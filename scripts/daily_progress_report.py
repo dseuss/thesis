@@ -3,21 +3,33 @@
 
 import collections
 import functools as ft
-import itertools as it
 import logging
 import os
 import tempfile
 from datetime import date
-from subprocess import Popen, PIPE
+from subprocess import PIPE, Popen
 
 import click
-
+import colorama
 import git
+
+colorama.init()
 
 CONFIG = {
     'logging_level': logging.ERROR,
     'word_goal': 100,
 }
+
+
+ASCII_THUMPS_UP = """
+            _
+           /(|
+          (  :
+         __\  \  _____
+       (____)  `|
+      (____)|   |
+       (____).__|
+        (___)__.|_____"""
 
 
 def log_functioncall(function, logger=logging):
@@ -95,6 +107,18 @@ def get_wordcount_diff(repo, basecommit, currentcommit):
     return parse_wdiff_output(stdout.decode('utf-8'))
 
 
+def print_message(word_diff, words):
+    print("")
+    print(colorama.Fore.GREEN + 'INSERTED: ' + str(word_diff['inserted']))
+    print(colorama.Fore.RED +   'DELETED:  ' + str(word_diff['deleted']))
+
+    if word_diff['inserted'] >= words:
+        print(colorama.Fore.YELLOW + ASCII_THUMPS_UP)
+    else:
+        print(colorama.Fore.YELLOW + f'Keep working until you have {words} words')
+    print(colorama.Style.RESET_ALL)
+
+
 @click.command()
 @click.option('--words', default=None, help='Goal set for the number of daily written words')
 @click.option('--directory', default='.', help='Base directory of the git repo')
@@ -105,6 +129,7 @@ def report(words, directory, basecommit):
     words written in them now to the last commit of yesterday.
     """
     directory = os.path.abspath(os.path.expanduser(directory))
+    words = CONFIG.get('word_goal', 0) if words is None else int(words)
 
     try:
         repo = git.Repo(path=directory)
@@ -117,9 +142,7 @@ def report(words, directory, basecommit):
             else repo.commit(basecommit)
         currentcommit = repo.commit('HEAD')
         word_diff = get_wordcount_diff(repo, basecommit, currentcommit)
-
-        print("Words inserted so far today: ", word_diff['inserted'])
-
+        print_message(word_diff, words)
     except ValueError as e:
         print(e)
         return -1
