@@ -8,14 +8,28 @@
 \usepackage{bbm}
 \usepackage{graphicx,subcaption} 
 
-\usepackage{biblatex}
+\usepackage[backend=biber]{biblatex}
 \bibliography{references_ds}
+
+\usepackage[breaklinks=true]{hyperref}
+%getting rid of hyperref's ugly boxes.
+%From:http://tex.stackexchange.com/a/51349
+\hypersetup{
+  colorlinks   = true, %Colours links instead of ugly boxes
+  urlcolor     = blue, %Colour for external hyperlinks
+  linkcolor    = blue, %Colour of internal links
+  citecolor   = red %Colour of citations
+}
+\usepackage[nameinlink,capitalize]{cleveref}
+
+\usepackage{color}
+\usepackage[color=red!50!white,textsize=small,textwidth=2.5cm]{todonotes}
 
 \input{macros.tex}
 
-% if \makefull is defined (e.g. by commandline argument, include everything)
+if \makefull is defined (e.g. by commandline argument, include everything)
 \ifdefined\makefull\else
-  \includeonly{chapters/introduction}
+  \includeonly{chapters/tensors}
 \fi
 
 \begin{document}
@@ -36,6 +50,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
 \include{chapters/introduction}
+\include{chapters/phaselift}
+\include{chapters/tensors}
 \include{chapters/conclusion}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
