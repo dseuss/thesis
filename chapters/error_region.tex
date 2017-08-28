@@ -9,21 +9,19 @@
 
 % two main flavours of statistics...
 % task of parameter estimation, model
+% parametric model: state space \Omega
+However, even if our model describes the data perfectly we cannot exactly recover this value from a finite amount of data due to statistical fluctuations.
+The concept of error bars, or more generally error regions, allows for quantifying the uncertainty of a given estimate. 
 
 \subsection{Frequentist Statistics}
 \label{sub:intro.frequentist}
-
-% frequentist interpretation of probablilty -> 
-% fixed true parameter, infite nr. of repetions of experiment 
-% point estimator mapping data to estimate of parameter
-% how to measure goodness of parameter? -> freedom of choice,
-% examples: minimax, min. mean least square error, unbiasedness, ...
 
 In the frequentist (or orthodox) framework, the probability of an outcome of a random experiment is defined in terms of its relative frequency of occurrence when the number of repetitions goes to infinity~\cite{Keynes_2007_Treatise,Kiefer_2012_Introduction}.
 More precisely, denote the number of repetitions of an experiment by $T$ and the number of times the event under consideration $x$ occurred by $n_T$. 
 Then, a Frequentist interprets the probability $\Prob(x)$ as the statement that if $T \to \infty$, $\frac{n_T}{T} \to \Prob(x)$.
 
-For the task of parameter estimation, we assume that the observed data are generated from the parametric model with \quotes{true} parameter $\theta$, which is unknown.
+% probabliities = hypothetical frequencies, not repeatable
+For the task of parameter estimation, we assume that the observed data are generated from the parametric model with \quotes{true} parameter $\theta \in \Omega$, which is unknown.
 From a finite number of observations $X_1, \ldots X_N$, we must construct an estimate for $\theta$ that is close to the true value in some sense.
 The function $\hat\theta$ that maps observations to such an estimate is called a point estimator.
 The quality of an estimator is measured by its risk function.
@@ -35,14 +33,14 @@ A risk function commonly used for continuous parameter spaces is the mean square
 Note that \cref{eq:frequentist.mean_square} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\theta$.
 Strategies to make statements independent of the true value include 
 \begin{itemize}
-  \item $\hat\theta$ is called a \emph{uniformly best} estimator, if for all other estimators $\hat\theta'$ and all values of the true parameter $\theta$
+  \item $\hat\theta$ is called a \emph{uniformly best} estimator, if for all other estimators $\hat\theta'$ and all values of the true parameter $\theta \in \Omega$
   \[
     \mathcal{L}_{\hat\theta}(\theta) \le \mathcal{L}_{\hat\theta'}(\theta).
   \]
 
   \item $\hat\theta$ is called \emph{minimax}, if for all other estimators $\hat\theta'$
   \[
-    \sup_\theta \mathcal{L}_{\hat\theta}(\theta) \le \sup_\theta \mathcal{L}_{\hat\theta'}(\theta).
+    \sup_{\theta\in\Omega} \mathcal{L}_{\hat\theta}(\theta) \le \sup_{\theta\in\Omega} \mathcal{L}_{\hat\theta'}(\theta).
   \]
 
   \item $\hat\theta$ is called \emph{best on average} w.r.t.\ a distribution of the true value $\theta \sim \Theta$ if for all other estimators $\hat\theta'$
@@ -50,20 +48,32 @@ Strategies to make statements independent of the true value include
     \Exp_{\theta \sim \Theta} \mathcal{L}_{\hat\theta}(\theta) \le  \Exp_{\theta \sim \Theta} \mathcal{L}_{\hat\theta'}(\theta).
   \]
 \end{itemize}
+\todo{Discussion of different properties}
+\todo{Choice is arbitrary!}
+\todo{How does this connect with definition of probability?}
 
 
-
-
-
-
-
-
-
-
-
-
-% confidence regions -> region estimators -> coverage
-% not unique as full region trivially fullfils -> need an optimailty criterion to single out one construction
 % examples (also depends on notion of volume), admissability
+However, as already mentioned in the introduction, point estimators cannot convey uncertainty in the estimate. 
+For this purpose we need to introduce a precise notion of \quotes{error bars}, namely \emph{confidence regions}.
+A confidence region $\mathcal{C} \subset \Omega$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data to a subset of the parameter space -- such that the true parameter is contained in $\mathcal{C}$ with probability greater than $\alpha$
+\[
+  \label{eq:frequentist.coverage}
+  \forall \theta\in\Omega \colon \Prob_\theta\left( \mathcal{C}(X_1, \ldots, X_N) \ni \theta \right) \ge \alpha.
+\]
+Similar to point estimators, \cref{eq:frequentist.coverage} does not uniquely determine a confidence region construction.
+Furthermore, additional constraints are necessary to exclude trivial constructions such as the following:
+Take the region estimator, which is always equal to the full parameter space independent of the data $\mathcal{C}(X_1, \ldots X_N) = \Omega$, then 
+\[
+  \Prob_\theta\left(  \mathcal{C}(X_1, \ldots, X_N) \ni \theta  \right = 1 \ge \alpha
+\]
+for all confidence levels $\alpha$.
+Although, this construction trivially fulfils the coverage condition~\eqref{eq:frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
 
 
+
+
+
+
+
+\todo{Today: Asymptotic optimal, adaptive, ...}
