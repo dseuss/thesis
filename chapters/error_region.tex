@@ -1,0 +1,69 @@
+ % -*- root: ../thesis.tex -*-
+\chapter{Uncertainty Quantification for quantum state estimation}
+\label{chap:error}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction to Statistics}
+\label{sec:error.intro}
+
+% two main flavours of statistics...
+% task of parameter estimation, model
+
+\subsection{Frequentist Statistics}
+\label{sub:intro.frequentist}
+
+% frequentist interpretation of probablilty -> 
+% fixed true parameter, infite nr. of repetions of experiment 
+% point estimator mapping data to estimate of parameter
+% how to measure goodness of parameter? -> freedom of choice,
+% examples: minimax, min. mean least square error, unbiasedness, ...
+
+In the frequentist (or orthodox) framework, the probability of an outcome of a random experiment is defined in terms of its relative frequency of occurrence when the number of repetitions goes to infinity~\cite{Keynes_2007_Treatise,Kiefer_2012_Introduction}.
+More precisely, denote the number of repetitions of an experiment by $T$ and the number of times the event under consideration $x$ occurred by $n_T$. 
+Then, a Frequentist interprets the probability $\Prob(x)$ as the statement that if $T \to \infty$, $\frac{n_T}{T} \to \Prob(x)$.
+
+For the task of parameter estimation, we assume that the observed data are generated from the parametric model with \quotes{true} parameter $\theta$, which is unknown.
+From a finite number of observations $X_1, \ldots X_N$, we must construct an estimate for $\theta$ that is close to the true value in some sense.
+The function $\hat\theta$ that maps observations to such an estimate is called a point estimator.
+The quality of an estimator is measured by its risk function.
+A risk function commonly used for continuous parameter spaces is the mean square error
+\[
+  \label{eq:frequentist.mean_square}
+  \mathcal{L}_{\hat\theta}(\theta) := \Exp_\theta \left( \Norm{\theta - \hat\theta(X_1, \ldots, X_N)}^2 \right).
+\]
+Note that \cref{eq:frequentist.mean_square} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\theta$.
+Strategies to make statements independent of the true value include 
+\begin{itemize}
+  \item $\hat\theta$ is called a \emph{uniformly best} estimator, if for all other estimators $\hat\theta'$ and all values of the true parameter $\theta$
+  \[
+    \mathcal{L}_{\hat\theta}(\theta) \le \mathcal{L}_{\hat\theta'}(\theta).
+  \]
+
+  \item $\hat\theta$ is called \emph{minimax}, if for all other estimators $\hat\theta'$
+  \[
+    \sup_\theta \mathcal{L}_{\hat\theta}(\theta) \le \sup_\theta \mathcal{L}_{\hat\theta'}(\theta).
+  \]
+
+  \item $\hat\theta$ is called \emph{best on average} w.r.t.\ a distribution of the true value $\theta \sim \Theta$ if for all other estimators $\hat\theta'$
+  \[
+    \Exp_{\theta \sim \Theta} \mathcal{L}_{\hat\theta}(\theta) \le  \Exp_{\theta \sim \Theta} \mathcal{L}_{\hat\theta'}(\theta).
+  \]
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+% confidence regions -> region estimators -> coverage
+% not unique as full region trivially fullfils -> need an optimailty criterion to single out one construction
+% examples (also depends on notion of volume), admissability
+
+

@@ -22,14 +22,27 @@
 }
 \usepackage[nameinlink,capitalize]{cleveref}
 
+\usepackage{algorithmicx} 
+\usepackage{algorithm} 
+\usepackage{algpseudocode}
+
 \usepackage{color}
 \usepackage[color=red!50!white,textsize=small,textwidth=2.5cm]{todonotes}
 
-\input{macros.tex}
+%% use \[ ... \] for displayed equations
+\newcommand{\myequation}{\begin{equation}}
+\newcommand{\myendequation}{\end{equation}}
+\let\[\myequation{}
+\let\]\myendequation{}
+%% Only referenced equations are numbered
+% \usepackage{autonum}
 
-if \makefull is defined (e.g. by commandline argument, include everything)
+
+\input{macros}
+
+% if \makefull is defined (e.g. by commandline argument, include everything)
 \ifdefined\makefull\else
-  \includeonly{chapters/tensors}
+  \includeonly{chapters/error_region}
 \fi
 
 \begin{document}
@@ -50,6 +63,7 @@ if \makefull is defined (e.g. by commandline argument, include everything)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
 \include{chapters/introduction}
+\include{chapters/error_region}
 \include{chapters/phaselift}
 \include{chapters/tensors}
 \include{chapters/conclusion}
