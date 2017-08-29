@@ -69,24 +69,24 @@ Strategies to make statements independent of the true value include
 % examples (also depends on notion of volume), admissability
 However, as already mentioned in the introduction, point estimators cannot convey uncertainty in the estimate. 
 For this purpose we need to introduce a precise notion of \quotes{error bars}, namely \emph{confidence regions}.
-A confidence region $\mathcal{C} \subset \Omega$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data to a subset of the parameter space -- such that the true parameter is contained in $\mathcal{C}$ with probability greater than $\alpha$
+A confidence region $\CR \subset \Omega$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data to a subset of the parameter space -- such that the true parameter is contained in $\CR$ with probability greater than $\alpha$
 \[
   \label{eq:frequentist.coverage}
-  \forall \theta\in\Omega \colon \Prob_\theta\left( \mathcal{C}(X_1, \ldots, X_N) \ni \theta \right) \ge \alpha.
+  \forall \theta\in\Omega \colon \Prob_\theta\left( \CR(X_1, \ldots, X_N) \ni \theta \right) \ge \alpha.
 \]
 Similar to point estimators, \cref{eq:frequentist.coverage} does not uniquely determine a confidence region construction.
 Furthermore, additional constraints are necessary to exclude trivial constructions such as the following:
-Take the region estimator, which is always equal to the full parameter space independent of the data $\mathcal{C}(X_1, \ldots X_N) = \Omega$, then 
+Take the region estimator, which is always equal to the full parameter space independent of the data $\CR(X_1, \ldots X_N) = \Omega$, then 
 \[
-  \Prob_\theta\left(  \mathcal{C}(X_1, \ldots, X_N) \ni \theta  \right = 1 \ge \alpha
+  \Prob_\theta\left(  \CR(X_1, \ldots, X_N) \ni \theta  \right) = 1 \ge \alpha
 \]
 for all confidence levels $\alpha$.
 Although, this construction trivially fulfils the coverage condition~\eqref{eq:frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
+Therefore, we have to impose a notion of what constitutes a good confidence region.
 
-
-
-
-
-
+Clearly, if we have two confidence regions $\CR_1$ and $\CR_2$ with the same confidence level $\alpha$ and $\CR_1 \subset \CR_2$, then $\CR_1$ is more informative.
+More generally, smaller regions should be preferred since they convey more confidence in the estimate and exclude more alternatives.
+Therefore, measures of size such as (expected) volume or diameter are commonly used as risk functions for region estimators.
+This leads to similar definitions as in \cref{def:frequentist.optimality_conditions} for confidence regions with the additional constraint that \cref{eq:frequentist.coverage} is fulfilled.
 
 \todo{Today: Asymptotic optimal, adaptive, ...}
