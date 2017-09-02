@@ -32,6 +32,7 @@ A risk function commonly used for continuous parameter spaces is the mean square
   \label{eq:frequentist.mean_square}
   \mathcal{L}_{\hat\theta}(\theta) := \Exp_\theta \left( \Norm{\theta - \hat\theta(X_1, \ldots, X_N)}^2 \right).
 \]
+\todo{Make loss without expectation}
 Note that \cref{eq:frequentist.mean_square} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\theta$.
 Strategies to make statements independent of the true value include 
 \begin{definition}
@@ -61,9 +62,11 @@ Strategies to make statements independent of the true value include
   \end{itemize}
 \end{definition}
 \todo{Citation}
-\todo{Discussion of different properties}
+\todo{Discussion of different properties, why no expectation value -> no "singular" regions?}
 \todo{Choice is arbitrary!}
 \todo{How does this connect with definition of probability?}
+\todo{Typical estimators? Max likelihood?}
+\todo{No statement about single runs!}
 
 
 % examples (also depends on notion of volume), admissability
@@ -74,6 +77,7 @@ A confidence region $\CR \subset \Omega$ with coverage $\alpha \in [0,1]$ is a r
   \label{eq:frequentist.coverage}
   \forall \theta\in\Omega \colon \Prob_\theta\left( \CR(X_1, \ldots, X_N) \ni \theta \right) \ge \alpha.
 \]
+\todo{Make this explicit defintion?}
 Similar to point estimators, \cref{eq:frequentist.coverage} does not uniquely determine a confidence region construction.
 Furthermore, additional constraints are necessary to exclude trivial constructions such as the following:
 Take the region estimator, which is always equal to the full parameter space independent of the data $\CR(X_1, \ldots X_N) = \Omega$, then 
@@ -87,6 +91,53 @@ Therefore, we have to impose a notion of what constitutes a good confidence regi
 Clearly, if we have two confidence regions $\CR_1$ and $\CR_2$ with the same confidence level $\alpha$ and $\CR_1 \subset \CR_2$, then $\CR_1$ is more informative.
 More generally, smaller regions should be preferred since they convey more confidence in the estimate and exclude more alternatives.
 Therefore, measures of size such as (expected) volume or diameter are commonly used as risk functions for region estimators.
-This leads to similar definitions as in \cref{def:frequentist.optimality_conditions} for confidence regions with the additional constraint that \cref{eq:frequentist.coverage} is fulfilled.
+This leads to similar definitions as in \cref{def:frequentist.optimality_conditions} for confidence regions with the additional constraint that \cref{eq:frequentist.coverage} has to be fulfilled.
 
 \todo{Today: Asymptotic optimal, adaptive, ...}
+
+
+\subsection{Bayesian Statistics}
+\label{sub:intro.bayesian}
+
+% frequentist: parameters fixed, data random; Bayesian: other way
+% two different camps of interpretation: subjective and objective -> only differetnt in interpretation, technically the same
+% prior -> Bayes' rule -> posterior 
+
+Let us now introduce the Bayesian point of view on inference.
+In contrast to the Frequentist's framework, where the existence of a single \quotes{true value} for the model parameter is assumed and the observed data is assumed to be random, Bayesian statistics treats the parameter itself as a random variable.
+More precisely, in Bayesian statistics probabilities reflect subjective beliefs and allow for consistently updating one's belief according to empirical observations.
+In a parameter estimation problem, the \emph{prior distribution} $\Prob(\theta)$ expresses one's belief about the parameter $\theta$ before taking any data into account.
+Given an observation $X$, the distribution of $\theta$ is updated according to Bayes' rule~\cite{}
+\[
+  \label{eq:bayesian.bayes_rule}
+  \Prob(\theta | X) = \frac{\Prob(X | \theta) \Prob(\theta)}{\Prob(X)}.
+\]
+Here, $\Prob(X|\theta)$ is the \emph{likelihood function} and $\Prob(\theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\theta$.
+
+% posterior encodes all information
+% but if one wants to report single number: Bayes mean estimator -> Bregman divergences -> optimality
+% also MAP estimator -> optimization problem, often used due to efficency
+Note that the posterior contains all the information on $\theta$. 
+To summarize important features of the posterior, we introduce point and region estimators similar to the Frequentist case:
+One commonly used estimator is the Bayesian mean estimator (BME) given by
+\[
+  \hat\theta_\mathrm{BME}(X) = \int \theta \, \Prob(\theta | X) \, \dd\theta.
+\]
+A justification for the BME is that it minimizes (under normal circumstances~\cite{Lehmann_1998_Theory}) the expected loss 
+\[
+  \label{eq:bayesian.expected_loss}
+  \Exp_\theta \mathcal{L}(\theta, \hat\theta(X)),
+\]
+provided the loss function $\mathcal{L}$ is a \emph{Bregman divergence}~\cite{Banerjee_2005_On}.
+Note that the expectation over $\theta$ in \cref{eq:bayesian.expected_loss} is taken over the posterior with observation $X$.
+
+Another example of a point estimator is the \emph{maximum a posteriori} (MAP) estimator.
+As the name suggests, the MAP estimator is obtained by maximizing the posterior~\eqref{eq:bayesian.bayes_rule}.
+Since this does not require the computation of the denominator in \cref{eq:bayesian.bayes_rule} and (at least local minima) of the posterior can be found efficiently via gradient descent, the MAP estimator is often used in high dimensional problem~\cite{Murphy_2012_Machine}.
+
+% uncertainty quantificatio -> credible region 
+% since for given outcome everythign fixed, less arbitrary/freedom then frequentist (see Def. above)
+% min. vol, least surprise, ...
+
+
+% conjugated priors
