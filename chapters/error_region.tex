@@ -77,13 +77,13 @@ A confidence region $\CR \subset \Omega$ with coverage $\alpha \in [0,1]$ is a r
   \label{eq:frequentist.coverage}
   \forall \Theta\in\Omega \colon \Prob_\Theta\left( \CR(X_1, \ldots, X_N) \ni \Theta \right) \ge \alpha.
 \]
-\todo{Make this explicit defintion?}
+ 
 Similar to point estimators, \cref{eq:frequentist.coverage} does not uniquely determine a confidence region construction.
 Furthermore, additional constraints are necessary to exclude trivial constructions such as the following:
 Take the region estimator, which is always equal to the full parameter space independent of the data $\CR(X_1, \ldots X_N) = \Omega$, then 
 \[
   \Prob_\Theta\left(  \CR(X_1, \ldots, X_N) \ni \Theta  \right) = 1 \ge \alpha
-\]
+\] 
 for all confidence levels $\alpha$.
 Although, this construction trivially fulfils the coverage condition~\eqref{eq:frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
 Therefore, we have to impose a notion of what constitutes a good confidence region.
@@ -138,7 +138,28 @@ Since this does not require the expensive computation of the denominator in \cre
 % uncertainty quantificatio -> credible region 
 % since for given outcome everythign fixed, less arbitrary/freedom then frequentist (see Def. above)
 % min. vol, least surprise, ...
+Let us now introduce the concept of error regions in the Bayesian framework.
+A \emph{credible region}\footnote{%
+  We use the same letter for confidence and credible regions when the meaning is clear from the context.
+}
+$\CR$ with credibility $\alpha$ is a subset of the parameter space $\Omega$ containing at least mass $\alpha$ of the posterior
+\[
+  \label{eq:bayesian.credibility}
+  \Prob(\Theta \in \CR | X_1, \ldots, X_N) \ge \alpha.
+\]
+Notice the different notion of randomness compared to \cref{eq:frequentist.coverage}:
+Confidence regions are random variables due to their dependence on the data and \cref{eq:frequentist.coverage} demands that the true value is contained in the confidence region with high probability.
+Here, \quotes{probability} refers to (possibly hypothetical) repetitions of the experiment -- no statement can be made for a single run of an experiment with given outcomes.
+In contrast, the definition of credible regions~\eqref{eq:bayesian.credibility} only refers to probability w.r.t.\ the posterior and, therefore, is well defined even for a single run of the experiment.
+
+In order to single out \quotes{good} credible regions, we need to introduce a notion of optimality. 
+As argued in \cref{sub:intro.frequentist}, smaller error regions are generally more informative. 
+Therefore, good credible regions are minimal-volume credible regions (MVCRs) or credible regions with the smallest diameter.
+Since the prior and data are  assumed to be fixed, no ambiguity similar to \cref{def:frequentist.optimality_conditions} arises in this setting.
+Although in the following we deal with MVCRs w.r.t.\ a geometric notion of volume, some authors have proposed to measure the volume of a region by its prior probability~\cite{Evans_2006_Optimally,Shang_2013_Optimal}.
 
 
 
 % conjugated priors
+
+\todo{Objective vs subjective Bayesian}
