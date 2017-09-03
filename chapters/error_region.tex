@@ -23,41 +23,41 @@ More precisely, denote the number of repetitions of an experiment by $T$ and the
 Then, a Frequentist interprets the probability $\Prob(x)$ as the statement that if $T \to \infty$, $\frac{n_T}{T} \to \Prob(x)$.
 
 % probabliities = hypothetical frequencies, not repeatable
-For the task of parameter estimation, we assume that the observed data are generated from the parametric model with \quotes{true} parameter $\theta \in \Omega$, which is unknown.
-From a finite number of observations $X_1, \ldots X_N$, we must construct an estimate for $\theta$ that is close to the true value in some sense.
-The function $\hat\theta$ that maps observations to such an estimate is called a point estimator.
+For the task of parameter estimation, we assume that the observed data are generated from the parametric model with \quotes{true} parameter $\Theta \in \Omega$, which is unknown.
+From a finite number of observations $X_1, \ldots X_N$, we must construct an estimate for $\Theta$ that is close to the true value in some sense.
+The function $\hat\Theta$ that maps observations to such an estimate is called a point estimator.
 The quality of an estimator is measured by its risk function.
 A risk function commonly used for continuous parameter spaces is the mean square error
 \[
   \label{eq:frequentist.mean_square}
-  \mathcal{L}_{\hat\theta}(\theta) := \Exp_\theta \left( \Norm{\theta - \hat\theta(X_1, \ldots, X_N)}^2 \right).
+  \mathcal{L}_{\hat\Theta}(\Theta) := \Exp_\Theta \left( \Norm{\Theta - \hat\Theta(X_1, \ldots, X_N)}^2 \right).
 \]
 \todo{Make loss without expectation}
-Note that \cref{eq:frequentist.mean_square} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\theta$.
+Note that \cref{eq:frequentist.mean_square} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\Theta$.
 Strategies to make statements independent of the true value include 
 \begin{definition}
   \label{def:frequentist.optimality_conditions}
   \begin{itemize}
-    \item $\hat\theta$ is called a \emph{uniformly best} estimator, if for all other estimators $\hat\theta'$ and all values of the true parameter $\theta \in \Omega$
+    \item $\hat\Theta$ is called a \emph{uniformly best} estimator, if for all other estimators $\hat\Theta'$ and all values of the true parameter $\Theta \in \Omega$
     \[
-      \mathcal{L}_{\hat\theta}(\theta) \le \mathcal{L}_{\hat\theta'}(\theta).
+      \mathcal{L}_{\hat\Theta}(\Theta) \le \mathcal{L}_{\hat\Theta'}(\Theta).
     \]
 
-    \item $\hat\theta$ is called \emph{minimax}, if for all other estimators $\hat\theta'$
+    \item $\hat\Theta$ is called \emph{minimax}, if for all other estimators $\hat\Theta'$
     \[
-      \sup_{\theta\in\Omega} \mathcal{L}_{\hat\theta}(\theta) \le \sup_{\theta\in\Omega} \mathcal{L}_{\hat\theta'}(\theta).
+      \sup_{\Theta\in\Omega} \mathcal{L}_{\hat\Theta}(\Theta) \le \sup_{\Theta\in\Omega} \mathcal{L}_{\hat\Theta'}(\Theta).
     \]
 
-    \item $\hat\theta$ is called \emph{best on average} w.r.t.\ a distribution of the true value $\theta \sim \Theta$ if for all other estimators $\hat\theta'$
+    \item $\hat\Theta$ is called \emph{best on average} w.r.t.\ a distribution of the true value $\Theta$ if for all other estimators $\hat\Theta'$
     \[
-      \Exp_{\theta \sim \Theta} \mathcal{L}_{\hat\theta}(\theta) \le  \Exp_{\theta \sim \Theta} \mathcal{L}_{\hat\theta'}(\theta).
+      \Exp_{\Theta} \mathcal{L}_{\hat\Theta}(\Theta) \le  \Exp_{\Theta} \mathcal{L}_{\hat\Theta'}(\Theta).
     \]
 
-    \item $\hat\theta$ is called \emph{admissible} if there is no other estimator $\hat\theta'$ such that
+    \item $\hat\Theta$ is called \emph{admissible} if there is no other estimator $\hat\Theta'$ such that
     \[
-      \forall\theta \in \Omega\colon \mathcal{L}_{\hat\theta'}(\theta) \le \mathcal{L}_{\hat\theta}(\theta) 
+      \forall\Theta \in \Omega\colon \mathcal{L}_{\hat\Theta'}(\Theta) \le \mathcal{L}_{\hat\Theta}(\Theta) 
       \quad\mbox{ and }\quad
-      \exists\theta \in \Omega\colon \mathcal{L}_{\hat\theta'}(\theta) < \mathcal{L}_{\hat\theta}(\theta) 
+      \exists\Theta \in \Omega\colon \mathcal{L}_{\hat\Theta'}(\Theta) < \mathcal{L}_{\hat\Theta}(\Theta) 
     \]
   \end{itemize}
 \end{definition}
@@ -75,14 +75,14 @@ For this purpose we need to introduce a precise notion of \quotes{error bars}, n
 A confidence region $\CR \subset \Omega$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data to a subset of the parameter space -- such that the true parameter is contained in $\CR$ with probability greater than $\alpha$
 \[
   \label{eq:frequentist.coverage}
-  \forall \theta\in\Omega \colon \Prob_\theta\left( \CR(X_1, \ldots, X_N) \ni \theta \right) \ge \alpha.
+  \forall \Theta\in\Omega \colon \Prob_\Theta\left( \CR(X_1, \ldots, X_N) \ni \Theta \right) \ge \alpha.
 \]
 \todo{Make this explicit defintion?}
 Similar to point estimators, \cref{eq:frequentist.coverage} does not uniquely determine a confidence region construction.
 Furthermore, additional constraints are necessary to exclude trivial constructions such as the following:
 Take the region estimator, which is always equal to the full parameter space independent of the data $\CR(X_1, \ldots X_N) = \Omega$, then 
 \[
-  \Prob_\theta\left(  \CR(X_1, \ldots, X_N) \ni \theta  \right) = 1 \ge \alpha
+  \Prob_\Theta\left(  \CR(X_1, \ldots, X_N) \ni \Theta  \right) = 1 \ge \alpha
 \]
 for all confidence levels $\alpha$.
 Although, this construction trivially fulfils the coverage condition~\eqref{eq:frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
@@ -106,38 +106,39 @@ This leads to similar definitions as in \cref{def:frequentist.optimality_conditi
 Let us now introduce the Bayesian point of view on inference.
 In contrast to the Frequentist's framework, where the existence of a single \quotes{true value} for the model parameter is assumed and the observed data is assumed to be random, Bayesian statistics treats the parameter itself as a random variable.
 More precisely, in Bayesian statistics probabilities reflect subjective beliefs and allow for consistently updating one's belief according to empirical observations.
-In a parameter estimation problem, the \emph{prior distribution} $\Prob(\theta)$ expresses one's belief about the parameter $\theta$ before taking any data into account.
-Given an observation $X$, the distribution of $\theta$ is updated according to Bayes' rule~\cite{}
+In a parameter estimation problem, the \emph{prior distribution} $\Prob(\Theta)$ expresses one's belief about the parameter $\Theta$ before taking any data into account.
+Given an observation $X$, the distribution of $\Theta$ is updated according to Bayes' rule~\cite{}
 \[
   \label{eq:bayesian.bayes_rule}
-  \Prob(\theta | X) = \frac{\Prob(X | \theta) \Prob(\theta)}{\Prob(X)}.
+  \Prob(\Theta | X) = \frac{\Prob(X | \Theta) \Prob(\Theta)}{\Prob(X)}.
 \]
-Here, $\Prob(X|\theta)$ is the \emph{likelihood function} and $\Prob(\theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\theta$.
+Here, $\Prob(X|\Theta)$ is the \emph{likelihood function} and $\Prob(\Theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\Theta$.
 
 % posterior encodes all information
 % but if one wants to report single number: Bayes mean estimator -> Bregman divergences -> optimality
 % also MAP estimator -> optimization problem, often used due to efficency
-Note that the posterior contains all the information on $\theta$. 
+Note that the posterior contains all the information on $\Theta$. 
 To summarize important features of the posterior, we introduce point and region estimators similar to the Frequentist case:
 One commonly used estimator is the Bayesian mean estimator (BME) given by
 \[
-  \hat\theta_\mathrm{BME}(X) = \int \theta \, \Prob(\theta | X) \, \dd\theta.
+  \hat\Theta_\mathrm{BME}(X) = \int \Theta \, \Prob(\Theta | X) \, \dd\Theta.
 \]
 A justification for the BME is that it minimizes (under normal circumstances~\cite{Lehmann_1998_Theory}) the expected loss 
 \[
   \label{eq:bayesian.expected_loss}
-  \Exp_\theta \mathcal{L}(\theta, \hat\theta(X)),
+  \Exp_\Theta \mathcal{L}(\Theta, \hat\Theta(X)),
 \]
 provided the loss function $\mathcal{L}$ is a \emph{Bregman divergence}~\cite{Banerjee_2005_On}.
-Note that the expectation over $\theta$ in \cref{eq:bayesian.expected_loss} is taken over the posterior with observation $X$.
+Note that the expectation over $\Theta$ in \cref{eq:bayesian.expected_loss} is taken over the posterior with observation $X$.
 
 Another example of a point estimator is the \emph{maximum a posteriori} (MAP) estimator.
 As the name suggests, the MAP estimator is obtained by maximizing the posterior~\eqref{eq:bayesian.bayes_rule}.
-Since this does not require the computation of the denominator in \cref{eq:bayesian.bayes_rule} and (at least local minima) of the posterior can be found efficiently via gradient descent, the MAP estimator is often used in high dimensional problem~\cite{Murphy_2012_Machine}.
+Since this does not require the expensive computation of the denominator in \cref{eq:bayesian.bayes_rule} and (at least local minima) of the posterior can be found efficiently via gradient descent, the MAP estimator is often used in high dimensional problem~\cite{Murphy_2012_Machine}.\\
 
 % uncertainty quantificatio -> credible region 
 % since for given outcome everythign fixed, less arbitrary/freedom then frequentist (see Def. above)
 % min. vol, least surprise, ...
+
 
 
 % conjugated priors
