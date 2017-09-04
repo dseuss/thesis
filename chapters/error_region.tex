@@ -114,9 +114,24 @@ Given an observation $X$, the distribution of $\Theta$ is updated according to B
 \]
 Here, $\Prob(X|\Theta)$ is the \emph{likelihood function} and $\Prob(\Theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\Theta$.
 
-% posterior encodes all information
-% but if one wants to report single number: Bayes mean estimator -> Bregman divergences -> optimality
-% also MAP estimator -> optimization problem, often used due to efficency
+Computing the Bayesian update~\eqref{eq:bayesian.bayes_rule} analytically is possible only in a few rare cases:
+If for likelihood function the prior and the posterior are in the same family of distributions, the prior is called a \emph{conjugate prior} for the likelihood function.
+For example, consider a Gaussian random variable $X \sim \Normal(\theta, \tau^2)$ with known variance $\tau^2$.
+If we assume a Gaussian prior $\theta \sim \Normal(\mu, \sigma^2)$, we have~\cite{}
+\[
+  \theta \vert X=x \sim \Normal (\mu', \sigma'^2)
+\]
+with 
+\[
+  \mu' = \frac{ \frac{\mu}{\sigma^2} + \frac{x}{\tau^2} }{ \frac{1}{\sigma^2} + \frac{1}{\tau^2} },
+  \quad\mbox{and}\quad
+  \sigma' = \left( \frac{1}{\sigma^2} + \frac{1}{\tau^2} \right)^{- \tfrac{1}{2}}.
+\]
+In other words, an update of a Gaussian prior with a Gaussian likelihood function yields a Gaussian posterior distribution.
+Although there are other well-known conjugate priors with explicit formulas for the parameter update, in practice the Bayesian update~\eqref{eq:bayesian.bayes_rule} can only be approximated numerically.
+Commonly used methods include sampling techniques such as Markov Chain Monte Carlo and Sequential Monte Carlo~\cite{} as well as variational Bayes~\cite{}.\\
+
+
 Note that the posterior contains all the information on $\Theta$. 
 To summarize important features of the posterior, we introduce point and region estimators similar to the Frequentist case:
 One commonly used estimator is the Bayesian mean estimator (BME) given by
@@ -135,9 +150,6 @@ Another example of a point estimator is the \emph{maximum a posteriori} (MAP) es
 As the name suggests, the MAP estimator is obtained by maximizing the posterior~\eqref{eq:bayesian.bayes_rule}.
 Since this does not require the expensive computation of the denominator in \cref{eq:bayesian.bayes_rule} and (at least local minima) of the posterior can be found efficiently via gradient descent, the MAP estimator is often used in high dimensional problem~\cite{Murphy_2012_Machine}.\\
 
-% uncertainty quantificatio -> credible region 
-% since for given outcome everythign fixed, less arbitrary/freedom then frequentist (see Def. above)
-% min. vol, least surprise, ...
 Let us now introduce the concept of error regions in the Bayesian framework.
 A \emph{credible region}\footnote{%
   We use the same letter for confidence and credible regions when the meaning is clear from the context.
@@ -158,8 +170,5 @@ Therefore, good credible regions are minimal-volume credible regions (MVCRs) or 
 Since the prior and data are  assumed to be fixed, no ambiguity similar to \cref{def:frequentist.optimality_conditions} arises in this setting.
 Although in the following we deal with MVCRs w.r.t.\ a geometric notion of volume, some authors have proposed to measure the volume of a region by its prior probability~\cite{Evans_2006_Optimally,Shang_2013_Optimal}.
 
-
-
-% conjugated priors
 
 \todo{Objective vs subjective Bayesian}
