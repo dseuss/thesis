@@ -2,6 +2,7 @@
 \chapter{Uncertainty Quantification for quantum state estimation}
 \label{chap:error}
 
+% postivity of quantum states for error regions
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction to Statistics}
@@ -11,7 +12,7 @@
 % task of parameter estimation, model
 % parametric model: state space \Omega
 However, even if our model describes the data perfectly we cannot exactly recover this value from a finite amount of data due to statistical fluctuations.
-The concept of error bars, or more generally error regions, allows for quantifying the uncertainty of a given estimate. 
+The concept of error bars, or more generally error regions, allows for quantifying the uncertainty of a given estimate.
 
 % uncertatiny quantification, problem with point estimators
 
@@ -19,7 +20,7 @@ The concept of error bars, or more generally error regions, allows for quantifyi
 \label{sub:intro.frequentist}
 
 In the frequentist (or orthodox) framework, the probability of an outcome of a random experiment is defined in terms of its relative frequency of occurrence when the number of repetitions goes to infinity~\cite{Keynes_2007_Treatise,Kiefer_2012_Introduction}.
-More precisely, denote the number of repetitions of an experiment by $T$ and the number of times the event under consideration $x$ occurred by $n_T$. 
+More precisely, denote the number of repetitions of an experiment by $T$ and the number of times the event under consideration $x$ occurred by $n_T$.
 Then, a Frequentist interprets the probability $\Prob(x)$ as the statement that if $T \to \infty$, $\frac{n_T}{T} \to \Prob(x)$.
 
 % probabliities = hypothetical frequencies, not repeatable
@@ -34,7 +35,7 @@ A risk function commonly used for continuous parameter spaces is the mean square
 \]
 \todo{Make loss without expectation}
 Note that \cref{eq:frequentist.mean_square} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\Theta$.
-Strategies to make statements independent of the true value include 
+Strategies to make statements independent of the true value include
 \begin{definition}
   \label{def:frequentist.optimality_conditions}
   \begin{itemize}
@@ -55,9 +56,9 @@ Strategies to make statements independent of the true value include
 
     \item $\hat\Theta$ is called \emph{admissible} if there is no other estimator $\hat\Theta'$ such that
     \[
-      \forall\Theta \in \Omega\colon \mathcal{L}_{\hat\Theta'}(\Theta) \le \mathcal{L}_{\hat\Theta}(\Theta) 
+      \forall\Theta \in \Omega\colon \mathcal{L}_{\hat\Theta'}(\Theta) \le \mathcal{L}_{\hat\Theta}(\Theta)
       \quad\mbox{ and }\quad
-      \exists\Theta \in \Omega\colon \mathcal{L}_{\hat\Theta'}(\Theta) < \mathcal{L}_{\hat\Theta}(\Theta) 
+      \exists\Theta \in \Omega\colon \mathcal{L}_{\hat\Theta'}(\Theta) < \mathcal{L}_{\hat\Theta}(\Theta)
     \]
   \end{itemize}
 \end{definition}
@@ -70,20 +71,20 @@ Strategies to make statements independent of the true value include
 
 
 % examples (also depends on notion of volume), admissability
-However, as already mentioned in the introduction, point estimators cannot convey uncertainty in the estimate. 
+However, as already mentioned in the introduction, point estimators cannot convey uncertainty in the estimate.
 For this purpose we need to introduce a precise notion of \quotes{error bars}, namely \emph{confidence regions}.
 A confidence region $\CR \subset \Omega$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data to a subset of the parameter space -- such that the true parameter is contained in $\CR$ with probability greater than $\alpha$
 \[
   \label{eq:frequentist.coverage}
   \forall \Theta\in\Omega \colon \Prob_\Theta\left( \CR(X_1, \ldots, X_N) \ni \Theta \right) \ge \alpha.
 \]
- 
+
 Similar to point estimators, \cref{eq:frequentist.coverage} does not uniquely determine a confidence region construction.
 Furthermore, additional constraints are necessary to exclude trivial constructions such as the following:
-Take the region estimator, which is always equal to the full parameter space independent of the data $\CR(X_1, \ldots X_N) = \Omega$, then 
+Take the region estimator, which is always equal to the full parameter space independent of the data $\CR(X_1, \ldots X_N) = \Omega$, then
 \[
   \Prob_\Theta\left(  \CR(X_1, \ldots, X_N) \ni \Theta  \right) = 1 \ge \alpha
-\] 
+\]
 for all confidence levels $\alpha$.
 Although, this construction trivially fulfils the coverage condition~\eqref{eq:frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
 Therefore, we have to impose a notion of what constitutes a good confidence region.
@@ -101,7 +102,7 @@ This leads to similar definitions as in \cref{def:frequentist.optimality_conditi
 
 % frequentist: parameters fixed, data random; Bayesian: other way
 % two different camps of interpretation: subjective and objective -> only differetnt in interpretation, technically the same
-% prior -> Bayes' rule -> posterior 
+% prior -> Bayes' rule -> posterior
 
 Let us now introduce the Bayesian point of view on inference.
 In contrast to the Frequentist's framework, where the existence of a single \quotes{true value} for the model parameter is assumed and the observed data is assumed to be random, Bayesian statistics treats the parameter itself as a random variable.
@@ -121,7 +122,7 @@ If we assume a Gaussian prior $\theta \sim \Normal(\mu, \sigma^2)$, we have~\cit
 \[
   \theta \vert X=x \sim \Normal (\mu', \sigma'^2)
 \]
-with 
+with
 \[
   \mu' = \frac{ \frac{\mu}{\sigma^2} + \frac{x}{\tau^2} }{ \frac{1}{\sigma^2} + \frac{1}{\tau^2} },
   \quad\mbox{and}\quad
@@ -132,13 +133,13 @@ Although there are other well-known conjugate priors with explicit formulas for 
 Commonly used methods include sampling techniques such as Markov Chain Monte Carlo and Sequential Monte Carlo~\cite{} as well as variational Bayes~\cite{}.\\
 
 
-Note that the posterior contains all the information on $\Theta$. 
+Note that the posterior contains all the information on $\Theta$.
 To summarize important features of the posterior, we introduce point and region estimators similar to the Frequentist case:
 One commonly used estimator is the Bayesian mean estimator (BME) given by
 \[
   \hat\Theta_\mathrm{BME}(X) = \int \Theta \, \Prob(\Theta | X) \, \dd\Theta.
 \]
-A justification for the BME is that it minimizes (under normal circumstances~\cite{Lehmann_1998_Theory}) the expected loss 
+A justification for the BME is that it minimizes (under normal circumstances~\cite{Lehmann_1998_Theory}) the expected loss
 \[
   \label{eq:bayesian.expected_loss}
   \Exp_\Theta \mathcal{L}(\Theta, \hat\Theta(X)),
@@ -149,6 +150,7 @@ Note that the expectation over $\Theta$ in \cref{eq:bayesian.expected_loss} is t
 Another example of a point estimator is the \emph{maximum a posteriori} (MAP) estimator.
 As the name suggests, the MAP estimator is obtained by maximizing the posterior~\eqref{eq:bayesian.bayes_rule}.
 Since this does not require the expensive computation of the denominator in \cref{eq:bayesian.bayes_rule} and (at least local minima) of the posterior can be found efficiently via gradient descent, the MAP estimator is often used in high dimensional problem~\cite{Murphy_2012_Machine}.\\
+
 
 Let us now introduce the concept of error regions in the Bayesian framework.
 A \emph{credible region}\footnote{%
@@ -164,11 +166,401 @@ Confidence regions are random variables due to their dependence on the data and 
 Here, \quotes{probability} refers to (possibly hypothetical) repetitions of the experiment -- no statement can be made for a single run of an experiment with given outcomes.
 In contrast, the definition of credible regions~\eqref{eq:bayesian.credibility} only refers to probability w.r.t.\ the posterior and, therefore, is well defined even for a single run of the experiment.
 
-In order to single out \quotes{good} credible regions, we need to introduce a notion of optimality. 
-As argued in \cref{sub:intro.frequentist}, smaller error regions are generally more informative. 
+In order to single out \quotes{good} credible regions, we need to introduce a notion of optimality.
+As argued in \cref{sub:intro.frequentist}, smaller error regions are generally more informative.
 Therefore, good credible regions are minimal-volume credible regions (MVCRs) or credible regions with the smallest diameter.
 Since the prior and data are  assumed to be fixed, no ambiguity similar to \cref{def:frequentist.optimality_conditions} arises in this setting.
 Although in the following we deal with MVCRs w.r.t.\ a geometric notion of volume, some authors have proposed to measure the volume of a region by its prior probability~\cite{Evans_2006_Optimally,Shang_2013_Optimal}.
 
 
+
 \todo{Objective vs subjective Bayesian}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Frequentist Confidence Regions}
+\label{sec:error.frequentist}
+
+In this section we are going to present the first major result of our work~\cite{Suess_2016_Error} concerned with Frequentist confidence regions in QSE.
+Optimal confidence regions for high-dimensional parameter estimation problems in are quite intricate in general even without additional constraints.
+The
+re are only few elementary settings, where optimal error regions are known and easily characterized.
+
+Since the goal of this work is to demonstrate that quantum shape constraints severely complicate even ``classically'' simple confidence regions, in the further discussion we restrict the discussion to a simplified setting:
+We focus on confidence ellipsoids for Gaussian distributions, which are one of the few easily characterizable examples.
+% FIXME REALLY?
+As discussed in \cref{sub:intro.frequentist}, Gaussian distributions arise in the limit of many measurements due to local asymptotic normality.
+In this section we show, that even characterizing these highly simplifying ellipsoids with the quantum constraints taken into account constitutes a hard computational problem.
+On the other hand, as indicated in \cref{???}, these additional constraints may help to reduce the uncertainty tremendously.
+Therefore, our work can be interpreted a trade-off between computational efficiency and statistical optimality in QSE.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Optimal confidence regions for quantum states}
+\label{sub:ortho.optimal}
+
+As already indicated in Sec.~\ref{sub:intro.positivity}, the additional information that the true quantum state $\varrho_0$ must belong to the set of positive semidefinite matrices $of this work \States \subset \HermTrace$ can be exploited to possibly improve any confidence region for QST.
+This is especially clear for notions of optimality with a loss function stated in terms of volume\footnote{%
+  Throughout this work, the volume is taken with respect to the flat Hilbert-Schmidt measure on $\HermTrace$.
+}
+$\Vol(\cdot)$, as we will show in this section.
+
+We consider an especially simple procedure to take the positivity constraints into account, namely truncating all non-positive matrices from tractable confidence regions for the unconstrained problem.
+This approach is mainly motivated by the goal to show that the computational intractability exclusively stems from the quantum constraints and is not caused by difficulties of high-dimensional statistics in general.
+Furthermore, we prove in Lemma~\ref{lem:ortho.admissible_truncation} that some notions of optimality, e.g.\ admissibility, are preserved under truncation.
+In other words, there are notions of optimality such that truncation of an optimal confidence region for the unconstrained problem gives rise to an optimal region for the constrained one.\\
+
+%Note that whenever our discussion is not conceptually restricted to $d$-dimensional quantum states (what happens in the current subsection), we omit the subscript $d$.
+%The set  $\HermTrace$ can be as well understood as a general parameter space with $\States$ playing the role of its subset obtained by imposing certain constraints (such as positivity).
+%Consequently, $\varrho_0$ can be understood in a more abstract way as a parameter belonging to $\HermTrace$.
+
+First, let us introduce the notion of admissibility as given by~\cite[Def. 2.2]{Joshi_1969_Admissibility}.
+\begin{definition}\label{def:ortho.admissible}
+  A confidence region $\CR$ for the parameter estimation of $\varrho_0 \in \HermTrace$ is called (weakly) \emph{admissible} if there is no other confidence region $\CR'$ that fulfills
+  \begin{enumerate}
+    \item(equal or smaller volume) $\Vol(\CR'(\vec y)) \le \Vol(\CR(\vec y))$ for almost all observations $y \in \Reals^m$
+    \item(same or better coverage) $\Prob(\CR' \owns \varrho_0) \ge \Prob(\CR \owns \varrho_0)$ for all $\varrho_0 \in \HermTrace$
+    \item(strictly better) strict inequality holds for one $\varrho_0 \in \HermTrace$ in (ii) or on a set of positive measure in (i).
+  \end{enumerate}
+\end{definition}
+In words, $\CR$ is admissible if there is no other confidence region $\CR'$ that performs at least as good as $\CR$ and strictly better for some settings.
+The conditions in Def.~\ref{def:ortho.admissible} are stated only for ``almost all'' $\vec y$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
+A different approach is to state condition (i) in terms of the expected volume\footnote{%
+  Here, the average is taken over to the obtained data for a fixed true state $\varrho_0$.
+}
+, which leads to the notion of strong admissibility~\cite[Def.~7.1]{Joshi_1969_Admissibility}.
+
+% \todods{Take out this whole paragraph?}
+% Another possible notion of optimality, the minimax principle, favors confidence regions that have the smallest expectedvolume for the worst choice of the true parameter~\cite{Kiefer_2012_Introduction}.
+% However, since minimax estimators try to reduce the worst case volume at all costs, they often show a very singular and counter-intuitive behavior -- even for ``regular values'' of the unknown parameter.\\
+
+
+Def.~\ref{def:ortho.admissible} can also be stated for the parameter estimation with physical constraints, i.e.\ when $\varrho_0 \in \States$.
+The question is: Can we obtain admissible confidence regions $\CR^+\subset\States$ for the constrained setting from admissible confidence regions $\CR\subset\HermTrace$ of the unconstrained estimation problem?
+% For the answer, define the following region estimators: $\CR^\cap := \CR\cap\States$, which is the part of $\CR$ belonging to $\States$, and $\CR^{c}=\CR\setminus \CR^{\cap}$, being the compliment of $\CR^{\cap}$ in $\CR$.
+% Obviously $\CR = \CR^{\cap} \cup \CR^{c}$.
+% We shall start our analysis by considering a list of generic scenarios for a given observation $\vec y$:
+% \begin{enumerate}
+%   \item\label{it:ortho.truncation} truncation scenario: the positivity constraint acts only on the boundary of $\States$, provided the boundary is reached. Then $\CR^+(\vec y) = \CR^\cap(\vec y)$, and consequently $\Vol(\CR^+(\vec y)) = \Vol(\CR^\cap(\vec y))$.
+%   \item shrinkage scenario: $\CR^+(\vec y) \subset \CR^\cap(\vec y)$ and, therefore, $\Vol(\CR^+(\vec y)) < \Vol(\CR^\cap(\vec y))$.
+%   \item shift \& deformation scenario: any other case in which $\CR^+(\vec y)$ covers some density matrices beyond $\CR^\cap(\vec y)$, and at the same time $\Vol(\CR^+(\vec y)) < \Vol(\CR^\cap(\vec y))$.
+% \end{enumerate}
+The following Lemma answers this question with a simple geometric construction:
+\begin{lemma}\label{lem:ortho.admissible_truncation}
+  Let $\CR$ denote an admissible confidence region for the unconstrained estimation problem for the parameter $\varrho_0 \in \HermTrace$.
+  Then, $\CR^\cap := \CR\cap\States$ is an admissible confidence region for the constrained problem with $\varrho_0 \in \States$.
+\end{lemma}
+\begin{proof}
+  Under the assumption that $\CR^\cap$ is not admissible, there must exist a ``better'' confidence region $\CR^+$ for the constrained parameter estimation problem.
+  W.l.o.g.\ assume that both $\CR^+$ and $\CR^\cap$ have the same coverage.
+  Therefore, we must have $\Vol(\CR^+(\vec y)) \leq \Vol(\CR^\cap(\vec y))$ for almost all observations $y \in \Reals^m$, and there is a set $Y \subset \Reals^m$ of non-zero measure such that $\Vol(\CR^+(\vec y)) < \Vol(\CR^\cap(\vec y))$ for $\vec y \in Y$.
+  Define a new confidence region for the unconstrained problem
+  \begin{equation}
+    \CR' := \CR^+ \cup \CR^c,
+    \label{eq:ortho.new_region}
+  \end{equation}
+  where $\CR^{c}=\CR\setminus \CR^{\cap}$ denotes the compliment of $\CR^{\cap}$ in $\CR$.
+  Then, $\CR'$ has the given coverage level, since $\CR^+$ provides coverage for $\varrho_0 \in \States$, whereas $\CR^c$ provides coverage for the case $\varrho_0 \in \HermTrace \setminus \States$.
+  Furthermore, we have for almost all $\vec y$
+  \begin{equation}
+    \label{eq:ortho.volumes}
+    \begin{split}
+      \Vol(\CR'(\vec y))
+      &= \Vol(\CR^+(\vec y)) + \Vol(\CR^c(\vec y)) \\
+      &\leq \Vol(\CR^\cap(\vec y)) + \Vol(\CR^c(\vec y)) \\
+      &= \Vol(\CR(\vec y)).
+    \end{split}
+  \end{equation}
+  Finally, strict inequality holds in Eq.~\eqref{eq:ortho.volumes} for all $\vec y \in Y$ due to the assumption on $\CR^+$.
+  However, this would imply $\CR$ not being admissible in contradiction to the assumptions of the Lemma.
+\end{proof}
+
+One criticism raised against the use of the truncated confidence regions is the possibility that they may yield empty realizations and, hence, are considered ``unphysical''~\cite{Feldman_1998_Unified}.
+However, according to the standard definition in Sec.~\ref{sub:intro.error_regions}, a procedure that reports 95\% confidence regions is allowed to give any result 5\% of the time.
+
+Furthermore, a different strategy often adopted for point estimator is to use an unconstrained parametrization for the constrained parameter space.
+A typical example is a coin toss model with bias $p \in [0, 1]$.
+Instead of $p$, the problem can also be parameterized in terms of of log-odds $\log\frac{p}{1 - p}$, which can take any value in $(-\infty,\infty)$.
+Similar, one could use the following parametrization for quantum states guaranteed to give a positive semidefinite, Hermitian matrix with trace 1
+\[
+  \rho(X) = \frac{X \adj X}{\tr X \adj X}
+\]
+with $X \in \mathbb{C}^{d \times d}$.
+Although this parametrization can certainly be advantageous for point estimation, it is unlikely to be helpful for uncertainty quantification:
+While $X$ and $\rho(X)$ carry equivalent information, the size of a region measured in ``$X$-space'' is hardly related to the size of a region in the physical state space.
+This is necessarily so, as any map from an unbounded space onto the compact quantum state space must grossly distort the geometry.
+So, having obtained a ``small confidence region'' in parameter space does not imply that the state has been well-estimated w.r.t.\ any physically relevant metric.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Confidence Regions from Linear Inversion}
+\label{sub:ortho.linear_inversion}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure*}
+  \centering
+  \begin{tikzpicture}[scale=0.85]
+    \begin{scope}[shift={(0,0)},rotate=35]
+      \draw[line width=2](0,0)--(5,0)  (0,-1)--(1.5,-1)  (3,-1)--(5,-1);
+      \draw[dashed, line width=2](0,0)--(-1,0)  (0,-1)--(-1,-1)  (5,0)--(6,0)  (5,-1)--(6,-1);
+      \draw[color=green!30!white,line width=2](1.5,-1)--(3,-1);
+      \draw[dashed, line width=1.5](0,0) arc (90:270:.3cm and .5cm);
+      \draw[dashed, line width=1.5](5,0) arc (90:270:.3cm and .5cm);
+      \draw[line width=2](0,0) arc (90:-90:.3cm and .5cm);
+      \draw[line width=2](5,0) arc (90:-90:.3cm and .5cm);
+      \draw[color=red, line width =2](1.5,-1) parabola bend (2.25,-7/16) (3,-1) ;
+      \draw[color=red, dashed, line width =1.25](.5,-3.5) parabola[bend at end] (2.25,-7/16);
+      \draw[color=red, dashed, line width =1.25](4,-3.5) parabola[bend at end] (2.25,-7/16);
+      \draw[fill=black] (2.05,-.68) circle (1.5pt)  node[anchor=west]{{\large $\estim{{\varrho}}$}};
+      \draw[color=red] (1.2,-2.2)  node[anchor=west]{{\LARGE $\States$}};
+      \draw (1.2,1.4)  node[anchor=west]{{\LARGE $\HermTrace$}};
+      \draw (5.6,-1.2)  node[anchor=west]{{\LARGE $A^{-1}(\CR_{\estim{\vec y}})$}};
+    \end{scope}
+    \begin{scope}[shift={(7,-2.5)}]
+      \draw (0,0) (2,3.5) node[anchor=south]{{\LARGE $A$}} (2,2.5) node[anchor=north]{{\LARGE $A^{-1}$}};
+      \draw[->] (1,3.45) -- (3,3.45);
+      \draw[<-] (1,2.5) -- (3,2.5);
+    \end{scope}
+    \begin{scope}[shift={(10,-2.5)}]
+      \draw[fill=black] (0,0) (2,3) circle (1.5pt) node[anchor=west]{{\large $\estim{\vec{y}}$}};
+      \draw[rotate around={15:(2,3)}] (0,0) (2,3) ellipse (.8 and 1.3);
+      \draw (0,0) (3.5,1.5) node[anchor=south]{{\LARGE $\CR_{\estim{\vec y}}$}};
+      \draw (0,0) (1.5,0) node[anchor=south]{{\LARGE $\mathbb{R}^m$}};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{\label{fig:ortho.geometry}
+    Geometric construction of confidence region for $\estim\varrho$.
+    Quantum states are mapped by a measurement matrix $A$ to the respective quantum expectation values $\vec y$.
+    Conversely, the pre-image of a confidence region $\CR_{\estim{\vec y}}$ under $A$ gives rise to a confidence region for $\estim\varrho$.
+    These may be unbounded if the measurements are not tomographically complete -- a drawback that can be cured by taking into account the physical constraints on quantum states, i.e.\ positivity.
+    }
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+A particularly simple method to transform estimates of measurement data to estimates of quantum states is the method of linear inversion, which we are going to review now:
+First, assume that the \emph{true} but unknown quantum state is represented by a $d\times d$ density matrix $\varrho_0$ and the QST performed by measuring $m\geq d^{2} - 1$ tomographically-complete measurement projectors $E_{1},\ldots,E_{m}$.
+By $y_{k}=\tr\left(E_{k}\varrho_0\right)$, $k=1,\ldots,m$ we denote the (quantum) expectation values of $E_{k}$ for the true state $\varrho_0$.
+Since these relations are linear, we can rewrite them as $\vec{y} = A \vec{\varrho}$, where $\vec{\varrho}$ stands for the quantum state interpreted as a vector and $A$ is the measurement (or design) matrix independent of $\varrho$.
+The desired (pseudo)-inverse of the above relation is
+\begin{equation}
+  \label{eq:ortho.linear_inversion}
+  \vec{\varrho}={\left(A^{T}A\right)}^{-1}A^{T}\vec{y}
+\end{equation}
+and simplifies to $\vec{\varrho}=A^{-1}\vec{y}$ if $m=d^{2} - 1$.
+
+Of course, in an experiment, the expectation values $\vec{y}$ are unknown and can only be approximated by some estimate $\estim{\vec y}$ based on the observed data.
+The linear inversion estimate for the quantum state $\estim{\varrho}$ is then given by Eq.~\eqref{eq:ortho.linear_inversion} with the probabilities $\vec y$ replaced by the empirical frequencies $\estim{\vec y}$.
+However, due to statistical fluctuations the estimated state $\estim{\varrho}$ is not necessarily positive semidefinite~\cite{Knips_2015_How}, which led to the development of estimators enforcing the physical constraints such as the maximum likelihood estimator~\cite{Hradil_2004_3}.
+Although the linear inversion and maximum likelihood estimator solve two distinct problems -- namely the unconstrained and constrained one, respectively -- in certain cases the two are related.
+ More precisely, if the outcomes approximately follow a Gaussian distribution, a fast projection algorithm computes the maximum likelihood estimate from the linear inversion estimate directly~\cite{Smolin_2012_Maximum}.
+
+Here, we take a similar approach.
+First, the simple geometric interpretation of the linear inversion estimator (see Fig.~\ref{fig:ortho.geometry}) allows us to map confidence regions for the expectation values to confidence regions for the state without taking into account the positivity constraint:
+If $\CR_{\estim{\vec y}}$ is a confidence region for $\estim{\vec y}$ with confidence level $\alpha$, then so is its pre-image under the measurement map
+\begin{equation}
+  \label{eq:ortho.linear_confidence}
+  \CR_{\estim{\vec \varrho}} := A^{-1}(\CR_{\estim{\vec y}})
+\end{equation}
+for $\estim{\vec \varrho}$.
+Second, the truncation construction from Sec.~\ref{sub:ortho.optimal} yields an improved confidence region for the problem with quantum constraints taken into account.
+As shown in Lemma~\ref{lem:ortho.admissible_truncation}, this approach yields admissible confidence region provided the original region was admissible.
+
+The same construction can also be carried out for tomographically incomplete measurements, i.e.\ for $m<d^{2}$:
+Since the measurement matrix $A$ is non-invertible in this case, the estimate for the state $\estim{\varrho}$ satisfying $A\estim{\vec\varrho} = \estim{\vec y}$ is not uniquely defined.
+However, under additional structural assumptions, one can single out a unique estimate~\cite{Gross_2010_Quantum,Flammia_2012_Quantum}.
+The singularity of the measurement map $A$ also reflects in the confidence region defined by Eq.~\eqref{eq:ortho.linear_confidence}.
+Even if $\CR_{\estim{\vec y}}$ is a bounded region, the confidence region for the state $\CR_{\estim{\vec \varrho}}$ extends to infinity in the directions ``unobserved by $A$''.
+In both cases, the tomographically complete and incomplete, we can use the intersection with the psd states to reduce the the region's size while not sacrificing coverage.
+This improvement is especially far-reaching in the latter case, where it turns an unbounded region to a bounded one just by taking into account the physical constraints.\\
+
+
+Of course, the question is whether we can somehow characterize the truncated confidence region $\CR_{\estim{\vec \varrho}}^\cap := A^{-1}(\CR_{\estim{\vec y}}) \cap \States$ computationally efficiently.
+Since our goal is to show that this is an intractable problem exclusively due to the quantum constraints -- and not because of the complexity of high-dimensional statistics in general -- we are going to make the simplifying assumption that the measured frequencies are approximately Gaussian distributed.
+Furthermore, we are going to focus on a class of confidence regions that are efficiently characterizable in the unconstrained setting, namely Gaussian confidence ellipsoids or, more precisely, ellipsoidal balls of the form
+\begin{equation}
+  \CR_{\estim{\vec y}} = \left\{ \vec y \in \Reals^m\colon  {\left(\vec{y}-\estim{\vec{y}}\right)}^T B\left(\vec{y}-\estim{\vec{y}}\right) \leq 1  \right\}
+  \label{eq:ortho.confelip}
+\end{equation}
+centered at the the empirical frequencies  $\estim{\vec y}$.
+The $m\times m$, symmetric, positive semidefinite matrix $B$ completely specifies the ellipsoidal shape of this confidence region.
+These are the natural generalizations of the well-known $2\sigma$ confidence intervals to multivariate Gaussian distributions.
+
+However, in the unconstrained setting, the ellipsoidal construction~\eqref{eq:ortho.confelip} is known to be admissible only for $m=\left\{ 1,2\right\}$~\cite{Joshi_1969_Admissibility}, while it is not admissible for $m\geq3$~\cite{Joshi_1967_Inadmissibility} due to Stein's phenomenon~\cite{Stein_1956_Inadmissibility}.
+Smaller confidence ellipsoids with the same coverage can be obtained by shifting the center slightly~\cite{Tseng_1997_Good,Hwang_1982_Minimax}.
+Furthermore, other constructions similar to an egg~\cite{Shinozaki_????_Improved} or the non-convex Pascal lima\c{c}on~\cite{Brown_1995_Optimal} are known to outperform the standard ellipsoids.
+Nevertheless, non of these constructions is known to be optimal and, to the best of the author's knowledge, no optimal confidence region for multivariate Gaussians in higher dimensions is known.
+
+But, since our discussion is focused on the question how the physical psd constraints can be used to improve confidence regions, we are still going to use the ellipsoids~\eqref{eq:ortho.confelip} as a tractable example:
+As we will prove later, it is impossible to characterize the truncated ellipsoids efficiently although they are fully described by a few parameters, namely $\estim{\vec y}$ and $B$ in the unconstrained case.
+In other words, we show that there exists a trade-off between computational and statistical efficiency for the problem of determining ``good'' confidence regions in QST.\\
+
+
+
+In the remainder of this section, we are going to discuss a useful parametrization for the aforementioned ellipsoids~\eqref{eq:ortho.confelip}.
+To this end we use the fact that any $d\times d$ Hermitian matrix can be expanded in a basis formed by the identity $\1$ and $d^{2}-1$ traceless Hermitian matrices $\sigma_{i}$, $i=1,\ldots,d^{2}-1$, normalized according to $\textrm{Tr}(\sigma_{i}\sigma_{j})=2\delta_{ij}$.
+With the symbols $\sigma_{i}$ we associate here the most common choice of the basis elements~\cite{Kimura_2003_Bloch}  --  explicitly provided in~\ref{sec:parametrisation} -- while any other $\sigma_{i}'=\sum_{j}O_{ji}\sigma_{j}$, given in terms of an orthogonal $d^{2}-1$ dimensional matrix $O$, are valid alternatives.
+For $d=2$ the choice stated in~\ref{sec:parametrisation} is simply the Bloch basis of Pauli matrices: $\sigma_{1}\equiv\sigma_{x}$, $\sigma_{2}\equiv\sigma_{y}$ and $\sigma_{3}\equiv\sigma_{z}$.
+In higher dimensions the matrices $\sigma_{i}$ maintain the Bloch basis structure:
+Let
+\begin{equation}
+  \label{eq:ortho.x_yz_index}
+  i_{d}=d(d-1)/2,
+\end{equation}
+then their construction mimics $\sigma_{x}$ for $1\leq i\leq i_{d}$, $\sigma_{y}$ for $i_{d}+1\leq i\leq2i_{d}$ and $\sigma_{z}$ for $2i_{d}+1\leq i\leq d^{2}-1$.
+Therefore, we are going to refer to the $\sigma_{i}$ as (generalized) Bloch representation.
+
+We are in position to provide the first result of this paper, falling into the category of geometry of quantum states:
+\begin{theorem}\label{thm:ortho.ellipsoids}
+  For the tomographically complete case $m \geq d^2 - 1$, the pre-image under the measurement matrix of any confidence ellipsoid of the form~\eqref{eq:ortho.confelip} can be represented as
+  \begin{equation}
+    \CR = \left\{ \estim{\varrho} + \sum_{i}R_{i}u_{i}\sigma_{i}'\colon \vec{u}^{T}\vec{u}\leq1 \right\},
+    \label{eq:ortho.ellipsoid}
+  \end{equation}
+  where $\estim{\varrho}$ is the linear inversion estimator, that is a Hermitian matrix with $\tr \estim{\varrho} = 1$, and the $R_{i}>0$ ($i=1,\ldots,d^{2}-1$) are the ellipsoid's radii in the directions given by $\sigma_{i}'=\sum_{j}O_{ji}\sigma_{j}$, respectively.
+  The orthogonal matrix $O\in\mathcal{O}\left(d^{2}-1\right)$ furnishes any orientation of the semi-major axes of the ellipsoid.
+\end{theorem}
+\begin{proof}
+  Note that whenever the sum has no limits specified (like in Eq.~\eqref{eq:ortho.ellipsoid}), by default it extends from $1$ to $d^{2}-1$.
+  Let us parameterize both $\varrho \in \CR$ and $\estim{\varrho}$ in the Bloch representation with coordinates $w_{i}$ and $\estim{w}_i$, respectively:
+  \begin{equation}
+    \varrho=\frac{\1}{d}+\sum_{i}w_{i}\sigma_{i},\qquad\estim{\varrho}=\frac{\1}{d}+\sum_{i}\estim{w}_{i}\sigma_{i}.
+  \end{equation}
+  Since $\vec{y}=\textrm{Tr}\left(\vec{E}\varrho\right)$, and $\estim{\vec{y}}=\textrm{Tr}\left(\vec{E}\estim{\varrho}\right)$ we find
+  \begin{equation}
+    \vec{y}-\estim{\vec{y}}=Q\left(\vec{w}-\estim{\vec{w}}\right),
+  \end{equation}
+  where $Q$ is a $m\times(d^{2}-1)$ matrix with elements $Q_{ki}=\textrm{Tr}\left(E_{k}\sigma_{i}\right)$.
+  In other words, the Bloch coordinates satisfy the same ellipsoid equation (\ref{eq:ortho.confelip}) as the measurement outcomes with $B$ substituted by the $d^{2}-1$ dimensional square matrix $B'=Q^{T}BQ$.
+  Since $B$ is symmetric and positive definite, the same holds for $B'$.
+  Hence, $B'$ can be diagonalized to the form $B'=ODO^{T}$, where $O$ is some orthogonal $d^{2}-1$ dimensional matrix and $D=\textrm{diag}(R_{1}^{-2},\ldots,R_{d^{2}-1}^{-2})$ is the diagonal matrix with positive entries.
+  If we rescale $\vec{w}-\estim{\vec{w}}=OD^{-1/2}\vec{u}$, then $\vec{u}^{T}\vec{u}\leq1$ and
+  \begin{equation}
+    \varrho-\estim{\varrho}=\sum_{j}\left(\sum_{i}O_{ji}R_{i}u_{i}\right)\sigma_{j}.
+  \end{equation}
+  In the last step of the proof we simply change the orientation of the basis to $\sigma_{i}'=\sum_{j}O_{ji}\sigma_{j}$.
+\end{proof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Computational Intractability of Truncated Ellipsoids}
+\label{sub:ortho.hard}
+
+Guided by the discussion from the previous section we now study the confidence region for the linear inversion QST defined as
+\begin{equation}
+  \label{eq:ortho.truncated_ellipsoid}
+  \CR^\cap := \CR \cap \States = A^{-1}(\CR_{\estim y}) \cap \States,
+\end{equation}
+where $\CR$ is given by the ellipsoid~\eqref{eq:ortho.ellipsoid} for the tomographically complete case $m=d^2 - 1$.
+% By Thm.~\ref{thm:ortho.ellipsoids}, the untruncated region $\CR$ can be easily characterized:
+% It is an ellipsoid centered around $\estim\varrho$, where $\estim{\vec\varrho} = A^{-1} \estim{\vec y}$, and its characteristic properties such as diameter, volume, etc.\ can be readily expressed in terms of the $R_i$.
+In this section, we are going to show that in contrast to the full ellipsoid $\CR$, the truncated ellipsoid $\CR^\cap$ cannot be characterized computationally efficiently.
+This shows, for example, in the fact that there is no efficient algorithm to answer the following question:
+How much does taking into account the physical constraints reduce the size of the confidence region on a particular set of observed data?
+Note that we will not be concerned with properties of the region estimator but with a single instance corresponding to a fixed set of data.
+By abuse of notation, we are going to refer to these instances as $\CR$ and $\CR^\cap$ as well.
+
+% After computing the ellipsoidal estimator $\CR$ for a fixed experimental outcome, we could have two situations: precisely, we s
+% \begin{enumerate}
+%   \item If $\CR\subset\States+d$, then $\CR$ and $\CR^\cap$ are identical and, therefore, have the same volume, diameter, etc.
+%   \item If $\CR$ covers Hermitian matrices (necessarily the set of non-zero measure) beyond $\States$, then $\CR^\cap$ has strictly smaller volume than $\CR$.
+%   Note that the diameter may be unaffected.
+% \end{enumerate}
+% It becomes evident that while computing the volume of $\CR^\cap$ one also provides an answer to the following question: \emph{%
+%   Is the ellipsoid~\eqref{eq:ortho.ellipsoid} fully contained in the set $\States$ of positive semi-definite density matrices?
+% }
+% Our goal is to show that there is no computationally efficient algorithm deciding this problem.
+
+More precisely, we are concerned with the question if for a fixed ellipsoid $\CR$ there is any reduction in size due to constraints in Eq.~\eqref{eq:ortho.truncated_ellipsoid} or if $\CR$ is fully contained in the set of psd states.
+For the precise formulation, we use the representation of ellipsoids from Thm.~\ref{thm:ortho.ellipsoids}.
+\begin{problem}\label{prob:ortho.ellpos}
+  Given the center $\estim\varrho$, radii $R_i$, and a basis $\sigma'_i$ for $\HermTrace$.
+  Is there a $\vec u \in \Reals^{d^2 - 1}$ with $\vec{u}^{T}\vec{u} \leq 1$ such that
+  \begin{equation}
+    \estim{\varrho} + \sum_{i}R_{i}u_{i}\sigma_{i}' \in \HermTrace \setminus \States?
+  \end{equation}
+\end{problem}
+The main result of this section is the following statement on the computational complexity of the aforementioned problem.
+\begin{theorem}\label{thm:ortho.hard}
+  Problem~\ref{prob:ortho.ellpos} is NP-hard.
+\end{theorem}
+As a consequence of Thm.~\ref{thm:ortho.hard}, the problem of ``characterizing'' the truncated confidence ellipsoids $\CR_{\estim{\vec \varrho}}^\cap := A^{-1}(\CR_{\estim{\vec y}}) \cap \States$ defined in Sec.~\ref{sub:ortho.linear_inversion} computationally is hard in general.
+By ``characterizing'' we mean computing any property of $\CR_{\estim{\vec \varrho}}^\cap$ that is sensitive to whether the truncation influences the original ellipsoid or not, e.g.\ computing the volume of the truncated ellipsoid or its distance to boundary of the quantum state space with high enough precision.
+Note, however, that there are also properties such as the diameter that might be unaffected by the truncation in certain special cases and, hence, their computational complexity cannot be classified using Thm.~\ref{thm:ortho.hard}.
+Therefore, the more general problem of computing truncated confidence regions (without the Gaussian approximation) is hard as well since it subsumes Prob.~\ref{prob:ortho.ellpos}.
+
+Another consequence of the theorem concerns confidence regions for the constrained problem, which output ``good regions'' for the unconstrained problem when the constraints are not active:
+More precisely, it is extremely natural to use likelihood ratio-based ellipsoidal confidence regions for unconstrained Gaussian data although they cannot be optimal due to Stein's phenomenon.
+So it is natural to require any quantum region estimator to behave this way in the particular case that the likelihood function is concentrated well away from the boundary of state space.
+What Thm.~\ref{thm:ortho.hard} shows is that any region estimator subject to this criterion must necessarily solve NP-hard problems.\\
+
+
+Finally, the remainder of this section is dedicated to give some insight to the proof of the main theorem and to discuss a tractable solvable special case.
+The proof of Thm.~\ref{thm:ortho.hard} is inspired by a similar result due to Ben-Tal and Nemirovski~\cite{Tal_1998_Robust} in robust optimization theory, who showed that the following problem is NP-complete.
+\begin{problem}\label{prob:ortho.bental}
+  Given $k$ $d\times d$ symmetric matrices $A^{1},\ldots,A^{k}$, check whether there is a $\vec u \in \Reals^k$ with $\vec{u}^{T}\vec{u} \leq 1$ such that $\sum_{i=1}^{k}u_{i}A^{i} > \1_{d}$.
+\end{problem}
+Although the two problems are strongly related, the intractability result~\cite{Tal_1998_Robust} cannot be applied directly to our tomography related problem due to the following crucial difference:
+The proof of NP-completeness of Prob.~\ref{prob:ortho.bental} deals with the case $k=d(d-1)/2+1$ and a set of real symmetric matrices ${(A_k)}_k$, which are not necessarily pairwise orthogonal to each other~\cite[Sec.~3.4.1]{Tal_1998_Robust}.
+However, in Prob.~\ref{prob:ortho.ellpos}, the $\sigma'_i$ ($i=1,\ldots,d^2 - 1)$ form an orthogonal basis of the space of complex Hermitian, traceless matrices.
+Hence, we need to adapt the original proof strategy to deal with the restrictions imposed by our tomography related problem.
+
+% Note that the intractability result~\cite{Tal_1998_Robust} does not directly apply the Problem~\ref{prob:ortho.bental}.
+% Although our proof uses the same basic idea as the stated result, it had to be adjusted to the geometrical picture of the space of quantum states.
+% The wider freedom of the above problem refers to the fact that both parameters $k$ and $l$, together with all $k$ matrices $\left\{ A^{i}\right\} $ are treated as an input.
+% In other words, in such a general formulation, it counter-intuitively might be easier to find the hard instances of the problem, as one can freely fix all the degrees of freedom.
+% For instance, the desired reduction to an NP-complete problem was shown for $k=l(l-1)/2+1$ and a set of non-orthogonal matrices $(A_k)_k$~\cite[Sec.~3.4.1]{Tal_1998_Robust}.
+% Let us emphasize the three main limitations of our tomography-related problem in comparison with the general result cited above:
+% \begin{enumerate}
+%   \item We deal with complex Hermitian matrices and fixed dimensions $l=d$, $k=d^{2}-1$.
+%   \item Our matrices $\left\{ A^{i}\right\}$ are fixed at $\left\{ \sigma_{i}\right\} $, i.e.~they form the generalized Bloch basis of orthogonal matrices.
+%   \item The crucial part of the problem by Ben-Tal and Nemirovski can be reformulated as: \emph{do all the matrices $\1_{l}+\sum_{i=1}^{k}u_{i}A^{i}$ belong to $\States$ for $\forall_{u}\vec{u}^{T}\vec{u}\leq1$?} In our case the role of $\1_{l}$ is played by the estimate state $\estim{\varrho}_{0}$
+% \end{enumerate}
+% The last point above and the problem of deciding whether a confidence ellipsoid is fully contained in the set of psd states are related by Thm.~\ref{thm:ortho.ellipsoids}.
+% Therefore, the precise formulation of the latter problem reads
+% A negative answer to this problem shows that the corresponding ellipsoid is fully contained within the psd states.
+
+
+Let us start the outline of the proof of Thm.~\ref{thm:ortho.hard} with a simplified example, when the ellipsoid in question is a ball, i.e.\ when $R_{i}=R$ for all $i=1,\ldots,d^{2}-1$.
+With no loss of generality, we can assume $\sigma'_i = \sigma_i$.
+The following Lemma, which is proven in~\ref{sec:spheres}, provides an easily checkable, necessary, and sufficient condition to decide Prob~\ref{prob:ortho.ellpos} for this special case.
+\begin{lemma}\label{lem:ortho.spheres}
+  Let $\CR$ denote a ball parameterized according to Thm.~\ref{thm:ortho.ellipsoids} with with radii $R_i=R$ and midpoint $\estim{\varrho}$.
+  $\CR$ is fully contained in the set of psd density matrices if and only if
+  \begin{equation}
+    R\leq\sqrt{\frac{d}{2\left(d-1\right)}} \, \operatorname{mineig} \estim{\varrho},
+  \end{equation}
+  where $\operatorname{mineig}\estim{\varrho}$ denotes the smallest eigenvalue of $\estim{\varrho}$.
+\end{lemma}
+The statement is a straightforward but interesting extension of the known result that the largest ball centered at the completely mixed state and fully contained in the set of psd density matrices has radius $R_{\mathrm{max}}=\sqrt{\frac{1}{2d\left(d-1\right)}}$.
+Intuitively, when the center of the ball is moved away from the completely mixed state, the allowed radii become smaller.
+This correction happens to be quantified by the smallest eigenvalue of the new center.
+In conclusions, spherical ellipsoids do not constitute hard instances of Problem~\ref{prob:ortho.ellpos} provided that the minimal eigenvalue of $\estim\varrho$ can be computed efficiently with high enough accuracy.
+
+However, it turns out that a slightly more complicated setting is already enough to proof the computational intractability.
+The ellipsoids under consideration still have their semi-major axes aligned with the generalized Bloch basis, that is we assume $\sigma'_i = \sigma_i$.
+The only change compared to the previous setting is the choice of radii.
+We consider the same radius $R_{1}$ for all directions generalizing the $x$-direction to higher dimensions and the distinct radius $R_{2}$ for the remaining directions:
+\begin{equation}
+  \label{eq:ortho.subclass}
+  \begin{split}
+    R_{i}=R_{1} &\quad i=1,\ldots,i_{d}\\
+    R_{i}=R_{2} &\quad i=i_{d}+1,\ldots,d^{2}-1.
+  \end{split}
+\end{equation}
+Recall $i_d$ defined in Eq.~\eqref{eq:ortho.x_yz_index}.
+
+Now, in order to prove the computational intractability of Problem~\ref{prob:ortho.ellpos}, we use a reduction from the \emph{balanced sum} problem, which is known to be NP-complete.
+\begin{problem}\label{prob:ellpos.balanced_sum}
+  Given a vector $\vec a \in \mathbb{N}^d$, decide whether there exists a vector $\vec \psi$ with
+  \begin{equation}
+    \forall{k}\:\psi_{k}\in\left\{ -1,1\right\} \;\textrm{ and }\quad \vec a \cdot \vec\psi=0.
+    \label{eq:ellpos.partition_vector}
+  \end{equation}
+\end{problem}
+In case there is such a vector $\vec \psi$ one says that the instance $\vec a$ allows for a balanced sum partition because the sum of components of $\vec a$ labeled by $\psi_i = 1$ is equal to the sum of components $a_i$ labeled by $\psi_i = -1$.
+The main technical difficulty is now to identify the values of $R_1$ and $R_2$ as well as $\estim{\rho}$ depending on an instance of the balanced sum problem $\vec a$ such that the corresponding ellipsoid $\CR$ given by Thm.~\ref{thm:ortho.ellipsoids} contains an element with negative eigenvalues if and only if $\vec a$ has a balanced sum partition.
+For the details, please see~\ref{sec:ellpos}.
+
+% Looking from tomographic perspective, this result shows how complex the optimal error estimation happens to be, when one deals with quantum states instead of a bunch of unconstrained parameters.
+% From the point of view of orthodox statistic it is thus fully legitimate not to aim for a general-purpose, efficient routine able to output an optimal confidence region and, as a consequence, allow for approximations.
+% This conclusion, however, would not be practically meaningful if one could bypass the limitations of Theorem \ref{thm:ortho.hard} with the help of Bayesian tools.
+% In the following section we will show that the intractability result has a universal flavor, and while looking for optimal Bayesian credibility regions one is back in Problem \ref{prob:ellpos}.
