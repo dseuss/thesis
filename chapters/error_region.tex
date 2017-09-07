@@ -94,6 +94,23 @@ More generally, smaller regions should be preferred since they convey more confi
 Therefore, measures of size such as (expected) volume or diameter are commonly used as risk functions for region estimators.
 This leads to similar definitions as in \cref{def:frequentist.optimality_conditions} for confidence regions with the additional constraint that \cref{eq:frequentist.coverage} has to be fulfilled.
 
+Since it is crucial for the discussion of confidence regions under constraints, let us explicitly state the following the notion of optimality from~\cite[Def. 2.2]{Joshi_1969_Admissibility}.
+Note that in contrast to the previous discussion, it uses \quotes{pointwise volume} as a loss function.
+\begin{definition}
+  \label{def:frequentist.admissible}
+  A confidence region $\CR$ for the parameter estimation of $\theta \in \Omega$ is called (weakly) \emph{admissible} if there is no other confidence region $\CR'$ that fulfils
+  \begin{enumerate}
+    \item(equal or smaller volume) $\Vol(\CR'(\vec x)) \le \Vol(\CR(\vec x))$ for almost all observations $\vec x$.
+    \item(same or better coverage) $\Prob(\CR' \owns \theta) \ge \Prob(\CR \owns \theta)$ for all $\theta \in \Omega$
+    \item(strictly better) strict inequality holds for one $\theta \in \Omega$ in (ii) or on a set of positive measure in (i).
+  \end{enumerate}
+\end{definition}
+In words, $\CR$ is admissible if there is no other confidence region $\CR'$ that performs at least as good as $\CR$ and strictly better for some non-negligible settings.
+The conditions in Def.~\ref{def:frequentist.admissible} are stated only for ``almost all'' $\vec x$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
+A different approach is to state condition (i) in terms of the expected volume with the average taken over to the data $\vec x$ for a fixed true parameter $\theta$.
+This definition of strong admissibility~\cite[Def.~7.1]{Joshi_1969_Admissibility} is closely related to the definition of admissibility for point estimators in \cref{def:frequentist.optimality_conditions}.
+
+
 \todo{Today: Asymptotic optimal, adaptive, ...}
 
 
@@ -177,80 +194,58 @@ Although in the following we deal with MVCRs w.r.t.\ a geometric notion of volum
 \todo{Objective vs subjective Bayesian}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction to Complexity Theory}
+\label{sec:intro.complexity}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Frequentist Confidence Regions}
 \label{sec:error.frequentist}
 
 In this section we are going to present the first major result of our work~\cite{Suess_2016_Error} concerned with Frequentist confidence regions in QSE.
 Optimal confidence regions for high-dimensional parameter estimation problems in are quite intricate in general even without additional constraints.
-The
-re are only few elementary settings, where optimal error regions are known and easily characterized.
+There are only few elementary settings, where optimal error regions are known and easily characterized.
 
 Since the goal of this work is to demonstrate that quantum shape constraints severely complicate even ``classically'' simple confidence regions, in the further discussion we restrict the discussion to a simplified setting:
 We focus on confidence ellipsoids for Gaussian distributions, which are one of the few easily characterizable examples.
 % FIXME REALLY?
 As discussed in \cref{sub:intro.frequentist}, Gaussian distributions arise in the limit of many measurements due to local asymptotic normality.
-In this section we show, that even characterizing these highly simplifying ellipsoids with the quantum constraints taken into account constitutes a hard computational problem.
-On the other hand, as indicated in \cref{???}, these additional constraints may help to reduce the uncertainty tremendously.
-Therefore, our work can be interpreted a trade-off between computational efficiency and statistical optimality in QSE.
+In this section we show that even characterizing these highly simplifying ellipsoids with the quantum constraints taken into account constitutes a hard computational problem.
+This simplification is motivated by the goal to show that the computational intractability exclusively stems from the quantum constraints and that it is not caused by difficulties of high-dimensional statistics in general.
+Furthermore, any less restrictive formulation encompassing this simplified setting must be at least as hard to solve.
+
+In conclusion, although exploiting the physical constraints may help to reduce the uncertainty tremendously as shown in \cref{FIXME}, doing so in an optimal way is computationally intractable in general.
+Therefore, our work can be interpreted as a trade-off between computational efficiency and statistical optimality in QSE.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Optimal confidence regions for quantum states}
 \label{sub:ortho.optimal}
 
-As already indicated in Sec.~\ref{sub:intro.positivity}, the additional information that the true quantum state $\varrho_0$ must belong to the set of positive semidefinite matrices $of this work \States \subset \HermTrace$ can be exploited to possibly improve any confidence region for QST.
-This is especially clear for notions of optimality with a loss function stated in terms of volume\footnote{%
-  Throughout this work, the volume is taken with respect to the flat Hilbert-Schmidt measure on $\HermTrace$.
-}
-$\Vol(\cdot)$, as we will show in this section.
-
+% FIXME
+As already indicated in \cref{FIXME}, the additional information that the true quantum state $\varrho_0$ must belong to the set of positive semi-definite matrices $\States \subset \HermTrace$ can be exploited to possibly improve any confidence region for QSE.
+This is especially clear for notions of optimality with a loss function stated in terms of volume $\Vol(\cdot)$, as we will show in this section.
+\todo{Which definition of volume? Should be independent. Maybe proof that truncated voluem can't be double exponentially small?}
 We consider an especially simple procedure to take the positivity constraints into account, namely truncating all non-positive matrices from tractable confidence regions for the unconstrained problem.
-This approach is mainly motivated by the goal to show that the computational intractability exclusively stems from the quantum constraints and is not caused by difficulties of high-dimensional statistics in general.
-Furthermore, we prove in Lemma~\ref{lem:ortho.admissible_truncation} that some notions of optimality, e.g.\ admissibility, are preserved under truncation.
-In other words, there are notions of optimality such that truncation of an optimal confidence region for the unconstrained problem gives rise to an optimal region for the constrained one.\\
 
-%Note that whenever our discussion is not conceptually restricted to $d$-dimensional quantum states (what happens in the current subsection), we omit the subscript $d$.
-%The set  $\HermTrace$ can be as well understood as a general parameter space with $\States$ playing the role of its subset obtained by imposing certain constraints (such as positivity).
-%Consequently, $\varrho_0$ can be understood in a more abstract way as a parameter belonging to $\HermTrace$.
-
-First, let us introduce the notion of admissibility as given by~\cite[Def. 2.2]{Joshi_1969_Admissibility}.
-\begin{definition}\label{def:ortho.admissible}
-  A confidence region $\CR$ for the parameter estimation of $\varrho_0 \in \HermTrace$ is called (weakly) \emph{admissible} if there is no other confidence region $\CR'$ that fulfills
-  \begin{enumerate}
-    \item(equal or smaller volume) $\Vol(\CR'(\vec y)) \le \Vol(\CR(\vec y))$ for almost all observations $y \in \Reals^m$
-    \item(same or better coverage) $\Prob(\CR' \owns \varrho_0) \ge \Prob(\CR \owns \varrho_0)$ for all $\varrho_0 \in \HermTrace$
-    \item(strictly better) strict inequality holds for one $\varrho_0 \in \HermTrace$ in (ii) or on a set of positive measure in (i).
-  \end{enumerate}
-\end{definition}
-In words, $\CR$ is admissible if there is no other confidence region $\CR'$ that performs at least as good as $\CR$ and strictly better for some settings.
-The conditions in Def.~\ref{def:ortho.admissible} are stated only for ``almost all'' $\vec y$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
-A different approach is to state condition (i) in terms of the expected volume\footnote{%
-  Here, the average is taken over to the obtained data for a fixed true state $\varrho_0$.
-}
-, which leads to the notion of strong admissibility~\cite[Def.~7.1]{Joshi_1969_Admissibility}.
-
-% \todods{Take out this whole paragraph?}
-% Another possible notion of optimality, the minimax principle, favors confidence regions that have the smallest expectedvolume for the worst choice of the true parameter~\cite{Kiefer_2012_Introduction}.
-% However, since minimax estimators try to reduce the worst case volume at all costs, they often show a very singular and counter-intuitive behavior -- even for ``regular values'' of the unknown parameter.\\
+Although such an ad-hoc approach does not seem to exploit the constraints in an optimal way, it has multiple advantages as we discuss in more detail in \cref{sub:ortho.hard}:
+First and foremost, some notions of optimality, e.g.\ admissibility, are preserved under truncation as shown in \cref{lem:ortho.admissible_truncation}.
+In other words, there are notions of optimality such that truncation of an optimal confidence region for the unconstrained problem gives rise to an optimal region for the constrained one.
+Furthermore, as already mentioned in the introduction, our goal is to show that the intractability arises purely due to the quantum constraints.
+Therefore, we start from a tractable solution in the unconstrained setting and show that even this simple approach of taking the constraints into account leads to an computationally intractable problem.
+Finally, the truncation approach simplifies the discussion but as we discuss in \cref{sub:ortho.hard}, our results apply to a much larger class of confidence regions such as likelihood ratio based Gaussian ellipsoids.\\
 
 
-Def.~\ref{def:ortho.admissible} can also be stated for the parameter estimation with physical constraints, i.e.\ when $\varrho_0 \in \States$.
-The question is: Can we obtain admissible confidence regions $\CR^+\subset\States$ for the constrained setting from admissible confidence regions $\CR\subset\HermTrace$ of the unconstrained estimation problem?
-% For the answer, define the following region estimators: $\CR^\cap := \CR\cap\States$, which is the part of $\CR$ belonging to $\States$, and $\CR^{c}=\CR\setminus \CR^{\cap}$, being the compliment of $\CR^{\cap}$ in $\CR$.
-% Obviously $\CR = \CR^{\cap} \cup \CR^{c}$.
-% We shall start our analysis by considering a list of generic scenarios for a given observation $\vec y$:
-% \begin{enumerate}
-%   \item\label{it:ortho.truncation} truncation scenario: the positivity constraint acts only on the boundary of $\States$, provided the boundary is reached. Then $\CR^+(\vec y) = \CR^\cap(\vec y)$, and consequently $\Vol(\CR^+(\vec y)) = \Vol(\CR^\cap(\vec y))$.
-%   \item shrinkage scenario: $\CR^+(\vec y) \subset \CR^\cap(\vec y)$ and, therefore, $\Vol(\CR^+(\vec y)) < \Vol(\CR^\cap(\vec y))$.
-%   \item shift \& deformation scenario: any other case in which $\CR^+(\vec y)$ covers some density matrices beyond $\CR^\cap(\vec y)$, and at the same time $\Vol(\CR^+(\vec y)) < \Vol(\CR^\cap(\vec y))$.
-% \end{enumerate}
-The following Lemma answers this question with a simple geometric construction:
+We start by showing that the truncation of confidence regions preservers admissibility.
+Notice that \cref{def:frequentist.admissible} can be stated for both, the unconstrained estimation problem $\rho_0 \in \HermTrace$ as well as the constrained estimation problem $\rho_0 \in \States$.
+The question is: How are admissible confidence regions for the constrained setting $\CR^+\subset\States$ related to admissible confidence regions for the unconstrained estimation problem $\CR\subset\HermTrace$?
 \begin{lemma}\label{lem:ortho.admissible_truncation}
   Let $\CR$ denote an admissible confidence region for the unconstrained estimation problem for the parameter $\varrho_0 \in \HermTrace$.
-  Then, $\CR^\cap := \CR\cap\States$ is an admissible confidence region for the constrained problem with $\varrho_0 \in \States$.
+  Then, the truncated region estimator $\CR^\cap := \CR\cap\States$ is an admissible confidence region for the constrained problem with $\varrho_0 \in \States$.
 \end{lemma}
 \begin{proof}
-  Under the assumption that $\CR^\cap$ is not admissible, there must exist a ``better'' confidence region $\CR^+$ for the constrained parameter estimation problem.
+  Under the assumption that $\CR^\cap$ is not admissible, there must exist a better confidence region $\CR^+$ for the constrained parameter estimation problem.
   W.l.o.g.\ assume that both $\CR^+$ and $\CR^\cap$ have the same coverage.
   Therefore, we must have $\Vol(\CR^+(\vec y)) \leq \Vol(\CR^\cap(\vec y))$ for almost all observations $y \in \Reals^m$, and there is a set $Y \subset \Reals^m$ of non-zero measure such that $\Vol(\CR^+(\vec y)) < \Vol(\CR^\cap(\vec y))$ for $\vec y \in Y$.
   Define a new confidence region for the unconstrained problem
@@ -273,22 +268,25 @@ The following Lemma answers this question with a simple geometric construction:
   Finally, strict inequality holds in Eq.~\eqref{eq:ortho.volumes} for all $\vec y \in Y$ due to the assumption on $\CR^+$.
   However, this would imply $\CR$ not being admissible in contradiction to the assumptions of the Lemma.
 \end{proof}
+A similar procedure of computing optimal estimators for constrained problems by modifying an optimal estimator estimator for the unconstrained problem was introduced for the maximum likelihood estimator in~\cite{Smolin_2012_Maximum}.\\
 
-One criticism raised against the use of the truncated confidence regions is the possibility that they may yield empty realizations and, hence, are considered ``unphysical''~\cite{Feldman_1998_Unified}.
-However, according to the standard definition in Sec.~\ref{sub:intro.error_regions}, a procedure that reports 95\% confidence regions is allowed to give any result 5\% of the time.
+
+
+One criticism raised against the use of the truncated confidence regions is the possibility that they may yield empty realizations and, hence, are considered \quotes{unphysical}~\cite{Feldman_1998_Unified}.
+However, according to the standard definition in \cref{sub:intro.frequentist}, a procedure that reports 95\% confidence regions is allowed to give any result 5\% of the time.
 
 Furthermore, a different strategy often adopted for point estimator is to use an unconstrained parametrization for the constrained parameter space.
 A typical example is a coin toss model with bias $p \in [0, 1]$.
-Instead of $p$, the problem can also be parameterized in terms of of log-odds $\log\frac{p}{1 - p}$, which can take any value in $(-\infty,\infty)$.
+Instead of $p$, the problem can also be parametrized in terms of of log-odds $\log\frac{p}{1 - p}$, which can take any value in $(-\infty,\infty)$.
 Similar, one could use the following parametrization for quantum states guaranteed to give a positive semidefinite, Hermitian matrix with trace 1
 \[
   \rho(X) = \frac{X \adj X}{\tr X \adj X}
 \]
 with $X \in \mathbb{C}^{d \times d}$.
 Although this parametrization can certainly be advantageous for point estimation, it is unlikely to be helpful for uncertainty quantification:
-While $X$ and $\rho(X)$ carry equivalent information, the size of a region measured in ``$X$-space'' is hardly related to the size of a region in the physical state space.
+While $X$ and $\rho(X)$ carry equivalent information, the size of a region measured in \quotes{$X$-space} is hardly related to the size of a region in the physical state space unless one chooses highly unnatural volume measures.
 This is necessarily so, as any map from an unbounded space onto the compact quantum state space must grossly distort the geometry.
-So, having obtained a ``small confidence region'' in parameter space does not imply that the state has been well-estimated w.r.t.\ any physically relevant metric.
+So, having obtained a \quotes{small confidence region} in parameter space does not imply that the state has been well-estimated w.r.t.\ any physically relevant metric.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Confidence Regions from Linear Inversion}
