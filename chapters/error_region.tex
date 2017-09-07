@@ -4,6 +4,22 @@
 
 % postivity of quantum states for error regions
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction to Statistics}
 \label{sec:error.intro}
@@ -196,6 +212,24 @@ Although in the following we deal with MVCRs w.r.t.\ a geometric notion of volum
 \todo{Objective vs subjective Bayesian}
 
 
+
+
+
+
+d
+
+
+
+
+
+
+
+
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction to Complexity Theory}
 \label{sec:intro.complexity}
@@ -211,6 +245,24 @@ Although in the following we deal with MVCRs w.r.t.\ a geometric notion of volum
   \]
 \end{problem}
 In case there is such a vector $\vec \psi$ one says that the instance $\vec a$ allows for a balanced sum partition because the sum of components of $\vec a$ labeled by $\psi_i = 1$ is equal to the sum of components $a_i$ labeled by $\psi_i = -1$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -552,3 +604,271 @@ Recall the definition of $i_d$ \cref{eq:ortho.x_yz_index}.
 To prove the hardness of \cref{prob:ortho.ellpos}, we use a reduction from the balanced sum problem~\ref{prob:ellpos.balanced_sum}.
 The main technical difficulty is to identify the values of $R_1$ and $R_2$ as well as $\estim{\rho}$ depending on an instance of the balanced sum problem $\vec a$ such that the corresponding ellipsoid $\CR$ given by \cref{thm:ortho.ellipsoids} contains an element with negative eigenvalues if and only if $\vec a$ has a balanced sum partition.
 For the details, please see \cref{sec:ellpos}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bayesian Credibility regions}
+\label{sec:bayesian}
+
+\subsection{MVCR for Gaussians}
+\label{sub:bayesian.gaussian}
+
+We now turn to the question of minimal volume credible regions (MVCR) in the Bayesian framework:
+In the unconstrained case, Gaussian posteriors are one of the few examples of multivariate distributions, where the MVCR are simple geometric objects, namely ellipsoids.
+In practice, Gaussian posteriors arise in the following scenario:
+Consider a random vector $\vec X\sim\mathcal{N}(\vec\mu, \Sigma)$, where the covariance matrix $\Sigma$ is known and we wish to estimate its mean $\vec\mu$.
+If we furthermore assume a Gaussian prior for the mean, the posterior will be Gaussian as well due to the fact that the Gaussian distribution is its own conjugated prior.
+
+This is one of the few cases, in which the Bayesian update as well as the computation of an optimal credible region can be carried out analytically.
+First, computing the parameters for the Gaussian posterior distribution can be done by means of \emph{linear Kalman filter update equations}, see e.g.~\cite[Sec.\ 2.4]{Audenaert_2009_Quantum}.
+Second, for the credible region, assume that after the Bayesian update, the posterior distribution of $\vec\mu$ is parameterized by its mean $\vec\theta \in \Reals^N$ and covariance matrix $\Sigma \in \Reals^{N \times N}$.
+Therefore, the posterior of $\vec\mu$ has probability density
+\begin{equation}
+  \label{eq:bayesian.gaussian_density}
+  \pi_{\vec\theta,\Sigma}(\vec x) = {(2\pi)}^{-\Nhalf} \abs{\Sigma}^{-\frac{1}{2}} \exp\left( -\frac{1}{2} \norm{\vec x - \vec\theta}_\Sigma^2 \right).
+\end{equation}
+where
+\begin{equation}
+  \norm{\vec x - \vec\theta}_\Sigma := \sqrt{{(\vec x - \vec\theta)}^T \Sigma^{-1} (\vec x - \vec\theta)}
+\end{equation}
+is the Mahalanobis distance and  $\abs{\Sigma}$ denotes the determinant of $\Sigma$.
+As elaborated in Sec.~\ref{sub:intro.error_regions}, the MVCRs are exactly the highest posterior density sets as defined in Eq.~\eqref{eq:intro.highest_posterior}.
+Therefore, the MVCR with credibility $\alpha$ for the density Gaussian~\eqref{eq:bayesian.gaussian_density} is given by
+\begin{equation}
+  \label{eq:bayesian.gaussian_cr}
+  \CR = \{ \vec x \in \Reals^N\colon \norm{\vec x - \vec\theta}_\Sigma \le r_{\alpha} \} =: \Eps(r_{\alpha}).
+\end{equation}
+This is an ellipsoid centered at $\vec\theta$ with radius $r_{\alpha}$ determined by the saturated credibility condition~\eqref{eq:intro.credible_region}:
+\begin{equation}
+  \label{eq:bayesian.radius}
+  \begin{split}
+    \alpha
+    &= {(2\pi)}^{-\Nhalf} \abs{\Sigma}^{-\frac{1}{2}} \int_{\Eps(r_{\alpha})} \exp\left( -\frac{1}{2} \norm{\vec x - \vec\theta}_\Sigma^2 \right) \dd^N x \\
+    &= \frac{\gamma\left( \Nhalf, \frac{r^2_{\alpha}}{2} \right)}{\Gamma\left( \Nhalf \right)}
+    \equiv P\left( \Nhalf, \tfrac{r^2_{\alpha}}{2} \right).
+    \end{split}
+\end{equation}
+By $\gamma(\cdot,\cdot)$ we denote the incomplete $\Gamma$-function and $P(\cdot,\cdot)$ is its normalized version.
+The above condition fixes $r_{\alpha}$ uniquely since $x \mapsto P(\Nhalf, x)$ is strictly monotonic for any $N > 0$.
+Hence, determining the MVCR for a multivariate Gaussian posterior with known mean and covariances reduces to computing the radius $r_\alpha$, which is formalized in the following problem.
+\begin{problem}\label{prob:bayesian.cr}
+  For given mean $\vec\theta \in \Reals^N$, covariance matrix $\Sigma \in \Reals^{N \times N}$ with $\Sigma \geq 0$, credibility $\alpha \in [0,1]$, and accuracy $\delta$ with $\delta^{-1} \in \mathbb{N}$, determine the radius of the MVCR $r_{\alpha}$ defined in Eq.~\eqref{eq:bayesian.radius} with given accuracy.
+\end{problem}
+
+An efficient algorithm for solving Prob.~\ref{prob:bayesian.cr} is outlined in the following.
+To ease notation, we set $x = r^2_{\alpha}/2$.
+\begin{enumerate}
+  \item W.l.o.g.\ we can assume that $\alpha \le 0.9$ (or some other arbitrary constant).
+  Otherwise, the problem can be restated in terms of $Q(\Nhalf, x) = 1 - P(\Nhalf, x)$, which allows for a similar analysis.
+  The condition $\alpha \le 0.9$ restricts the search space for $x$ to some finite interval $[0, t_\mathrm{max}]$.
+  Note that the upper bound $t_\mathrm{max}$ grows at worst polynomially in $\Nhalf$.
+  \item The above restriction, the finite precision, and the fact that $x \mapsto P(\Nhalf, x)$ is strictly monotonic allow for interpreting the problem of finding $x$ given $\alpha$ as a search in an ordered, finite list of size $M \sim \tfrac{t_\mathrm{max}}{\delta}$.
+  \item Each entry of this list can be evaluated with exponential precision in polynomial time using a power series expansion of $P(\Nhalf, x)$ (for more details see Lemma~\ref{lem:bayesian.normalization_constant} in~\ref{sec:proof_bayesian}).
+  \item Since finding $x$ in this list only requires $\log M$ evaluations using binary search, the whole problem can be solved in polynomial time.
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Bayesian QST}
+\label{sub:bayesian.tomography}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}[t]
+  \centering
+  \begin{tikzpicture}[
+    elip/.style={fill=yellow, line width=0},
+    truncated/.style={pattern=north west lines, pattern color=blue},
+    truncelip/.style={dashed, line width=2pt, fill=blue},
+    psd/.style={dashed, color=red, line width=2pt}
+  ]
+    \clip (-3,-3) rectangle (13,3);
+
+    \def\origelip{(0,0) ellipse [x radius=1.5, y radius=2, rotate=-30]}
+    \def\truncatedelip{(0,0) ellipse [x radius=2, y radius=2.66666, rotate=-30]}
+
+    \def\psdradius{5.5}
+    \def\psdcircle{(psdcenter) [draw=none] circle (\psdradius)}
+
+    \begin{scope}[shift={(0,0)}]
+      \draw[elip]\origelip;
+      \draw[truncated]\origelip;
+      \node at (0.2,0) {$\Eps(r_{\frac{\alpha}{C}})$};
+      \node at (2.4,-.2) {$\Eps(r^+_{\alpha})$};
+
+
+      \node at (0,-3) (psdcenter) {};
+      \node[color=red] at (3,1) {psd};
+      \draw[psd] ([shift=(50:\psdradius)]psdcenter) arc (50:100:\psdradius);
+    \end{scope}
+
+
+    \begin{scope}[shift={(8,0)}]
+      \draw[truncelip]\origelip;
+      \draw\truncatedelip;
+
+      \node at (-1,-4) (psdcenter) {};
+      \node[color=red] at (3,1) {psd};
+
+      \draw[psd] ([shift=(50:\psdradius)]psdcenter) arc (50:100:\psdradius);
+      \begin{scope}
+        \clip \psdcircle;
+        \fill[elip] \origelip;
+        \fill[truncated]\truncatedelip;
+      \end{scope}
+
+      \node at (0,0) {$\Eps(r_{\frac{\alpha}{C}})$};
+      \node at (2.8,-.4) {$\Eps(r^+_{\alpha})$};
+    \end{scope}
+  \end{tikzpicture}
+  \caption{\label{fig:bayesian.ellipsoids}
+    The two possible cases for the credible regions.
+    \emph{Left:} The original ellipsoid $\Eps(r_\frac{\alpha}{C})$ with credibility $\frac{\alpha}{C}$ (yellow) lies completely inside the psd states and is, therefore, equal to the ellipsoid taking into account positivity $\Eps(r^+_{\alpha})$ with credibility $\alpha$ (blue hatched).
+    \emph{Right:}  Parts of the original ellipsoid $\Eps(r_\frac{\alpha}{C})$ lie outside the psd states (blue).
+    Hence, the ellipsoid that takes into account positivity $\Eps(r^+_{\alpha})$ has to have a larger radius in order to achieve the sought for credibility.
+  }
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Let us now turn to the application of Bayesian methods to QST, for a more thorough discussion see e.g.~\cite{Granade_2015_Practical}.
+%Here, the parameter we want to estimate is a quantum state
+%\begin{equation}
+ % \varrho \in \States = \{ \varrho \in \BC^{d \times d}\colon \varrho = \varrho^\dagger, \tr \varrho = 1, \varrho \ge 0 \}.
+%\end{equation}
+%Here, $\States$ denotes the set of valid mixed quantum states, which is a proper subset of the real vector space $\HermTrace$ of hermitian matrices with trace 1.
+In order to incorporate the prior knowledge of positive semidefiniteness, we chose a prior that is concentrated on $\States$ and vanishes on its complement.
+As before% in Sec.~\ref{sub:bayesian.gaussian}
+, we choose a (truncated) Gaussian prior and, therefore, Gaussian posteriors.
+Hence, the density $\pi_{\theta,\Sigma}^+(\varrho)$ of a Gaussian posterior on $\States$ with respect to the flat Hilbert-Schmidt measure $\dd\varrho$ on $\HermTrace$ can be written as
+\begin{equation}
+  \label{eq:bayesian.density_plus}
+  \pi^+_{\theta,\Sigma}(\varrho) = C_{\theta,\Sigma}\ \chi(\varrho)\ \pi_{\theta,\Sigma}(\varrho).
+\end{equation}
+Here, $\pi_{\theta,\Sigma}$ is the multivariate Gaussian from Eq.~\eqref{eq:bayesian.gaussian_density} with $\theta \in \HermTrace$.
+The other factors in Eq.~\eqref{eq:bayesian.density_plus} ensure that $\pi^+_{\theta,\Sigma}$ is a proper probability distribution supported on $\States$:
+$\chi(\varrho)$ is the indicator function of $\States$ and $C_{\theta,\Sigma}$ is the normalization constant defined by
+\begin{equation}
+  C_{\theta,\Sigma}^{-1} = \int_{\States} \pi_{\theta,\Sigma}(\varrho) \,\dd\varrho.
+\end{equation}
+From now on we will drop the subscripts indicating the mean $\theta$ and the covariance matrix $\Sigma$ if no confusion arises. It is then important to remember that the constant in question is denoted by $C$, while the credibility region is $\CR$.
+
+The problem we try to solve is the following:
+Given the mean $\theta$, covariance matrix $\Sigma$, and credibility $\alpha$, can we find the MVCR for the Gaussian distribution supported on $\States$?
+Since the posterior density~\eqref{eq:bayesian.density_plus} is supported on the psd states and MVCRs are highest-density sets due to~\eqref{eq:intro.highest_posterior}, the MVCR is of the form
+\begin{equation}
+  \Eps(r^+_{\alpha}) \cap \States = \{ \varrho \in \States \colon \norm{\varrho - \theta}_\Sigma \le r^+_{\alpha} \}.
+  \label{eq:bayesian.mvcr}
+\end{equation}
+Similar to Eq.~\eqref{eq:bayesian.radius}, the radius is determined by the credibility condition
+\begin{equation}
+  \label{eq:bayesian.radius_plus}
+  \alpha = C \int_{\Eps(r^+_{\alpha}) \cap \States} \pi_{\theta,\Sigma}(\varrho) \dd \varrho.
+\end{equation}
+However, this case involves the normalization constant $C$ from~\eqref{eq:bayesian.density_plus} and the integral is restricted to the psd states.
+Also, there is no closed-form analogue to Eq.~\eqref{eq:bayesian.radius} due to the psd constraint.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Computational Intractability}
+\label{sub:bayesian.hard}
+
+
+
+
+
+
+Our main result from this section concerns MVCR for Gaussian posteriors that are fully supported on the psd states.
+We will show that the following problem is computational hard.
+\begin{problem}\label{prob:bayesian.trucated_cr}
+  For given mean $\theta \in \HermTrace$, covariance matrix $\Sigma$, credibility $\alpha \in [0,1]$, and accuracy $\delta$ with $\delta^{-1} \in \mathbb{N}$, determine the radius of the MVCR $r^+_{\alpha}$ defined in Eq.~\eqref{eq:bayesian.radius_plus} with given accuracy.
+\end{problem}
+In other words, there is no efficient algorithm that outputs smallest volume credibility regions for every Gaussian distribution on $\HermTrace$ restricted to the positive semidefinite states and every credibility $\alpha$.
+Consequently, there cannot be an efficient algorithm to solve the problem of MVCR for QST, since the latter more general problem contains the instances of Prob.~\ref{prob:bayesian.trucated_cr}.
+To prove Prob.~\ref{prob:bayesian.trucated_cr}, we use a reduction from Problem~\ref{prob:ortho.ellpos}, which has already been shown to be NP-hard.
+This reduction runs along the following lines:
+\begin{enumerate}
+  \item Assume that Prob.~\ref{prob:bayesian.trucated_cr} can be solved efficiently.
+
+  \item As we will prove later, every ellipsoid $\Eps^*$ in $\HermTrace$ can be encoded as a minimum volume credible ellipsoid for some Gaussian distribution $\pi$ with a suitable choice of $\theta$, $\Sigma$, and $R$:
+  \begin{equation}
+    \Eps^* = \Eps_{\theta,\Sigma}(R).
+  \end{equation}
+  Note that only $\theta$ is uniquely defined.
+  $\Sigma$ is defined only up to a multiplicative, positive constant, since every rescaling of $\Sigma$ can be compensated by an appropriate rescaling of $R$.
+
+  \item  Using the assumed efficient algorithm for Prob.~\ref{prob:bayesian.trucated_cr}, we can compute the normalization constant $C$ of the truncated distribution~\eqref{eq:bayesian.density_plus} for given $\theta$ and $\Sigma$ with sufficient precision in polynomial time.
+
+  \item Based on this, we can compute a credibility $\alpha$ such that $R = r_\frac{\alpha}{C}$ and, therefore,
+  \begin{equation}
+    \Eps^* = \Eps_{\theta,\Sigma}(r_\frac{\alpha}{C}).
+  \end{equation}
+
+  \item The crucial observation is that this ellipsoid is contained in the psd states if and only if the corresponding MVCR for the truncated distribution $\pi^+$ fulfills
+  \begin{equation}
+    \label{eq:bayesian.criterion}
+    r^+_{\alpha} = r_\frac{\alpha}{C}.
+  \end{equation}
+  See Fig.~\ref{fig:bayesian.ellipsoids} for an illustration.
+  Since we can compute $r^+_{\alpha}$ efficiently by assumption, checking Eq.~\eqref{eq:bayesian.criterion} allows us to decide Prob.~\ref{prob:ortho.ellpos}.
+\end{enumerate}
+
+In conclusion, the main result from this section is the following lower bound on the computational complexity of Problem~\ref{prob:bayesian.cr}.
+\begin{theorem}\label{thm:bayesian.hardness}
+  If Problem~\ref{prob:bayesian.trucated_cr} has a polynomial time algorithm, then we can also decide Problem~\ref{prob:ortho.ellpos} in polynomial time.
+  Therefore, there is no efficient algorithm for Problem~\ref{prob:bayesian.trucated_cr} unless $\mathrm{P} = \mathrm{NP}$.
+\end{theorem}
+
+The proof runs along the lines outlined above and can be found in~\ref{sec:proof_bayesian}.
+Here, the main technical problem is that we are dealing with finite-precision arithmetic.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion \& Outlook}
+\label{sec:outlook}
+
+The goal of this work is to provide an absolute ``upper bound'' on what we can expect from algorithms computing error regions for QST and to demonstrate that there is a trade-off between optimality and efficiency.
+This paper should not be understood as providing a no-go theorem for efficient algorithms in practice since the negative result of this work does not rule out efficient algorithms for practically acceptable approximations to optimal regions.
+Also, there is no indication that the various approaches used in practice give rise to regions that are far from optimal or do not have the advertised coverage.
+The reason our result leaves room for feasible approaches in practice are twofold:
+First, like any result showing NP-hardness, we prove that there is no efficient algorithm solving the exact problem deterministically for any instances.
+Hence, our result neither precludes the existence of efficient approximate or probabilistic algorithms, nor cannot make any statement about average case hardness.
+Second, although the experimental effort necessary for full-fledged tomography scales polynomially in the dimension of the system -- and is, therefore, efficient in the sense of computational complexity -- in practice other characterization techniques such as randomized benchmarking or direct fidelity estimation become more important for larger dimensions.
+It should now be the goal of future work to further close down the gap between existing positive results and the proven no-go theorems from either side.
+
+
+More specifically, due to the simplifying assumptions made we investigate computational intractability that is solely caused by the quantum constraints and not by the general complications in high-dimensional statistics.
+In the Bayesian settings we show that minimal volume (w.r.t.\ the Hilbert-Schmidt measure) credible regions for truncated Gaussian posterior distributions are hard to compute.
+Therefore, the problem of determining MVCR for QST cannot be solved efficiently as well, since any algorithm solving the latter must also be able to solve instances with the specific prior used in Prob.~\ref{prob:bayesian.trucated_cr}.
+
+The result for frequentist confidence regions is somewhat weaker since optimal confidence regions for high-dimensional Gaussian distributions are not known for most natural notions of optimality.
+Nevertheless, Gaussian confidence ellipsoids constitute a viable choice due to their simplicity and tractability.
+However, our results show that the constraints imposed by quantum mechanics render the task of characterizing the confidence regions for the constrained problem computationally intractable -- even under the simplifying assumptions made.
+Of course, any more general setting encompassing the Gaussian approximation will be at least as hard to treat as the one used in this work.
+Furthermore, it also shows that computing any confidence region estimator yielding ellipsoids when the constraints are not active (and anything possibly better when they are) involves solving NP-hard problems.\\
+
+
+Recently, the mathematical statistics community has started to analyze the trade-offs between computational complexity and optimality in inference problems -- see e.g.\
+\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower}.
+Early papers concentrated on the problem of \emph{sparse principal component analysis}, which roughly asks whether the covariance matrix of a random vector possess a sparse eigenvector with large eigenvalue~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower}.
+Later works have addressed the much better-studied problem of sparse inference~\cite{Zhang_2014_Lower}.
+The main difference between these papers and the present one is that we always condition on a data set and show that certain operations for quantifying uncertainty given the data are hard.
+This approach is canonical for a Bayesian analysis, but merely ``natural'' for orthodox error regions (c.f.~Sec.~\ref{sub:intro.error_regions}).
+In contrast, Refs.~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower} analyze the ``global'' performance of orthodox estimators -- i.e.\ they do not require looking at worst-case scenarios over the data.
+References~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower} achieve this by reducing a certain problem (``hidden clique'') -- that is conjectured to be hard in the average case -- to the sparse PCA problem; while~\cite{Zhang_2014_Lower} employs a more subtle argument involving the non-uniform complexity class $P/\mathrm{poly}$.
+It would be very interesting to adapt such arguments to the problem of quantum uncertainty quantification.
+
+
+Of course, from the practical point of view, ``positive'' results -- i.e.\ new algorithms to solve the problem -- would be more beneficial.
+Here, recent work on sampling distributions restricted to convex bodies~\cite{Cousins_2013_Cubic,Cousins_2015_Bypassing} could be a starting point for further investigations.
+
+Beside quantum st
