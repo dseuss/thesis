@@ -68,6 +68,8 @@ Strategies to make statements independent of the true value include
 \todo{How does this connect with definition of probability?}
 \todo{Typical estimators? Max likelihood?}
 \todo{No statement about single runs!}
+\todo{Likelihood ratio CR?}
+\todo{Stein's phenomenon}
 
 
 % examples (also depends on notion of volume), admissability
@@ -249,14 +251,14 @@ The question is: How are admissible confidence regions for the constrained setti
   W.l.o.g.\ assume that both $\CR^+$ and $\CR^\cap$ have the same coverage.
   Therefore, we must have $\Vol(\CR^+(\vec y)) \leq \Vol(\CR^\cap(\vec y))$ for almost all observations $y \in \Reals^m$, and there is a set $Y \subset \Reals^m$ of non-zero measure such that $\Vol(\CR^+(\vec y)) < \Vol(\CR^\cap(\vec y))$ for $\vec y \in Y$.
   Define a new confidence region for the unconstrained problem
-  \begin{equation}
+  \[
     \CR' := \CR^+ \cup \CR^c,
     \label{eq:ortho.new_region}
-  \end{equation}
+  \]
   where $\CR^{c}=\CR\setminus \CR^{\cap}$ denotes the compliment of $\CR^{\cap}$ in $\CR$.
   Then, $\CR'$ has the given coverage level, since $\CR^+$ provides coverage for $\varrho_0 \in \States$, whereas $\CR^c$ provides coverage for the case $\varrho_0 \in \HermTrace \setminus \States$.
   Furthermore, we have for almost all $\vec y$
-  \begin{equation}
+  \[
     \label{eq:ortho.volumes}
     \begin{split}
       \Vol(\CR'(\vec y))
@@ -264,7 +266,7 @@ The question is: How are admissible confidence regions for the constrained setti
       &\leq \Vol(\CR^\cap(\vec y)) + \Vol(\CR^c(\vec y)) \\
       &= \Vol(\CR(\vec y)).
     \end{split}
-  \end{equation}
+  \]
   Finally, strict inequality holds in Eq.~\eqref{eq:ortho.volumes} for all $\vec y \in Y$ due to the assumption on $\CR^+$.
   However, this would imply $\CR$ not being admissible in contradiction to the assumptions of the Lemma.
 \end{proof}
@@ -293,7 +295,6 @@ So, having obtained a \quotes{small confidence region} in parameter space does n
 \label{sub:ortho.linear_inversion}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \begin{figure*}
   \centering
   \begin{tikzpicture}[scale=0.85]
@@ -332,17 +333,18 @@ So, having obtained a \quotes{small confidence region} in parameter space does n
     These may be unbounded if the measurements are not tomographically complete -- a drawback that can be cured by taking into account the physical constraints on quantum states, i.e.\ positivity.
     }
 \end{figure*}
+\todo{Update figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-A particularly simple method to transform estimates of measurement data to estimates of quantum states is the method of linear inversion, which we are going to review now:
-First, assume that the \emph{true} but unknown quantum state is represented by a $d\times d$ density matrix $\varrho_0$ and the QST performed by measuring $m\geq d^{2} - 1$ tomographically-complete measurement projectors $E_{1},\ldots,E_{m}$.
+A particularly simple method to transform estimates of measurement data to estimates of quantum states is the method of \emph{linear inversion}, which we are going to review now:
+First, assume that the \emph{true} but unknown quantum state is represented by a $d\times d$ density matrix $\varrho_0$ and QSE performed by measuring $m\geq d^{2} - 1$ tomographically-complete measurement projectors $E_{1},\ldots,E_{m}$.
 By $y_{k}=\tr\left(E_{k}\varrho_0\right)$, $k=1,\ldots,m$ we denote the (quantum) expectation values of $E_{k}$ for the true state $\varrho_0$.
 Since these relations are linear, we can rewrite them as $\vec{y} = A \vec{\varrho}$, where $\vec{\varrho}$ stands for the quantum state interpreted as a vector and $A$ is the measurement (or design) matrix independent of $\varrho$.
 The desired (pseudo)-inverse of the above relation is
-\begin{equation}
+\[
   \label{eq:ortho.linear_inversion}
   \vec{\varrho}={\left(A^{T}A\right)}^{-1}A^{T}\vec{y}
-\end{equation}
+\]
 and simplifies to $\vec{\varrho}=A^{-1}\vec{y}$ if $m=d^{2} - 1$.
 
 Of course, in an experiment, the expectation values $\vec{y}$ are unknown and can only be approximated by some estimate $\estim{\vec y}$ based on the observed data.
@@ -353,87 +355,87 @@ Although the linear inversion and maximum likelihood estimator solve two distinc
 
 Here, we take a similar approach.
 First, the simple geometric interpretation of the linear inversion estimator (see Fig.~\ref{fig:ortho.geometry}) allows us to map confidence regions for the expectation values to confidence regions for the state without taking into account the positivity constraint:
-If $\CR_{\estim{\vec y}}$ is a confidence region for $\estim{\vec y}$ with confidence level $\alpha$, then so is its pre-image under the measurement map
-\begin{equation}
+If $\CR_{\estim{\vec y}}$ denotes a confidence region for $\estim{\vec y}$ with confidence level $\alpha$, then so is its pre-image under the measurement map
+\[
   \label{eq:ortho.linear_confidence}
-  \CR_{\estim{\vec \varrho}} := A^{-1}(\CR_{\estim{\vec y}})
-\end{equation}
+  \CR_{\estim{\vec\varrho}} := A^{-1}(\CR_{\estim{\vec y}})
+\]
 for $\estim{\vec \varrho}$.
-Second, the truncation construction from Sec.~\ref{sub:ortho.optimal} yields an improved confidence region for the problem with quantum constraints taken into account.
+Second, the truncation $\CR^\cap_{\estim \varrho} := \CR_{\estim{\vec\varrho}} \cap \States$ yields an improved confidence region for the problem with quantum constraints taken into account.
 As shown in Lemma~\ref{lem:ortho.admissible_truncation}, this approach yields admissible confidence region provided the original region was admissible.
 
 The same construction can also be carried out for tomographically incomplete measurements, i.e.\ for $m<d^{2}$:
 Since the measurement matrix $A$ is non-invertible in this case, the estimate for the state $\estim{\varrho}$ satisfying $A\estim{\vec\varrho} = \estim{\vec y}$ is not uniquely defined.
 However, under additional structural assumptions, one can single out a unique estimate~\cite{Gross_2010_Quantum,Flammia_2012_Quantum}.
 The singularity of the measurement map $A$ also reflects in the confidence region defined by Eq.~\eqref{eq:ortho.linear_confidence}.
-Even if $\CR_{\estim{\vec y}}$ is a bounded region, the confidence region for the state $\CR_{\estim{\vec \varrho}}$ extends to infinity in the directions ``unobserved by $A$''.
-In both cases, the tomographically complete and incomplete, we can use the intersection with the psd states to reduce the the region's size while not sacrificing coverage.
+Even if $\CR_{\estim{\vec y}}$ is a bounded region, the confidence region for the state $\CR_{\estim{\vec \varrho}}$ extends to infinity in the directions \quotes{unobserved by $A$}.
+In both cases, the tomographically complete and incomplete, we can use the intersection with the psd states $\States$ to reduce the the region's size while not sacrificing coverage.
 This improvement is especially far-reaching in the latter case, where it turns an unbounded region to a bounded one just by taking into account the physical constraints.\\
 
 
 Of course, the question is whether we can somehow characterize the truncated confidence region $\CR_{\estim{\vec \varrho}}^\cap := A^{-1}(\CR_{\estim{\vec y}}) \cap \States$ computationally efficiently.
 Since our goal is to show that this is an intractable problem exclusively due to the quantum constraints -- and not because of the complexity of high-dimensional statistics in general -- we are going to make the simplifying assumption that the measured frequencies are approximately Gaussian distributed.
 Furthermore, we are going to focus on a class of confidence regions that are efficiently characterizable in the unconstrained setting, namely Gaussian confidence ellipsoids or, more precisely, ellipsoidal balls of the form
-\begin{equation}
+\[
   \CR_{\estim{\vec y}} = \left\{ \vec y \in \Reals^m\colon  {\left(\vec{y}-\estim{\vec{y}}\right)}^T B\left(\vec{y}-\estim{\vec{y}}\right) \leq 1  \right\}
   \label{eq:ortho.confelip}
-\end{equation}
+\]
 centered at the the empirical frequencies  $\estim{\vec y}$.
-The $m\times m$, symmetric, positive semidefinite matrix $B$ completely specifies the ellipsoidal shape of this confidence region.
-These are the natural generalizations of the well-known $2\sigma$ confidence intervals to multivariate Gaussian distributions.
+The $m\times m$, symmetric, positive semi-definite matrix $B$ completely specifies the ellipsoidal shape of this confidence region.
+These are the natural generalizations of the well-known $2\sigma$ confidence intervals to multivariate Gaussian distributions using likelihood ratios.
+\todo{Check the likelihood ratio stuff}
 
-However, in the unconstrained setting, the ellipsoidal construction~\eqref{eq:ortho.confelip} is known to be admissible only for $m=\left\{ 1,2\right\}$~\cite{Joshi_1969_Admissibility}, while it is not admissible for $m\geq3$~\cite{Joshi_1967_Inadmissibility} due to Stein's phenomenon~\cite{Stein_1956_Inadmissibility}.
-Smaller confidence ellipsoids with the same coverage can be obtained by shifting the center slightly~\cite{Tseng_1997_Good,Hwang_1982_Minimax}.
-Furthermore, other constructions similar to an egg~\cite{Shinozaki_????_Improved} or the non-convex Pascal lima\c{c}on~\cite{Brown_1995_Optimal} are known to outperform the standard ellipsoids.
-Nevertheless, non of these constructions is known to be optimal and, to the best of the author's knowledge, no optimal confidence region for multivariate Gaussians in higher dimensions is known.
+However, even in the unconstrained setting, the ellipsoidal construction~\eqref{eq:ortho.confelip} is known to be admissible only for $m=\left\{ 1,2\right\}$~\cite{Joshi_1969_Admissibility}, while it is not admissible for $m\geq3$~\cite{Joshi_1967_Inadmissibility} due to Stein's phenomenon~\cite{Stein_1956_Inadmissibility}:
+By shifting the center of the ellipsoid from the empirical mean $\hat{\vec y}$ to the Stein estimator~\eqref{FIXME}, one can improve the coverage while keeping the volume constant~\cite{Joshi_1967_Inadmissibility}.
+Smaller confidence ellipsoids with the same coverage can be obtained by shifting the center slightly~\cite{Tseng_1997_Good,Hwang_1982_Minimax} or use more complicated shapes~\cite{Shinozaki_????_Improved,Brown_1995_Optimal}.
+Nevertheless, non of these constructions is known to be optimal and, to the best of the author's knowledge, no optimal confidence region for multivariate Gaussians in dimensions $m \ge 3$ is known.
 
-But, since our discussion is focused on the question how the physical psd constraints can be used to improve confidence regions, we are still going to use the ellipsoids~\eqref{eq:ortho.confelip} as a tractable example:
-As we will prove later, it is impossible to characterize the truncated ellipsoids efficiently although they are fully described by a few parameters, namely $\estim{\vec y}$ and $B$ in the unconstrained case.
-In other words, we show that there exists a trade-off between computational and statistical efficiency for the problem of determining ``good'' confidence regions in QST.\\
-
+But since our discussion is focused on the question how the physical psd constraints can be used to improve confidence regions, we are still going to use the ellipsoids~\eqref{eq:ortho.confelip} as a tractable example:
+As we will prove later, it is impossible to characterize the truncated ellipsoids efficiently although they are fully described by only few parameters, namely $\estim{\vec y}$ and $B$.\\
 
 
-In the remainder of this section, we are going to discuss a useful parametrization for the aforementioned ellipsoids~\eqref{eq:ortho.confelip}.
+
+In the remainder of this section, we are going to discuss a useful parametrization of the ellipsoids $\CR_{\estim{\vec\varrho}} = A^{-1}(\CR_{\estim{\vec y}})$ with $\CR_{\estim{\vec y}}$ given by \cref{eq:ortho.confelip}.
 To this end we use the fact that any $d\times d$ Hermitian matrix can be expanded in a basis formed by the identity $\1$ and $d^{2}-1$ traceless Hermitian matrices $\sigma_{i}$, $i=1,\ldots,d^{2}-1$, normalized according to $\textrm{Tr}(\sigma_{i}\sigma_{j})=2\delta_{ij}$.
 With the symbols $\sigma_{i}$ we associate here the most common choice of the basis elements~\cite{Kimura_2003_Bloch}  --  explicitly provided in~\ref{sec:parametrisation} -- while any other $\sigma_{i}'=\sum_{j}O_{ji}\sigma_{j}$, given in terms of an orthogonal $d^{2}-1$ dimensional matrix $O$, are valid alternatives.
 For $d=2$ the choice stated in~\ref{sec:parametrisation} is simply the Bloch basis of Pauli matrices: $\sigma_{1}\equiv\sigma_{x}$, $\sigma_{2}\equiv\sigma_{y}$ and $\sigma_{3}\equiv\sigma_{z}$.
 In higher dimensions the matrices $\sigma_{i}$ maintain the Bloch basis structure:
 Let
-\begin{equation}
+\[
   \label{eq:ortho.x_yz_index}
   i_{d}=d(d-1)/2,
-\end{equation}
-then their construction mimics $\sigma_{x}$ for $1\leq i\leq i_{d}$, $\sigma_{y}$ for $i_{d}+1\leq i\leq2i_{d}$ and $\sigma_{z}$ for $2i_{d}+1\leq i\leq d^{2}-1$.
-Therefore, we are going to refer to the $\sigma_{i}$ as (generalized) Bloch representation.
-
-We are in position to provide the first result of this paper, falling into the category of geometry of quantum states:
+\]
+then the definition of $\sigma_i$ mimics $\sigma_{x}$ for $1\leq i\leq i_{d}$, $\sigma_{y}$ for $i_{d}+1\leq i\leq2i_{d}$ and $\sigma_{z}$ for $2i_{d}+1\leq i\leq d^{2}-1$.
+Therefore, we are going to refer to the $\sigma_{i}$ as \emph{(generalized) Bloch matrices} and the corresponding parametrization of Hermitian matrices as the \emph{(generalized) Bloch representation}.
+The following theorem provides a useful parameterization of pre-images under the design matrix $A$ of ellipsoids.
 \begin{theorem}\label{thm:ortho.ellipsoids}
-  For the tomographically complete case $m \geq d^2 - 1$, the pre-image under the measurement matrix of any confidence ellipsoid of the form~\eqref{eq:ortho.confelip} can be represented as
-  \begin{equation}
-    \CR = \left\{ \estim{\varrho} + \sum_{i}R_{i}u_{i}\sigma_{i}'\colon \vec{u}^{T}\vec{u}\leq1 \right\},
+  For the tomographically complete case $m \geq d^2 - 1$, the pre-image under the design matrix of any ellipsoid of the form~\eqref{eq:ortho.confelip} can be written as
+  \[
     \label{eq:ortho.ellipsoid}
-  \end{equation}
-  where $\estim{\varrho}$ is the linear inversion estimator, that is a Hermitian matrix with $\tr \estim{\varrho} = 1$, and the $R_{i}>0$ ($i=1,\ldots,d^{2}-1$) are the ellipsoid's radii in the directions given by $\sigma_{i}'=\sum_{j}O_{ji}\sigma_{j}$, respectively.
-  The orthogonal matrix $O\in\mathcal{O}\left(d^{2}-1\right)$ furnishes any orientation of the semi-major axes of the ellipsoid.
+    \CR_{\estim \varrho} = A^{-1}\left( \CR_{\estim{\vec y}} \right) = \left\{ \estim{\varrho} + \sum_{i}R_{i}u_{i}\sigma_{i}'\colon \vec{u}^{T}\vec{u}\leq1 \right\}.
+  \]
+  Here, $\estim{\varrho}$ is the linear inversion estimator corresponding to \cref{eq:ortho.linear_inversion}, that is a Hermitian matrix with $\tr \estim{\varrho} = 1$. 
+  The $R_{i}>0$ ($i=1,\ldots,d^{2}-1$) are the ellipsoid's radii in the directions given by $\sigma_{i}'=\sum_{j}O_{ji}\sigma_{j}$ and the orthogonal matrix $O\in\mathcal{SO}\left(d^{2}-1\right)$ furnishes any orientation of the semi-major axes of the ellipsoid.
 \end{theorem}
 \begin{proof}
   Note that whenever the sum has no limits specified (like in Eq.~\eqref{eq:ortho.ellipsoid}), by default it extends from $1$ to $d^{2}-1$.
-  Let us parameterize both $\varrho \in \CR$ and $\estim{\varrho}$ in the Bloch representation with coordinates $w_{i}$ and $\estim{w}_i$, respectively:
-  \begin{equation}
-    \varrho=\frac{\1}{d}+\sum_{i}w_{i}\sigma_{i},\qquad\estim{\varrho}=\frac{\1}{d}+\sum_{i}\estim{w}_{i}\sigma_{i}.
-  \end{equation}
+  Let us parameterize both $\varrho \in \CR_{\estim \varrho}$ and $\estim{\varrho}$ in the Bloch representation with coordinates $w_{i}$ and $\estim{w}_i$, respectively:
+  \[
+    \varrho=\frac{1}{d}\1 + \sum_{i}w_{i}\sigma_{i},
+    \qquad\estim{\varrho}=\frac{1}{d} \1 + \sum_{i}\estim{w}_{i}\sigma_{i}.
+  \]
   Since $\vec{y}=\textrm{Tr}\left(\vec{E}\varrho\right)$, and $\estim{\vec{y}}=\textrm{Tr}\left(\vec{E}\estim{\varrho}\right)$ we find
-  \begin{equation}
+  \[
     \vec{y}-\estim{\vec{y}}=Q\left(\vec{w}-\estim{\vec{w}}\right),
-  \end{equation}
+  \]
   where $Q$ is a $m\times(d^{2}-1)$ matrix with elements $Q_{ki}=\textrm{Tr}\left(E_{k}\sigma_{i}\right)$.
   In other words, the Bloch coordinates satisfy the same ellipsoid equation (\ref{eq:ortho.confelip}) as the measurement outcomes with $B$ substituted by the $d^{2}-1$ dimensional square matrix $B'=Q^{T}BQ$.
   Since $B$ is symmetric and positive definite, the same holds for $B'$.
-  Hence, $B'$ can be diagonalized to the form $B'=ODO^{T}$, where $O$ is some orthogonal $d^{2}-1$ dimensional matrix and $D=\textrm{diag}(R_{1}^{-2},\ldots,R_{d^{2}-1}^{-2})$ is the diagonal matrix with positive entries.
+  Hence, $B'$ can be diagonalized to the form $B'=ODO^{T}$, where $O \in \mathcal{SO}(d^2 - 1)$ and $D=\textrm{diag}(R_{1}^{-2},\ldots,R_{d^{2}-1}^{-2})$ is the diagonal matrix with positive entries.
   If we rescale $\vec{w}-\estim{\vec{w}}=OD^{-1/2}\vec{u}$, then $\vec{u}^{T}\vec{u}\leq1$ and
-  \begin{equation}
+  \[
     \varrho-\estim{\varrho}=\sum_{j}\left(\sum_{i}O_{ji}R_{i}u_{i}\right)\sigma_{j}.
-  \end{equation}
+  \]
   In the last step of the proof we simply change the orientation of the basis to $\sigma_{i}'=\sum_{j}O_{ji}\sigma_{j}$.
 \end{proof}
 
@@ -443,38 +445,25 @@ We are in position to provide the first result of this paper, falling into the c
 \label{sub:ortho.hard}
 
 Guided by the discussion from the previous section we now study the confidence region for the linear inversion QST defined as
-\begin{equation}
+\[
   \label{eq:ortho.truncated_ellipsoid}
   \CR^\cap := \CR \cap \States = A^{-1}(\CR_{\estim y}) \cap \States,
-\end{equation}
+\]
 where $\CR$ is given by the ellipsoid~\eqref{eq:ortho.ellipsoid} for the tomographically complete case $m=d^2 - 1$.
-% By Thm.~\ref{thm:ortho.ellipsoids}, the untruncated region $\CR$ can be easily characterized:
-% It is an ellipsoid centered around $\estim\varrho$, where $\estim{\vec\varrho} = A^{-1} \estim{\vec y}$, and its characteristic properties such as diameter, volume, etc.\ can be readily expressed in terms of the $R_i$.
 In this section, we are going to show that in contrast to the full ellipsoid $\CR$, the truncated ellipsoid $\CR^\cap$ cannot be characterized computationally efficiently.
 This shows, for example, in the fact that there is no efficient algorithm to answer the following question:
 How much does taking into account the physical constraints reduce the size of the confidence region on a particular set of observed data?
 Note that we will not be concerned with properties of the region estimator but with a single instance corresponding to a fixed set of data.
 By abuse of notation, we are going to refer to these instances as $\CR$ and $\CR^\cap$ as well.
 
-% After computing the ellipsoidal estimator $\CR$ for a fixed experimental outcome, we could have two situations: precisely, we s
-% \begin{enumerate}
-%   \item If $\CR\subset\States+d$, then $\CR$ and $\CR^\cap$ are identical and, therefore, have the same volume, diameter, etc.
-%   \item If $\CR$ covers Hermitian matrices (necessarily the set of non-zero measure) beyond $\States$, then $\CR^\cap$ has strictly smaller volume than $\CR$.
-%   Note that the diameter may be unaffected.
-% \end{enumerate}
-% It becomes evident that while computing the volume of $\CR^\cap$ one also provides an answer to the following question: \emph{%
-%   Is the ellipsoid~\eqref{eq:ortho.ellipsoid} fully contained in the set $\States$ of positive semi-definite density matrices?
-% }
-% Our goal is to show that there is no computationally efficient algorithm deciding this problem.
-
 More precisely, we are concerned with the question if for a fixed ellipsoid $\CR$ there is any reduction in size due to constraints in Eq.~\eqref{eq:ortho.truncated_ellipsoid} or if $\CR$ is fully contained in the set of psd states.
 For the precise formulation, we use the representation of ellipsoids from Thm.~\ref{thm:ortho.ellipsoids}.
 \begin{problem}\label{prob:ortho.ellpos}
   Given the center $\estim\varrho$, radii $R_i$, and a basis $\sigma'_i$ for $\HermTrace$.
   Is there a $\vec u \in \Reals^{d^2 - 1}$ with $\vec{u}^{T}\vec{u} \leq 1$ such that
-  \begin{equation}
+  \[
     \estim{\varrho} + \sum_{i}R_{i}u_{i}\sigma_{i}' \in \HermTrace \setminus \States?
-  \end{equation}
+  \]
 \end{problem}
 The main result of this section is the following statement on the computational complexity of the aforementioned problem.
 \begin{theorem}\label{thm:ortho.hard}
@@ -523,9 +512,9 @@ The following Lemma, which is proven in~\ref{sec:spheres}, provides an easily ch
 \begin{lemma}\label{lem:ortho.spheres}
   Let $\CR$ denote a ball parameterized according to Thm.~\ref{thm:ortho.ellipsoids} with with radii $R_i=R$ and midpoint $\estim{\varrho}$.
   $\CR$ is fully contained in the set of psd density matrices if and only if
-  \begin{equation}
+  \[
     R\leq\sqrt{\frac{d}{2\left(d-1\right)}} \, \operatorname{mineig} \estim{\varrho},
-  \end{equation}
+  \]
   where $\operatorname{mineig}\estim{\varrho}$ denotes the smallest eigenvalue of $\estim{\varrho}$.
 \end{lemma}
 The statement is a straightforward but interesting extension of the known result that the largest ball centered at the completely mixed state and fully contained in the set of psd density matrices has radius $R_{\mathrm{max}}=\sqrt{\frac{1}{2d\left(d-1\right)}}$.
@@ -537,22 +526,22 @@ However, it turns out that a slightly more complicated setting is already enough
 The ellipsoids under consideration still have their semi-major axes aligned with the generalized Bloch basis, that is we assume $\sigma'_i = \sigma_i$.
 The only change compared to the previous setting is the choice of radii.
 We consider the same radius $R_{1}$ for all directions generalizing the $x$-direction to higher dimensions and the distinct radius $R_{2}$ for the remaining directions:
-\begin{equation}
+\[
   \label{eq:ortho.subclass}
   \begin{split}
     R_{i}=R_{1} &\quad i=1,\ldots,i_{d}\\
     R_{i}=R_{2} &\quad i=i_{d}+1,\ldots,d^{2}-1.
   \end{split}
-\end{equation}
+\]
 Recall $i_d$ defined in Eq.~\eqref{eq:ortho.x_yz_index}.
 
 Now, in order to prove the computational intractability of Problem~\ref{prob:ortho.ellpos}, we use a reduction from the \emph{balanced sum} problem, which is known to be NP-complete.
 \begin{problem}\label{prob:ellpos.balanced_sum}
   Given a vector $\vec a \in \mathbb{N}^d$, decide whether there exists a vector $\vec \psi$ with
-  \begin{equation}
+  \[
     \forall{k}\:\psi_{k}\in\left\{ -1,1\right\} \;\textrm{ and }\quad \vec a \cdot \vec\psi=0.
     \label{eq:ellpos.partition_vector}
-  \end{equation}
+  \]
 \end{problem}
 In case there is such a vector $\vec \psi$ one says that the instance $\vec a$ allows for a balanced sum partition because the sum of components of $\vec a$ labeled by $\psi_i = 1$ is equal to the sum of components $a_i$ labeled by $\psi_i = -1$.
 The main technical difficulty is now to identify the values of $R_1$ and $R_2$ as well as $\estim{\rho}$ depending on an instance of the balanced sum problem $\vec a$ such that the corresponding ellipsoid $\CR$ given by Thm.~\ref{thm:ortho.ellipsoids} contains an element with negative eigenvalues if and only if $\vec a$ has a balanced sum partition.
