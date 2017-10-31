@@ -24,11 +24,23 @@
 \section{Introduction to Statistics}
 \label{sec:error.intro}
 
-% two main flavours of statistics...
-% task of parameter estimation, model
-% parametric model: state space \Omega
-However, even if our model describes the data perfectly we cannot exactly recover this value from a finite amount of data due to statistical fluctuations.
+The objective of statistical inference is to obtain information about the distribution of a random variable $X$ from observational data.
+Here, we focus on the special case of inference in parametric models, which can we described as follows~\cite{Wasserman_2013_All}:
+A \emph{parametric model} is a family of distributions $\Prob_{\vec\Theta}$ labeled by a finite number of parameters $\vec\Theta \in \Omega$, where $\Omega \subset \Reals^k$ is called the \emph{state space} of the model.
+Then, any function $\estim{\vec\Theta}$ mapping observations to the parameter space $\Reals^k$ is called a \emph{point estimator} for the parameters $\vec\Theta$.
+In general, we do not require $\estim{\vec\Theta}$ to map to the state space $\Omega$ as this restriction would preclude many relevant estimators.
+However, since we are interested in learning about the distribution $X$, not every estimator is equally useful.
+Indeed, the goal should be to find the estimator yielding the parameter value that describes the observed data best.
+
+What we mean by \quotes{best} in this context not only depends on the specific model and what the estimate is supposed to be used for, but also on how we interpret the probabilities.
+Broadly speaking, there are two different interpretations of probability, namely the frequentist (or orthodox) interpretation and the Bayesian interpretation~\cite{Hajek_2012_Interpretations,Caves_2000_Probabilities}, which lead to distinct schools of inference~\cite{Kiefer_2012_Introduction,Bolstad_2007_Introduction,Wasserman_2013_All}.
+Although the two approaches agree for very simple models or -- under mild regularity assumptions -- in the limit of many measurements, they generally yield different and in some cases even contradictory results~\cite[Sec. 11.9]{Wasserman_2013_All}.
+
+So far we have only discussed point estimators, which yield a single value for the parameters.
+However, even if our model describes the data perfectly for some choice of $\vec\Theta$, we cannot exactly recover this value from a finite amount of data due to statistical fluctuations.
 The concept of error bars, or more generally error regions, allows for quantifying the uncertainty of a given estimate.
+In \cref{sub:intro.frequentist}, we introduce the basic concepts of frequentist inference and the corresponding notion of \emph{confidence regions}.
+\Cref{sub:intro.bayesian}, is concerned with Bayesian inference and the corresponding notion of error regions, namely \emph{credible regions}.
 
 % uncertatiny quantification, problem with point estimators
 
