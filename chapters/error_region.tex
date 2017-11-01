@@ -3,47 +3,39 @@
 \label{chap:error}
 
 % postivity of quantum states for error regions
-
-
-
-
-
-
-
-
-
-
-
-
-
+% what is QSE
+% why error bars?
 
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction to Statistics}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction to Statistical Inference}
 \label{sec:error.intro}
 
 The objective of statistical inference is to obtain information about the distribution of a random variable $X$ from observational data.
 Here, we focus on the special case of inference in parametric models, which can we described as follows~\cite{Wasserman_2013_All}:
-A \emph{parametric model} is a family of distributions $\Prob_{\vec\Theta}$ labeled by a finite number of parameters $\vec\Theta \in \Omega$, where $\Omega \subset \Reals^k$ is called the \emph{state space} of the model.
-Then, any function $\estim{\vec\Theta}$ mapping observations to the parameter space $\Reals^k$ is called a \emph{point estimator} for the parameters $\vec\Theta$.
-In general, we do not require $\estim{\vec\Theta}$ to map to the state space $\Omega$ as this restriction would preclude many relevant estimators.
+A \emph{parametric model} is a family of distributions $\Prob_\theta$ labeled by a finite number of parameters $\theta \in \Omega$, where $\Omega \subset \Reals^k$ is called the \emph{state space} of the model.
+For now, we consider only the scalar case $k=1$.
+Then, any function $\estim\theta$ mapping observations to the parameter space $\Reals$ is called a \emph{point estimator} for the parameters $\theta$.
+In general, we do not require $\estim\theta$ to map to the state space $\Omega$ as this restriction would preclude many relevant estimators.
 However, since we are interested in learning about the distribution $X$, not every estimator is equally useful.
 Indeed, the goal should be to find the estimator yielding the parameter value that describes the observed data best.
 
 What we mean by \quotes{best} in this context not only depends on the specific model and what the estimate is supposed to be used for, but also on how we interpret the probabilities.
 Broadly speaking, there are two different interpretations of probability, namely the frequentist (or orthodox) interpretation and the Bayesian interpretation~\cite{Hajek_2012_Interpretations,Caves_2000_Probabilities}, which lead to distinct schools of inference~\cite{Kiefer_2012_Introduction,Bolstad_2007_Introduction,Wasserman_2013_All}.
-Although the two approaches agree for very simple models or -- under mild regularity assumptions -- in the limit of many measurements, they generally yield different and in some cases even contradictory results~\cite[Sec. 11.9]{Wasserman_2013_All}.
+Although the two approaches yield the same results for very simple models or -- under mild regularity assumptions -- in the limit of many measurements, they generally differ and in some cases even yield contradictory results~\cite[Sec. 11.9]{Wasserman_2013_All}.
 
 So far we have only discussed point estimators, which yield a single value for the parameters.
-However, even if our model describes the data perfectly for some choice of $\vec\Theta$, we cannot exactly recover this value from a finite amount of data due to statistical fluctuations.
+However, even if our model describes the data perfectly for some choice of $\theta$, we cannot exactly recover this value from a finite amount of data due to statistical fluctuations.
 The concept of error bars, or more generally error regions, allows for quantifying the uncertainty of a given estimate.
 In \cref{sub:intro.frequentist}, we introduce the basic concepts of frequentist inference and the corresponding notion of \emph{confidence regions}.
 \Cref{sub:intro.bayesian}, is concerned with Bayesian inference and the corresponding notion of error regions, namely \emph{credible regions}.
 
-% uncertatiny quantification, problem with point estimators
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Frequentist Statistics}
 \label{sub:intro.frequentist}
 
@@ -51,42 +43,69 @@ In the frequentist (or orthodox) framework, the probability of an outcome of a r
 More precisely, denote the number of repetitions of an experiment by $T$ and the number of times the event under consideration $x$ occurred by $n_T$.
 Then, a Frequentist interprets the probability $\Prob(x)$ as the statement that if $T \to \infty$, $\frac{n_T}{T} \to \Prob(x)$.
 
-% probabliities = hypothetical frequencies, not repeatable
-For the task of parameter estimation, we assume that the observed data are generated from the parametric model with \quotes{true} parameter $\Theta \in \Omega$, which is unknown.
-From a finite number of observations $X_1, \ldots X_N$, we must construct an estimate for $\Theta$ that is close to the true value in some sense.
-The function $\hat\Theta$ that maps observations to such an estimate is called a point estimator.
-The quality of an estimator is measured by its risk function.
-A risk function commonly used for continuous parameter spaces is the mean square error
+For the task of parameter estimation, we assume that the observed data are generated from the parametric model with the fixed \quotes{true} parameter $\theta \in \Omega$, which is unknown.
+From a finite number of observations $X_1, \ldots X_N$, we must construct an estimate $\hat\theta(\vec X)$ for $\theta$.
+The question how to single out a \quotes{good} estimator is formalized in statistical decision theory~\cite{Casella_2008_Statistical,Lehmann_1998_Theory}.
+For this purpose, we need to introduce a \emph{loss function}
 \[
-  \label{eq:frequentist.mean_square}
-  \mathcal{L}_{\hat\Theta}(\Theta) := \Exp_\Theta \left( \Norm{\Theta - \hat\Theta(X_1, \ldots, X_N)}^2 \right).
+  \label{eq:frequentist.loss_function}
+  \Loss\colon \Omega \times \Reals \to \Reals,  (\theta, \estim\theta) \mapsto \Loss(\theta, \estim\theta),
 \]
-\todo{Make loss without expectation}
-Note that \cref{eq:frequentist.mean_square} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\Theta$.
+which measures the discrepancy between $\theta$ and an estimate $\estim\theta(\vec X)$.
+Keep in mind that since the $X_i$ are random variables, so are $\estim\hat(\vec X)$ and its loss.
+To asses the estimator $\hat\theta$, that is the function mapping data to an estimate, we evaluate the average loss or \emph{risk}
+\[
+  \label{eq:frequentist.risk}
+  \Risk(\theta, \hat\theta) = \Exp_\theta(\Loss(\theta, \hat\theta(\vec X))) = \int \Loss(\theta, \hat\theta(\vec x)) \Prob_\theta(\vec x) \dd x.
+\]
+Then, the problem of finding a good estimator reduces to the problem of finding an estimator that yields small values for \cref{eq:frequentist.risk}.
+
+Of course, the problem remains to choose an appropriate loss function for the problem at hand.
+Some examples for loss functions include the squared error loss
+\[
+  \Loss(\theta, \theta') = \left( \theta - \theta' \right)^2,
+  \label{eq:frequentist.l2loss}
+\]
+which is often used for continuous parameter models e.g. $\Omega = \Reals$, and
+\[
+  \Loss(\theta, \theta') =
+  \begin{cases}
+    1 & \theta = \theta' \\
+    0 & \mathrm{otherwise}
+  \end{cases},
+  \label{eq:frequentist.01loss}
+\]
+which is appropriate only for discrete parameter models where the parameter space $\Omega$ is a discrete set.
+The choice of loss function generally depends on the problem at hand and determines the properties of the corresponding estimator.
+
+% max. likelihood (-> Frequentist) + Gaussian = MSE
+% MLE -> consistent (Frequenist!) + efficient + other Wasserman p. 126
+
+Note that \cref{eq:frequentist.mean_square} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\theta$.
 Strategies to make statements independent of the true value include
 \begin{definition}
   \label{def:frequentist.optimality_conditions}
   \begin{itemize}
-    \item $\hat\Theta$ is called a \emph{uniformly best} estimator, if for all other estimators $\hat\Theta'$ and all values of the true parameter $\Theta \in \Omega$
+    \item $\hat\theta$ is called a \emph{uniformly best} estimator, if for all other estimators $\hat\theta'$ and all values of the true parameter $\theta \in \Omega$
     \[
-      \mathcal{L}_{\hat\Theta}(\Theta) \le \mathcal{L}_{\hat\Theta'}(\Theta).
+      \Loss_{\hat\theta}(\theta) \le \Loss_{\hat\theta'}(\theta).
     \]
 
-    \item $\hat\Theta$ is called \emph{minimax}, if for all other estimators $\hat\Theta'$
+    \item $\hat\theta$ is called \emph{minimax}, if for all other estimators $\hat\theta'$
     \[
-      \sup_{\Theta\in\Omega} \mathcal{L}_{\hat\Theta}(\Theta) \le \sup_{\Theta\in\Omega} \mathcal{L}_{\hat\Theta'}(\Theta).
+      \sup_{\theta\in\Omega} \Loss_{\hat\theta}(\theta) \le \sup_{\theta\in\Omega} \Loss_{\hat\theta'}(\theta).
     \]
 
-    \item $\hat\Theta$ is called \emph{best on average} w.r.t.\ a distribution of the true value $\Theta$ if for all other estimators $\hat\Theta'$
+    \item $\hat\theta$ is called \emph{best on average} w.r.t.\ a distribution of the true value $\theta$ if for all other estimators $\hat\theta'$
     \[
-      \Exp_{\Theta} \mathcal{L}_{\hat\Theta}(\Theta) \le  \Exp_{\Theta} \mathcal{L}_{\hat\Theta'}(\Theta).
+      \Exp_{\theta} \Loss_{\hat\theta}(\theta) \le  \Exp_{\theta} \Loss_{\hat\theta'}(\theta).
     \]
 
-    \item $\hat\Theta$ is called \emph{admissible} if there is no other estimator $\hat\Theta'$ such that
+    \item $\hat\theta$ is called \emph{admissible} if there is no other estimator $\hat\theta'$ such that
     \[
-      \forall\Theta \in \Omega\colon \mathcal{L}_{\hat\Theta'}(\Theta) \le \mathcal{L}_{\hat\Theta}(\Theta)
+      \forall\theta \in \Omega\colon \Loss_{\hat\theta'}(\theta) \le \Loss_{\hat\theta}(\theta)
       \quad\mbox{ and }\quad
-      \exists\Theta \in \Omega\colon \mathcal{L}_{\hat\Theta'}(\Theta) < \mathcal{L}_{\hat\Theta}(\Theta)
+      \exists\theta \in \Omega\colon \Loss_{\hat\theta'}(\theta) < \Loss_{\hat\theta}(\theta)
     \]
   \end{itemize}
 \end{definition}
@@ -106,14 +125,16 @@ For this purpose we need to introduce a precise notion of \quotes{error bars}, n
 A confidence region $\CR \subset \Omega$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data to a subset of the parameter space -- such that the true parameter is contained in $\CR$ with probability greater than $\alpha$
 \[
   \label{eq:frequentist.coverage}
-  \forall \Theta\in\Omega \colon \Prob_\Theta\left( \CR(X_1, \ldots, X_N) \ni \Theta \right) \ge \alpha.
+  \forall \theta\in\Omega \colon \Prob_\theta\left( \CR(X_1, \ldots, X_N) \ni \theta \right) \ge \alpha.
 \]
+
+\todo{Interpreation of CR? See Wasserman p.92)}
 
 Similar to point estimators, \cref{eq:frequentist.coverage} does not uniquely determine a confidence region construction.
 Furthermore, additional constraints are necessary to exclude trivial constructions such as the following:
 Take the region estimator, which is always equal to the full parameter space independent of the data $\CR(X_1, \ldots X_N) = \Omega$, then
 \[
-  \Prob_\Theta\left(  \CR(X_1, \ldots, X_N) \ni \Theta  \right) = 1 \ge \alpha
+  \Prob_\theta\left(  \CR(X_1, \ldots, X_N) \ni \theta  \right) = 1 \ge \alpha
 \]
 for all confidence levels $\alpha$.
 Although, this construction trivially fulfils the coverage condition~\eqref{eq:frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
@@ -154,13 +175,13 @@ This definition of strong admissibility~\cite[Def.~7.1]{Joshi_1969_Admissibility
 Let us now introduce the Bayesian point of view on inference.
 In contrast to the Frequentist's framework, where the existence of a single \quotes{true value} for the model parameter is assumed and the observed data is assumed to be random, Bayesian statistics treats the parameter itself as a random variable.
 More precisely, in Bayesian statistics probabilities reflect subjective beliefs and allow for consistently updating one's belief according to empirical observations.
-In a parameter estimation problem, the \emph{prior distribution} $\Prob(\Theta)$ expresses one's belief about the parameter $\Theta$ before taking any data into account.
-Given an observation $X$, the distribution of $\Theta$ is updated according to Bayes' rule~\cite{}
+In a parameter estimation problem, the \emph{prior distribution} $\Prob(\theta)$ expresses one's belief about the parameter $\theta$ before taking any data into account.
+Given an observation $X$, the distribution of $\theta$ is updated according to Bayes' rule~\cite{}
 \[
   \label{eq:bayesian.bayes_rule}
-  \Prob(\Theta | X) = \frac{\Prob(X | \Theta) \Prob(\Theta)}{\Prob(X)}.
+  \Prob(\theta | X) = \frac{\Prob(X | \theta) \Prob(\theta)}{\Prob(X)}.
 \]
-Here, $\Prob(X|\Theta)$ is the \emph{likelihood function} and $\Prob(\Theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\Theta$.
+Here, $\Prob(X|\theta)$ is the \emph{likelihood function} and $\Prob(\theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\theta$.
 
 Computing the Bayesian update~\eqref{eq:bayesian.bayes_rule} analytically is possible only in a few rare cases:
 If for likelihood function the prior and the posterior are in the same family of distributions, the prior is called a \emph{conjugate prior} for the likelihood function.
@@ -171,6 +192,7 @@ If we assume a Gaussian prior $\theta \sim \Normal(\mu, \sigma^2)$, we have~\cit
 \]
 with
 \[
+  \label{eq:bayesian.kalman}
   \mu' = \frac{ \frac{\mu}{\sigma^2} + \frac{x}{\tau^2} }{ \frac{1}{\sigma^2} + \frac{1}{\tau^2} },
   \quad\mbox{and}\quad
   \sigma' = \left( \frac{1}{\sigma^2} + \frac{1}{\tau^2} \right)^{- \tfrac{1}{2}}.
@@ -180,19 +202,19 @@ Although there are other well-known conjugate priors with explicit formulas for 
 Commonly used methods include sampling techniques such as Markov Chain Monte Carlo and Sequential Monte Carlo~\cite{} as well as variational Bayes~\cite{}.\\
 
 
-Note that the posterior contains all the information on $\Theta$.
+Note that the posterior contains all the information on $\theta$.
 To summarize important features of the posterior, we introduce point and region estimators similar to the Frequentist case:
 One commonly used estimator is the Bayesian mean estimator (BME) given by
 \[
-  \hat\Theta_\mathrm{BME}(X) = \int \Theta \, \Prob(\Theta | X) \, \dd\Theta.
+  \hat\theta_\mathrm{BME}(X) = \int \theta \, \Prob(\theta | X) \, \dd\theta.
 \]
 A justification for the BME is that it minimizes (under normal circumstances~\cite{Lehmann_1998_Theory}) the expected loss
 \[
   \label{eq:bayesian.expected_loss}
-  \Exp_\Theta \mathcal{L}(\Theta, \hat\Theta(X)),
+  \Exp_\theta \Loss(\theta, \hat\theta(X)),
 \]
-provided the loss function $\mathcal{L}$ is a \emph{Bregman divergence}~\cite{Banerjee_2005_On}.
-Note that the expectation over $\Theta$ in \cref{eq:bayesian.expected_loss} is taken over the posterior with observation $X$.
+provided the loss function $\Loss$ is a \emph{Bregman divergence}~\cite{Banerjee_2005_On}.
+Note that the expectation over $\theta$ in \cref{eq:bayesian.expected_loss} is taken over the posterior with observation $X$.
 
 Another example of a point estimator is the \emph{maximum a posteriori} (MAP) estimator.
 As the name suggests, the MAP estimator is obtained by maximizing the posterior~\eqref{eq:bayesian.bayes_rule}.
@@ -206,7 +228,7 @@ A \emph{credible region}\footnote{%
 $\CR$ with credibility $\alpha$ is a subset of the parameter space $\Omega$ containing at least mass $\alpha$ of the posterior
 \[
   \label{eq:bayesian.credibility}
-  \Prob(\Theta \in \CR | X_1, \ldots, X_N) \ge \alpha.
+  \Prob(\theta \in \CR | X_1, \ldots, X_N) \ge \alpha.
 \]
 Notice the different notion of randomness compared to \cref{eq:frequentist.coverage}:
 Confidence regions are random variables due to their dependence on the data and \cref{eq:frequentist.coverage} demands that the true value is contained in the confidence region with high probability.
@@ -225,10 +247,6 @@ Although in the following we deal with MVCRs w.r.t.\ a geometric notion of volum
 
 
 
-
-
-
-d
 
 
 
@@ -489,7 +507,7 @@ The following theorem provides a useful parameterization of pre-images under the
     \label{eq:ortho.ellipsoid}
     \CR_{\estim \varrho} = A^{-1}\left( \CR_{\estim{\vec y}} \right) = \left\{ \estim{\varrho} + \sum_{i}R_{i}u_{i}\sigma_{i}'\colon \vec{u}^{T}\vec{u}\leq1 \right\}.
   \]
-  Here, $\estim{\varrho}$ is the linear inversion estimator corresponding to \cref{eq:ortho.linear_inversion}, that is a Hermitian matrix with $\tr \estim{\varrho} = 1$. 
+  Here, $\estim{\varrho}$ is the linear inversion estimator corresponding to \cref{eq:ortho.linear_inversion}, that is a Hermitian matrix with $\tr \estim{\varrho} = 1$.
   The $R_{i}>0$ ($i=1,\ldots,d^{2}-1$) are the ellipsoid's radii in the directions given by $\sigma_{i}'=\sum_{j}O_{ji}\sigma_{j}$ and the orthogonal matrix $O\in\mathcal{SO}\left(d^{2}-1\right)$ furnishes any orientation of the semi-major axes of the ellipsoid.
 \end{theorem}
 \begin{proof}
@@ -583,7 +601,7 @@ Hence, we need to adapt the original proof strategy to deal with the restriction
 % A negative answer to this problem shows that the corresponding ellipsoid is fully contained within the psd states.
 
 
-Let us start the outline of the proof of \cref{thm:ortho.hard} with a simplified example: 
+Let us start the outline of the proof of \cref{thm:ortho.hard} with a simplified example:
 Consider $R_{i}=R$ for all $i=1,\ldots,d^{2}-1$ that is all radii are equal and the ellipsoid is a ball.
 With no loss of generality, we can assume $\sigma'_i = \sigma_i$.
 The following Lemma, which is proven in~\cref{FIXME}, provides an easily checkable, necessary, and sufficient condition to decide \cref{prob:ortho.ellpos} for this special case.
@@ -635,26 +653,25 @@ For the details, please see \cref{sec:ellpos}.
 \section{Bayesian Credibility regions}
 \label{sec:bayesian}
 
+\todo{Explain the model}
+\todo{Covariance matrix, parameter space.}
+
 \subsection{MVCR for Gaussians}
 \label{sub:bayesian.gaussian}
 
 We now turn to the question of minimal volume credible regions (MVCR) in the Bayesian framework:
 In the unconstrained case, Gaussian posteriors are one of the few examples of multivariate distributions, where the MVCR are simple geometric objects, namely ellipsoids.
-In practice, Gaussian posteriors arise in the following scenario:
-Consider a random vector $\vec X\sim\mathcal{N}(\vec\mu, \Sigma)$, where the covariance matrix $\Sigma$ is known and we wish to estimate its mean $\vec\mu$.
-If we furthermore assume a Gaussian prior for the mean, the posterior will be Gaussian as well due to the fact that the Gaussian distribution is its own conjugated prior.
-
-This is one of the few cases, in which the Bayesian update as well as the computation of an optimal credible region can be carried out analytically.
-First, computing the parameters for the Gaussian posterior distribution can be done by means of \emph{linear Kalman filter update equations}, see e.g.~\cite[Sec.\ 2.4]{Audenaert_2009_Quantum}.
-Second, for the credible region, assume that after the Bayesian update, the posterior distribution of $\vec\mu$ is parameterized by its mean $\vec\theta \in \Reals^N$ and covariance matrix $\Sigma \in \Reals^{N \times N}$.
-Therefore, the posterior of $\vec\mu$ has probability density
+As discussed in \cref{sub:intro.bayesian}, Gaussian posterior arise from updating Gaussian priors with Gaussian likelihood functions.
+Computing the parameters for the multivariate Gaussian posterior distribution can be done by means of \emph{linear Kalman filter update equations} similar to \cref{eq:bayesian.kalman}, see e.g.~\cite[Sec.\ 2.4]{Audenaert_2009_Quantum}.
+Second, for the credible region assume that after the Bayesian update, the posterior distribution of $\varrho$ is parameterized by its mean $\theta$ and covariance matrix $\Sigma$.
+Therefore, the posterior of $\varrho$ has probability density
 \begin{equation}
   \label{eq:bayesian.gaussian_density}
-  \pi_{\vec\theta,\Sigma}(\vec x) = {(2\pi)}^{-\Nhalf} \abs{\Sigma}^{-\frac{1}{2}} \exp\left( -\frac{1}{2} \norm{\vec x - \vec\theta}_\Sigma^2 \right).
+  \pi_{\theta,\Sigma}(\varrho) = {(2\pi)}^{-\Nhalf} \abs{\Sigma}^{-\frac{1}{2}} \exp\left( -\frac{1}{2} \norm{\varrho - \theta}_\Sigma^2 \right).
 \end{equation}
 where
 \begin{equation}
-  \norm{\vec x - \vec\theta}_\Sigma := \sqrt{{(\vec x - \vec\theta)}^T \Sigma^{-1} (\vec x - \vec\theta)}
+  \norm{\varrho - \theta}_\Sigma := \sqrt{{(\varrho - \theta)}^T \Sigma^{-1} (\varrho - \theta)}
 \end{equation}
 is the Mahalanobis distance and  $\abs{\Sigma}$ denotes the determinant of $\Sigma$.
 As elaborated in Sec.~\ref{sub:intro.error_regions}, the MVCRs are exactly the highest posterior density sets as defined in Eq.~\eqref{eq:intro.highest_posterior}.
