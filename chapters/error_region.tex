@@ -43,9 +43,25 @@ In the frequentist (or orthodox) framework, the probability of an outcome of a r
 More precisely, denote the number of repetitions of an experiment by $T$ and the number of times the event under consideration $x$ occurred by $n_T$.
 Then, a Frequentist interprets the probability $\Prob(x)$ as the statement that if $T \to \infty$, $\frac{n_T}{T} \to \Prob(x)$.
 
-For the task of parameter estimation, we assume that the observed data are generated from the parametric model with the fixed \quotes{true} parameter $\theta \in \Omega$, which is unknown.
-From a finite number of observations $X_1, \ldots X_N$, we must construct an estimate $\hat\theta(\vec X)$ for $\theta$.
-The question how to single out a \quotes{good} estimator is formalized in statistical decision theory~\cite{Casella_2008_Statistical,Lehmann_1998_Theory}.
+For the task of parameter estimation, we assume that the observed data are generated from the parametric model with the fixed \quotes{true} parameter $\theta_0 \in \Omega$, which is unknown.
+From a finite number of observations $X_1, \ldots X_N$, we must construct an estimate $\hat\theta(\vec X)$ for $\theta_0$.
+Although there are some intuitive approaches to this problem such as the method of moments~\cite[Sec.\ 9.2]{Wasserman_2013_All}, the \emph{principle of maximum likelihood} is often employed to construct an estimator with good frequentist properties.
+The \emph{likelihood function} is defined by
+\[
+  \Loss(\theta; \vec X) = \Prob_\theta(\vec X) = \prod_{i=1}^N \Prob_\theta(X_i),
+  \label{eq:frequentist.likelihood_function}
+\]
+where we have assumed independence of the samples in the last line.
+The \emph{maximum likelihood estimator} (\apprv{MLE}) is then defined by
+\[
+  \estim\theta_\mathrm{MLE}(\vec x) = \argmax_\theta \Loss(\theta; \vec x).
+  \label{eq:frequentist.mle}
+\]
+The justification for using~\eqref{eq:frequentist.mle} is that under mild conditions on the model, the MLE posses many appealing properties~\cite[Sec.\ 9.4]{Wasserman_2013_All} such as consistency and efficiency:
+Consistency means that the MLE converges to the true value $\theta_0$ in probability as $N \to \infty$ and efficiency roughly means that among all well behaved estimators, the MLE has the smallest variance in the large sample limit.\\
+
+
+A broader approach to the problem of how to single out a \quotes{good} estimator is formalized in statistical decision theory~\cite{Casella_2008_Statistical,Lehmann_1998_Theory}.
 For this purpose, we need to introduce a \emph{loss function}
 \[
   \label{eq:frequentist.loss_function}
@@ -77,9 +93,6 @@ which is often used for continuous parameter models e.g. $\Omega = \Reals$, and
 \]
 which is appropriate only for discrete parameter models where the parameter space $\Omega$ is a discrete set.
 The choice of loss function generally depends on the problem at hand and determines the properties of the corresponding estimator.
-
-% max. likelihood (-> Frequentist) + Gaussian = MSE
-% MLE -> consistent (Frequenist!) + efficient + other Wasserman p. 126
 
 Note that \cref{eq:frequentist.mean_square} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\theta$.
 Strategies to make statements independent of the true value include
@@ -117,6 +130,10 @@ Strategies to make statements independent of the true value include
 \todo{No statement about single runs!}
 \todo{Likelihood ratio CR?}
 \todo{Stein's phenomenon}
+
+
+% max. likelihood (-> Frequentist) + Gaussian = MSE
+% MLE -> consistent (Frequenist!) + efficient + other Wasserman p. 126
 
 
 % examples (also depends on notion of volume), admissability
