@@ -51,10 +51,10 @@ The \emph{likelihood function} is defined by
   \Loss(\theta; \vec X) = \Prob_\theta(\vec X) = \prod_{i=1}^N \Prob_\theta(X_i),
   \label{eq:frequentist.likelihood_function}
 \]
-where we have assumed independence of the samples in the last line.
+where we have assumed independence of the samples.
 The \emph{maximum likelihood estimator} (\apprv{MLE}) is then defined by
 \[
-  \estim\theta_\mathrm{MLE}(\vec x) = \argmax_\theta \Loss(\theta; \vec x).
+  \estim\theta_\mathrm{MLE}(\vec x) = \operatorname{argmax}_\theta \Loss(\theta; \vec x).
   \label{eq:frequentist.mle}
 \]
 The justification for using~\eqref{eq:frequentist.mle} is that under mild conditions on the model, the MLE posses many appealing properties~\cite[Sec.\ 9.4]{Wasserman_2013_All} such as consistency and efficiency:
@@ -65,121 +65,119 @@ A broader approach to the problem of how to single out a \quotes{good} estimator
 For this purpose, we need to introduce a \emph{loss function}
 \[
   \label{eq:frequentist.loss_function}
-  \Loss\colon \Omega \times \Reals \to \Reals,  (\theta, \estim\theta) \mapsto \Loss(\theta, \estim\theta),
+  \Loss\colon \Omega \times \Reals \to \Reals,  (\theta_0, \estim\theta) \mapsto \Loss(\theta_0, \estim\theta),
 \]
-which measures the discrepancy between $\theta$ and an estimate $\estim\theta(\vec X)$.
-Keep in mind that since the $X_i$ are random variables, so are $\estim\hat(\vec X)$ and its loss.
-To asses the estimator $\hat\theta$, that is the function mapping data to an estimate, we evaluate the average loss or \emph{risk}
+which measures the discrepancy between $\theta_0$ and an estimate $\estim\theta(\vec X)$.
+Keep in mind that since the $X_i$ are random variables, so are $\estim\theta(\vec X)$ and its loss.
+To asses the estimator $\hat\theta$, that is the function mapping data to an estimate, we evaluate the average loss or \emph{risk function}
 \[
   \label{eq:frequentist.risk}
-  \Risk(\theta, \hat\theta) = \Exp_\theta(\Loss(\theta, \hat\theta(\vec X))) = \int \Loss(\theta, \hat\theta(\vec x)) \Prob_\theta(\vec x) \dd x.
+  \Risk(\theta_0, \hat\theta) = \Exp_{\theta_0}(\Loss(\theta_0, \hat\theta(\vec X)))
+  = \int \Loss(\theta_0, \hat\theta(\vec x)) \Prob_{\theta_0}(\vec x) \dd x.
 \]
 Then, the problem of finding a good estimator reduces to the problem of finding an estimator that yields small values for \cref{eq:frequentist.risk}.
 
 Of course, the problem remains to choose an appropriate loss function for the problem at hand.
 Some examples for loss functions include the squared error loss
 \[
-  \Loss(\theta, \theta') = \left( \theta - \theta' \right)^2,
+  \Loss(\theta_0, \theta') = \left( \theta_0 - \theta' \right)^2,
   \label{eq:frequentist.l2loss}
 \]
 which is often used for continuous parameter models e.g. $\Omega = \Reals$, and
 \[
-  \Loss(\theta, \theta') =
+  \Loss(\theta_0, \theta') =
   \begin{cases}
-    1 & \theta = \theta' \\
+    1 & \theta_0 = \theta' \\
     0 & \mathrm{otherwise}
   \end{cases},
   \label{eq:frequentist.01loss}
 \]
 which is appropriate only for discrete parameter models where the parameter space $\Omega$ is a discrete set.
-The choice of loss function generally depends on the problem at hand and determines the properties of the corresponding estimator.
-
-Note that \cref{eq:frequentist.mean_square} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\theta$.
-Strategies to make statements independent of the true value include
-\begin{definition}
-  \label{def:frequentist.optimality_conditions}
-  \begin{itemize}
-    \item $\hat\theta$ is called a \emph{uniformly best} estimator, if for all other estimators $\hat\theta'$ and all values of the true parameter $\theta \in \Omega$
-    \[
-      \Loss_{\hat\theta}(\theta) \le \Loss_{\hat\theta'}(\theta).
-    \]
-
-    \item $\hat\theta$ is called \emph{minimax}, if for all other estimators $\hat\theta'$
-    \[
-      \sup_{\theta\in\Omega} \Loss_{\hat\theta}(\theta) \le \sup_{\theta\in\Omega} \Loss_{\hat\theta'}(\theta).
-    \]
-
-    \item $\hat\theta$ is called \emph{best on average} w.r.t.\ a distribution of the true value $\theta$ if for all other estimators $\hat\theta'$
-    \[
-      \Exp_{\theta} \Loss_{\hat\theta}(\theta) \le  \Exp_{\theta} \Loss_{\hat\theta'}(\theta).
-    \]
-
-    \item $\hat\theta$ is called \emph{admissible} if there is no other estimator $\hat\theta'$ such that
-    \[
-      \forall\theta \in \Omega\colon \Loss_{\hat\theta'}(\theta) \le \Loss_{\hat\theta}(\theta)
-      \quad\mbox{ and }\quad
-      \exists\theta \in \Omega\colon \Loss_{\hat\theta'}(\theta) < \Loss_{\hat\theta}(\theta)
-    \]
-  \end{itemize}
-\end{definition}
-\todo{Citation}
-\todo{Discussion of different properties, why no expectation value -> no "singular" regions?}
-\todo{Choice is arbitrary!}
-\todo{How does this connect with definition of probability?}
-\todo{Typical estimators? Max likelihood?}
-\todo{No statement about single runs!}
-\todo{Likelihood ratio CR?}
-\todo{Stein's phenomenon}
+The choice of loss function generally depends on the problem at hand and determines the properties of the corresponding estimator.\\
 
 
-% max. likelihood (-> Frequentist) + Gaussian = MSE
-% MLE -> consistent (Frequenist!) + efficient + other Wasserman p. 126
+% Note that the risk in \cref{eq:frequentist.risk} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\theta_0$.
+% Some definitions risks that are independent of $\theta_0$ are given in the following definition.
+% \begin{definition}
+  % \label{def:frequentist.optimality_conditions}
+  % \begin{itemize}
+    % \item $\hat\theta$ is called a \emph{uniformly best} estimator, if for all other estimators $\hat\theta'$ and all values of the true parameter $\theta \in \Omega$
+    % \[
+      % \Loss_{\hat\theta}(\theta) \le \Loss_{\hat\theta'}(\theta).
+    % \]
+
+    % \item $\hat\theta$ is called \emph{minimax}, if for all other estimators $\hat\theta'$
+    % \[
+      % \sup_{\theta\in\Omega} \Loss_{\hat\theta}(\theta) \le \sup_{\theta\in\Omega} \Loss_{\hat\theta'}(\theta).
+    % \]
+
+    % \item $\hat\theta$ is called \emph{best on average} w.r.t.\ a distribution of the true value $\theta$ if for all other estimators $\hat\theta'$
+    % \[
+      % \Exp_{\theta} \Loss_{\hat\theta}(\theta) \le  \Exp_{\theta} \Loss_{\hat\theta'}(\theta).
+    % \]
+
+    % \item $\hat\theta$ is called \emph{admissible} if there is no other estimator $\hat\theta'$ such that
+    % \[
+      % \forall\theta \in \Omega\colon \Loss_{\hat\theta'}(\theta) \le \Loss_{\hat\theta}(\theta)
+      % \quad\mbox{ and }\quad
+      % \exists\theta \in \Omega\colon \Loss_{\hat\theta'}(\theta) < \Loss_{\hat\theta}(\theta)
+    % \]
+  % \end{itemize}
+% \end{definition}
 
 
-% examples (also depends on notion of volume), admissability
-However, as already mentioned in the introduction, point estimators cannot convey uncertainty in the estimate.
+As already mentioned in the introduction, point estimators cannot convey uncertainty in the estimate.
 For this purpose we need to introduce a precise notion of \quotes{error bars}, namely \emph{confidence regions}.
-A confidence region $\CR \subset \Omega$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data to a subset of the parameter space -- such that the true parameter is contained in $\CR$ with probability greater than $\alpha$
-\[
-  \label{eq:frequentist.coverage}
-  \forall \theta\in\Omega \colon \Prob_\theta\left( \CR(X_1, \ldots, X_N) \ni \theta \right) \ge \alpha.
-\]
-
-\todo{Interpreation of CR? See Wasserman p.92)}
+\begin{definition}\label{def:frequentist.cr}
+  A confidence region $\CR$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data $\vec x$ to a subset $\CR(\vec x) \subset \Omega$ of the parameter space -- such that the true parameter is contained in $\CR$ with probability greater than $\alpha$:
+  \[
+    \label{eq:frequentist.coverage}
+    \forall \theta_0\in\Omega \colon \Prob_\theta_0\left( \CR(X_1, \ldots, X_N) \ni \theta_0 \right) \ge 1 - \alpha.
+  \]
+\end{definition}
+Note that the coverage condition~\eqref{eq:frequentist.coverage} is not a probabilistic statement about the true parameter $\theta_0$ for fixed observed data $\vec x$.
+Instead, \cref{def:frequentist.cr} should be interpreted as a statistical guarantee for the region estimator $\CR$:
+Say we repeat an experiment $M$ times and obtain data $\vec x\ind{1}$, \ldots $\vec x\ind{M}$ from a distribution with true parameter $\theta_0$.
+Then, in the limit $M \to \infty$ a fraction of $1 - \alpha$ of the regions $\CR(\vec x\ind{1})$, \ldots, $\CR(\vec x\ind{M})$ contain the true parameter $\theta_0$.
 
 Similar to point estimators, \cref{eq:frequentist.coverage} does not uniquely determine a confidence region construction.
 Furthermore, additional constraints are necessary to exclude trivial constructions such as the following:
 Take the region estimator, which is always equal to the full parameter space independent of the data $\CR(X_1, \ldots X_N) = \Omega$, then
 \[
-  \Prob_\theta\left(  \CR(X_1, \ldots, X_N) \ni \theta  \right) = 1 \ge \alpha
+  \Prob_\theta\left(  \CR(X_1, \ldots, X_N) \ni \theta_0  \right) = 1 \ge 1 - \alpha
 \]
 for all confidence levels $\alpha$.
 Although, this construction trivially fulfils the coverage condition~\eqref{eq:frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
-Therefore, we have to impose a notion of what constitutes a good confidence region.
-
-Clearly, if we have two confidence regions $\CR_1$ and $\CR_2$ with the same confidence level $\alpha$ and $\CR_1 \subset \CR_2$, then $\CR_1$ is more informative.
+Therefore, we have to impose a notion of what constitutes a good confidence region by introducing a loss function.
+Clearly, if we have two confidence regions $\CR_1$ and $\CR_2$ with the same confidence level and $\CR_1 \subset \CR_2$, then $\CR_1$ is more informative.
 More generally, smaller regions should be preferred since they convey more confidence in the estimate and exclude more alternatives.
 Therefore, measures of size such as (expected) volume or diameter are commonly used as risk functions for region estimators.
-This leads to similar definitions as in \cref{def:frequentist.optimality_conditions} for confidence regions with the additional constraint that \cref{eq:frequentist.coverage} has to be fulfilled.
 
-Since it is crucial for the discussion of confidence regions under constraints, let us explicitly state the following the notion of optimality from~\cite[Def. 2.2]{Joshi_1969_Admissibility}.
-Note that in contrast to the previous discussion, it uses \quotes{pointwise volume} as a loss function.
-\begin{definition}
+
+Note that the risk function~\eqref{eq:frequentist.risk} for a given estimator still depends on the unknown true value.
+In order to obtain a single-number summary of the performance of an estimator, there are different strategies such as maximizing or averaging the risk function over all true values~\cite[Sec.\ 12.2]{Wasserman_2013_All}.
+By minimizing these risks over all possible estimators, we try to determine a single best estimator.
+However, in the following we use a less ambitious notion of optimality:
+\begin{definition}{\cite[Def. 2.2]{Joshi_1969_Admissibility}}
   \label{def:frequentist.admissible}
-  A confidence region $\CR$ for the parameter estimation of $\theta \in \Omega$ is called (weakly) \emph{admissible} if there is no other confidence region $\CR'$ that fulfils
+  A confidence region $\CR$ for the parameter estimation of $\theta_0 \in \Omega$ is called (weakly) \emph{admissible} if there is no other confidence region $\CR'$ that fulfils
   \begin{enumerate}
     \item(equal or smaller volume) $\Vol(\CR'(\vec x)) \le \Vol(\CR(\vec x))$ for almost all observations $\vec x$.
-    \item(same or better coverage) $\Prob(\CR' \owns \theta) \ge \Prob(\CR \owns \theta)$ for all $\theta \in \Omega$
-    \item(strictly better) strict inequality holds for one $\theta \in \Omega$ in (ii) or on a set of positive measure in (i).
+    \item(same or better coverage) $\Prob_{\theta_0}(\CR' \owns \theta_0) \ge \Prob_{\theta_0}(\CR \owns \theta_0)$ for all $\theta_0 \in \Omega$
+    \item(strictly better) strict inequality holds for one $\theta_0 \in \Omega$ in (ii) or on a set of positive measure in (i).
   \end{enumerate}
 \end{definition}
 In words, $\CR$ is admissible if there is no other confidence region $\CR'$ that performs at least as good as $\CR$ and strictly better for some non-negligible settings.
+In contrast to the previous discussion, this notion of optimality uses \quotes{pointwise} volume as a risk function instead of the average volume.
 The conditions in Def.~\ref{def:frequentist.admissible} are stated only for ``almost all'' $\vec x$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
-A different approach is to state condition (i) in terms of the expected volume with the average taken over to the data $\vec x$ for a fixed true parameter $\theta$.
-This definition of strong admissibility~\cite[Def.~7.1]{Joshi_1969_Admissibility} is closely related to the definition of admissibility for point estimators in \cref{def:frequentist.optimality_conditions}.
+A different approach more in line with the previous discussion is to state condition (i) in terms of the expected volume with the average taken over the data $\vec X$ for a fixed true parameter $\theta_0$~\cite[Def.~7.1]{Joshi_1969_Admissibility}.
 
 
 \todo{Today: Asymptotic optimal, adaptive, ...}
+\todo{Likelihood ratio CR?}
+\todo{Stein's phenomenon}
+\todo{Talk about the connection MLE/MSE for 1D Gaussian?}
+\todo{No statement about single runs!}
 
 
 \subsection{Bayesian Statistics}
