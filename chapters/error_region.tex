@@ -172,34 +172,33 @@ In contrast to the previous discussion, this notion of optimality uses \quotes{p
 The conditions in Def.~\ref{def:frequentist.admissible} are stated only for ``almost all'' $\vec x$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
 A different approach more in line with the previous discussion is to state condition (i) in terms of the expected volume with the average taken over the data $\vec X$ for a fixed true parameter $\theta_0$~\cite[Def.~7.1]{Joshi_1969_Admissibility}.
 
-
 \todo{Today: Asymptotic optimal, adaptive, ...}
 \todo{Likelihood ratio CR?}
 \todo{Stein's phenomenon}
 \todo{Talk about the connection MLE/MSE for 1D Gaussian?}
-\todo{No statement about single runs!}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Bayesian Statistics}
 \label{sub:intro.bayesian}
 
-% frequentist: parameters fixed, data random; Bayesian: other way
-% two different camps of interpretation: subjective and objective -> only differetnt in interpretation, technically the same
-% prior -> Bayes' rule -> posterior
 
-Let us now introduce the Bayesian point of view on inference.
-In contrast to the Frequentist's framework, where the existence of a single \quotes{true value} for the model parameter is assumed and the observed data is assumed to be random, Bayesian statistics treats the parameter itself as a random variable.
-More precisely, in Bayesian statistics probabilities reflect subjective beliefs and allow for consistently updating one's belief according to empirical observations.
-In a parameter estimation problem, the \emph{prior distribution} $\Prob(\theta)$ expresses one's belief about the parameter $\theta$ before taking any data into account.
+Let us now introduce the Bayesian point of view on inference:
+In the Bayesian interpretation, probabilities do not describe frequencies in the limit of infinitely many repetitions, but they reflect subjective degrees of belief.
+In other words, in the Bayesian framework randomness reflects one's ignorance, or lack of knowledge of the value of a parameter.
+In contrast to frequentist inference, this enables us to make probabilistic statements about the values of parameters even for a single set of observed data.
+Generally, Bayesian inference for a parametric model is carried out in the following way:
+First, we choose a \emph{prior distribution} $\Prob(\theta)$, which expresses our belief about the parameter $\theta$ before taking any data into account.
 Given an observation $X$, the distribution of $\theta$ is updated according to Bayes' rule~\cite{}
 \[
   \label{eq:bayesian.bayes_rule}
   \Prob(\theta | X) = \frac{\Prob(X | \theta) \Prob(\theta)}{\Prob(X)}.
 \]
-Here, $\Prob(X|\theta)$ is the \emph{likelihood function} and $\Prob(\theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\theta$.
+Here, $\Prob(X|\theta)$ is the \emph{likelihood function} of the model analogous to~\eqref{eq:frequentist.likelihood_function} and $\Prob(\theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\theta$.
+Of course, the update in \cref{eq:bayesian.bayes_rule} is not limited to a single observation and can be iterated for independent data.
 
 Computing the Bayesian update~\eqref{eq:bayesian.bayes_rule} analytically is possible only in a few rare cases:
-If for likelihood function the prior and the posterior are in the same family of distributions, the prior is called a \emph{conjugate prior} for the likelihood function.
+If for a given likelihood function, the prior and the posterior are in the same family of distributions, the prior is called a \emph{conjugate prior} for the likelihood function.
 For example, consider a Gaussian random variable $X \sim \Normal(\theta, \tau^2)$ with known variance $\tau^2$.
 If we assume a Gaussian prior $\theta \sim \Normal(\mu, \sigma^2)$, we have~\cite{}
 \[
@@ -223,13 +222,12 @@ One commonly used estimator is the Bayesian mean estimator (BME) given by
 \[
   \hat\theta_\mathrm{BME}(X) = \int \theta \, \Prob(\theta | X) \, \dd\theta.
 \]
-A justification for the BME is that it minimizes (under normal circumstances~\cite{Lehmann_1998_Theory}) the expected loss
-\[
-  \label{eq:bayesian.expected_loss}
-  \Exp_\theta \Loss(\theta, \hat\theta(X)),
-\]
-provided the loss function $\Loss$ is a \emph{Bregman divergence}~\cite{Banerjee_2005_On}.
-Note that the expectation over $\theta$ in \cref{eq:bayesian.expected_loss} is taken over the posterior with observation $X$.
+A justification for the BME is that it minimizes (under normal circumstances~\cite{Lehmann_1998_Theory,Banerjee_2005_On}) the expected risk
+\(
+  \Exp \left( \Risk(\theta, \hat\theta(X)) \right),
+\)
+provided the loss function $\Loss$ is a \emph{Bregman divergence}.
+Note that the expectation is taken over $\theta$ w.r.t.\ the posterior with observation $X$.
 
 Another example of a point estimator is the \emph{maximum a posteriori} (MAP) estimator.
 As the name suggests, the MAP estimator is obtained by maximizing the posterior~\eqref{eq:bayesian.bayes_rule}.
@@ -237,14 +235,17 @@ Since this does not require the expensive computation of the denominator in \cre
 
 
 Let us now introduce the concept of error regions in the Bayesian framework.
-A \emph{credible region}\footnote{%
-  We use the same letter for confidence and credible regions when the meaning is clear from the context.
-}
-$\CR$ with credibility $\alpha$ is a subset of the parameter space $\Omega$ containing at least mass $\alpha$ of the posterior
-\[
-  \label{eq:bayesian.credibility}
-  \Prob(\theta \in \CR | X_1, \ldots, X_N) \ge \alpha.
-\]
+\begin{definition}
+  \label{def:bayesian.cr}
+  A \emph{credible region}\footnote{%
+    We use the same letter for confidence and credible regions when the meaning is clear from the context.
+  }
+  $\CR$ with credibility $1-\alpha$ is a subset of the parameter space $\Omega$ containing at least mass $1-\alpha$ of the posterior
+  \[
+    \label{eq:bayesian.credibility}
+    \Prob(\theta \in \CR | X_1, \ldots, X_N) \ge 1-\alpha.
+  \]
+\end{definition}
 Notice the different notion of randomness compared to \cref{eq:frequentist.coverage}:
 Confidence regions are random variables due to their dependence on the data and \cref{eq:frequentist.coverage} demands that the true value is contained in the confidence region with high probability.
 Here, \quotes{probability} refers to (possibly hypothetical) repetitions of the experiment -- no statement can be made for a single run of an experiment with given outcomes.
@@ -253,25 +254,7 @@ In contrast, the definition of credible regions~\eqref{eq:bayesian.credibility} 
 In order to single out \quotes{good} credible regions, we need to introduce a notion of optimality.
 As argued in \cref{sub:intro.frequentist}, smaller error regions are generally more informative.
 Therefore, good credible regions are minimal-volume credible regions (MVCRs) or credible regions with the smallest diameter.
-Since the prior and data are  assumed to be fixed, no ambiguity similar to \cref{def:frequentist.optimality_conditions} arises in this setting.
 Although in the following we deal with MVCRs w.r.t.\ a geometric notion of volume, some authors have proposed to measure the volume of a region by its prior probability~\cite{Evans_2006_Optimally,Shang_2013_Optimal}.
-
-
-
-\todo{Objective vs subjective Bayesian}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
