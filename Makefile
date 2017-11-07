@@ -11,6 +11,8 @@ full:
 	-$(MAKE_FULL_CMD)
 	-$(MAKE_FULL_CMD)
 
+preamble: thesis.tex
+	pdflatex -interaction=nonstopmode -ini -jobname="thesis" "&pdflatex" mylatexformat.ltx """thesis.tex"""
 
 SUBDIR_ROOTS := chapters
 DIRS := . $(shell find $(SUBDIR_ROOTS) -type d)

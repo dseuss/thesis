@@ -1,12 +1,13 @@
+%&thesis
 \documentclass[a4paper,11pt,BCOR=8mm,twoside,headsepline]{scrbook}
 \author{Daniel Suess}
 \title{Data problems in Quantum Physics}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Begin of dumped preamble
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \usepackage{amsmath,amsbsy,amssymb,amsthm}
 \usepackage{bbm}
-\usepackage{graphicx,subcaption} 
+\usepackage{graphicx,subcaption}
 
 \usepackage[backend=biber,bibencoding=utf8]{biblatex}
 \bibliography{references_ds}
@@ -22,8 +23,8 @@
 }
 \usepackage[nameinlink,capitalize]{cleveref}
 
-\usepackage{algorithmicx} 
-\usepackage{algorithm} 
+\usepackage{algorithmicx}
+\usepackage{algorithm}
 \usepackage{algpseudocode}
 
 \usepackage{color}
@@ -49,6 +50,10 @@
 \newtheorem{problem}[theorem]{Problem}
 
 
+\endofdump
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% End of dumped preamble
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{macros}
 
 % if \makefull is defined (e.g. by commandline argument, include everything)
@@ -56,9 +61,9 @@
   \includeonly{chapters/error_region}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \frontmatter
 \maketitle
 \tableofcontents
