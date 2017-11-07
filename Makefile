@@ -6,16 +6,17 @@ partial:
 
 .PHONY: full
 full:
-	$(MAKE_FULL_CMD)
-	biber thesis.tex
-	$(MAKE_FULL_CMD)
-	$(MAKE_FULL_CMD)
+	-$(MAKE_FULL_CMD)
+	-biber thesis
+	-$(MAKE_FULL_CMD)
+	-$(MAKE_FULL_CMD)
+
 
 SUBDIR_ROOTS := chapters
 DIRS := . $(shell find $(SUBDIR_ROOTS) -type d)
-GARBAGE_PATTERNS := *.aux *.log *.bbl *.bcf *.blg *.fdb_latexmk *.fls *.run.xml
+GARBAGE_PATTERNS := *.aux *.log *.bbl *.bcf *.blg *.fdb_latexmk *.fls *.run.xml *.tdo *.fmt
 GARBAGE := $(foreach DIR,$(DIRS),$(addprefix $(DIR)/,$(GARBAGE_PATTERNS)))
 
 .PHONY: clean
 clean:
-	rm -f $(GARBAGE)
+	rm -f $(GARBAGE) thesis.pdf
