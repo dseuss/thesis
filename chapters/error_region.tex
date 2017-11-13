@@ -268,6 +268,8 @@ Although in the following we deal with MVCRs w.r.t.\ a geometric notion of volum
 % classifying computational problems according to their inherent difficulty -> here: runtime; other: space, communication, etc.
 
 The objective of computational complexity theory is to classify computational problems according to their inherent difficulty.
+Here, difficulty is quantified by the time needed to solve the problem.
+Other resources, which one may want to consider, are the least amount of memory or communication between parties required.
 At a first glance, an answer to the question whether a given problem can be solved efficiently might depend on what we consider as a \quotes{computer}:
 Clearly, a modern high-performance cluster can solve problems, which would take a human with pen and paper more than a lifetime to finish.
 Maybe surprisingly, it turns out that a single, simple mathematical model -- the \emph{Turing machine} -- describes the capabilities and restrictions of almost all physical implementations of computation well enough for the purpose of complexity theory.
@@ -302,13 +304,19 @@ as follows:
 The register is set to value $q'$, the tape head overwrites the cell with symbol $\gamma'$, and it moves depending on the value of $h$:
 If $h = L$ or $h = R$, it moves one cell to the left or right, respectively and if $h = S$ it stays in the current position.
 This cycle repeats until the register takes on the halting state $q_h$.
-If the TM halts, the state of the output tape is taken as its output.
+If the TM halts, the state of the tape with leading and trailing blanks removed is taken as its output.
+Note that many different definitions of TMs exist, e.g. with additional scratch tapes or with tapes that extend to infinity only in one direction.
+However, they are all equivalent, i.e., the architecture above can simulate and can be simulated on the other architectures with a small overhead.
 
 % computational problem: infinte collection of instances of varying size and the desired output
 % to assess whether a given algorithm is efficient based on its runtime -- or more precisely the number of basic operatoins -- scaling as a function of input size for the worst case
 % for this purpose -> turing machines as tractable model
 % efficcient algorithm: runtime scales polynomially in n
 % P definitoin
+
+
+
+
 
 % may seem arbitrary, since large coefficients and exponents may be more impractical than a slow exponential sclaing for practical relevant size
 % but:
