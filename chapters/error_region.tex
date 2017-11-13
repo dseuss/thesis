@@ -309,29 +309,20 @@ Note that many different definitions of TMs exist, e.g. with additional scratch 
 However, they are all equivalent, i.e., the architecture above can simulate and can be simulated on the other architectures with a small overhead.
 Furthermore, we can assume $\Gamma = \{0, 1, \blank\}$, that is, we use a binary encoding for all non-blank values of the alphabet.
 
-% computational problem: infinte collection of instances of varying size and the desired output
-% to assess whether a given algorithm is efficient based on its runtime -- or more precisely the number of basic operatoins -- scaling as a function of input size for the worst case
-% for this purpose -> turing machines as tractable model
-% efficcient algorithm: runtime scales polynomially in n
-% P definitoin
-
-We now formalize the notion of runtime.
+We now formalize the notion of runtime of a TM and the complexity of a given problem.
 Denote by
 \[
   \BitStrings = \bigcup_{n \in \Naturals} \{0, 1\}^n
 \]
 the set of all finite bit strings.
+
 \begin{definition}{\cite[Def.\ 1.3]{Arora_2009_Computational}}
   \label{def:complexity.runtime}
-  Let $f\colon \BitStrings \to \BitStrings$ and $T\colon \Reals \to \Reals$ be some functions.
+  Let $f\colon \BitStrings \to \BitStrings$ and $T\colon \Naturals \to \Naturals$ be some functions.
   Furthermore, let $M$ be a Turing machine.
-  We say $M$ \emph{computes} $f$ in $T(n)$-time if for every input $x \in \BitStrings$, whenever $M$ is initialized with input $x$ , then it halts with $f(x)$ written on its output tape in at most $T(\abs{x})$ steps.
+  We say $M$ \emph{computes} $f$ in $T(n)$-time if for every input $x \in \BitStrings$, whenever $M$ is initialized with input $x$, it halts with $f(x)$ written on its output tape in at most $T(\abs{x})$ steps.
+  Here, $\abs{x}$ denotes the length of $x$.
 \end{definition}
-Here, $\abs{x}$ denotes the length of $x$.
-
-
-
-
 
 % may seem arbitrary, since large coefficients and exponents may be more impractical than a slow exponential sclaing for practical relevant size
 % but:
@@ -340,6 +331,25 @@ Here, $\abs{x}$ denotes the length of $x$.
 %   - invariant under changing details of computational model [Aurora, Sec. 1]; not the case if we just restrict to e.g. linear scaling
 %   - efficient computations + efficient subroutines -> Arora p.27
 %   - relative growth rate
+
+In words, \cref{def:complexity.runtime} gives a formal notion of the runtime of a TM for computing a function $f$.
+But as stated in the introduction, we are more interested in the intrinsic complexity of computing the function $f$ instead of a specific implementation.
+For this purpose, we introduce \emph{complexity classes}, which are sets of functions that can be computed within given resource bounds.
+The most important examples of complexity classes pertain to boolean functions $f\colon \BitStrings \to \{0, 1\}$, which correspond to decision problems.
+The corresponding set of \quotes{truthy} inputs $L = \{x \ in \BitStrings\colon f(x) = 1}$ is referred to as a \emph{language}.
+\begin{definition}
+  \label{def:complexity.p}
+  Let $T\colon \Naturals \to \Naturals$ be some function.
+  We say that a language $L$ is in $\DTIME(T(n))$ if and only if there is a TM $M$ that computes $f$ in time $c \times T(n)$ for some constant $c > 0$.
+  The complexity class $\P$ is then defined by
+  \[
+    \P = \bigcup_{\lambda \ge 1} \DTIME(n^\lambda).
+  \]
+\end{definition}
+In words, $\P$ is the set of all languages that can be decided by a TM in a number of steps that scales polynomially in the input size in the worst case.
+All problems in $\P$ are considered to be efficiently solvable.
+\todo{More on why P = efficiently solvable?}
+Therefore, in order to show that some problem is \quotes{easy}, we just have to provide a TM -- or put differently, an algorithm -- that decides that problem in polynomial time.
 
 % but how to prove that computational problem is actually hard -> show there is no algorithm in poly time
 % such nonexistence results exist only for computational models which are less poewrful than Turing model
@@ -350,6 +360,7 @@ Here, $\abs{x}$ denotes the length of $x$.
 % => computational intractble because otherwise solve a myriad of problems, which have evaded efficient solution for long time
 % => can't find efficient algoithm  but neither can all these famous people
 % question whether NP hard really do not have efficeint algorithm => P = NP question
+
 
 
 % Example -> input, output -> decission problem
