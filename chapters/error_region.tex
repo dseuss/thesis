@@ -350,21 +350,10 @@ In words, $\P$ is the set of all languages that can be decided by a TM in a numb
 All problems in $\P$ are considered to be efficiently solvable.
 \todo{More on why P = efficiently solvable?}
 
-% but how to prove that computational problem is actually hard -> show there is no algorithm in poly time
-% such nonexistence results exist only for computational models which are less poewrful than Turing model
-% therefore, strategy: introduce certain class of problems, which are conjectured to be hard and show that problem under consideration is at least as hard
-% -> NP -> reason for this is existence of hard problems
-% showing hardness via reduction from... -> Def. reduction
-% Def. NP hardness, completeness
-% => computational intractble because otherwise solve a myriad of problems, which have evaded efficient solution for long time
-% => can't find efficient algoithm  but neither can all these famous people
-% question whether NP hard really do not have efficeint algorithm => P = NP question
-
 Therefore, in order to show that some problem is \quotes{easy}, we just have to provide a TM, or put differently, an algorithm that decides the problem in polynomial time.
 On the other hand, proving the nonexistence of efficient algorithms for certain natural computational problems has turned out to be a tremendous challenge -- notwithstanding deep results for computational models strictly less powerful than the TM model~\cite[Part Two]{Arora_2009_Computational}.
 Hence, we are going to follow a less ambitious, but very fruitful strategy:
-Instead of proving that a given problem is infeasible to solve efficiently, we are comparing its computational complexity to other problems.
-The goal is to show that it is at least as hard to solve as a large body of problems, which have withstood all attempts at solving them efficiently so far.
+Instead of proving that a given problem is infeasible to solve efficiently, we are comparing its computational complexity to other problems that are considered computationally infeasible.
 This idea is formalized in the definition of reducibility.
 \todo{Citation?}
 
@@ -374,11 +363,39 @@ This idea is formalized in the definition of reducibility.
 \end{definition}
 
 Less formally speaking, if we have $L \le_p L'$ then $L'$ is at least as hard to decide as $L$.
-Indeed, by using  the reduction $f$, we can expand any TM deciding $L'$ to also decide $L$ with at most polynomial runtime overhead.
+Indeed, by using the reduction $f$, we can turn any TM deciding $L'$ into a TM deciding $L$ with at most polynomial runtime overhead.
 Particularly, if additionally $L' \in \P$ then so is $L$.
+Conversely, if no efficient algorithm for $L$ exists and $L \le_p L'$, then there cannot be an efficient algorithm $L'$.
+The latter observation is the basis of the strategy mentioned above:
+We show that a given problem is computationally hard by establishing that is at least as hard as a large class of other problems, which have withstood numerous attempts at solving them efficiently so far.
+For this purpose we introduce the complexity class $\NP$.
 
+\begin{definition}
+  \label{def:complexity.np}
+  A language $L \subseteq \BitStrings$ is in $\NP$ if there exists a polynomial-time computable function $M$ such that for every $x \in \BitStrings$
+  \[
+    x \in L \iff \exists u \in \{ 0, 1 \}^{p(\abs{x})} s.t.\ M(x, u) = 1.
+  \]
+  The function $M$ is called the verifier and for $x \in L$, the bitstring $u$ is called a certificate for $x$.
+\end{definition}
 
+Clearly, $\P \subset \NP$ with $p(\abs{x}) = 0$.
+On the other hand, the question whether $\NP \subseq \P$, and hence, $\P = \NP$ is one of the major unsolved problems in math and science~\cite{Cook_2000_P,Aaronson_????_P,Garey_2002_Computers}.
+\todo{Interpretation of NP, etc.}
+However, these philosophical considerations are not the main reason for the importance of \cref{def:complexity.np} from a computer scientific point of view.
+The main justification of the class $\NP$ is twofold:
+On the one hand, there are a myriad of problems known to be in $\NP$ and many of them have resisted all efforts of finding a polynomial-time algorithm.
+On the other hand, there is a tremendous number of problems known to be at least as hard as any problem in $\NP$~\cite{Garey_2002_Computers} -- these are referred to as $\NP$-hard problems:
 
+\begin{definition}
+  \label{def:complexity.hard_and_complete}
+  We say that a language $L$ is $\NP$-hard if for every $L' \in \NP$ we have $L' \le_p L$.
+  We say that a language $L$ is $\NP$-complete if $L \in \NP$ and $L$ is $\NP$-complete.
+\end{definition}
+
+Clearly, for any $\NP$-hard problem $L$, $L \le_p L'$ implies that $L'$ is $\NP$-hard as well, and hence, any problem in $\NP$ is polynomial-time reducible to $L'$.
+Therefore, an efficient algorithm for $L'$ would provide an efficient algorithm for a large number of other problems, which are widely considered difficult and which have been confounding experts for years.
+This fact is taken as very strong evidence that $L'$ cannot be solved efficiently.
 
 % Example -> input, output -> decission problem
 % partition problem one of six original NP hard problems, only one dealing with numbers -> starting point for many hardness proofs involving numbers
