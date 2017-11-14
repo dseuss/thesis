@@ -175,6 +175,7 @@ A different approach more in line with the previous discussion is to state condi
 \todo{Today: Asymptotic optimal, adaptive, ...}
 \todo{Likelihood ratio CR?}
 \todo{Stein's phenomenon}
+\todo{Asymptotic normality}
 \todo{Talk about the connection MLE/MSE for 1D Gaussian?}
 
 
@@ -372,7 +373,7 @@ For this purpose we introduce the complexity class $\NP$.
 
 \begin{definition}
   \label{def:complexity.np}
-  A language $L \subseteq \BitStrings$ is in $\NP$ if there exists a polynomial-time computable function $M$ such that for every $x \in \BitStrings$
+  A language $L \subset \BitStrings$ is in $\NP$ if there exists a polynomial-time computable function $M$ such that for every $x \in \BitStrings$
   \[
     x \in L \iff \exists u \in \{ 0, 1 \}^{p(\abs{x})} s.t.\ M(x, u) = 1.
   \]
@@ -380,7 +381,7 @@ For this purpose we introduce the complexity class $\NP$.
 \end{definition}
 
 Clearly, $\P \subset \NP$ with $p(\abs{x}) = 0$.
-On the other hand, the question whether $\NP \subseteq \P$, and hence, $\P = \NP$ is one of the major unsolved problems in math and science~\cite{Cook_2000_P,Aaronson_????_P,Garey_2002_Computers}.
+On the other hand, the question whether $\NP \subset \P$, and hence, $\P = \NP$ is one of the major unsolved problems in math and science~\cite{Cook_2000_P,Aaronson_????_P,Garey_2002_Computers}.
 \todo{Interpretation of NP, etc.}
 However, these philosophical considerations are not the main reason for the importance of \cref{def:complexity.np} from a computer scientific point of view.
 The main justification of the class $\NP$ is twofold:
@@ -429,60 +430,57 @@ A more appropriate classification of the difficulty of \quotes{typical} is given
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Frequentist Confidence Regions}
+\section{Hardness results for confidence regions}
 \label{sec:error.frequentist}
 
-In this section we are going to present the first major result of our work~\cite{Suess_2016_Error} concerned with Frequentist confidence regions in QSE.
-Optimal confidence regions for high-dimensional parameter estimation problems in are quite intricate in general even without additional constraints.
-There are only few elementary settings, where optimal error regions are known and easily characterized.
+In this section we are going to present the first major result of our work~\cite{Suess_2016_Error} concerned with frequentist confidence regions in QSE.
+Optimal confidence regions for high-dimensional parameter estimation problems in are quite intricate in general even without additional constraints as there are only few elementary settings, where optimal confidence regions are known and easily characterized.
 
-Since the goal of this work is to demonstrate that quantum shape constraints severely complicate even ``classically'' simple confidence regions, in the further discussion we restrict the discussion to a simplified setting:
+Since the goal of this work is to demonstrate that quantum shape constraints severely complicate even \quotes{classically} simple confidence regions, in the further discussion we restrict the discussion to a simplified setting:
 We focus on confidence ellipsoids for Gaussian distributions, which are one of the few easily characterizable examples.
-% FIXME REALLY?
 As discussed in \cref{sub:intro.frequentist}, Gaussian distributions arise in the limit of many measurements due to local asymptotic normality.
 In this section we show that even characterizing these highly simplifying ellipsoids with the quantum constraints taken into account constitutes a hard computational problem.
 This simplification is motivated by the goal to show that the computational intractability exclusively stems from the quantum constraints and that it is not caused by difficulties of high-dimensional statistics in general.
 Furthermore, any less restrictive formulation encompassing this simplified setting must be at least as hard to solve.
 
-In conclusion, although exploiting the physical constraints may help to reduce the uncertainty tremendously as shown in \cref{FIXME}, doing so in an optimal way is computationally intractable in general.
+In conclusion, although exploiting the physical constraints may help to reduce the uncertainty tremendously as mentioned in the introduction, doing so in an optimal way is computationally intractable in general.
 Therefore, our work can be interpreted as a trade-off between computational efficiency and statistical optimality in QSE.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Optimal confidence regions for quantum states}
 \label{sub:ortho.optimal}
 
-% FIXME
-As already indicated in \cref{FIXME}, the additional information that the true quantum state $\varrho_0$ must belong to the set of positive semi-definite matrices $\States \subset \HermTrace$ can be exploited to possibly improve any confidence region for QSE.
-This is especially clear for notions of optimality with a loss function stated in terms of volume $\Vol(\cdot)$, as we will show in this section.
-\todo{Which definition of volume? Should be independent. Maybe proof that truncated voluem can't be double exponentially small?}
-We consider an especially simple procedure to take the positivity constraints into account, namely truncating all non-positive matrices from tractable confidence regions for the unconstrained problem.
+As already indicated in the introduction, additional constraints on the parameter $\theta_0$ under consideration can be exploited to possibly improve any confidence region estimator.
+This is especially clear for notions of optimality with a loss function stated in terms of a volume measure $\Vol(\cdot)$, as we will show in this section.
+Therefore, assume that $\theta_0 \in \Omega_\mrc$, where the constrained parameter space $\Omega_\mrc \subset \Omega$ has non-zero measure w.r.t.\ $\Vol$.
+We consider an especially simple procedure to take the constraints into account, namely truncating all $\theta \notin \Omega_\mrc$ from tractable confidence regions for the unconstrained problem.
 
 Although such an ad-hoc approach does not seem to exploit the constraints in an optimal way, it has multiple advantages as we discuss in more detail in \cref{sub:ortho.hard}:
 First and foremost, some notions of optimality, e.g.\ admissibility, are preserved under truncation as shown in \cref{lem:ortho.admissible_truncation}.
 In other words, there are notions of optimality such that truncation of an optimal confidence region for the unconstrained problem gives rise to an optimal region for the constrained one.
-Furthermore, as already mentioned in the introduction, our goal is to show that the intractability arises purely due to the quantum constraints.
+Furthermore, as already mentioned in the introduction, our goal is to show that the intractability arises purely due taking the constraints imposed by quantum mechanics into account.
 Therefore, we start from a tractable solution in the unconstrained setting and show that even this simple approach of taking the constraints into account leads to an computationally intractable problem.
 Finally, the truncation approach simplifies the discussion but as we discuss in \cref{sub:ortho.hard}, our results apply to a much larger class of confidence regions such as likelihood ratio based Gaussian ellipsoids.\\
 
 
 We start by showing that the truncation of confidence regions preservers admissibility.
-Notice that \cref{def:frequentist.admissible} can be stated for both, the unconstrained estimation problem $\rho_0 \in \HermTrace$ as well as the constrained estimation problem $\rho_0 \in \States$.
-The question is: How are admissible confidence regions for the constrained setting $\CR^+\subset\States$ related to admissible confidence regions for the unconstrained estimation problem $\CR\subset\HermTrace$?
+Notice that \cref{def:frequentist.admissible} can be stated for both, the unconstrained estimation problem $\theta_0 \in \Omega$ as well as the constrained estimation problem $\theta_0 \in \Omega_\mrc$.
+The question is: How are admissible confidence regions for the constrained setting related to admissible confidence regions for the unconstrained estimation problem?
 \begin{lemma}\label{lem:ortho.admissible_truncation}
-  Let $\CR$ denote an admissible confidence region for the unconstrained estimation problem for the parameter $\varrho_0 \in \HermTrace$.
-  Then, the truncated region estimator $\CR^\cap := \CR\cap\States$ is an admissible confidence region for the constrained problem with $\varrho_0 \in \States$.
+  Let $\CR$ denote an admissible confidence region for the unconstrained estimation problem for the parameter $\theta_0 \in \Omega$.
+  Then, the truncated region estimator $\CR^\cap := \CR\cap\Omega_\mrc$ is an admissible confidence region for the constrained problem with $\theta_0 \in \Omega_\mrc$.
 \end{lemma}
 \begin{proof}
   Under the assumption that $\CR^\cap$ is not admissible, there must exist a better confidence region $\CR^+$ for the constrained parameter estimation problem.
   W.l.o.g.\ assume that both $\CR^+$ and $\CR^\cap$ have the same coverage.
-  Therefore, we must have $\Vol(\CR^+(\vec y)) \leq \Vol(\CR^\cap(\vec y))$ for almost all observations $y \in \Reals^m$, and there is a set $Y \subset \Reals^m$ of non-zero measure such that $\Vol(\CR^+(\vec y)) < \Vol(\CR^\cap(\vec y))$ for $\vec y \in Y$.
+  Therefore, we must have $\Vol(\CR^+(\vec y)) \leq \Vol(\CR^\cap(\vec y))$ for almost all observations $\vec y \in \Reals^m$, and there is a set $Y \subset \Reals^m$ of non-zero measure such that $\Vol(\CR^+(\vec y)) < \Vol(\CR^\cap(\vec y))$ for $\vec y \in Y$.
   Define a new confidence region for the unconstrained problem
   \[
     \CR' := \CR^+ \cup \CR^c,
     \label{eq:ortho.new_region}
   \]
   where $\CR^{c}=\CR\setminus \CR^{\cap}$ denotes the compliment of $\CR^{\cap}$ in $\CR$.
-  Then, $\CR'$ has the given coverage level, since $\CR^+$ provides coverage for $\varrho_0 \in \States$, whereas $\CR^c$ provides coverage for the case $\varrho_0 \in \HermTrace \setminus \States$.
+  Then, $\CR'$ has the given coverage level, since $\CR^+$ provides coverage for $\theta_0 \in \Omega_\mrc$, whereas $\CR^c$ provides coverage for the case $\theta_0 \in \Omega \setminus \Omega_\mrc$.
   Furthermore, we have for almost all $\vec y$
   \[
     \label{eq:ortho.volumes}
@@ -496,7 +494,7 @@ The question is: How are admissible confidence regions for the constrained setti
   Finally, strict inequality holds in Eq.~\eqref{eq:ortho.volumes} for all $\vec y \in Y$ due to the assumption on $\CR^+$.
   However, this would imply $\CR$ not being admissible in contradiction to the assumptions of the Lemma.
 \end{proof}
-A similar procedure of computing optimal estimators for constrained problems by modifying an optimal estimator estimator for the unconstrained problem was introduced for the maximum likelihood estimator in~\cite{Smolin_2012_Maximum}.\\
+A similar procedure of computing optimal point estimators for constrained problems by modifying an optimal estimator for the unconstrained problem was introduced for the maximum likelihood estimator in~\cite{Smolin_2012_Maximum}.\\
 
 
 
@@ -519,6 +517,7 @@ So, having obtained a \quotes{small confidence region} in parameter space does n
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Confidence Regions from Linear Inversion}
 \label{sub:ortho.linear_inversion}
+the additional information that the true quantum state $\varrho_0$ must belong to the set of positive semi-definite matrices $\States \subset \HermTrace$ can be exploited to possibly improve any confidence region for QSE.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}
@@ -783,7 +782,7 @@ For the details, please see \cref{sec:ellpos}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Bayesian Credibility regions}
+\section{Hardness results for credible regions}
 \label{sec:bayesian}
 
 \todo{Explain the model}
