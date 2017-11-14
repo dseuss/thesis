@@ -380,7 +380,7 @@ For this purpose we introduce the complexity class $\NP$.
 \end{definition}
 
 Clearly, $\P \subset \NP$ with $p(\abs{x}) = 0$.
-On the other hand, the question whether $\NP \subseq \P$, and hence, $\P = \NP$ is one of the major unsolved problems in math and science~\cite{Cook_2000_P,Aaronson_????_P,Garey_2002_Computers}.
+On the other hand, the question whether $\NP \subseteq \P$, and hence, $\P = \NP$ is one of the major unsolved problems in math and science~\cite{Cook_2000_P,Aaronson_????_P,Garey_2002_Computers}.
 \todo{Interpretation of NP, etc.}
 However, these philosophical considerations are not the main reason for the importance of \cref{def:complexity.np} from a computer scientific point of view.
 The main justification of the class $\NP$ is twofold:
@@ -396,30 +396,28 @@ On the other hand, there is a tremendous number of problems known to be at least
 Clearly, for any $\NP$-hard problem $L$, $L \le_p L'$ implies that $L'$ is $\NP$-hard as well, and hence, any problem in $\NP$ is polynomial-time reducible to $L'$.
 Therefore, an efficient algorithm for $L'$ would provide an efficient algorithm for a large number of other problems, which are widely considered difficult and which have been confounding experts for years.
 This fact is taken as very strong evidence that $L'$ cannot be solved efficiently.
-
-% Example -> input, output -> decission problem
-% partition problem one of six original NP hard problems, only one dealing with numbers -> starting point for many hardness proofs involving numbers
-% see Garey Johnson for proof, here slightly different formulation
-\begin{problem}\label{prob:ellpos.balanced_sum}
+As an example of an $\NP$-complete problem, we consider the \emph{number partition} problem.
+\begin{problem}\label{prob:complexity.partition}
   Given a vector $\vec a \in \mathbb{N}^d$, decide whether there exists a vector $\vec \psi$ with
   \[
     \forall{k}\:\psi_{k}\in\left\{ -1,1\right\} \;\textrm{ and }\quad \vec a \cdot \vec\psi=0.
     \label{eq:ellpos.partition_vector}
   \]
 \end{problem}
-In case there is such a vector $\vec \psi$ one says that the instance $\vec a$ allows for a balanced sum partition because the sum of components of $\vec a$ labeled by $\psi_i = 1$ is equal to the sum of components $a_i$ labeled by $\psi_i = -1$.
+In case there is such a vector $\vec \psi$ one says that the instance $\vec a$ allows for a partition because the sum of components of $\vec a$ labeled by $\psi_i = 1$ is equal to the sum of components $a_i$ labeled by $\psi_i = -1$.
+For a proof of \cref{prob:complexity.partition}, see~\cite{Garey_2002_Computers}.\\
+
 
 
 % of course, NP hardness only shows that nonplusultra doesnt exist -> approxiomation, probabilistic, average complexity, etc
 % tells you: don't look for efficeint, exact algorithm becuase there is none
+The question remains what the notion of $\NP$-hardness means in practice.
+Due to its strict definition in terms of worst-case runtime needed for any instance, \cref{def:complexity.np} leaves open many possibilities for the existence of \quotes{good-enough} solutions:
+Efficient approximative or probabilistic algorithms often suffice for all practical purposes~\cite{Garey_2002_Computers,Arora_2009_Computational}.
+Furthermore, considering only the worst-case behavior is often too pessimistic in practice.
+A more appropriate classification of the difficulty of \quotes{typical} is given in terms of \emph{average case} complexity~\cite{Arora_2009_Computational}.
 
-
-
-
-
-
-
-
+\todo{Finalize section, easiest hard problem, Levin's theory, ...}
 
 
 
@@ -766,7 +764,7 @@ We consider the same radius $R_{1}$ for all directions generalizing the $x$-dire
   \end{split}
 \]
 Recall the definition of $i_d$ \cref{eq:ortho.x_yz_index}.
-To prove the hardness of \cref{prob:ortho.ellpos}, we use a reduction from the balanced sum problem~\ref{prob:ellpos.balanced_sum}.
+To prove the hardness of \cref{prob:ortho.ellpos}, we use a reduction from the balanced sum problem~\ref{prob:complexity.partition}.
 The main technical difficulty is to identify the values of $R_1$ and $R_2$ as well as $\estim{\rho}$ depending on an instance of the balanced sum problem $\vec a$ such that the corresponding ellipsoid $\CR$ given by \cref{thm:ortho.ellipsoids} contains an element with negative eigenvalues if and only if $\vec a$ has a balanced sum partition.
 For the details, please see \cref{sec:ellpos}.
 
