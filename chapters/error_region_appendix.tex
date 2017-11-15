@@ -4,38 +4,34 @@
 \label{sec:error.parametrisation}
 
 Here, we provide the particular generalizations $\sigma_{i}$ of the Pauli matrices used in Sec.~\ref{sub:ortho.linear_inversion}.
-These are exactly the generators of the group $SU(d)$, see e.g.~\cite{Kimura_2003_Bloch,Byrd_2003_Characterization} for more details.
-Since the exact order of the $\sigma_{i}$ is not important for our purposes, we present them as finite sets of matrices generalizing the $\sigma_\mathrm{X}$, $\sigma_\mathrm{Y}$, and $\sigma_\mathrm{Z}$ matrix, respectively:
-\begin{equation}
-  \left\{ \sigma_{i}:i=1,\ldots,i_{d}\right\} =\left\{ \Xi_{jk}^{(\textrm{Re})}:1\leq j<k\leq d\right\} ,
-\end{equation}
-\begin{equation}
-  \left\{ \sigma_{i}:i=i_{d}+1,\ldots,2i_{d}\right\} =\left\{ \Xi_{jk}^{(\textrm{Im})}:1\leq j<k\leq d\right\} ,
-\end{equation}
-\begin{equation}
-  \left\{ \sigma_{i}:i=2i_{d}+1,\ldots,d^{2}-1\right\} =\left\{ \Xi_{l}^{(\textrm{diag})}:1\leq l\leq d-1\right\} .
-\end{equation}
-Recall that $i_{d}=d(d-1)/2$.
-The matrices on the right hand side are defined in terms of some orthonormal basis ${\{\ket{i}\}}_i$:
-\begin{equation}
-  \Xi_{jk}^{(\textrm{Re})} =  \ket{j}\bra{k} + \ket{k}\bra{j},
-\end{equation}
-\begin{equation}
-  \Xi_{jk}^{(\textrm{Im})} = -\ii \Big(\ket{j}\bra{k} - \ket{k}\bra{j}\Big),
-\end{equation}
-\begin{equation}
-  \Xi_{l}^{(\textrm{diag})} = \sqrt{\frac{2}{l\left(l+1\right)}}\left(\sum_{j=1}^{l} \ket{j}\bra{j} - l \ket{l+1}\bra{l+1} \right).
-\end{equation}
-
+These are exactly the generators of the group $\mathrm{SU}(d)$, see e.g.~\cite{Kimura_2003_Bloch,Byrd_2003_Characterization} for more details.
+Denote by  ${\{\ket{i}\}}_i$ an orthonormal basis and let
+\begin{align*}
+  \Xi_{jk}^{(\textrm{Re})} &=  \ket{j}\bra{k} + \ket{k}\bra{j}, \\
+  \Xi_{jk}^{(\textrm{Im})} &= -\ii \Big(\ket{j}\bra{k} - \ket{k}\bra{j}\Big), \\
+  \Xi_{l}^{(\textrm{diag})} &= \sqrt{\frac{2}{l\left(l+1\right)}}\left(\sum_{j=1}^{l} \ket{j}\bra{j} - l \ket{l+1}\bra{l+1} \right).
+\end{align*}
+We now define the generalized Pauli matrices in terms of these auxiliary matrices:
+\begin{align}
+  \label{eq:parametrisation.x}
+  \left\{ \sigma_{i}:i=1,\ldots,i_{d}\right\} &= \left\{ \Xi_{jk}^{(\textrm{Re})}:1\leq j<k\leq d\right\},  \\
+  \label{eq:parametrisation.y}
+  \left\{ \sigma_{i}:i=i_{d}+1,\ldots,2i_{d}\right\} &= \left\{ \Xi_{jk}^{(\textrm{Im})}:1\leq j<k\leq d\right\}, \\
+  \label{eq:parametrisation.z}
+  \left\{ \sigma_{i}:i=2i_{d}+1,\ldots,d^{2}-1\right\} &= \left\{ \Xi_{l}^{(\textrm{diag})}:1\leq l\leq d-1\right\},
+\end{align}
+where $i_{d}=d(d-1)/2$.
+Note that the elements of the sets in Eq.~\eqref{eq:parametrisation.x}, \eqref{eq:parametrisation.y}, and \eqref{eq:parametrisation.z} generalize the Pauli matrices $\sigma_\matrm{X}$, $\sigma_\matrm{Y}$, and $\sigma_\matrm{Z}$, respectively.
+Since only this structure is crucial to our proof, the order of the elements in Eq.~\eqref{eq:parametrisation.x}--\eqref{eq:parametrisation.z} in arbitrary, and hence, the definition in terms of sets is well defined for our purposes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Proof of Theorem~\ref{thm:ortho.hard}}
 \label{sec:error.ellpos}
 
 We shall start the current discussion with a word of clarification concerning the dual notation already used in the definition of the Bloch vector. We utilize an alternative representation of the state $\ket{\Psi} $ in terms of a complex vector $\vec{\psi}$ with coordinates
-\begin{equation}
+\[
   \psi_{k}=\left\langle k \ket{\Psi} \right.,\qquad k=1,\ldots,d,\label{coordinates}
-\end{equation}
+\]
 specified with respect to the orthonormal basis fixed in~\ref{sec:parametrisation}.
 Consequently,  $\sqrt{\left\langle \Psi \ket{\Psi} \right.}$ is the  norm of $\ket{\Psi}$, while $\norm{\vec\psi}$ denotes the norm of $\vec\psi$. Obviously both norms assume the same value.
 
@@ -46,32 +42,32 @@ The confidence ellipsoid $\CR$ is fully contained in the set of psd states if an
 \)
 holds.
 In the parametrization from Thm.~\ref{thm:ortho.ellipsoids}, this condition can be rewritten as
-\begin{equation}
+\[
   \bra{\Psi}\estim{\varrho} \ket{\Psi} +R_{1}\sum_{i=1}^{i_{d}}u_{i}v_{i}\left(\vec\psi\right)+R_{2}\sum_{i=i_{d}+1}^{d^{2}-1}u_{i}v_{i}\left(\vec\psi\right)\geq0,
   \label{eq:ellpos.positivity}
-\end{equation}
+\]
 where we have already restricted our attention to the special case from Eq.~\eqref{eq:ortho.subclass}.
 Furthermore, we have used the shorthand $v_{i}\left(\vec\psi\right)=\bra{\Psi}\sigma_{i} \ket{\Psi} $, which are the rescaled Bloch coordinates of the density matrix $\ket{\Psi} \bra{\Psi}$.
 Condition~\eqref{eq:ellpos.positivity} is independent of the norm of $\ket{\Psi}$ thus, we can fix $\left\langle \Psi \ket{\Psi} \right. = d$.
 Recall that Eq.~\eqref{eq:ellpos.positivity} has to hold for all values of $\vec u$ with $\vec u^T \vec u \le 1$.
 Since the left hand side assumes its minimal value for
-\begin{equation}
+\[
   u_{i} = -\frac{v_{i}\left(\vec\psi\right)}{\sqrt{\sum_{j}v_{i}^{2}\left(\vec\psi\right)}},
-\end{equation}
+\]
 we find that Eq.~\eqref{eq:ellpos.positivity} is equivalent to
-\begin{equation}
+\[
  \bra{\Psi}\estim{\varrho} \ket{\Psi} -\sqrt{R_{1}^{2}\sum_{i=1}^{i_{d}}v_{i}^{2}\left(\vec\psi\right)+R_{2}^{2}\sum_{i=i_{d}+1}^{d^{2}-1}v_{i}^{2}\left(\vec\psi\right)}\geq0.
   \label{eq:ellpos.worst_case}
-\end{equation}
+\]
 Using the unusual normalization of $\ket\Psi$, we find
-\begin{equation}
+\[
   \sum_{i}v_{i}^{2}\left(\vec\psi\right)=2 d\left(d-1\right) =: \mathcal{P},
-\end{equation}
+\]
 which can be utilized to simplify~\eqref{eq:ellpos.worst_case}
-\begin{equation}
+\[
  g(\vec\psi) := \bra{\Psi}\estim{\varrho} \ket{\Psi} -\sqrt{\mathcal{P}R_{2}^{2}+\left(R_{1}^{2}-R_{2}^{2}\right)\sum_{i=1}^{i_{d}}v_{i}^{2}\left(\vec\psi\right)}\geq0.
   \label{eq:ellpos.major}
-\end{equation}
+\]
 In the following, we restrict our attention to  $R_{1}>R_{2}$, so that both term inside the square root are manifestly non-negative.\\
 
 In the second step of the proof we show and utilize the following lemma:
@@ -80,61 +76,61 @@ In the second step of the proof we show and utilize the following lemma:
 \end{lemma}
 \begin{proof}
   Note that we can decompose any vector $\ket\Psi$ into its real and imaginary part
-  \begin{equation}
+  \[
     \ket\Psi = \ket{\Psi_1} + \ii\Ket{\Psi_2},
-  \end{equation}
+  \]
   where the $\ket{\Psi_i}$ are given by real vectors $\vec\psi_i$.
   Therefore, for $\estim{\varrho}$ being real and symmetric, we find
-  \begin{equation}
+  \[
     \bra{\Psi} \estim\varrho \ket{\Psi} = \bra{\Psi_1} \estim\varrho \ket{\Psi_1} + \bra{\Psi_2} \estim\varrho \ket{\Psi_2}.
-  \end{equation}
+  \]
   A similar equality holds with $\estim\varrho$ replaced by $\1$ or $\sigma_i$ for $i=1,\ldots,i_d$, since the latter matrices are symmetric and real as well.
   To shorten the notation, we now define two $i_d+1$ dimensional vectors $\vec x^1$ and $\vec x^2$ with components ($\alpha=1,2$)
-  \begin{equation}
+  \[
     \begin{split}
       x^\alpha_0 &= \frac{\sqrt{\mathcal{P}}}{d} R_2 \norm{\vec\psi_\alpha}^2 \\
       x^\alpha_i &= \sqrt{R_1^2 - R_2^2}\;v_i\left(\vec\psi_\alpha\right) \qquad (i=1,\ldots,i_d).
     \end{split}
-  \end{equation}
+  \]
   Since $d = \norm{\vec\psi}^2 = \norm{\vec\psi_1}^2 + \norm{\vec\psi_2}^2$, we find
-  \begin{equation}
+  \[
   \sqrt{ \mathcal{P} R_2^2 + (R_1^2 - R_2^2) \sum_{i=1}^{i_d} v_{i}^{2}\left(\vec\psi\right)} = \norm{\vec x^1 + \vec x^2} \le \norm{\vec x^1} + \norm{\vec x^2},
-  \end{equation}
+  \]
   where we used triangle inequality in the last step.
   Therefore
-\begin{equation}
+\[
  g(\vec\psi) \geq  g(\vec\psi_1) + g(\vec\psi_2)
-\end{equation}
+\]
 so that if  $g(\vec\psi)$ is non-negative for all real vectors, it is also non-negative for every complex vector $\vec\psi$. More intuitively, the above result is true because the construction of $g(\vec\psi)$ utilizes only the generalized $\sigma_x$ Pauli matrices, which by construction pick up certain real parts of $\vec\psi^*\otimes\vec\psi$ (imaginary contribution could appear only due to $\sigma_y$).
 \end{proof}
 
 The next step of the proof, which is crucial for encoding an instance  the balanced sum problem, is the choice of the ellipsoid's center.
 %Following~\cite{Tal_1998_Robust},
 We choose
-\begin{equation}
+\[
   \estim{\varrho}=\frac{q}{d}\1+\frac{1-q}{a^{2}} \ket{\vec a} \bra{\vec a},\qquad0\leq q\leq1,\qquad a=\norm{\vec a},
   \label{eq:ellpos.rho0}
-\end{equation}
+\]
 with $q$ to be specified below and $\ket{\vec a} =\sum_{k}a_{k}\ket{k} $ denoting a state represented by a real, \emph{integral} vector $\vec{a}$ playing the role of the instance of Prob.~\ref{prob:ellpos.balanced_sum}. % to be encoded.
 Since $\estim\varrho$ given by Eq.~\eqref{eq:ellpos.rho0} is manifestly real and symmetric we can restrict our attention to $\vec\psi \in \BR^d$ due to Lemma~\ref{lem:ellpos.real_min}. We find
-\begin{equation}
+\[
   \bra{\Psi}\estim{\varrho} \ket{\Psi} =q+\frac{1-q}{a^{2}}{\left(\vec{a}\cdot\vec{\psi}\right)}^{2},
-\end{equation}
+\]
 and
-\begin{equation}
+\[
   \sum_{i=1}^{i_{d}}v_{i}^{2}\left(\vec\psi\right)=4\sum_{1\leq j<k\leq d}\psi_{j}^{2}\psi_{k}^{2}\equiv2d^{2}-2\sum_{k=1}^{d}\psi_{k}^{4}.
-\end{equation}
+\]
 %with $\vec{\psi}\in\mathbb{R}^{d}$.
 
 Before we will be ready to take an advantage of the above encoding we need to  perform a sequence of tedious algebraic manipulations. In short, the function we work with has an algebraic form $g(\vec\psi)=\kappa-\sqrt{\Delta}$, with both $\kappa$ and $\Delta$ being non-negative. Testing if this function is non-negative is thus equivalent to checking the inequality $\kappa^2- \Delta\geq 0$. If we divide this inequality by $2(R_1^2-R_2^2)$ and fix $q=q_+$ or $q=q_-$ with
-\begin{equation}
+\[
   q_{\pm}=\frac{1}{2}\left(1\pm\sqrt{1-8d\left(R_{1}^{2}-R_{2}^{2}\right)\frac{a^{2}}{1+a^{2}}}\right).\label{eq:ellpos.q}
-\end{equation}
+\]
 we can rearrange it to the convenient form
-\begin{equation}
+\[
   f\left(\vec{\psi}\right)-C_{2}{\left(\vec{a}\cdot\vec{\psi}\right)}^{4}\leq C_{1},
   \label{eq:ellpos.condition}
-\end{equation}
+\]
 where:
 \begin{align}
 %  f\left(\vec{\psi}\right)=d^{2}-\sum_{k=1}^{d}\psi_{k}^{4}+\left(d-\frac{\left(\vec{a}\cdot\vec{\psi}\right)^{2}}{1+a^{2}}\right)^{2},
@@ -147,24 +143,24 @@ where:
 Both solutions~\eqref{eq:ellpos.q} assure that~\eqref{eq:ellpos.condition} is free from additional terms proportional to ${\left(\vec{a}\cdot\vec{\psi}\right)}^{2}$, except those already hidden in $f$.
 
 Hence, the original problem of deciding whether the ellipsoid $\Eps$ centered at $\estim\varrho$ and with radii~\eqref{eq:ortho.subclass} is contained in the psd states can be rephrased as deciding whether the maximum of the left hand side of Eq.~\eqref{eq:ellpos.condition} is smaller or equal to some constant:
-\begin{equation}
+\[
   \Eps\subset\States
   \iff
   \max_{\vec\psi\in\mathbb{S}^{d-1}_{d}}\left[f\left(\vec\psi\right)-C_{2}{\left(\vec a \cdot \vec\psi\right)}^{4}\right]\leq C_{1}.
   \label{eq:ellpos.max_condition}
-\end{equation}
+\]
 Here, $ \mathbb{S}^{d-1}_{\zeta}$ denotes a $(d-1)$-dimensional sphere with radius $\sqrt\zeta$, i.e.
-\begin{equation}
+\[
  \vec\psi\in\mathbb{S}^{d-1}_{d} \iff    \vec\psi\in\mathbb{R}^{d}\;\wedge \; \left\Vert \vec\psi\right\Vert^{2}=d.
-\end{equation}
+\]
 The relation of Problem~\ref{prob:ortho.ellpos} to the balanced sum problem (Problem~\ref{prob:ellpos.balanced_sum}) is derived in the following Lemma.
 \begin{lemma}\label{lem:ellpos.gap_or_no_gap}
   If the instance $\vec a$ of Problem~\ref{prob:ellpos.balanced_sum} allows for a balanced sum partition, then
-  \begin{equation}
+  \[
     \max_{\vec\psi\in\mathbb{S}^{d-1}_{d}}\left[f\left(\vec\psi\right)-C_{2}{\left( \vec a \cdot \vec\psi\right)}^{4}\right]
     %= \max_{\vec\psi\in\mathbb{S}^{d-1}_{d}}f\left(\vec\psi\right)
     = 2d^{2}-d \label{eq:ellpos.def_pi0}.
-  \end{equation}
+  \]
   On the other hand, if there is no such partition, we have
  \begin{align}
     \max_{\vec\psi\in\mathbb{S}^{d-1}_{d}}\left[f\left(\vec\psi\right)-C_{2}{\left( \vec a \cdot \vec\psi\right)}^{4}\right]
@@ -176,65 +172,65 @@ The relation of Problem~\ref{prob:ortho.ellpos} to the balanced sum problem (Pro
 \end{lemma}
 For the sake of clarity we relegate the proof of the above lemma to the end of this section.
 As a consequence of Lemma~\ref{lem:ellpos.gap_or_no_gap} the choice,
-\begin{equation}
+\[
   C_{1}=2d^{2}-d-p{(a d)}^{-1},
   \label{eq:ellpos.choice}
-\end{equation}
+\]
 implies that an efficient algorithm deciding whether the inequality~\eqref{eq:ellpos.condition} is satisfied or not is also capable of deciding Prob.~\ref{prob:ellpos.balanced_sum} efficiently.
 This is exactly the statement of Thm.~\ref{thm:ortho.hard}.\\
 
 
 The last step we need to make is to find the parameters $R_{1}$ and $R_{2}$ leading to the choice~\eqref{eq:ellpos.choice}.
 To this end, we set $R_{2}=\epsilon R_{1}$ with $0<\epsilon<1$ and introduce two positive parameters
-\begin{equation}
+\[
   B_{1}=p{(a d)}^{-1},\qquad B_{2}=\frac{d a^2}{1+a^2}.
-\end{equation}
+\]
 Note that if $1\leq j\leq d$ is such that $|a_j|=\min_k |a_k|$, then for $\vec\psi^j$ given by $\psi^j_k=\sqrt{d} \delta_{jk}$ the function $f(\vec\psi^j)$ is equal to
-\begin{equation}
+\[
 f\left(\boldsymbol{\psi}^{j}\right)=\frac{d^{2}}{1+a^{2}}\left(1+a^{2}-2a_{j}^{2}\right).
-\end{equation}
+\]
 Since $a^2-2a_j^2\geq(d-2)a_j^2$ the quantity $f(\boldsymbol{\psi}^{j})$ is non-negative, so is the right hand side of Eq.~\eqref{eq:ellpos.def_pi}.
 From~\eqref{eq:ellpos.def_pi2} we can find the bound
-\begin{equation}
+\[
   \label{eq:ellpos.b1_bound}
   B_{1} \le d^{2}-d/2.
-\end{equation}
+\]
 Furthermore, $B_{2} \le d$.
 
 Rearranging Eq.~\eqref{eq:ellpos.def_c1}, taking the square root and substituting~\eqref{eq:ellpos.choice} we can see that $R_1$ is implicitly defined by the relation
-\begin{equation}
+\[
   \sqrt{2}\sqrt{\left(d^{2}-d-B_1\right)\left(1-\epsilon^{2}\right)+d\left(d-1\right)\epsilon^{2}}R_{1}=q_\pm.
   \label{eq:ellpos.equiv}
-\end{equation}
+\]
 If the left hand side of~\eqref{eq:ellpos.equiv} happens to be bigger than $1/2$, we need to take the $q_+$ solution on the right hand side (and $q_-$ in the opposite case). In order for the square roots in Eq.~\eqref{eq:ellpos.equiv} to be real-valued, we need to assume
-\begin{equation}
+\[
   \left(d^{2}-d-B_1\right)\left(1-\epsilon^{2}\right)+d\left(d-1\right)\epsilon^{2}\geq0.
-\end{equation}
+\]
 and
-\begin{equation}
+\[
   1-8R_{1}^{2}\left(1-\epsilon^{2}\right)B_{2}\geq0,\label{eq:ellpos.extra_cond}
-\end{equation}
+\]
 The latter condition assures that $q_\pm$ are real while the former condition, as it
 does not depend on $R_{1}$, can be immediately solved for $\epsilon$:
-\begin{equation}
+\[
   \epsilon^{2}\geq1-\frac{d\left(d-1\right)}{B_{1}}.
   \label{eq:ellpos.condition_epsilon1}
-\end{equation}
+\]
 However, Eq.~\eqref{eq:ellpos.condition_epsilon1} does not yield a universal bound for acceptable values of $\epsilon$ since $B_1$ depends on the particular instance $\vec a$.
 To obtain a lower bound independent of $\vec a$, we use Eq.~\eqref{eq:ellpos.b1_bound}, obtaining:
-\begin{equation}
+\[
 \epsilon^2 \geq \frac{1}{2d - 1}.
-\end{equation}
+\]
 Since both sides of~\eqref{eq:ellpos.equiv} are non-negative, we can take the square of this relation and turn it it into a quadratic equation for $R_1$. Surprisingly, this equation has a trivial solution $R_1=0$ (only relevant while dealing with $q_-$) and a single  non-trivial solution which can be simplified to the form:
-\begin{equation}
+\[
   R_{1}=\frac{1}{\sqrt{2}}\frac{\sqrt{d\left(d-1\right)-B_{1}\left(1-\epsilon^{2}\right)}}{d\left(d-1\right)-\left(B_{1}-B_{2}\right)\left(1-\epsilon^{2}\right)},
   \label{eq:ellpos_r1}
-\end{equation}
+\]
 The condition~\eqref{eq:ellpos.extra_cond} becomes trivially satisfied, while the left hand side of Eq. (\ref{eq:ellpos.equiv}) is greater than $1/2$ (relevant for $q_+$) for
-\begin{equation}
+\[
   \epsilon^{2}\geq1-\frac{d\left(d-1\right)}{\left(B_{1}+B_{2}\right)}.
   \label{eq:ellpos.condtion_epsilon2}
-\end{equation}
+\]
 In the opposite case the inequality is reversed.
 When~\eqref{eq:ellpos.condtion_epsilon2} occurs, we find that
 \begin{align}
@@ -249,53 +245,53 @@ To finalize the proof of Theorem~\ref{thm:ortho.hard}, we now state the proof of
   The first part of the proof -- Eq.~\eqref{eq:ellpos.def_pi0} --  follows from a simple calculation utilizing the partition vector $\vec\psi$ defined in~\eqref{eq:ellpos.partition_vector}. Note that as $\vec a \cdot\vec \psi=0$, we immediately obtain the first equality in~\eqref{eq:ellpos.def_pi0}, which since $C_2$ is non-negative turns into inequality in~\eqref{eq:ellpos.def_pi}.
 
   To prove~\eqref{eq:ellpos.def_pi2}, we define the set of all possible ($2^d$ in total) partition vectors
-  \begin{equation}
+  \[
     \mathcal{Z} := \left\{ \vec z \in \BR^d\colon \forall i \, z_i = \pm 1 \right\}
-  \end{equation}
+  \]
   and (for an arbitrary $0<\lambda<1$) the set of vectors that are ``close'' to some element from $\mathcal{Z}$
-  \begin{equation}
+  \[
     \mathcal{B} := \left\{ \vec\psi\in\BR^d\colon \min_{\vec z\in \mathcal{Z}} \norm{\vec\psi - \vec z} \leq \frac{\lambda}{a} \right\}.
-  \end{equation}
+  \]
 Because $a \geq 1$, the set $\mathcal{B}$ can be thought of as a disjoint union of $2^d$ balls centered around the elements of $\mathcal{Z}$.
 For further convenience we denote $\tilde{\vec{z}} = \mathrm{argmin}_{\vec z\in\mathcal{Z}} \, \norm{\vec\psi - \vec z}$, and $\vec\delta := \vec\psi - \tilde{\vec{z}}$.
 By construction $\tilde{z}_k=\mathrm{sign}\,\psi_k$ so that for all $k=1,\ldots,d$
-\begin{equation}
+\[
 \tilde{z}_k\delta_k=\tilde{z}_k\psi_k-\tilde{z}_k^2=|\psi_k|-1\geq-1.
-\end{equation}
+\]
 Since $\norm{\vec\psi}^2=d$ we find that
-  \begin{equation}
+  \[
     2\tilde{\vec{z}} \cdot\vec\delta = - \norm{\vec\delta}^2.
-  \end{equation}
+  \]
 Using all the above, the fact that $\tilde{z}_k^2=1$ and  $\tilde{z}_k^3=\tilde{z}_k$, and the Jensen inequality we can further estimate
-\begin{equation}
+\[
 -\sum_{k=1}^d \psi_k^4\leq-d-\sum_{k=1}^d \delta_k^4\leq-d-\frac{\norm{\vec\delta}^4}{d}.
-\end{equation}
+\]
 
 As $\vec a$ does not allow for a balanced sum partition and both, $\tilde{\vec z}$ and $\vec a$ are integral, we must necessarily have $\vert \vec a \cdot \tilde{\vec z} \vert \geq 1$. Thus
-\begin{equation}
+\[
 1\leq\left|\boldsymbol{a}\cdot\tilde{\vec z}\right|=\left|\boldsymbol{a}\cdot\left(\boldsymbol{\psi}-\boldsymbol{\delta}\right)\right|\leq\left|\boldsymbol{a}\cdot\boldsymbol{\psi}\right|+\left|\boldsymbol{a}\cdot\boldsymbol{\delta}\right|\leq\left|\boldsymbol{a}\cdot\boldsymbol{\psi}\right|+a\norm{\boldsymbol{\delta}},
-\end{equation}
+\]
 so that
-\begin{equation}
+\[
 -\left|\boldsymbol{a}\cdot\boldsymbol{\psi}\right|\leq\min\left\{0,a\norm{\boldsymbol{\delta}}-1\right\},
-\end{equation}
+\]
 Taking all the above results together with $\left|\boldsymbol{a}\cdot\boldsymbol{\psi}\right|\leq a\norm{\boldsymbol{\psi}}=a\sqrt{d}$ we obtain
-\begin{equation}
+\[
 f(\vec \psi)\leq 2d^{2}-d-\frac{\norm{\vec\delta}^4}{d}+2 d^{3/2}a\frac{\min\left\{0,a\norm{\boldsymbol{\delta}}-1\right\}}{1+a^{2}}.
-\end{equation}
+\]
 
 We will now study two cases. For $\psi \in \mathcal{B}$, we have $0\leq\norm{\vec \delta}\leq\lambda/a$, so that
-\begin{equation}
+\[
 f(\vec \psi)\leq 2d^{2}-d-2 d^{3/2}a\frac{1-\lambda}{1+a^{2}},
-\end{equation}
+\]
 while for the opposite case ($\psi \notin \mathcal{B}$), when  $\norm{\vec \delta}>\lambda/a$, one finds
- \begin{equation}
+ \[
 f(\vec \psi)\leq 2d^{2}-d-\frac{\lambda^4}{d a^4}.
-\end{equation}
+\]
 Therefore, we have for any $\vec\psi \in \BR^d$ with $\norm{\vec\psi}^2 = d$
-\begin{equation}
+\[
 f(\vec \psi)\leq 2d^{2}-d- \min\left\{2 d^{3/2}a\frac{1-\lambda}{1+a^{2}},\frac{\lambda^4}{d a^4}\right\},
-\end{equation}
+\]
 so that by setting $\lambda=d^{-3/4}$ we obtain the desired result with $p(ad)=2{(ad)}^4$.
 \end{proof}
 
@@ -308,18 +304,18 @@ so that by setting $\lambda=d^{-3/4}$ we obtain the desired result with $p(ad)=2
 
 
 To check whether a sphere with radius $R$ centered at $\estim\varrho$ is contained in the set of psd states, specialize Eq.~\eqref{eq:ellpos.worst_case} to the special case $R_1 = R_2$:
-\begin{equation}
+\[
   \bra{\Psi}\estim{\varrho} \ket{\Psi} -R\sqrt{\sum_{i}v_{i}^2\left(\vec\psi\right)}\geq0.
  \label{eq:spheres.worst_case}
-\end{equation}
+\]
 Since for any pure state $ \ket{\Psi} $ the identity
-\begin{equation}
+\[
   \sum_{i}v_{i}^{2}\left(\vec\psi\right)=\frac{2\left(d-1\right)}{d},\label{puresum-1}
-\end{equation}
+\]
 holds (Bloch vectors of pure states live on the hypersphere), the inequality in question becomes
-\begin{equation}
+\[
   \bra{\Psi}\estim{\varrho} \ket{\Psi} -R\sqrt{\frac{2\left(d-1\right)}{d}}\geq0.
-\end{equation}
+\]
 Simple minimization with respect to $ \ket{\Psi} $ leads to the final result stated as Lemma~\ref{lem:ortho.spheres}.
 
 
@@ -337,11 +333,11 @@ We will begin with the main observation of this reduction, namely Eq.~\eqref{eq:
 \begin{proof}
   The two cases of  $\Eps(r_\frac{\alpha}{C})$ being contained and not being contained in the psd states are illustrated in Fig.~\ref{fig:bayesian.ellipsoids}.
   First, assume that $\Eps(r_\frac{\alpha}{C}) \subset \States$, then
-  \begin{equation}
+  \[
     \frac{\alpha}{C} = \int_{\Eps(r_\frac{\alpha}{C})} \pi(\varrho) \, \dd \varrho.
     \implies
     \alpha = \int_{\Eps(r_\frac{\alpha}{C}) \cap \States } C \pi(\varrho) \, \dd \varrho.
-  \end{equation}
+  \]
   Note that the right equation is exactly the defining Eq.~\eqref{eq:bayesian.radius_plus} for the positive radius $r^+_{\alpha}$ if $r^+_\alpha = r_\frac{\alpha}{C}$.
 
   Now, assume that a part of the ellipsoid $O = \Eps(r_\frac{\alpha}{C})  \setminus \States \neq \emptyset$ lies outside the psd states.
@@ -355,22 +351,22 @@ A first step toward this is the following Lemma.
 
 \begin{lemma}\label{lem:bayesian.positivity_violation}
   Let $\vec a \in \mathbb{N}^d$ describe an instance of the balanced sum problem and
-  \begin{equation}
+  \[
     \label{eq:bayesian.positivity_violation.ellipsoid}
     \Eps_{\vec{a}} = \left\{ \varrho_0 + R_1 \sum_{i=1}^{i_d} u_i \sigma_i^ + R_2 \sum_{i=i_d + 1}^{d^2 - 1} u_i \sigma_i \colon \norm{\vec u}_2 = 1 \right\}
-  \end{equation}
+  \]
   the corresponding encoding ellipsoid for Problem~\ref{prob:ortho.ellpos} defined in~\ref{sec:ellpos}.
   There exists a polynomial $\tilde p$ such that if $\Eps_{\vec{a}}$ is not a subset of $\States$, there is an element $\varrho \in \Eps_{\vec{a}}$ with
-  \begin{equation}
+  \[
     \mathrm{mineig}(\varrho) \le -\tilde p{(\norm{\vec a})}^{-1} < 0.
-  \end{equation}
+  \]
 \end{lemma}
 \begin{proof}
   The main proof idea is to trace back the proof for polynomial gap in Lemma~\ref{lem:ellpos.gap_or_no_gap}.
   Recall that Eqs.~\eqref{eq:ellpos.def_pi0} and~\eqref{eq:ellpos.choice} ensure that if $\vec a$ has a balanced sum partition, there is a $\vec\Psi \in {\{\pm 1\}}^d$ such that $\vec a \cdot \vec\Psi = 0$ and
-  \begin{equation}
+  \[
     d^2 - \sum_k \psi_k^4 + {\left( d - \frac{{(\vec a \cdot \vec \psi)}^2}{1 + \norm{\vec a}^2} \right)}^2 - C_2 {(\vec a \cdot \vec \psi)}^4 = C_1 + p{(\norm{\vec a})}^{-1}.
-  \end{equation}
+  \]
   By tracing back the steps which lead to this equation, we find for $\ket{\Psi} := \sum_{k=1}^d \psi_k / \sqrt{d} \ket{k}$
   \begin{align}
     \label{eq:bayesian.posviol_1}
@@ -379,9 +375,9 @@ A first step toward this is the following Lemma.
     =: \sum_i R_i^2 {\left( \bra\Psi \sigma_i \ket\Psi \right)}^2
   \end{align}
   Due to the special choice for $\varrho_0$ in~\eqref{eq:ellpos.rho0} and $\vec a \cdot \vec \psi = 0$, we have
-  \begin{equation}
+  \[
     \bra\Psi\varrho_0\ket\Psi = \frac{q}{d}
-  \end{equation}
+  \]
   with $q$ defined in~\eqref{eq:ellpos.q}.
   Therefore, we can rewrite Eq.~\eqref{eq:bayesian.posviol_1} as
   \begin{align}
@@ -391,7 +387,7 @@ A first step toward this is the following Lemma.
     \label{eq:bayesian.posviol_2}
   \end{align}
   where we have used
-  \begin{equation}
+  \[
     1 - \sqrt{1 + x^2} \le
     \left\{
       \begin{array}{ll}
@@ -399,12 +395,12 @@ A first step toward this is the following Lemma.
        -2 & x > 2 \sqrt{2} \\
       \end{array}
     \right.
-  \end{equation}
+  \]
   Since all the constants on the right hand side of Eq.~\eqref{eq:bayesian.posviol_2} can be expressed as polynomials in the input, it defines the polynomial $\tilde p(\norm{\vec a})$ of the lemma.
   The left hand side of that equation is equal to $\bra\Psi \varrho \ket\Psi$, where
-  \begin{equation}
+  \[
     \varrho = \varrho_0 + \sum_i R_i u_i \sigma_i \in \Eps_{\vec{a}}
-  \end{equation}
+  \]
   for the special choice of $u$ from~\eqref{eq:ellpos.positivity}.
   The claim of the lemma follows for this $\varrho$ using Eq.~\eqref{eq:bayesian.posviol_2}.
 \end{proof}
@@ -413,25 +409,25 @@ We will now show how the explicitly parameterized ellipsoid~\eqref{eq:bayesian.p
 
 \begin{lemma}\label{lem:bayesian.encoded_ellipsoid}
   Denote by
-  \begin{equation}
+  \[
    \Eps^* = \left\{ \varrho_0 + \sum_{i=1}^{d^2 - 1} u_i R_i \sigma_i \colon \norm{\vec u}_2 = 1 \right\}
-  \end{equation}
+  \]
   an ellipsoid $\Eps^* \subset \HermTrace$, which is axis-aligned with the coordinate axes defined by the generalized Pauli operators.
 
   Then, $\Eps^*$ can be encoded as a $\frac{\alpha}{C}$ MVCR-ellipsoid for a Gaussian distribution with mean $\varrho_0 \in \States$ and covariance matrix $\Sigma$.
   The latter is diagonal in the generalized Bloch basis $\sigma_i$ with entries $\Sigma_{ij} = R_i^2 \delta_{ij}$ and for the corresponding radius we have $r_\frac{\alpha}{C} = \sqrt{2}$.
   Hence, the credibility is given by
-  \begin{equation}
+  \[
     \label{eq:bayesian.encoded_ellipsoid.credibility}
     \alpha = C\, P\left(\Nhalf, 1\right),
-  \end{equation}
+  \]
   which can be calculated efficiently up to exponential precision for given $C$ and $N$.
  \end{lemma}
  \begin{proof}
    Since the generalized Pauli operators form an orthogonal system with $\tr \sigma_i \sigma_j = 2 \delta_{ij}$, we find for $\varrho \in \Eps^*$
-   \begin{equation}
+   \[
       \norm{\varrho}^2_2 = \sum_{i,j} u_i u_j \, R_i R_j \, {(\Sigma^{-1})}_{ij} \, 2 \delta_{ij} = 2 \norm{\vec u}_2^2.
-   \end{equation}
+   \]
    Therefore, $\Eps^* = \Eps(\sqrt{2})$ with mean $\varrho_0$ and the stated covariance matrix.
    The efficient computation of the credibility~\eqref{eq:bayesian.encoded_ellipsoid.credibility} is given later in the proof of Lemma~\ref{lem:bayesian.always_contained}.
  \end{proof}
@@ -487,9 +483,9 @@ In case Eq.~\eqref{eq:bayesian.criterion} does not hold -- that is the correspon
   Assume that $\vec a$ has a balanced sum partition and, therefore, $\Eps_{\vec{a}}$ is not a subset of $\States$.
 
   Then, there exists a polynomial $p$ such that
-  \begin{equation}
+  \[
     {r^+_{\alpha}}^2 - {r_\frac{\alpha}{C}}^2 \ge 2^{-p(\log \norm{\vec a}_1)}.
-  \end{equation}
+  \]
   Here, $\norm{\vec a_1} = \sum_k \abs{a_k}$.
   In words, the gap of violation of Eq.~\eqref{eq:bayesian.criterion} can only become polynomially small in the logarithm of the size of the problem specification.
 \end{lemma}
@@ -497,11 +493,11 @@ In case Eq.~\eqref{eq:bayesian.criterion} does not hold -- that is the correspon
   First, let us lower bound the volume of $\Eps(r_\frac{\alpha}{C})$ that lies outside the psd states (the solid blue region in Fig.~\ref{fig:bayesian.r_separation}).
   From Lemma~\ref{lem:bayesian.positivity_violation} we know, that there exists a $\varrho\in \Eps(r_\frac{\alpha}{C})$ with smallest eigenvalue smaller than $- \tilde p{(\norm{\vec a})}^{-1}$ for some polynomial $\tilde p$.
   This also gives us a lower bound on
-  \begin{equation}
+  \[
     \mathrm{dist}(\varrho,\States) = \inf_{\varrho' \in \States} \norm{\varrho - \varrho'}_2.
-  \end{equation}
+  \]
   From~\cite[Theorem~III.2.8]{Bhatia_1997_Matrix} we know that for every $\varrho_+ \in \States$ the following bound holds:
-  \begin{equation}
+  \[
     \begin{split}
       \norm{\varrho - \varrho_+}_2
       &\ge \norm{\varrho - \varrho_-}_\infty
@@ -509,12 +505,12 @@ In case Eq.~\eqref{eq:bayesian.criterion} does not hold -- that is the correspon
       &\ge \abs{\mineig(\varrho) - \mineig(\varrho_+)}
       \ge \tilde p{(\norm{\vec a})}^{-1}.
     \end{split}
-  \end{equation}
+  \]
   Therefore,
-  \begin{equation}
+  \[
     \label{eq:bayesian.r_separation.dist}
     \mathrm{dist}(\varrho,\States) \ge \tilde p{(\norm{\vec a})}^{-1}.
-  \end{equation}
+  \]
   This allows us to lower bound the volume of $\Eps(r_\frac{\alpha}{C})$ that lies outside the psd states by an ellipsoid with the same covariance, but radius ${(2\, \tilde p(\norm{\vec a}) \, \maxeig(\Sigma))}^{-1}$
   \begin{align}
     \label{eq:bayesian.r_separation.volume}
@@ -522,11 +518,11 @@ In case Eq.~\eqref{eq:bayesian.criterion} does not hold -- that is the correspon
     &\ge \frac{\pi^{\Nhalf} \abs{\Sigma}}{\Gamma(\Nhalf + 1)} \, \frac{1}{{\left( 2 \tilde p(\norm{\vec a}) \, \maxeig(\Sigma) \right)}^{N}} \\
   \end{align}
   Furthermore, we have
-  \begin{equation}
+  \[
     \label{eq:bayesian.r_separation.volume2}
     \mathrm{Vol}\left(\Eps(r^+_{1-\alpha}) \setminus \Eps(r_\frac{1-\alpha}{C}) \right)
     = \mathrm{Vol}\left( \Eps(r_\frac{1-\alpha}{C}) \setminus \States \right)
-  \end{equation}
+  \]
   since the solid blue and hatched blue regions in Fig.~\ref{fig:bayesian.r_separation} must be of same size.
 
   We now relate the volume inequality~\eqref{eq:bayesian.r_separation.volume} to a lower bound for the Gaussian volume:
@@ -541,15 +537,15 @@ In case Eq.~\eqref{eq:bayesian.criterion} does not hold -- that is the correspon
     \label{eq:bayesian.r_separation.p_diff}
   \end{align}
   Finally, note that the following crude inequality
-  \begin{equation}
+  \[
      P\left( \Nhalf, \tfrac{{r^+_{\alpha}}^2}{2} \right) - P\left( \Nhalf, \tfrac{{r_\frac{\alpha}{C}}^2}{2} \right)
      = \int_y^x \frac{t^{\Nhalf - 1} \ee^{-t}}{\Gamma(\Nhalf + 1)} \,\dd t \le x - y
-  \end{equation}
+  \]
   holds for $x \ge y$, since the integrand is less than 1.
   Therefore, with Eq.~\eqref{eq:bayesian.r_separation.p_diff}
-  \begin{equation}
+  \[
     {r^+_{\alpha}}^2 - {r_\frac{\alpha}{C}}^2 \ge 2^{-p(\log \norm{\vec a}_1)},
-  \end{equation}
+  \]
   which proofs the claim.
 \end{proof}
 
@@ -562,10 +558,10 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
   Let $\vec a \in \mathbb{N}^d$ be an instance of the balanced sum problem and denote by $\Eps_{\vec{a}}$ the corresponding encoding ellipsoid as defined by Eq.~\eqref{eq:bayesian.positivity_violation.ellipsoid}.
   Denote by $\pi_{\varrho_0,\Sigma}$ the Gaussian density, which encodes $\Eps_{\vec{a}}$ as an $\alpha$ credible region according to Lemma~\ref{lem:bayesian.encoded_ellipsoid}.
   Then, the ellipsoid $\Eps(r)$ is fully contained in the psd states provided
-  \begin{equation}
+  \[
     \label{eq:bayesian.always_contained}
     r \le \sqrt{\frac{d}{2(d-1)}} \, \frac{\mineig\varrho_0}{\sqrt{\maxeig\Sigma}}
-  \end{equation}
+  \]
 \end{lemma}
 \begin{proof}
   We know that for any $\varrho \in \Eps(r)$ with $r$ fulfilling~\eqref{eq:bayesian.always_contained} the following inequalities hold
@@ -584,48 +580,48 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
   Using the same notation as Lem.~\ref{lem:bayesian.always_contained} and assuming Prob.~\ref{prob:bayesian.trucated_cr} can be solved efficiently.
   Then, for every instance $a$ of the balanced sum problem and the corresponding $\varrho_0, \Sigma$, we can efficiently approximate the normalization constant $C$ of $\pi^+_{\varrho_0,\Sigma}$ with exponentially small error.
   More precisely, we have
-  \begin{equation}
+  \[
     C = \tilde C (1 + \epsilon),
-  \end{equation}
+  \]
   where $\tilde C$ can be computed in polynomial time making the correction term $\epsilon$ exponentially small.
 \end{lemma}
 \begin{proof}
   Due to Lemma~\ref{lem:bayesian.always_contained} and $\mineig\varrho_0 > 0$, we can always find an $r > 0$ such that $\Eps(r)$ is fully contained in the psd.
   Indeed, the eigenvalues of $\varrho_0$ and $\Sigma$ are readily calculated because of their particular simple form in Eq.~\eqref{eq:ellpos.rho0} and Lemma~\ref{lem:bayesian.encoded_ellipsoid}:
-  \begin{equation}
+  \[
     \sqrt{\frac{d}{2(d-1)}} \, \frac{\mineig\varrho_0}{\sqrt{\maxeig\Sigma}}
     =  \frac{q}{R_1 \sqrt{2d(d-1)}}
-  \end{equation}
+  \]
   Set\footnote{%
     Note that $\alpha$ does not denote the credibility used for encoding the ellipsoid in question, but an auxiliary ellipsoid used for computing $C$ here.
   }
-  \begin{equation}
+  \[
     \alpha := P\left( \Nhalf, \tfrac{r^2}{2} \right).
-  \end{equation}
+  \]
   Since we can choose $r$ as small as we want, we may assume that $x = \frac{r^2}{2} \ll 1 < \Nhalf$.
   In this regime, we can expand the normalized incomplete $\Gamma$-function $P$ in a power series~\cite{Gil_2012_Efficient}
-  \begin{equation}
+  \[
     \label{eq:bayesian.normalization_constant.incomplete_gamma}
     P\left( \Nhalf, x \right) = \frac{x^{\Nhalf} \ee^{-x}}{\Gamma\left( \Nhalf + 1 \right)} \sum_{k=0}^\infty \frac{x^k}{{\left( \Nhalf + 1 \right)}_k},
-  \end{equation}
+  \]
   where
-  \begin{equation}
+  \[
     {\left( \Nhalf + 1 \right)}_k = \frac{\Gamma\left( \Nhalf + k + 1 \right)}{\Gamma\left( \Nhalf + 1 \right)}.
-  \end{equation}
+  \]
   Truncating the series in Eq.~\eqref{eq:bayesian.normalization_constant.incomplete_gamma} for $k \ge k_0$
-  \begin{equation}
+  \[
     \label{eq:bayesian.normalization_constant.series}
     P\left( \Nhalf,x \right) = P_{k_0}\left( \Nhalf,x \right) + R_{k_0}\left( \Nhalf,x \right),
-  \end{equation}
+  \]
   with
-  \begin{equation}
+  \[
     P_{k_0}\left( \Nhalf,x \right)
     = \frac{x^{\Nhalf} \ee^{-x}}{\Gamma\left( \Nhalf + 1 \right)} \sum_{k=0}^{k_0} \frac{x^k}{{\left( \Nhalf + 1 \right)}_k}
-  \end{equation}
+  \]
   we can derive a bound on the truncation error $R_{k_0}(\Nhalf,x)$~\cite[Eq.~(2.18)]{Gil_2012_Efficient}
-  \begin{equation}
+  \[
     R_{k_0}(\Nhalf,x) \le \frac{x^{\Nhalf + k_0} \ee^{-x}}{\Gamma(\Nhalf + k_0 + 1)}\, \frac{\Nhalf + k_0}{\Nhalf + k_0 - x - 1}.
-  \end{equation}
+  \]
   Since $x \ll 1$, the term $x^{k_0}$ ensures that we can make the error in computing $\alpha$ exponentially small using only polynomial time in evaluating $P_{k_0}(\Nhalf, x)$.\\
 
 
@@ -633,17 +629,17 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
   Assume that we have computed $\tilde\alpha = \alpha-\epsilon$ for some truncation error $\epsilon = R_{k_0}(\Nhalf,x) > 0$.
   We may now use the (postulated) efficient algorithm for Prob.~\ref{prob:bayesian.trucated_cr} to compute the radius of the manifestly positive MVCR $r^+_{\tilde\alpha}$ and, hence, using Eq.~\eqref{eq:bayesian.criterion} the normalization constant:
   Since $C>1$, we have with $r_{\alpha} = r$
-  \begin{equation}
+  \[
     r_\frac{\tilde\alpha}{C} = r_\frac{\alpha-\epsilon}{C} < r_{\alpha} \implies \Eps(r_\frac{\tilde\alpha}{C}) \subset \States \implies r_\frac{\tilde\alpha}{C} = r^+_{\tilde\alpha} \le r_{\alpha}.
-  \end{equation}
+  \]
   Therefore, the ellipsoid with radius $r^+_{\tilde\alpha}$ is also contained in the psd states.
   The same holds true if we replace $r^+_{\tilde\alpha}$ by the actual output $r^+_{\tilde\alpha} \pm \delta$ of the postulated efficient algorithm for Prob.~\ref{prob:bayesian.cr}
   Here, $\delta$ denotes the (selectable) accuracy.
   By choosing $\delta$ small enough and possibly replacing the original radius $r$ by $r - \delta$, we can ensure that
-  \begin{equation}
+  \[
     \label{eq:bayesian.normalization_constant.small_enough_r}
     \Eps(r^+_{\tilde\alpha} \pm \delta) \subset \States,
-  \end{equation}
+  \]
   as well.
   Therefore, Eq.~\eqref{eq:bayesian.criterion} holds and we find
   \begin{align}
@@ -654,30 +650,30 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
   \end{align}
   The first addend on the right hand side can be evaluated using the same series expansion as in Eq.~\eqref{eq:bayesian.normalization_constant.series}, since we are in the same regime $\tfrac{{r^+_{\tilde\alpha}}^2}{2} \ll \Nhalf$.
   The second addend can be bounded by
-  \begin{equation}
+  \[
     \label{eq:bayesian.normalization_constant.upper_bound}
     \abs{\frac{1}{\Gamma(\Nhalf)} \int_{\tfrac{{r^+_{\tilde\alpha}}^2}{2}}^{\tfrac{{(r^+_{\tilde\alpha} \pm \delta)}^2}{2}}\, t^{\Nhalf - 1} \ee^{-t} \dd t}
     < \frac{\left( 2 {r^+_{\tilde\alpha}} \delta + \delta^2 \right)}{2}
-  \end{equation}
+  \]
   since
-  \begin{equation}
+  \[
     \frac{t^{\Nhalf - 1} \ee^{-t}}{\Gamma(\Nhalf)} < 1.
-  \end{equation}
+  \]
   Let us assume w.l.o.g.\ $r^+_{\tilde\alpha} \le 1$.
   This bound, as well as the error bound $\epsilon' > 0$ for the finite series-evaluation of $P$ in~\eqref{eq:bayesian.normalization_constant.almost_c} leads to
-  \begin{equation}
+  \[
     \frac{\tilde\alpha}{C} = P_{k_0}\left( \Nhalf, \tfrac{{(r^+_{\tilde\alpha} \pm \delta)}^2}{2} \right) + \epsilon' \pm D \delta
-  \end{equation}
+  \]
   for some appropriate constant $D$.
   A little arithmetic gives
-  \begin{equation}
+  \[
     \label{eq:bayesian.normalization_constant.formula_c}
     C = \frac{\tilde\alpha}{P_{k_0}(\ldots)} \, \left( 1 - \frac{\epsilon' \pm D\delta}{P_{k_0}(\ldots) + \epsilon' \pm D\delta} \right).
-  \end{equation}
+  \]
   By assumption we can make both $\epsilon'$ and $\delta$ exponentially small using only polynomial time while $P_{k_0}(\Nhalf, x) \uparrow P(\Nhalf,x)$ for $k_0 \to \infty$, the correction to
-  \begin{equation}
+  \[
     \tilde C = \frac{\tilde\alpha}{P_{k_0}\left( \Nhalf, \tfrac{{(r^+_{\tilde\alpha} \pm \delta)}^2}{2} \right)}
-  \end{equation}
+  \]
   in Eq.~\eqref{eq:bayesian.normalization_constant.formula_c} can be made exponentially small using polynomial time.
   On the other hand, $\tilde C$ can be computed in polynomial time as well.
 \end{proof}
@@ -689,14 +685,14 @@ We now have all the necessary parts for the proof of the main theorem, which wil
   First, we encode the ellipsoid of Problem~\ref{prob:ortho.ellpos} to be checked as a MVCR of a Gaussian with mean $\varrho_0$ and covariance matrix $\Sigma$ according to Lemma~\ref{lem:bayesian.encoded_ellipsoid}.
   Using Lemma~\ref{lem:bayesian.normalization_constant}, we compute an estimate $\tilde C$ to the normalization constant $C$.
   Using the techniques from the proof of the aforementioned Lemma, we may compute an estimate
-  \begin{equation}
+  \[
     \alpha = C \, P\left( \Nhalf, 1 \right) = \tilde C (1 + \epsilon) \left( P_{k_0}\left( \Nhalf, 1 \right) + \epsilon' \right) = \tilde\alpha + \epsilon''.
-  \end{equation}
+  \]
   This can be done for exponential small errors $\epsilon, \epsilon'$ in polynomial time.
   Here, the computable value is given by
-  \begin{equation}
+  \[
     \tilde\alpha = \tilde C \, P_{k_0}\left(\Nhalf, 1 \right).
-  \end{equation}
+  \]
   An exponential small difference of $\alpha$ and $\tilde\alpha$ also implies an exponential small difference of $r^+_{1-\alpha}$ and $r^+_{\tilde\alpha}$:
   Set $x := r^+_{\alpha}$ and $\tilde x := r^+_{\tilde\alpha}$ and assume $x > \tilde x$ -- the opposite case can be treated along the same lines by choosing a larger constant as a bound for $\tilde x$.
   Following Eq.~\eqref{eq:bayesian.r_separation.p_diff}, we have
@@ -710,9 +706,9 @@ We now have all the necessary parts for the proof of the main theorem, which wil
 
 
   Now, choose the errors $\epsilon$ and $\epsilon'$ in such a way that
-  \begin{equation}
+  \[
     \abs{r^+_{\alpha} - r^+_{\tilde\alpha}} \le \frac{\Delta}{4}.
-  \end{equation}
+  \]
   Here, $\Delta = 2^{-p(\log \norm{\vec a}_1)}$ is the (at worst exponentially small) gap from Lemma~\ref{lem:bayesian.r_separation}.
   Furthermore, we run the algorithm for computing $r^+_{\tilde\alpha}$ with precision $\delta = \frac{\Delta}{4}$ and denote the result by $\tilde r$.
   If $\abs{\tilde r - \sqrt{2}} \le \frac{\Delta}{2}$, we know that $r^+_{\alpha} = r_\frac{\alpha}{C}$ and the ellipsoid is fully contained in the psd states.
