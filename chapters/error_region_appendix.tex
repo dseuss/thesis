@@ -21,34 +21,37 @@ We now define the generalized Pauli matrices in terms of these auxiliary matrice
   \left\{ \sigma_{i}:i=2i_{d}+1,\ldots,d^{2}-1\right\} &= \left\{ \Xi_{l}^{(\textrm{diag})}:1\leq l\leq d-1\right\},
 \end{align}
 where $i_{d}=d(d-1)/2$.
-Note that the elements of the sets in Eq.~\eqref{eq:parametrisation.x}, \eqref{eq:parametrisation.y}, and \eqref{eq:parametrisation.z} generalize the Pauli matrices $\sigma_\matrm{X}$, $\sigma_\matrm{Y}$, and $\sigma_\matrm{Z}$, respectively.
+Note that the elements of the sets in Eq.~\eqref{eq:parametrisation.x}, \eqref{eq:parametrisation.y}, and \eqref{eq:parametrisation.z} generalize the Pauli matrices $\sigma_\mathrm{X}$, $\sigma_\mathrm{Y}$, and $\sigma_\mathrm{Z}$, respectively.
 Since only this structure is crucial to our proof, the order of the elements in Eq.~\eqref{eq:parametrisation.x}--\eqref{eq:parametrisation.z} in arbitrary, and hence, the definition in terms of sets is well defined for our purposes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Proof of Theorem~\ref{thm:ortho.hard}}
 \label{sec:error.ellpos}
 
-We shall start the current discussion with a word of clarification concerning the dual notation already used in the definition of the Bloch vector. We utilize an alternative representation of the state $\ket{\Psi} $ in terms of a complex vector $\vec{\psi}$ with coordinates
+In this section, we provide the technical details of the proof of \cref{thm:ortho.hard}.
+For this purpose, we often introduce an explicit representation of pure states in terms of the orthonormal basis $\{\ket{i}\}_i$ from~\cref{sec:error.parametrisation}.
+Let $\ket{\Psi}$ denote denote any element from the $d$ dimensional Hilbert space of pure states and define the corresponding  complex vector $\vec{\psi}$ in terms of its coordinates
 \[
-  \psi_{k}=\left\langle k \ket{\Psi} \right.,\qquad k=1,\ldots,d,\label{coordinates}
+  \psi_{k} = \braket{k | \Psi} ,\qquad k=1,\ldots,d,\label{coordinates}
 \]
-specified with respect to the orthonormal basis fixed in~\ref{sec:parametrisation}.
-Consequently,  $\sqrt{\left\langle \Psi \ket{\Psi} \right.}$ is the  norm of $\ket{\Psi}$, while $\norm{\vec\psi}$ denotes the norm of $\vec\psi$. Obviously both norms assume the same value.
+Consequently, $\sqrt{\braket{\Psi | \Psi}}$ is the norm of $\ket{\Psi}$, while $\norm{\vec\psi}$ denotes the norm of $\vec\psi$.
+Obviously both norms are equal.
 
 In a first step of the proof we write down the positivity condition for the ellipsoid under investigation:
-The confidence ellipsoid $\CR$ is fully contained in the set of psd states if and only if for all $\rho \in \CR$ and all $\ket{\Psi}$,
+The confidence ellipsoid $\CR$ is fully contained in the set of psd states if and only if for all $\varrho \in \CR$ and all $\ket{\Psi}$,
 \(
-  \bra{\Psi} \rho \ket{\Psi} \ge 0.
+  \bra{\Psi} \varrho \ket{\Psi} \ge 0.
 \)
 holds.
-In the parametrization from Thm.~\ref{thm:ortho.ellipsoids}, this condition can be rewritten as
+In the parametrization from \cref{thm:ortho.ellipsoids}, this condition can be rewritten as
 \[
   \bra{\Psi}\estim{\varrho} \ket{\Psi} +R_{1}\sum_{i=1}^{i_{d}}u_{i}v_{i}\left(\vec\psi\right)+R_{2}\sum_{i=i_{d}+1}^{d^{2}-1}u_{i}v_{i}\left(\vec\psi\right)\geq0,
   \label{eq:ellpos.positivity}
 \]
 where we have already restricted our attention to the special case from Eq.~\eqref{eq:ortho.subclass}.
 Furthermore, we have used the shorthand $v_{i}\left(\vec\psi\right)=\bra{\Psi}\sigma_{i} \ket{\Psi} $, which are the rescaled Bloch coordinates of the density matrix $\ket{\Psi} \bra{\Psi}$.
-Condition~\eqref{eq:ellpos.positivity} is independent of the norm of $\ket{\Psi}$ thus, we can fix $\left\langle \Psi \ket{\Psi} \right. = d$.
+Condition~\eqref{eq:ellpos.positivity} is independent of the norm of $\ket{\Psi}$.
+Thus, we can fix $\left\langle \Psi \ket{\Psi} \right. = d$.
 Recall that Eq.~\eqref{eq:ellpos.positivity} has to hold for all values of $\vec u$ with $\vec u^T \vec u \le 1$.
 Since the left hand side assumes its minimal value for
 \[
@@ -68,18 +71,17 @@ which can be utilized to simplify~\eqref{eq:ellpos.worst_case}
  g(\vec\psi) := \bra{\Psi}\estim{\varrho} \ket{\Psi} -\sqrt{\mathcal{P}R_{2}^{2}+\left(R_{1}^{2}-R_{2}^{2}\right)\sum_{i=1}^{i_{d}}v_{i}^{2}\left(\vec\psi\right)}\geq0.
   \label{eq:ellpos.major}
 \]
-In the following, we restrict our attention to  $R_{1}>R_{2}$, so that both term inside the square root are manifestly non-negative.\\
-
+In the following, we restrict our attention to  $R_{1}>R_{2}$, so that both term inside the square root are manifestly positive.\\
 In the second step of the proof we show and utilize the following lemma:
 \begin{lemma}\label{lem:ellpos.real_min}
-  If $\estim{\varrho}$ is a symmetric, real matrix w.r.t.\ $\ket{i}$, then the minimum of $g(\vec\psi)$ is attained by a vector $\vec{\psi}$ with real coordinates.
+  If $\estim{\varrho}$ is a real, symmetric matrix w.r.t.\ $\ket{i}$, then the minimum of $g(\vec\psi)$ is attained by a vector $\vec{\psi}$ with real coordinates.
 \end{lemma}
 \begin{proof}
   Note that we can decompose any vector $\ket\Psi$ into its real and imaginary part
   \[
     \ket\Psi = \ket{\Psi_1} + \ii\Ket{\Psi_2},
   \]
-  where the $\ket{\Psi_i}$ are given by real vectors $\vec\psi_i$.
+  where the $\ket{\Psi_i}$ are defined in terms of real vectors $\vec\psi_i$.
   Therefore, for $\estim{\varrho}$ being real and symmetric, we find
   \[
     \bra{\Psi} \estim\varrho \ket{\Psi} = \bra{\Psi_1} \estim\varrho \ket{\Psi_1} + \bra{\Psi_2} \estim\varrho \ket{\Psi_2}.
@@ -97,22 +99,25 @@ In the second step of the proof we show and utilize the following lemma:
   \sqrt{ \mathcal{P} R_2^2 + (R_1^2 - R_2^2) \sum_{i=1}^{i_d} v_{i}^{2}\left(\vec\psi\right)} = \norm{\vec x^1 + \vec x^2} \le \norm{\vec x^1} + \norm{\vec x^2},
   \]
   where we used triangle inequality in the last step.
-  Therefore
-\[
- g(\vec\psi) \geq  g(\vec\psi_1) + g(\vec\psi_2)
-\]
-so that if  $g(\vec\psi)$ is non-negative for all real vectors, it is also non-negative for every complex vector $\vec\psi$. More intuitively, the above result is true because the construction of $g(\vec\psi)$ utilizes only the generalized $\sigma_x$ Pauli matrices, which by construction pick up certain real parts of $\vec\psi^*\otimes\vec\psi$ (imaginary contribution could appear only due to $\sigma_y$).
+  Therefore we have
+  \[
+    \label{eq:ellpos.g_decomp}
+    g(\vec\psi) \geq  g(\vec\psi_1) + g(\vec\psi_2)
+  \]
+  \Cref{eq:ellpos.g_decomp} implies that if $g(\vec\psi)$ is non-negative for all real vectors then it is also non-negative for any vector $\vec\psi$.
+  More intuitively, the above result is true because the construction of $g(\vec\psi)$ utilizes only the generalized $\sigma_\mathrm{X}$ Pauli matrices and the expectation values of such generalized Pauli matrices are depend on the real parts of $\vec\psi^*\otimes\vec\psi$ w.r.t.\ the fixed basis.
+  The imaginary part of such projectors only show up in expectation values of the generalized $\sigma_\mathrm{Y}$ matrices.
 \end{proof}
 
-The next step of the proof, which is crucial for encoding an instance  the balanced sum problem, is the choice of the ellipsoid's center.
-%Following~\cite{Tal_1998_Robust},
+The next step of the proof, which is crucial for encoding an instance number partition problem, is the choice of the ellipsoid's center $\estim\varrho$.
 We choose
 \[
   \estim{\varrho}=\frac{q}{d}\1+\frac{1-q}{a^{2}} \ket{\vec a} \bra{\vec a},\qquad0\leq q\leq1,\qquad a=\norm{\vec a},
   \label{eq:ellpos.rho0}
 \]
-with $q$ to be specified below and $\ket{\vec a} =\sum_{k}a_{k}\ket{k} $ denoting a state represented by a real, \emph{integral} vector $\vec{a}$ playing the role of the instance of Prob.~\ref{prob:ellpos.balanced_sum}. % to be encoded.
-Since $\estim\varrho$ given by Eq.~\eqref{eq:ellpos.rho0} is manifestly real and symmetric we can restrict our attention to $\vec\psi \in \BR^d$ due to Lemma~\ref{lem:ellpos.real_min}. We find
+with $q \in \Reals$ to be specified below and $\ket{\vec a} =\sum_{k}a_{k}\ket{k} $ denoting a state represented by a real, \emph{integral} vector $\vec{a}$.
+The latter are exactly the instances of the number partition problem~\ref{prob:complexity.partition}.
+Since $\estim\varrho$ given by Eq.~\eqref{eq:ellpos.rho0} is manifestly real and symmetric, we can restrict our attention to $\vec\psi \in \Reals^d$ due to Lemma~\ref{lem:ellpos.real_min}. We find
 \[
   \bra{\Psi}\estim{\varrho} \ket{\Psi} =q+\frac{1-q}{a^{2}}{\left(\vec{a}\cdot\vec{\psi}\right)}^{2},
 \]
@@ -140,7 +145,7 @@ where:
   C_{2}&=\frac{q_{\mp}^{2}}{2a^{4}\left(R_{1}^{2}-R_{2}^{2}\right)}>0
 %+\frac{1}{\left(1+a^{2}\right)^{2}}>0.
 \end{align}
-Both solutions~\eqref{eq:ellpos.q} assure that~\eqref{eq:ellpos.condition} is free from additional terms proportional to ${\left(\vec{a}\cdot\vec{\psi}\right)}^{2}$, except those already hidden in $f$.
+Both solutions~\eqref{eq:ellpos.q} assure that~\eqref{eq:ellpos.condition} is free from additional terms proportional to ${\left(\vec{a}\cdot\vec{\psi}\right)}^{2}$, except those already included in $f$.
 
 Hence, the original problem of deciding whether the ellipsoid $\Eps$ centered at $\estim\varrho$ and with radii~\eqref{eq:ortho.subclass} is contained in the psd states can be rephrased as deciding whether the maximum of the left hand side of Eq.~\eqref{eq:ellpos.condition} is smaller or equal to some constant:
 \[
@@ -149,35 +154,34 @@ Hence, the original problem of deciding whether the ellipsoid $\Eps$ centered at
   \max_{\vec\psi\in\mathbb{S}^{d-1}_{d}}\left[f\left(\vec\psi\right)-C_{2}{\left(\vec a \cdot \vec\psi\right)}^{4}\right]\leq C_{1}.
   \label{eq:ellpos.max_condition}
 \]
-Here, $ \mathbb{S}^{d-1}_{\zeta}$ denotes a $(d-1)$-dimensional sphere with radius $\sqrt\zeta$, i.e.
+Here, $\mathbb{S}^{d-1}_{\zeta}$ denotes a $(d-1)$-dimensional sphere in $\Reals^d$ with radius $\sqrt\zeta$, i.e.
 \[
  \vec\psi\in\mathbb{S}^{d-1}_{d} \iff    \vec\psi\in\mathbb{R}^{d}\;\wedge \; \left\Vert \vec\psi\right\Vert^{2}=d.
 \]
-The relation of Problem~\ref{prob:ortho.ellpos} to the balanced sum problem (Problem~\ref{prob:ellpos.balanced_sum}) is derived in the following Lemma.
+The relation of \cref{prob:ortho.ellpos} to the number partition problem is derived in the following Lemma.
 \begin{lemma}\label{lem:ellpos.gap_or_no_gap}
-  If the instance $\vec a$ of Problem~\ref{prob:ellpos.balanced_sum} allows for a balanced sum partition, then
+  If the instance $\vec a$ of \cref{prob:complexity.partition} allows for a partition, then
   \[
     \max_{\vec\psi\in\mathbb{S}^{d-1}_{d}}\left[f\left(\vec\psi\right)-C_{2}{\left( \vec a \cdot \vec\psi\right)}^{4}\right]
-    %= \max_{\vec\psi\in\mathbb{S}^{d-1}_{d}}f\left(\vec\psi\right)
     = 2d^{2}-d \label{eq:ellpos.def_pi0}.
   \]
   On the other hand, if there is no such partition, we have
  \begin{align}
     \max_{\vec\psi\in\mathbb{S}^{d-1}_{d}}\left[f\left(\vec\psi\right)-C_{2}{\left( \vec a \cdot \vec\psi\right)}^{4}\right]
-    &<&   \max_{\vec\psi\in\mathbb{S}^{d-1}_{d}}f\left(\vec\psi\right)\label{eq:ellpos.def_pi}\\
-    &\leq&2d^{2}-d - \frac{2}{p(a d)}
+    &<   \max_{\vec\psi\in\mathbb{S}^{d-1}_{d}}f\left(\vec\psi\right)\label{eq:ellpos.def_pi}\\
+    &\leq 2d^{2}-d - \frac{2}{p(a d)}
     \label{eq:ellpos.def_pi2}.
   \end{align}
   where $p(x)=2 x^4$ is a non-negative polynomial.
 \end{lemma}
-For the sake of clarity we relegate the proof of the above lemma to the end of this section.
+For the sake of clarity we relegate the proof of the above lemma to the end of this section and discuss its implications now.
 As a consequence of Lemma~\ref{lem:ellpos.gap_or_no_gap} the choice,
 \[
   C_{1}=2d^{2}-d-p{(a d)}^{-1},
   \label{eq:ellpos.choice}
 \]
-implies that an efficient algorithm deciding whether the inequality~\eqref{eq:ellpos.condition} is satisfied or not is also capable of deciding Prob.~\ref{prob:ellpos.balanced_sum} efficiently.
-This is exactly the statement of Thm.~\ref{thm:ortho.hard}.\\
+implies that an efficient algorithm deciding whether the inequality~\eqref{eq:ellpos.condition} is satisfied or not is also capable of deciding the number partition problem~\ref{prob:complexity.partition} efficiently.
+This proves the claim of \cref{thm:ortho.hard} that \cref{prob:ortho.ellpos} is $\NP$-hard.\\
 
 
 The last step we need to make is to find the parameters $R_{1}$ and $R_{2}$ leading to the choice~\eqref{eq:ellpos.choice}.
@@ -239,18 +243,18 @@ When~\eqref{eq:ellpos.condtion_epsilon2} occurs, we find that
 \end{align}
 while in the opposite case the parameters $q_{+}$ and $q_{-}$ swap.
 These interrelations between the parameters imply that regardless of the validity of~\eqref{eq:ellpos.condtion_epsilon2}, the solution~\eqref{eq:ellpos_r1} uniquely determines  $q$ initially introduced in~\eqref{eq:ellpos.rho0} as given by the formula~\eqref{qp}. This parameter is manifestly smaller than $1$ and due to~\eqref{eq:ellpos.condition_epsilon1} it is also non-negative.
-With the given choice of parameters (\ref{eq:ellpos_r1},~\ref{eq:ellpos.condtion_epsilon2}) and $q$ specified as above, we complete the reduction of the balanced sum problem to Prob.~\ref{prob:ortho.ellpos}.
+With the given choice of parameters \eqref{eq:ellpos_r1} and \eqref{eq:ellpos.condtion_epsilon2} as well as $q$ specified above, we complete the reduction from the number partition problem.
 To finalize the proof of Theorem~\ref{thm:ortho.hard}, we now state the proof of Lemma~\ref{lem:ellpos.gap_or_no_gap}.
 \begin{proof}[Proof of Lemma~\ref{lem:ellpos.gap_or_no_gap}]
   The first part of the proof -- Eq.~\eqref{eq:ellpos.def_pi0} --  follows from a simple calculation utilizing the partition vector $\vec\psi$ defined in~\eqref{eq:ellpos.partition_vector}. Note that as $\vec a \cdot\vec \psi=0$, we immediately obtain the first equality in~\eqref{eq:ellpos.def_pi0}, which since $C_2$ is non-negative turns into inequality in~\eqref{eq:ellpos.def_pi}.
 
   To prove~\eqref{eq:ellpos.def_pi2}, we define the set of all possible ($2^d$ in total) partition vectors
   \[
-    \mathcal{Z} := \left\{ \vec z \in \BR^d\colon \forall i \, z_i = \pm 1 \right\}
+    \mathcal{Z} := \left\{ \vec z \in \Reals^d\colon \forall i \, z_i = \pm 1 \right\}
   \]
   and (for an arbitrary $0<\lambda<1$) the set of vectors that are ``close'' to some element from $\mathcal{Z}$
   \[
-    \mathcal{B} := \left\{ \vec\psi\in\BR^d\colon \min_{\vec z\in \mathcal{Z}} \norm{\vec\psi - \vec z} \leq \frac{\lambda}{a} \right\}.
+    \mathcal{B} := \left\{ \vec\psi\in\Reals^d\colon \min_{\vec z\in \mathcal{Z}} \norm{\vec\psi - \vec z} \leq \frac{\lambda}{a} \right\}.
   \]
 Because $a \geq 1$, the set $\mathcal{B}$ can be thought of as a disjoint union of $2^d$ balls centered around the elements of $\mathcal{Z}$.
 For further convenience we denote $\tilde{\vec{z}} = \mathrm{argmin}_{\vec z\in\mathcal{Z}} \, \norm{\vec\psi - \vec z}$, and $\vec\delta := \vec\psi - \tilde{\vec{z}}$.
@@ -267,7 +271,7 @@ Using all the above, the fact that $\tilde{z}_k^2=1$ and  $\tilde{z}_k^3=\tilde{
 -\sum_{k=1}^d \psi_k^4\leq-d-\sum_{k=1}^d \delta_k^4\leq-d-\frac{\norm{\vec\delta}^4}{d}.
 \]
 
-As $\vec a$ does not allow for a balanced sum partition and both, $\tilde{\vec z}$ and $\vec a$ are integral, we must necessarily have $\vert \vec a \cdot \tilde{\vec z} \vert \geq 1$. Thus
+As $\vec a$ does not allow for partition and both, $\tilde{\vec z}$ and $\vec a$ are integral, we must necessarily have $\vert \vec a \cdot \tilde{\vec z} \vert \geq 1$. Thus
 \[
 1\leq\left|\boldsymbol{a}\cdot\tilde{\vec z}\right|=\left|\boldsymbol{a}\cdot\left(\boldsymbol{\psi}-\boldsymbol{\delta}\right)\right|\leq\left|\boldsymbol{a}\cdot\boldsymbol{\psi}\right|+\left|\boldsymbol{a}\cdot\boldsymbol{\delta}\right|\leq\left|\boldsymbol{a}\cdot\boldsymbol{\psi}\right|+a\norm{\boldsymbol{\delta}},
 \]
@@ -288,7 +292,7 @@ while for the opposite case ($\psi \notin \mathcal{B}$), when  $\norm{\vec \delt
  \[
 f(\vec \psi)\leq 2d^{2}-d-\frac{\lambda^4}{d a^4}.
 \]
-Therefore, we have for any $\vec\psi \in \BR^d$ with $\norm{\vec\psi}^2 = d$
+Therefore, we have for any $\vec\psi \in \Reals^d$ with $\norm{\vec\psi}^2 = d$
 \[
 f(\vec \psi)\leq 2d^{2}-d- \min\left\{2 d^{3/2}a\frac{1-\lambda}{1+a^{2}},\frac{\lambda^4}{d a^4}\right\},
 \]
@@ -455,7 +459,7 @@ We will now show how the explicitly parameterized ellipsoid~\eqref{eq:bayesian.p
     \draw\truncatedelip;
 
     \node at (-1,-4) (psdcenter) {};
-    \node at (3,1) {\red{psd}};
+    \node[fill=red] at (3,1) {psd};
 
     \draw[psd] ([shift=(50:\psdradius)]psdcenter) arc (50:100:\psdradius);
     \begin{scope}

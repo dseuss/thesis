@@ -135,7 +135,7 @@ For this purpose we need to introduce a precise notion of \quotes{error bars}, n
   A confidence region $\CR$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data $\vec x$ to a subset $\CR(\vec x) \subset \Omega$ of the parameter space -- such that the true parameter is contained in $\CR$ with probability greater than $\alpha$:
   \[
     \label{eq:frequentist.coverage}
-    \forall \theta_0\in\Omega \colon \Prob_\theta_0\left( \CR(X_1, \ldots, X_N) \ni \theta_0 \right) \ge 1 - \alpha.
+    \forall \theta_0\in\Omega \colon \Prob_{\theta_0}\left( \CR(X_1, \ldots, X_N) \ni \theta_0 \right) \ge 1 - \alpha.
   \]
 \end{definition}
 Note that the coverage condition~\eqref{eq:frequentist.coverage} is not a probabilistic statement about the true parameter $\theta_0$ for fixed observed data $\vec x$.
@@ -289,7 +289,7 @@ A Turing machine (TM) can be thought of as a simplified and idealized model of a
 It is described by a tuple $(\Gamma, Q, \delta)$ and consists of
 \begin{itemize}
   \item An infinite tape, that is a bi-directional line of cells that can take the values from a finite set $\Gamma$ called the \emph{alphabet}.
-    $\Gammma$ must contain a designated symbol $\blank$ called \quotes{blank}.
+    $\Gamma$ must contain a designated symbol $\blank$ called \quotes{blank}.
   \item A register that can take on values from a finite set of states $Q$.
     $Q$ contains an initial state $q_0$ and a halting state $q_h$.
   \item A transition function
@@ -340,7 +340,7 @@ In words, \cref{def:complexity.runtime} gives a formal notion of the runtime of 
 But as stated in the introduction, we are more interested in the intrinsic complexity of computing the function $f$ instead of a specific implementation.
 For this purpose, we introduce \emph{complexity classes}, which are sets of functions that can be computed within given resource bounds.
 The most important examples of complexity classes pertain to boolean functions $f\colon \BitStrings \to \{0, 1\}$, which correspond to decision problems.
-The corresponding set of \quotes{truthy} inputs $L = \{x \ in \BitStrings\colon f(x) = 1}$ is referred to as a \emph{language}.
+The corresponding set of \quotes{truthy} inputs $L = \{x \ in \BitStrings\colon f(x) = 1\}$ is referred to as a \emph{language}.
 \begin{definition}
   \label{def:complexity.p}
   Let $T\colon \Naturals \to \Naturals$ be some function.
