@@ -691,6 +691,7 @@ For the precise formulation, we use the representation of ellipsoids from Thm.~\
   Given the center $\estim\varrho$, radii $R_i$, and a basis $\sigma'_i$ for $\HermTrace$.
   Is there a $\vec u \in \Reals^{d^2 - 1}$ with $\vec{u}^{T}\vec{u} \leq 1$ such that
   \[
+    \label{eq:ortho.ellpos_condition}
     \estim{\varrho} + \sum_{i}R_{i}u_{i}\sigma_{i}' \in \HermTrace \setminus \States?
   \]
 \end{problem}
@@ -711,7 +712,8 @@ What \cref{thm:ortho.hard} shows is that any region estimator subject to this cr
 
 
 Finally, the remainder of this section is dedicated to give some insight to the proof of the main theorem and to discuss a tractable solvable special case.
-The proof of \cref{thm:ortho.hard} is inspired by a similar result due to Ben-Tal and Nemirovski~\cite{Tal_1998_Robust} in robust optimization theory, who showed that the following problem is $\NP$-complete.
+First, note \cref{prob:ortho.ellpos} is in $\NP$ as any $\vec u$ fulfilling \cref{eq:ortho} serves as a certificate.
+The rest of the proof of \cref{thm:ortho.hard} is inspired by a similar result due to Ben-Tal and Nemirovski~\cite{Tal_1998_Robust} in robust optimization theory, who showed that the following problem is $\NP$-complete.
 \begin{problem}
   \label{prob:ortho.bental}
   Given $k \in \Naturals$ and $k$ $d\times d$ symmetric matrices $A_{1},\ldots,A_{k}$, check whether there is a $\vec u \in \Reals^k$ with $\vec{u}^{T}\vec{u} \leq 1$ such that $\sum_{i=1}^{k}u_{i}A_{i} > \1_{d}$.
@@ -752,15 +754,7 @@ We consider the same radius $R_{1}$ for all directions generalizing the $x$-dire
 Recall the definition of $i_d$ \cref{eq:ortho.x_yz_index}.
 To prove the hardness of \cref{prob:ortho.ellpos}, we use a reduction from the number partition problem \ref{prob:complexity.partition}.
 The main technical difficulty is to identify the values of $R_1$ and $R_2$ as well as $\estim{\rho}$ depending on an instance of the balanced sum problem $\vec a$ such that the corresponding ellipsoid $\CR$ given by \cref{thm:ortho.ellipsoids} contains an element with negative eigenvalues if and only if $\vec a$ has a balanced sum partition.
-For the details, please see \cref{sec:error.ellpos}.
-
-
-
-
-
-
-
-
+The details of the proof can be found in \cref{sec:error.ellpos}
 
 
 
