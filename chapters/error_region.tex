@@ -52,39 +52,39 @@ Although there are some intuitive approaches to this problem such as the method 
 The \emph{likelihood function} is defined by
 \[
   \Loss(\theta; \vec X) = \Prob_\theta(\vec X) = \prod_{i=1}^N \Prob_\theta(X_i),
-  \label{eq:frequentist.likelihood_function}
+  \label{eq:intro.frequentist.likelihood_function}
 \]
 where we have assumed independence of the samples.
 The \emph{maximum likelihood estimator} (\apprv{MLE}) is then defined by
 \[
   \estim\theta_\mathrm{MLE}(\vec x) = \operatorname{argmax}_\theta \Loss(\theta; \vec x).
-  \label{eq:frequentist.mle}
+  \label{eq:intro.frequentist.mle}
 \]
-The justification for using~\eqref{eq:frequentist.mle} is that under mild conditions on the model, the MLE posses many appealing properties~\cite[Sec.\ 9.4]{Wasserman_2013_All} such as consistency and efficiency:
+The justification for using~\eqref{eq:intro.frequentist.mle} is that under mild conditions on the model, the MLE posses many appealing properties~\cite[Sec.\ 9.4]{Wasserman_2013_All} such as consistency and efficiency:
 Consistency means that the MLE converges to the true value $\theta_0$ in probability as $N \to \infty$ and efficiency roughly means that among all well behaved estimators, the MLE has the smallest variance in the large sample limit.\\
 
 
 A broader approach to the problem of how to single out a \quotes{good} estimator is formalized in statistical decision theory~\cite{Casella_2008_Statistical,Lehmann_1998_Theory}.
 For this purpose, we need to introduce a \emph{loss function}
 \[
-  \label{eq:frequentist.loss_function}
+  \label{eq:intro.frequentist.loss_function}
   \Loss\colon \Omega \times \Reals \to \Reals,  (\theta_0, \estim\theta) \mapsto \Loss(\theta_0, \estim\theta),
 \]
 which measures the discrepancy between $\theta_0$ and an estimate $\estim\theta(\vec X)$.
 Keep in mind that since the $X_i$ are random variables, so are $\estim\theta(\vec X)$ and its loss.
 To asses the estimator $\hat\theta$, that is the function mapping data to an estimate, we evaluate the average loss or \emph{risk function}
 \[
-  \label{eq:frequentist.risk}
+  \label{eq:intro.frequentist.risk}
   \Risk(\theta_0, \hat\theta) = \Exp_{\theta_0}(\Loss(\theta_0, \hat\theta(\vec X)))
   = \int \Loss(\theta_0, \hat\theta(\vec x)) \Prob_{\theta_0}(\vec x) \dd x.
 \]
-Then, the problem of finding a good estimator reduces to the problem of finding an estimator that yields small values for \cref{eq:frequentist.risk}.
+Then, the problem of finding a good estimator reduces to the problem of finding an estimator that yields small values for \cref{eq:intro.frequentist.risk}.
 
 Of course, the problem remains to choose an appropriate loss function for the problem at hand.
 Some examples for loss functions include the squared error loss
 \[
   \Loss(\theta_0, \theta') = \left( \theta_0 - \theta' \right)^2,
-  \label{eq:frequentist.l2loss}
+  \label{eq:intro.frequentist.l2loss}
 \]
 which is often used for continuous parameter models e.g. $\Omega = \Reals$, and
 \[
@@ -93,16 +93,16 @@ which is often used for continuous parameter models e.g. $\Omega = \Reals$, and
     1 & \theta_0 = \theta' \\
     0 & \mathrm{otherwise}
   \end{cases},
-  \label{eq:frequentist.01loss}
+  \label{eq:intro.frequentist.01loss}
 \]
 which is appropriate only for discrete parameter models where the parameter space $\Omega$ is a discrete set.
 The choice of loss function generally depends on the problem at hand and determines the properties of the corresponding estimator.\\
 
 
-% Note that the risk in \cref{eq:frequentist.risk} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\theta_0$.
+% Note that the risk in \cref{eq:intro.frequentist.risk} -- and therefore the performance of a given estimator -- still depends on the unknown true value $\theta_0$.
 % Some definitions risks that are independent of $\theta_0$ are given in the following definition.
 % \begin{definition}
-  % \label{def:frequentist.optimality_conditions}
+  % \label{def:intro.frequentist.optimality_conditions}
   % \begin{itemize}
     % \item $\hat\theta$ is called a \emph{uniformly best} estimator, if for all other estimators $\hat\theta'$ and all values of the true parameter $\theta \in \Omega$
     % \[
@@ -131,38 +131,38 @@ The choice of loss function generally depends on the problem at hand and determi
 
 As already mentioned in the introduction, point estimators cannot convey uncertainty in the estimate.
 For this purpose we need to introduce a precise notion of \quotes{error bars}, namely \emph{confidence regions}.
-\begin{definition}\label{def:frequentist.cr}
+\begin{definition}\label{def:intro.frequentist.cr}
   A confidence region $\CR$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data $\vec x$ to a subset $\CR(\vec x) \subset \Omega$ of the parameter space -- such that the true parameter is contained in $\CR$ with probability greater than $\alpha$:
   \[
-    \label{eq:frequentist.coverage}
+    \label{eq:intro.frequentist.coverage}
     \forall \theta_0\in\Omega \colon \Prob_{\theta_0}\left( \CR(X_1, \ldots, X_N) \ni \theta_0 \right) \ge 1 - \alpha.
   \]
 \end{definition}
-Note that the coverage condition~\eqref{eq:frequentist.coverage} is not a probabilistic statement about the true parameter $\theta_0$ for fixed observed data $\vec x$.
-Instead, \cref{def:frequentist.cr} should be interpreted as a statistical guarantee for the region estimator $\CR$:
+Note that the coverage condition~\eqref{eq:intro.frequentist.coverage} is not a probabilistic statement about the true parameter $\theta_0$ for fixed observed data $\vec x$.
+Instead, \cref{def:intro.frequentist.cr} should be interpreted as a statistical guarantee for the region estimator $\CR$:
 Say we repeat an experiment $M$ times and obtain data $\vec x\ind{1}$, \ldots $\vec x\ind{M}$ from a distribution with true parameter $\theta_0$.
 Then, in the limit $M \to \infty$ a fraction of $1 - \alpha$ of the regions $\CR(\vec x\ind{1})$, \ldots, $\CR(\vec x\ind{M})$ contain the true parameter $\theta_0$.
 
-Similar to point estimators, \cref{eq:frequentist.coverage} does not uniquely determine a confidence region construction.
+Similar to point estimators, \cref{eq:intro.frequentist.coverage} does not uniquely determine a confidence region construction.
 Furthermore, additional constraints are necessary to exclude trivial constructions such as the following:
 Take the region estimator, which is always equal to the full parameter space independent of the data $\CR(X_1, \ldots X_N) = \Omega$, then
 \[
   \Prob_\theta\left(  \CR(X_1, \ldots, X_N) \ni \theta_0  \right) = 1 \ge 1 - \alpha
 \]
 for all confidence levels $\alpha$.
-Although, this construction trivially fulfils the coverage condition~\eqref{eq:frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
+Although, this construction trivially fulfils the coverage condition~\eqref{eq:intro.frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
 Therefore, we have to impose a notion of what constitutes a good confidence region by introducing a loss function.
 Clearly, if we have two confidence regions $\CR_1$ and $\CR_2$ with the same confidence level and $\CR_1 \subset \CR_2$, then $\CR_1$ is more informative.
 More generally, smaller regions should be preferred since they convey more confidence in the estimate and exclude more alternatives.
 Therefore, measures of size such as (expected) volume or diameter are commonly used as risk functions for region estimators.
 
 
-Note that the risk function~\eqref{eq:frequentist.risk} for a given estimator still depends on the unknown true value.
+Note that the risk function~\eqref{eq:intro.frequentist.risk} for a given estimator still depends on the unknown true value.
 In order to obtain a single-number summary of the performance of an estimator, there are different strategies such as maximizing or averaging the risk function over all true values~\cite[Sec.\ 12.2]{Wasserman_2013_All}.
 By minimizing these risks over all possible estimators, we try to determine a single best estimator.
 However, in the following we use a less ambitious notion of optimality:
 \begin{definition}{\cite[Def. 2.2]{Joshi_1969_Admissibility}}
-  \label{def:frequentist.admissible}
+  \label{def:intro.frequentist.admissible}
   A confidence region $\CR$ for the parameter estimation of $\theta_0 \in \Omega$ is called (weakly) \emph{admissible} if there is no other confidence region $\CR'$ that fulfils
   \begin{enumerate}
     \item(equal or smaller volume) $\Vol(\CR'(\vec x)) \le \Vol(\CR(\vec x))$ for almost all observations $\vec x$.
@@ -172,7 +172,7 @@ However, in the following we use a less ambitious notion of optimality:
 \end{definition}
 In words, $\CR$ is admissible if there is no other confidence region $\CR'$ that performs at least as good as $\CR$ and strictly better for some non-negligible settings.
 In contrast to the previous discussion, this notion of optimality uses \quotes{pointwise} volume as a risk function instead of the average volume.
-The conditions in Def.~\ref{def:frequentist.admissible} are stated only for ``almost all'' $\vec x$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
+The conditions in Def.~\ref{def:intro.frequentist.admissible} are stated only for ``almost all'' $\vec x$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
 A different approach more in line with the previous discussion is to state condition (i) in terms of the expected volume with the average taken over the data $\vec X$ for a fixed true parameter $\theta_0$~\cite[Def.~7.1]{Joshi_1969_Admissibility}.
 
 \todo{Today: Asymptotic optimal, adaptive, ...}
@@ -195,13 +195,13 @@ Generally, Bayesian inference for a parametric model is carried out in the follo
 First, we choose a \emph{prior distribution} $\Prob(\theta)$, which expresses our belief about the parameter $\theta$ before taking any data into account.
 Given an observation $X$, the distribution of $\theta$ is updated according to Bayes' rule~\cite{}
 \[
-  \label{eq:bayesian.bayes_rule}
+  \label{eq:intro.bayesian.bayes_rule}
   \Prob(\theta | X) = \frac{\Prob(X | \theta) \Prob(\theta)}{\Prob(X)}.
 \]
-Here, $\Prob(X|\theta)$ is the \emph{likelihood function} of the model analogous to~\eqref{eq:frequentist.likelihood_function} and $\Prob(\theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\theta$.
-Of course, the update in \cref{eq:bayesian.bayes_rule} is not limited to a single observation and can be iterated for independent data.
+Here, $\Prob(X|\theta)$ is the \emph{likelihood function} of the model analogous to~\eqref{eq:intro.frequentist.likelihood_function} and $\Prob(\theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\theta$.
+Of course, the update in \cref{eq:intro.bayesian.bayes_rule} is not limited to a single observation and can be iterated for independent data.
 
-Computing the Bayesian update~\eqref{eq:bayesian.bayes_rule} analytically is possible only in a few rare cases:
+Computing the Bayesian update~\eqref{eq:intro.bayesian.bayes_rule} analytically is possible only in a few rare cases:
 If for a given likelihood function, the prior and the posterior are in the same family of distributions, the prior is called a \emph{conjugate prior} for the likelihood function.
 For example, consider a Gaussian random variable $X \sim \Normal(\theta, \tau^2)$ with known variance $\tau^2$.
 If we assume a Gaussian prior $\theta \sim \Normal(\mu, \sigma^2)$, we have~\cite{}
@@ -210,13 +210,13 @@ If we assume a Gaussian prior $\theta \sim \Normal(\mu, \sigma^2)$, we have~\cit
 \]
 with
 \[
-  \label{eq:bayesian.kalman}
+  \label{eq:intro.bayesian.kalman}
   \mu' = \frac{ \frac{\mu}{\sigma^2} + \frac{x}{\tau^2} }{ \frac{1}{\sigma^2} + \frac{1}{\tau^2} },
   \quad\mbox{and}\quad
   \sigma' = \left( \frac{1}{\sigma^2} + \frac{1}{\tau^2} \right)^{- \tfrac{1}{2}}.
 \]
 In other words, an update of a Gaussian prior with a Gaussian likelihood function yields a Gaussian posterior distribution.
-Although there are other well-known conjugate priors with explicit formulas for the parameter update, in practice the Bayesian update~\eqref{eq:bayesian.bayes_rule} can only be approximated numerically.
+Although there are other well-known conjugate priors with explicit formulas for the parameter update, in practice the Bayesian update~\eqref{eq:intro.bayesian.bayes_rule} can only be approximated numerically.
 Commonly used methods include sampling techniques such as Markov Chain Monte Carlo and Sequential Monte Carlo~\cite{} as well as variational Bayes~\cite{}.\\
 
 
@@ -234,33 +234,37 @@ provided the loss function $\Loss$ is a \emph{Bregman divergence}.
 Note that the expectation is taken over $\theta$ w.r.t.\ the posterior with observation $X$.
 
 Another example of a point estimator is the \emph{maximum a posteriori} (MAP) estimator.
-As the name suggests, the MAP estimator is obtained by maximizing the posterior~\eqref{eq:bayesian.bayes_rule}.
-Since this does not require the expensive computation of the denominator in \cref{eq:bayesian.bayes_rule} and (at least local minima) of the posterior can be found efficiently via gradient descent, the MAP estimator is often used in high dimensional problem~\cite{Murphy_2012_Machine}.\\
+As the name suggests, the MAP estimator is obtained by maximizing the posterior~\eqref{eq:intro.bayesian.bayes_rule}.
+Since this does not require the expensive computation of the denominator in \cref{eq:intro.bayesian.bayes_rule} and (at least local minima) of the posterior can be found efficiently via gradient descent, the MAP estimator is often used in high dimensional problem~\cite{Murphy_2012_Machine}.\\
 
 
 Let us now introduce the concept of error regions in the Bayesian framework.
 \begin{definition}
-  \label{def:bayesian.cr}
+  \label{def:intro.bayesian.cr}
   A \emph{credible region}\footnote{%
     We use the same letter for confidence and credible regions when the meaning is clear from the context.
   }
   $\CR$ with credibility $1-\alpha$ is a subset of the parameter space $\Omega$ containing at least mass $1-\alpha$ of the posterior
   \[
-    \label{eq:bayesian.credibility}
+    \label{eq:intro.bayesian.credibility}
     \Prob(\theta \in \CR | X_1, \ldots, X_N) \ge 1-\alpha.
   \]
 \end{definition}
-Notice the different notion of randomness compared to \cref{eq:frequentist.coverage}:
-Confidence regions are random variables due to their dependence on the data and \cref{eq:frequentist.coverage} demands that the true value is contained in the confidence region with high probability.
+Notice the different notion of randomness compared to \cref{eq:intro.frequentist.coverage}:
+Confidence regions are random variables due to their dependence on the data and \cref{eq:intro.frequentist.coverage} demands that the true value is contained in the confidence region with high probability.
 Here, \quotes{probability} refers to (possibly hypothetical) repetitions of the experiment -- no statement can be made for a single run of an experiment with given outcomes.
-In contrast, the definition of credible regions~\eqref{eq:bayesian.credibility} only refers to probability w.r.t.\ the posterior and, therefore, is well defined even for a single run of the experiment.
+In contrast, the definition of credible regions~\eqref{eq:intro.bayesian.credibility} only refers to probability w.r.t.\ the posterior and, therefore, is well defined even for a single run of the experiment.
 
 In order to single out \quotes{good} credible regions, we need to introduce a notion of optimality.
 As argued in \cref{sub:intro.frequentist}, smaller error regions are generally more informative.
 Therefore, good credible regions are minimal-volume credible regions (MVCRs) or credible regions with the smallest diameter.
 Although in the following we deal with MVCRs w.r.t.\ a geometric notion of volume, some authors have proposed to measure the volume of a region by its prior probability~\cite{Evans_2006_Optimally,Shang_2013_Optimal}.
-
-
+In case the posterior has probability density $\pi$ w.r.t.\ the volume measure under consideration, the MVCR is given by
+\[
+  \label{eq:intro.bayesian.mvcr}
+  \CR = \{ \theta \in \Omega\colon \pi(\theta) \ge \lambda \}.
+\]
+The constant $\lambda$ is determined by the saturation of the credibility level condition~\eqref{eq:intro.bayesian.credibility}.
 
 
 
@@ -467,7 +471,7 @@ Finally, the truncation approach simplifies the discussion but as we discuss in 
 
 
 We start by showing that the truncation of confidence regions preservers admissibility.
-Notice that \cref{def:frequentist.admissible} can be stated for both, the unconstrained estimation problem $\theta_0 \in \Omega$ as well as the constrained estimation problem $\theta_0 \in \Omega_\mrc$.
+Notice that \cref{def:intro.frequentist.admissible} can be stated for both, the unconstrained estimation problem $\theta_0 \in \Omega$ as well as the constrained estimation problem $\theta_0 \in \Omega_\mrc$.
 The question is: How are admissible confidence regions for the constrained setting related to admissible confidence regions for the unconstrained estimation problem?
 \begin{lemma}\label{lem:ortho.admissible_truncation}
   Let $\CR$ denote an admissible confidence region for the unconstrained estimation problem for the parameter $\theta_0 \in \Omega$.
@@ -769,15 +773,16 @@ The details of the proof can be found in \cref{sec:error.ellpos}
 \todo{Explain the model}
 \todo{Covariance matrix, parameter space.}
 
-\subsection{MVCR for Gaussians}
+\subsection{MVCR for Gaussian distributions}
 \label{sub:bayesian.gaussian}
 
 We now turn to the question of minimal volume credible regions (MVCR) in the Bayesian framework:
 In the unconstrained case, Gaussian posteriors are one of the few examples of multivariate distributions, where the MVCR are simple geometric objects, namely ellipsoids.
 As discussed in \cref{sub:intro.bayesian}, Gaussian posterior arise from updating Gaussian priors with Gaussian likelihood functions.
-Computing the parameters for the multivariate Gaussian posterior distribution can be done by means of \emph{linear Kalman filter update equations} similar to \cref{eq:bayesian.kalman}, see e.g.~\cite[Sec.\ 2.4]{Audenaert_2009_Quantum}.
-Second, for the credible region assume that after the Bayesian update, the posterior distribution of $\varrho$ is parameterized by its mean $\theta$ and covariance matrix $\Sigma$.
-Therefore, the posterior of $\varrho$ has probability density
+Computing the parameters for the multivariate Gaussian posterior distribution can be done by means of \emph{linear Kalman filter update equations} similar to \cref{eq:intro.bayesian.kalman}, see e.g.~\cite[Sec.\ 2.4]{Audenaert_2009_Quantum}.
+Since credible regions are purely defined in terms of the posterior, we can ignore the details how the posterior arose.
+Hence, we assume that the posterior distribution of $\varrho$ under consideration is parameterized by its mean $\theta$ and covariance matrix $\Sigma$.
+In other words, we assume the posterior for $\varrho$ has probability density
 \begin{equation}
   \label{eq:bayesian.gaussian_density}
   \pi_{\theta,\Sigma}(\varrho) = {(2\pi)}^{-\Nhalf} \abs{\Sigma}^{-\frac{1}{2}} \exp\left( -\frac{1}{2} \norm{\varrho - \theta}_\Sigma^2 \right).
@@ -787,13 +792,13 @@ where
   \norm{\varrho - \theta}_\Sigma := \sqrt{{(\varrho - \theta)}^T \Sigma^{-1} (\varrho - \theta)}
 \end{equation}
 is the Mahalanobis distance and  $\abs{\Sigma}$ denotes the determinant of $\Sigma$.
-As elaborated in Sec.~\ref{sub:intro.error_regions}, the MVCRs are exactly the highest posterior density sets as defined in Eq.~\eqref{eq:intro.highest_posterior}.
-Therefore, the MVCR with credibility $\alpha$ for the density Gaussian~\eqref{eq:bayesian.gaussian_density} is given by
+As elaborated in \cref{sub:intro.bayesian}, the MVCRs are exactly the highest posterior density sets as defined in \cref{eq:intro.bayesian.mvcr}.
+Therefore, the MVCR with credibility $\alpha$ for the Gaussian posterior~\eqref{eq:bayesian.gaussian_density} is given by
 \begin{equation}
   \label{eq:bayesian.gaussian_cr}
   \CR = \{ \vec x \in \Reals^N\colon \norm{\vec x - \vec\theta}_\Sigma \le r_{\alpha} \} =: \Eps(r_{\alpha}).
 \end{equation}
-This is an ellipsoid centered at $\vec\theta$ with radius $r_{\alpha}$ determined by the saturated credibility condition~\eqref{eq:intro.credible_region}:
+This is an ellipsoid centered at $\vec\theta$ with radius $r_{\alpha}$ determined by the saturated credibility condition~\eqref{eq:intro.bayesian.credibility}:
 \begin{equation}
   \label{eq:bayesian.radius}
   \begin{split}
@@ -809,9 +814,16 @@ Hence, determining the MVCR for a multivariate Gaussian posterior with known mea
 \begin{problem}\label{prob:bayesian.cr}
   For given mean $\vec\theta \in \Reals^N$, covariance matrix $\Sigma \in \Reals^{N \times N}$ with $\Sigma \geq 0$, credibility $\alpha \in [0,1]$, and accuracy $\delta$ with $\delta^{-1} \in \mathbb{N}$, determine the radius of the MVCR $r_{\alpha}$ defined in Eq.~\eqref{eq:bayesian.radius} with given accuracy.
 \end{problem}
-
-An efficient algorithm for solving Prob.~\ref{prob:bayesian.cr} is outlined in the following.
-To ease notation, we set $x = r^2_{\alpha}/2$.
+Note that this does not constitute a decision problem, but an algebraic computation:
+We are asking to compute a number $y$ such that
+\[
+  \label{eq:bayesian.precission}
+  y \in (r_\alpha - \delta, r_\alpha + \delta).
+\]
+Although there are elaborate algebraic computational models~\cite[Sec.\ 16]{Arora_2009_Computational}, we are going to use the following simpler strategy here:
+We are going to consider algorithms for problems such as \cref{prob:bayesian.cr} that compute a rational number $y$ with binary encoding of its numerator and denominator.
+Such an algorithm exists for solving \cref{prob:bayesian.cr} that runs in polynomial time in the sense of \cref{def:complexity.runtime}.
+With the shorthand notation $x = r^2_{\alpha}/2$, the algorithm is outlined below:
 \begin{enumerate}
   \item W.l.o.g.\ we can assume that $\alpha \le 0.9$ (or some other arbitrary constant).
   Otherwise, the problem can be restated in terms of $Q(\Nhalf, x) = 1 - P(\Nhalf, x)$, which allows for a similar analysis.
