@@ -47,5 +47,15 @@
 \newcommand{\norm}[1]{{\Vert#1\Vert}}
 \newcommand{\Norm}[1]{{\left\Vert#1\right\Vert}}
 \newcommand{\estim}[1]{\hat{#1}}
-\renewcommand{\vec}[1]{\boldsymbol{#1}}
+\renewcommand{\vec}[1]{{\boldsymbol{#1}}}
 \newcommand{\mrc}{\mathrm{c}}
+
+
+\renewcommand\bra[1]{{\langle{#1}|}}
+\makeatletter
+% Make sure \ket{...}\bra{...} doeesnt have any weird space in between
+\renewcommand\ket[1]{%
+  \@ifnextchar\bra{\k@t{#1}\!}{\k@t{#1}}%
+}
+\newcommand\k@t[1]{{|{#1}\rangle}}
+\makeatother
