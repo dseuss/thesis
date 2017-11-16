@@ -8,6 +8,7 @@
 % QSE = statistical inference under constraints
 % introduce States and HermTrace
 % why error bars?
+% statistical model & gaussian approximation
 
 
 
@@ -767,21 +768,27 @@ The details of the proof can be found in \cref{sec:error.ellpos}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Hardness results for credible regions}
 \label{sec:bayesian}
 
-\todo{Explain the model}
+\todo{Explain the statistical model \& likelihood function}
 \todo{Covariance matrix, parameter space.}
+% Use Audenaart Scheel as a bluepritn
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{MVCR for Gaussian distributions}
 \label{sub:bayesian.gaussian}
 
-We now turn to the question of minimal volume credible regions (MVCR) in the Bayesian framework:
-In the unconstrained case, Gaussian posteriors are one of the few examples of multivariate distributions, where the MVCR are simple geometric objects, namely ellipsoids.
-As discussed in \cref{sub:intro.bayesian}, Gaussian posterior arise from updating Gaussian priors with Gaussian likelihood functions.
-Computing the parameters for the multivariate Gaussian posterior distribution can be done by means of \emph{linear Kalman filter update equations} similar to \cref{eq:intro.bayesian.kalman}, see e.g.~\cite[Sec.\ 2.4]{Audenaert_2009_Quantum}.
+As a first step towards obtaining good credible regions for the QSE model we ignore the positivity constraints in this section.
+The Gaussian approximation of the measurement statistics in \eqref{???} suggests that we use a Gaussian prior for $\varrho$:
+\todo{Fill in reference!}
+On the one hand, this yields a Gaussian posterior as well and the parameters can be computed analytically by means of \emph{linear Kalman filter update equations} similar to \cref{eq:intro.bayesian.kalman} \cite[Sec.\ 2.4]{Audenaert_2009_Quantum}.
+On the other hand, the MVCR for Gaussian distributions are simply ellipsoids, and therefore, can be characterized by a few parameters.
+Below, we show how those parameters can be computed efficiently.
+
 Since credible regions are purely defined in terms of the posterior, we can ignore the details how the posterior arose.
-Hence, we assume that the posterior distribution of $\varrho$ under consideration is parameterized by its mean $\theta$ and covariance matrix $\Sigma$.
+Hence, we assume that the posterior distribution of $\varrho$ under consideration is a Gaussian with mean $\theta$ and covariance matrix $\Sigma$.
 In other words, we assume the posterior for $\varrho$ has probability density
 \begin{equation}
   \label{eq:bayesian.gaussian_density}
@@ -836,7 +843,7 @@ With the shorthand notation $x = r^2_{\alpha}/2$, the algorithm is outlined belo
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Bayesian QST}
+\subsection{Bayesian QSE}
 \label{sub:bayesian.tomography}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -897,12 +904,9 @@ With the shorthand notation $x = r^2_{\alpha}/2$, the algorithm is outlined belo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Let us now turn to the application of Bayesian methods to QST, for a more thorough discussion see e.g.~\cite{Granade_2015_Practical}.
-%Here, the parameter we want to estimate is a quantum state
-%\begin{equation}
- % \varrho \in \States = \{ \varrho \in \BC^{d \times d}\colon \varrho = \varrho^\dagger, \tr \varrho = 1, \varrho \ge 0 \}.
-%\end{equation}
-%Here, $\States$ denotes the set of valid mixed quantum states, which is a proper subset of the real vector space $\HermTrace$ of hermitian matrices with trace 1.
-In order to incorporate the prior knowledge of positive semidefiniteness, we chose a prior that is concentrated on $\States$ and vanishes on its complement.
+
+In order to incorporate constraints on $\varrho$ imposed by quantum mechanics, we chose a prior distribution that is concentrated on $\States$ and vanishes on its complement.
+Since our statistical
 As before% in Sec.~\ref{sub:bayesian.gaussian}
 , we choose a (truncated) Gaussian prior and, therefore, Gaussian posteriors.
 Hence, the density $\pi_{\theta,\Sigma}^+(\varrho)$ of a Gaussian posterior on $\States$ with respect to the flat Hilbert-Schmidt measure $\dd\varrho$ on $\HermTrace$ can be written as
