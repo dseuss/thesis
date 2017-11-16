@@ -775,13 +775,14 @@ The details of the proof can be found in \cref{sec:error.ellpos}
 \todo{Explain the statistical model \& likelihood function}
 \todo{Covariance matrix, parameter space.}
 % Use Audenaart Scheel as a bluepritn
+% Let us now turn to the , for a more thorough discussion see e.g.~\cite{Granade_2015_Practical,Audenaert_2009_Quantum}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{MVCR for Gaussian distributions}
 \label{sub:bayesian.gaussian}
 
 As a first step towards obtaining good credible regions for the QSE model we ignore the positivity constraints in this section.
-The Gaussian approximation of the measurement statistics in \eqref{???} suggests that we use a Gaussian prior for $\varrho$:
+The Gaussian approximation of the measurement statistics in \cref{???} suggests that we use a Gaussian prior for $\varrho$:
 \todo{Fill in reference!}
 On the one hand, this yields a Gaussian posterior as well and the parameters can be computed analytically by means of \emph{linear Kalman filter update equations} similar to \cref{eq:intro.bayesian.kalman} \cite[Sec.\ 2.4]{Audenaert_2009_Quantum}.
 On the other hand, the MVCR for Gaussian distributions are simply ellipsoids, and therefore, can be characterized by a few parameters.
@@ -846,6 +847,45 @@ With the shorthand notation $x = r^2_{\alpha}/2$, the algorithm is outlined belo
 \subsection{Bayesian QSE}
 \label{sub:bayesian.tomography}
 
+In order to incorporate the positivity constraints on $\varrho$ imposed by quantum mechanics, we choose a prior distribution that is concentrated on $\States$ and vanishes on its complement.
+One possible choice are truncated Gaussian priors.
+These are defined in terms of their density $\pi_{\theta,\Sigma}^+(\varrho)$ with respect to the flat Hilbert-Schmidt measure $\dd\varrho$ on $\HermTrace$
+\begin{equation}
+  \label{eq:bayesian.density_plus}
+  \pi^+_{\theta,\Sigma}(\varrho) = C_{\theta,\Sigma}\ \chi(\varrho)\ \pi_{\theta,\Sigma}(\varrho).
+\end{equation}
+Here, $\pi_{\theta,\Sigma}$ is the multivariate Gaussian from Eq.~\eqref{eq:bayesian.gaussian_density} with $\theta \in \HermTrace$.
+The other factors in Eq.~\eqref{eq:bayesian.density_plus} ensure that $\pi^+_{\theta,\Sigma}$ is a proper probability distribution supported on $\States$:
+$\chi(\varrho)$ is the indicator function of $\States$ and $C_{\theta,\Sigma}$ is the normalization constant defined by
+\begin{equation}
+  \label{eq:bayes.normalization_factor}
+  C_{\theta,\Sigma}^{-1} = \int_{\States} \pi_{\theta,\Sigma}(\varrho) \,\dd\varrho.
+\end{equation}
+Since the numerator in Bayes rule~\eqref{eq:intro.bayesian.bayes_rule} is linear in the prior, the posterior distribution updated with Gaussian likelihood function is also of the form~\eqref{eq:bayesian.density_plus}.
+Furthermore, we can use the same linear Kalman filter update equations for both the standard and the truncated Gaussian distributions.
+The only additional complication of computing the posterior corresponding to the truncated prior~\eqref{eq:bayesian.density_plus} is that the normalization factor $C_{\theta,\Sigma}$ needs to be reevaluated after each update step in order to obtain a properly normalized probability distribution.
+From now on we only consider a fixed posterior distribution and drop the subscripts indicating the mean $\theta$ and the covariance matrix $\Sigma$ if no confusion arises.
+It is then important to remember that the constant in question is denoted by $C$, while the credibility region is $\CR$.
+
+The problem we try to solve is the following:
+Given the mean $\theta$, covariance matrix $\Sigma$, and credibility $\alpha$, can we find the MVCR for the truncated Gaussian distribution supported on $\States$?
+Since the truncated density~\eqref{eq:bayesian.density_plus} is supported on the psd states and MVCRs are highest-density sets due to~\eqref{eq:intro.bayesian.mvcr}, the MVCR is of the form
+\begin{equation}
+  \Eps(r^+_{\alpha}) \cap \States = \{ \varrho \in \States \colon \norm{\varrho - \theta}_\Sigma \le r^+_{\alpha} \}.
+  \label{eq:bayesian.mvcr}
+\end{equation}
+Similar to Eq.~\eqref{eq:bayesian.radius}, the radius is determined by the credibility condition
+\begin{equation}
+  \label{eq:bayesian.radius_plus}
+  \alpha = C \int_{\Eps(r^+_{\alpha}) \cap \States} \pi_{\theta,\Sigma}(\varrho) \dd \varrho.
+\end{equation}
+However, this case involves the normalization constant $C$ from~\eqref{eq:bayesian.density_plus} and the integral is restricted to the psd states.
+Also, there is no closed-form analogue to Eq.~\eqref{eq:bayesian.radius} due to the psd constraint.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Computational Intractability}
+\label{sub:bayesian.hard}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[t]
   \centering
@@ -902,47 +942,6 @@ With the shorthand notation $x = r^2_{\alpha}/2$, the algorithm is outlined belo
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Let us now turn to the application of Bayesian methods to QST, for a more thorough discussion see e.g.~\cite{Granade_2015_Practical}.
-
-In order to incorporate constraints on $\varrho$ imposed by quantum mechanics, we chose a prior distribution that is concentrated on $\States$ and vanishes on its complement.
-Since our statistical
-As before% in Sec.~\ref{sub:bayesian.gaussian}
-, we choose a (truncated) Gaussian prior and, therefore, Gaussian posteriors.
-Hence, the density $\pi_{\theta,\Sigma}^+(\varrho)$ of a Gaussian posterior on $\States$ with respect to the flat Hilbert-Schmidt measure $\dd\varrho$ on $\HermTrace$ can be written as
-\begin{equation}
-  \label{eq:bayesian.density_plus}
-  \pi^+_{\theta,\Sigma}(\varrho) = C_{\theta,\Sigma}\ \chi(\varrho)\ \pi_{\theta,\Sigma}(\varrho).
-\end{equation}
-Here, $\pi_{\theta,\Sigma}$ is the multivariate Gaussian from Eq.~\eqref{eq:bayesian.gaussian_density} with $\theta \in \HermTrace$.
-The other factors in Eq.~\eqref{eq:bayesian.density_plus} ensure that $\pi^+_{\theta,\Sigma}$ is a proper probability distribution supported on $\States$:
-$\chi(\varrho)$ is the indicator function of $\States$ and $C_{\theta,\Sigma}$ is the normalization constant defined by
-\begin{equation}
-  C_{\theta,\Sigma}^{-1} = \int_{\States} \pi_{\theta,\Sigma}(\varrho) \,\dd\varrho.
-\end{equation}
-From now on we will drop the subscripts indicating the mean $\theta$ and the covariance matrix $\Sigma$ if no confusion arises. It is then important to remember that the constant in question is denoted by $C$, while the credibility region is $\CR$.
-
-The problem we try to solve is the following:
-Given the mean $\theta$, covariance matrix $\Sigma$, and credibility $\alpha$, can we find the MVCR for the Gaussian distribution supported on $\States$?
-Since the posterior density~\eqref{eq:bayesian.density_plus} is supported on the psd states and MVCRs are highest-density sets due to~\eqref{eq:intro.highest_posterior}, the MVCR is of the form
-\begin{equation}
-  \Eps(r^+_{\alpha}) \cap \States = \{ \varrho \in \States \colon \norm{\varrho - \theta}_\Sigma \le r^+_{\alpha} \}.
-  \label{eq:bayesian.mvcr}
-\end{equation}
-Similar to Eq.~\eqref{eq:bayesian.radius}, the radius is determined by the credibility condition
-\begin{equation}
-  \label{eq:bayesian.radius_plus}
-  \alpha = C \int_{\Eps(r^+_{\alpha}) \cap \States} \pi_{\theta,\Sigma}(\varrho) \dd \varrho.
-\end{equation}
-However, this case involves the normalization constant $C$ from~\eqref{eq:bayesian.density_plus} and the integral is restricted to the psd states.
-Also, there is no closed-form analogue to Eq.~\eqref{eq:bayesian.radius} due to the psd constraint.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Computational Intractability}
-\label{sub:bayesian.hard}
-
-
-
 
 
 
