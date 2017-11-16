@@ -731,7 +731,7 @@ Hence, we need to adapt the original proof strategy to deal with the restriction
 Let us start the outline of the proof of \cref{thm:ortho.hard} with a simplified example:
 Consider $R_{i}=R$ for all $i=1,\ldots,d^{2}-1$ that is all radii are equal and the ellipsoid is a ball.
 With no loss of generality, we can assume $\sigma'_i = \sigma_i$.
-The following Lemma, which is proven in~\cref{FIXME}, provides an easily checkable, necessary, and sufficient condition to decide \cref{prob:ortho.ellpos} for this special case.
+The following Lemma, which is proven in \cref{sec:error.spheres}, provides an easily checkable, necessary, and sufficient condition to decide \cref{prob:ortho.ellpos} for this special case.
 \begin{lemma}\label{lem:ortho.spheres}
   Let $\CR$ denote a ball parameterized according to \cref{thm:ortho.ellipsoids} with with radii $R_i=R$ and midpoint $\estim{\varrho}$.
   $\CR$ is fully contained in the set of psd density matrices if and only if
@@ -951,8 +951,8 @@ We will show that the following problem is computational hard.
   For given mean $\theta \in \HermTrace$, covariance matrix $\Sigma$, credibility $\alpha \in [0,1]$, and accuracy $\delta$ with $\delta^{-1} \in \mathbb{N}$, determine the radius of the MVCR $r^+_{\alpha}$ defined in Eq.~\eqref{eq:bayesian.radius_plus} with given accuracy.
 \end{problem}
 In other words, there is no efficient algorithm that outputs smallest volume credibility regions for every Gaussian distribution on $\HermTrace$ restricted to the positive semidefinite states and every credibility $\alpha$.
-Consequently, there cannot be an efficient algorithm to solve the problem of MVCR for QST, since the latter more general problem contains the instances of Prob.~\ref{prob:bayesian.trucated_cr}.
-To prove Prob.~\ref{prob:bayesian.trucated_cr}, we use a reduction from Problem~\ref{prob:ortho.ellpos}, which has already been shown to be NP-hard.
+Consequently, there cannot be an efficient algorithm to solve the problem of MVCR for QSE, since the latter more general problem contains the instances of \cref{prob:bayesian.trucated_cr}.
+To prove \cref{prob:bayesian.trucated_cr}, we use a reduction from \cref{prob:ortho.ellpos}, which has already been shown to be $\NP$-complete.
 This reduction runs along the following lines:
 \begin{enumerate}
   \item Assume that Prob.~\ref{prob:bayesian.trucated_cr} can be solved efficiently.
@@ -987,7 +987,7 @@ In conclusion, the main result from this section is the following lower bound on
 \end{theorem}
 
 The proof runs along the lines outlined above and can be found in~\ref{sec:proof_bayesian}.
-Here, the main technical problem is that we are dealing with finite-precision arithmetic.
+The main technical problem is that we are dealing with finite-precision arithmetic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion \& Outlook}

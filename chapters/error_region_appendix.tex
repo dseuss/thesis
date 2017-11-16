@@ -304,7 +304,7 @@ so that by setting $\lambda=d^{-3/4}$ we obtain the desired result with $p(ad)=2
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Proof of Lemma~\ref{lem:ortho.spheres}}
-\label{sec:spheres}
+\label{sec:error.spheres}
 
 
 To check whether a sphere with radius $R$ centered at $\estim\varrho$ is contained in the set of psd states, specialize Eq.~\eqref{eq:ellpos.worst_case} to the special case $R_1 = R_2$:
@@ -326,10 +326,10 @@ Simple minimization with respect to $ \ket{\Psi} $ leads to the final result sta
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Proof of Theorem~\ref{thm:bayesian.hardness}}
-\label{sec:proof_bayesian}
+\label{sec:error.proof_bayesian}
 
-Let us now construct the polynomial time reduction of Prob.~\ref{prob:ortho.ellpos} to Prob.~\ref{prob:bayesian.cr}.
-We will begin with the main observation of this reduction, namely Eq.~\eqref{eq:bayesian.criterion}.
+Let us now construct the polynomial time reduction of \cref{prob:ortho.ellpos} to \cref{prob:bayesian.cr}.
+We will begin with the main observation of this proof, namely Eq.~\eqref{eq:bayesian.criterion}.
 \begin{lemma}\label{lem:bayesian.criterion}
   Let $\pi(\varrho)$ denote a Gaussian distribution on $\HermTrace$ and $\pi^+(\varrho) = C \pi(\varrho) \chi(\varrho)$ the corresponding restricted Gaussian with the same mean and covariance matrix, as defined in Eq.~\eqref{eq:bayesian.density_plus}.
   For any $\alpha \in [0,1]$, the credible ellipsoid $\Eps(r_\frac{\alpha}{C})$ with credibility $\frac{\alpha}{C}$ is contained in the psd if and only if the credible ellipsoid for $\pi^+$, $\Eps(r^+_{\alpha})$, with credibility $\alpha$ has the same radius, that is Eq.~\eqref{eq:bayesian.criterion} holds.
@@ -350,24 +350,24 @@ We will begin with the main observation of this reduction, namely Eq.~\eqref{eq:
   Therefore, $r^+_\alpha > r_\frac{\alpha}{C}$ in this case.
 \end{proof}
 Of course, the difference between $r_\frac{\alpha}{C}$ and $r^+_{\alpha}$ may in general become too small to be efficiently detectable.
-However, we will show that for the instances of the balanced sum problem encoded in Problem~\ref{prob:ortho.ellpos}, this is not the case.
+However, we will show that for the instances of the number partition problem encoded in Problem~\ref{prob:ortho.ellpos}, this is not the case.
 A first step toward this is the following Lemma.
 
 \begin{lemma}\label{lem:bayesian.positivity_violation}
-  Let $\vec a \in \mathbb{N}^d$ describe an instance of the balanced sum problem and
+  Let $\vec a \in \mathbb{N}^d$ be an instance of the number partition problem~\ref{prob:complexity.partition} and
   \[
     \label{eq:bayesian.positivity_violation.ellipsoid}
-    \Eps_{\vec{a}} = \left\{ \varrho_0 + R_1 \sum_{i=1}^{i_d} u_i \sigma_i^ + R_2 \sum_{i=i_d + 1}^{d^2 - 1} u_i \sigma_i \colon \norm{\vec u}_2 = 1 \right\}
+    \Eps_{\vec{a}} = \left\{ \varrho_0 + R_1 \sum_{i=1}^{i_d} u_i \sigma_i^ + R_2 \sum_{i=i_d + 1}^{d^2 - 1} u_i \sigma_i \colon \vec u^T \vec u \le 1 \right\}
   \]
-  the corresponding encoding ellipsoid for Problem~\ref{prob:ortho.ellpos} defined in~\ref{sec:ellpos}.
-  There exists a polynomial $\tilde p$ such that if $\Eps_{\vec{a}}$ is not a subset of $\States$, there is an element $\varrho \in \Eps_{\vec{a}}$ with
+  the corresponding encoding ellipsoid for Problem~\ref{prob:ortho.ellpos} defined in \cref{sec:error.ellpos}.
+  Then, there exists a polynomial $\tilde p$ such that if $\Eps_{\vec{a}}$ is not a subset of $\States$, there is an element $\varrho \in \Eps_{\vec{a}}$ with
   \[
     \mathrm{mineig}(\varrho) \le -\tilde p{(\norm{\vec a})}^{-1} < 0.
   \]
 \end{lemma}
 \begin{proof}
   The main proof idea is to trace back the proof for polynomial gap in Lemma~\ref{lem:ellpos.gap_or_no_gap}.
-  Recall that Eqs.~\eqref{eq:ellpos.def_pi0} and~\eqref{eq:ellpos.choice} ensure that if $\vec a$ has a balanced sum partition, there is a $\vec\Psi \in {\{\pm 1\}}^d$ such that $\vec a \cdot \vec\Psi = 0$ and
+  Recall that Eqs.~\eqref{eq:ellpos.def_pi0} and~\eqref{eq:ellpos.choice} ensure that if $\vec a$ has a partition, there is a $\vec\Psi \in {\{\pm 1\}}^d$ such that $\vec a \cdot \vec\Psi = 0$ and
   \[
     d^2 - \sum_k \psi_k^4 + {\left( d - \frac{{(\vec a \cdot \vec \psi)}^2}{1 + \norm{\vec a}^2} \right)}^2 - C_2 {(\vec a \cdot \vec \psi)}^4 = C_1 + p{(\norm{\vec a})}^{-1}.
   \]
@@ -401,7 +401,7 @@ A first step toward this is the following Lemma.
     \right.
   \]
   Since all the constants on the right hand side of Eq.~\eqref{eq:bayesian.posviol_2} can be expressed as polynomials in the input, it defines the polynomial $\tilde p(\norm{\vec a})$ of the lemma.
-  The left hand side of that equation is equal to $\bra\Psi \varrho \ket\Psi$, where
+  The left hand side of \cref{eq:bayesian.posviol_2} is equal to $\bra\Psi \varrho \ket\Psi$, where
   \[
     \varrho = \varrho_0 + \sum_i R_i u_i \sigma_i \in \Eps_{\vec{a}}
   \]
@@ -417,7 +417,6 @@ We will now show how the explicitly parameterized ellipsoid~\eqref{eq:bayesian.p
    \Eps^* = \left\{ \varrho_0 + \sum_{i=1}^{d^2 - 1} u_i R_i \sigma_i \colon \norm{\vec u}_2 = 1 \right\}
   \]
   an ellipsoid $\Eps^* \subset \HermTrace$, which is axis-aligned with the coordinate axes defined by the generalized Pauli operators.
-
   Then, $\Eps^*$ can be encoded as a $\frac{\alpha}{C}$ MVCR-ellipsoid for a Gaussian distribution with mean $\varrho_0 \in \States$ and covariance matrix $\Sigma$.
   The latter is diagonal in the generalized Bloch basis $\sigma_i$ with entries $\Sigma_{ij} = R_i^2 \delta_{ij}$ and for the corresponding radius we have $r_\frac{\alpha}{C} = \sqrt{2}$.
   Hence, the credibility is given by
@@ -425,10 +424,10 @@ We will now show how the explicitly parameterized ellipsoid~\eqref{eq:bayesian.p
     \label{eq:bayesian.encoded_ellipsoid.credibility}
     \alpha = C\, P\left(\Nhalf, 1\right),
   \]
-  which can be calculated efficiently up to exponential precision for given $C$ and $N$.
+  which can be calculated efficiently with exponential precision for given $C$ and $N$.
  \end{lemma}
  \begin{proof}
-   Since the generalized Pauli operators form an orthogonal system with $\tr \sigma_i \sigma_j = 2 \delta_{ij}$, we find for $\varrho \in \Eps^*$
+   Since the generalized Pauli operators form an orthogonal system with $\tr (\sigma_i\sigma_j) = 2 \delta_{ij}$, we find for $\varrho \in \Eps^*$
    \[
       \norm{\varrho}^2_2 = \sum_{i,j} u_i u_j \, R_i R_j \, {(\Sigma^{-1})}_{ij} \, 2 \delta_{ij} = 2 \norm{\vec u}_2^2.
    \]
@@ -482,7 +481,7 @@ We will now show how the explicitly parameterized ellipsoid~\eqref{eq:bayesian.p
 Based on the gap proven in Lemma~\ref{lem:bayesian.positivity_violation}, we will now turn to the following question:
 In case Eq.~\eqref{eq:bayesian.criterion} does not hold -- that is the corresponding ellipsoid is not fully contained in the psd states -- is the corresponding gap always large enough to be efficiently detectable?
 \begin{lemma}\label{lem:bayesian.r_separation}
-   Let $\vec a \in \mathbb{N}^d$ be an instance of the balanced sum problem and denote by $\Eps_{\vec{a}}$ the corresponding encoding ellipsoid as given by Eq.~\eqref{eq:bayesian.positivity_violation.ellipsoid}.
+   Let $\vec a \in \mathbb{N}^d$ be an instance of the number partition problem and denote by $\Eps_{\vec{a}}$ the corresponding encoding ellipsoid as given by Eq.~\eqref{eq:bayesian.positivity_violation.ellipsoid}.
   Furthermore, denote by $\pi_{\varrho_0,\Sigma}$ the Gaussian density, which encodes $\Eps_{\vec{a}} = \Eps(r_\frac{\alpha}{C})$ as an $\frac{\alpha}{C}$ credible region as given by Lemma~\ref{lem:bayesian.encoded_ellipsoid}.
   Assume that $\vec a$ has a balanced sum partition and, therefore, $\Eps_{\vec{a}}$ is not a subset of $\States$.
 
@@ -490,7 +489,7 @@ In case Eq.~\eqref{eq:bayesian.criterion} does not hold -- that is the correspon
   \[
     {r^+_{\alpha}}^2 - {r_\frac{\alpha}{C}}^2 \ge 2^{-p(\log \norm{\vec a}_1)}.
   \]
-  Here, $\norm{\vec a_1} = \sum_k \abs{a_k}$.
+  Here, $\norm{\vec a}_1 = \sum_k \abs{a_k}$.
   In words, the gap of violation of Eq.~\eqref{eq:bayesian.criterion} can only become polynomially small in the logarithm of the size of the problem specification.
 \end{lemma}
 \begin{proof}
@@ -510,6 +509,7 @@ In case Eq.~\eqref{eq:bayesian.criterion} does not hold -- that is the correspon
       \ge \tilde p{(\norm{\vec a})}^{-1}.
     \end{split}
   \]
+  Here, $\vec\lambda^\uparrow(\rho)$ denotes the vector of eigenvalues of $\rho$ in ascending order.
   Therefore,
   \[
     \label{eq:bayesian.r_separation.dist}
@@ -528,8 +528,7 @@ In case Eq.~\eqref{eq:bayesian.criterion} does not hold -- that is the correspon
     = \mathrm{Vol}\left( \Eps(r_\frac{1-\alpha}{C}) \setminus \States \right)
   \]
   since the solid blue and hatched blue regions in Fig.~\ref{fig:bayesian.r_separation} must be of same size.
-
-  We now relate the volume inequality~\eqref{eq:bayesian.r_separation.volume} to a lower bound for the Gaussian volume:
+  We now relate the volume inequality~\eqref{eq:bayesian.r_separation.volume} to a lower bound for the mass of the ellipsoid outside the psd states w.r.t.\ the Gaussian density:
   Due to the set of states $\States$ having finite radius $\sqrt{\tfrac{2(d-1)}{d}}$~\cite[Eq.~(18)]{Kimura_2003_Bloch}, we must have $r^+_{\alpha} \le 2 \sqrt{2}$.
   Therefore,
   \begin{align}
@@ -559,7 +558,7 @@ First, we efficiently compute a credibility $\alpha' \in [0,1]$ such that the co
 This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
 
 \begin{lemma}\label{lem:bayesian.always_contained}
-  Let $\vec a \in \mathbb{N}^d$ be an instance of the balanced sum problem and denote by $\Eps_{\vec{a}}$ the corresponding encoding ellipsoid as defined by Eq.~\eqref{eq:bayesian.positivity_violation.ellipsoid}.
+  Let $\vec a \in \mathbb{N}^d$ be an instance of the number partition problem and denote by $\Eps_{\vec{a}}$ the corresponding encoding ellipsoid as defined by Eq.~\eqref{eq:bayesian.positivity_violation.ellipsoid}.
   Denote by $\pi_{\varrho_0,\Sigma}$ the Gaussian density, which encodes $\Eps_{\vec{a}}$ as an $\alpha$ credible region according to Lemma~\ref{lem:bayesian.encoded_ellipsoid}.
   Then, the ellipsoid $\Eps(r)$ is fully contained in the psd states provided
   \[
@@ -573,16 +572,17 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
     \norm{\varrho - \varrho_0}
     &\le \frac{1}{\sqrt{\mineig\Sigma^{-1}}}\, \norm{\varrho - \varrho_0}_\Sigma \\
     &\le \frac{1}{\sqrt{\mineig\Sigma^{-1}}}\, r \\
-    &\le \sqrt{\frac{d}{2(d-1)}}\, \mineig \varrho_0
+    &\le \sqrt{\frac{d}{2(d-1)}}\, \mineig \varrho_0.
   \end{align*}
-  since $\mineig\Sigma^{-1} = {(\maxeig \Sigma)}^{-1}$.
+  Here, we have used $\mineig\Sigma^{-1} = {(\maxeig \Sigma)}^{-1}$, which holds for any positive definite matrix $\Sigma$.
   Therefore, $\Eps(r) \subset \States$ due to Lemma~\ref{lem:ortho.spheres}.
 \end{proof}
 
 
 \begin{lemma}\label{lem:bayesian.normalization_constant}
   Using the same notation as Lem.~\ref{lem:bayesian.always_contained} and assuming Prob.~\ref{prob:bayesian.trucated_cr} can be solved efficiently.
-  Then, for every instance $a$ of the balanced sum problem and the corresponding $\varrho_0, \Sigma$, we can efficiently approximate the normalization constant $C$ of $\pi^+_{\varrho_0,\Sigma}$ with exponentially small error.
+  Then, for every instance $\vec a$ of the number partition problem consider the corresponding ellipsoid encoding distribution according to \cref{lem:bayesian.encoded_ellipsoid} with parameters $\theta, \Sigma$.
+  Then, we can efficiently approximate the normalization constant $C$ of $\pi^+_{\theta,\Sigma}$ with exponentially small multiplicative error.
   More precisely, we have
   \[
     C = \tilde C (1 + \epsilon),
@@ -590,10 +590,10 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
   where $\tilde C$ can be computed in polynomial time making the correction term $\epsilon$ exponentially small.
 \end{lemma}
 \begin{proof}
-  Due to Lemma~\ref{lem:bayesian.always_contained} and $\mineig\varrho_0 > 0$, we can always find an $r > 0$ such that $\Eps(r)$ is fully contained in the psd.
-  Indeed, the eigenvalues of $\varrho_0$ and $\Sigma$ are readily calculated because of their particular simple form in Eq.~\eqref{eq:ellpos.rho0} and Lemma~\ref{lem:bayesian.encoded_ellipsoid}:
+  Due to Lemma~\ref{lem:bayesian.always_contained} and $\mineig\theta > 0$, we can always find an $r > 0$ such that $\Eps(r)$ is fully contained in the psd.
+  Indeed, the eigenvalues of $\theta$ and $\Sigma$ are readily calculated because of their particular simple form in Eq.~\eqref{eq:ellpos.rho0} and Lemma~\ref{lem:bayesian.encoded_ellipsoid}:
   \[
-    \sqrt{\frac{d}{2(d-1)}} \, \frac{\mineig\varrho_0}{\sqrt{\maxeig\Sigma}}
+    \sqrt{\frac{d}{2(d-1)}} \, \frac{\mineig\theta}{\sqrt{\maxeig\Sigma}}
     =  \frac{q}{R_1 \sqrt{2d(d-1)}}
   \]
   Set\footnote{%
@@ -626,19 +626,19 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
   \[
     R_{k_0}(\Nhalf,x) \le \frac{x^{\Nhalf + k_0} \ee^{-x}}{\Gamma(\Nhalf + k_0 + 1)}\, \frac{\Nhalf + k_0}{\Nhalf + k_0 - x - 1}.
   \]
-  Since $x \ll 1$, the term $x^{k_0}$ ensures that we can make the error in computing $\alpha$ exponentially small using only polynomial time in evaluating $P_{k_0}(\Nhalf, x)$.\\
+  Since $x \ll 1$, the term $x^{k_0}$ ensures that we can make the error in computing $\alpha$ exponentially small using only polynomial time in evaluating $P_{k_0}(\Nhalf, x)$.
 
 
   % Trace the error \delta -> error bound for r^+_{1-\alpha}
-  Assume that we have computed $\tilde\alpha = \alpha-\epsilon$ for some truncation error $\epsilon = R_{k_0}(\Nhalf,x) > 0$.
-  We may now use the (postulated) efficient algorithm for Prob.~\ref{prob:bayesian.trucated_cr} to compute the radius of the manifestly positive MVCR $r^+_{\tilde\alpha}$ and, hence, using Eq.~\eqref{eq:bayesian.criterion} the normalization constant:
+  Now, assume that we have computed $\tilde\alpha = \alpha-\epsilon$ for some truncation error $\epsilon = R_{k_0}(\Nhalf,x) > 0$.
+  We may now use the postulated efficient algorithm for Prob.~\ref{prob:bayesian.trucated_cr} to compute the radius of the manifestly positive MVCR $r^+_{\tilde\alpha}$ and, hence, using Eq.~\eqref{eq:bayesian.criterion} the normalization constant:
   Since $C>1$, we have with $r_{\alpha} = r$
   \[
     r_\frac{\tilde\alpha}{C} = r_\frac{\alpha-\epsilon}{C} < r_{\alpha} \implies \Eps(r_\frac{\tilde\alpha}{C}) \subset \States \implies r_\frac{\tilde\alpha}{C} = r^+_{\tilde\alpha} \le r_{\alpha}.
   \]
   Therefore, the ellipsoid with radius $r^+_{\tilde\alpha}$ is also contained in the psd states.
   The same holds true if we replace $r^+_{\tilde\alpha}$ by the actual output $r^+_{\tilde\alpha} \pm \delta$ of the postulated efficient algorithm for Prob.~\ref{prob:bayesian.cr}
-  Here, $\delta$ denotes the (selectable) accuracy.
+  Here, $\delta$ denotes the accuracy that is part of the input to the problem of computing $r^+_{\tilde\alpha}$.
   By choosing $\delta$ small enough and possibly replacing the original radius $r$ by $r - \delta$, we can ensure that
   \[
     \label{eq:bayesian.normalization_constant.small_enough_r}
@@ -656,7 +656,7 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
   The second addend can be bounded by
   \[
     \label{eq:bayesian.normalization_constant.upper_bound}
-    \abs{\frac{1}{\Gamma(\Nhalf)} \int_{\tfrac{{r^+_{\tilde\alpha}}^2}{2}}^{\tfrac{{(r^+_{\tilde\alpha} \pm \delta)}^2}{2}}\, t^{\Nhalf - 1} \ee^{-t} \dd t}
+    \Abs{\frac{1}{\Gamma(\Nhalf)} \int_{\tfrac{{r^+_{\tilde\alpha}}^2}{2}}^{\tfrac{{(r^+_{\tilde\alpha} \pm \delta)}^2}{2}}\, t^{\Nhalf - 1} \ee^{-t} \dd t}
     < \frac{\left( 2 {r^+_{\tilde\alpha}} \delta + \delta^2 \right)}{2}
   \]
   since
@@ -674,7 +674,8 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
     \label{eq:bayesian.normalization_constant.formula_c}
     C = \frac{\tilde\alpha}{P_{k_0}(\ldots)} \, \left( 1 - \frac{\epsilon' \pm D\delta}{P_{k_0}(\ldots) + \epsilon' \pm D\delta} \right).
   \]
-  By assumption we can make both $\epsilon'$ and $\delta$ exponentially small using only polynomial time while $P_{k_0}(\Nhalf, x) \uparrow P(\Nhalf,x)$ for $k_0 \to \infty$, the correction to
+  By assumption we can make both $\epsilon'$ and $\delta$ exponentially small using only polynomial time
+  Furthermore, $P_{k_0}(\Nhalf, x) \uparrow P(\Nhalf,x)$ for $k_0 \to \infty$ and the correction to
   \[
     \tilde C = \frac{\tilde\alpha}{P_{k_0}\left( \Nhalf, \tfrac{{(r^+_{\tilde\alpha} \pm \delta)}^2}{2} \right)}
   \]
@@ -682,10 +683,10 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
   On the other hand, $\tilde C$ can be computed in polynomial time as well.
 \end{proof}
 
-We now have all the necessary parts for the proof of the main theorem, which will conclude this section.
+We now have all the necessary parts for the proof of the main theorem~\ref{thm:bayesian.hardness}, which concludes this section.
 
 \begin{proof}[Proof of Thm.~\ref{thm:bayesian.hardness}]
-  The proof follows the outline stated at the beginning of this section:
+  The proof follows the outline stated in the main text:
   First, we encode the ellipsoid of Problem~\ref{prob:ortho.ellpos} to be checked as a MVCR of a Gaussian with mean $\varrho_0$ and covariance matrix $\Sigma$ according to Lemma~\ref{lem:bayesian.encoded_ellipsoid}.
   Using Lemma~\ref{lem:bayesian.normalization_constant}, we compute an estimate $\tilde C$ to the normalization constant $C$.
   Using the techniques from the proof of the aforementioned Lemma, we may compute an estimate
