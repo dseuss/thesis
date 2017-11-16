@@ -13,6 +13,7 @@
 \todo{Write this intr}
 
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction to Statistical Inference}
@@ -717,7 +718,7 @@ What \cref{thm:ortho.hard} shows is that any region estimator subject to this cr
 
 
 Finally, the remainder of this section is dedicated to give some insight to the proof of the main theorem and to discuss a tractable solvable special case.
-First, note \cref{prob:ortho.ellpos} is in $\NP$ as any $\vec u$ fulfilling \cref{eq:ortho} serves as a certificate.
+First, note \cref{prob:ortho.ellpos} is in $\NP$ as any $\vec u$ fulfilling \cref{eq:ortho.ellpos_condition} serves as a certificate.
 The rest of the proof of \cref{thm:ortho.hard} is inspired by a similar result due to Ben-Tal and Nemirovski~\cite{Tal_1998_Robust} in robust optimization theory, who showed that the following problem is $\NP$-complete.
 \begin{problem}
   \label{prob:ortho.bental}
@@ -838,7 +839,7 @@ With the shorthand notation $x = r^2_{\alpha}/2$, the algorithm is outlined belo
   The condition $\alpha \le 0.9$ restricts the search space for $x$ to some finite interval $[0, t_\mathrm{max}]$.
   Note that the upper bound $t_\mathrm{max}$ grows at worst polynomially in $\Nhalf$.
   \item The above restriction, the finite precision, and the fact that $x \mapsto P(\Nhalf, x)$ is strictly monotonic allow for interpreting the problem of finding $x$ given $\alpha$ as a search in an ordered, finite list of size $M \sim \tfrac{t_\mathrm{max}}{\delta}$.
-  \item Each entry of this list can be evaluated with exponential precision in polynomial time using a power series expansion of $P(\Nhalf, x)$ (for more details see Lemma~\ref{lem:bayesian.normalization_constant} in~\ref{sec:proof_bayesian}).
+  \item Each entry of this list can be evaluated with exponential precision in polynomial time using a power series expansion of $P(\Nhalf, x)$ (for more details see Lemma~\ref{lem:bayesian.normalization_constant} in~\ref{sec:error.proof_bayesian}).
   \item Since finding $x$ in this list only requires $\log M$ evaluations using binary search, the whole problem can be solved in polynomial time.
 \end{enumerate}
 
@@ -986,7 +987,7 @@ In conclusion, the main result from this section is the following lower bound on
   Therefore, there is no efficient algorithm for Problem~\ref{prob:bayesian.trucated_cr} unless $\mathrm{P} = \mathrm{NP}$.
 \end{theorem}
 
-The proof runs along the lines outlined above and can be found in~\ref{sec:proof_bayesian}.
+The proof runs along the lines outlined above and can be found in~\ref{sec:error.proof_bayesian}.
 The main technical problem is that we are dealing with finite-precision arithmetic.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
