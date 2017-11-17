@@ -1,0 +1,46 @@
+% \tikzsetnextfilename{error_ellipsoids}
+\begin{tikzpicture}[
+  elip/.style={fill=yellow, line width=0},
+  truncated/.style={pattern=north west lines, pattern color=blue},
+  truncelip/.style={dashed, line width=2pt, fill=blue},
+  psd/.style={dashed, color=red, line width=2pt}
+]
+\clip (-3,-3) rectangle (13,3);
+
+\def\origelip{(0,0) ellipse [x radius=1.5, y radius=2, rotate=-30]}
+\def\truncatedelip{(0,0) ellipse [x radius=2, y radius=2.66666, rotate=-30]}
+
+\def\psdradius{5.5}
+\def\psdcircle{(psdcenter) [draw=none] circle (\psdradius)}
+
+\begin{scope}[shift={(0,0)}]
+  \draw[elip]\origelip;
+  \draw[truncated]\origelip;
+  \node at (0.2,0) {$\Eps(r_{\frac{\alpha}{C}})$};
+  \node at (2.4,-.2) {$\Eps(r^+_{\alpha})$};
+
+
+  \node at (0,-3) (psdcenter) {};
+  \node[color=red] at (3,1) {psd};
+  \draw[psd] ([shift=(50:\psdradius)]psdcenter) arc (50:100:\psdradius);
+\end{scope}
+
+
+\begin{scope}[shift={(8,0)}]
+  \draw[truncelip]\origelip;
+  \draw\truncatedelip;
+
+  \node at (-1,-4) (psdcenter) {};
+  \node[color=red] at (3,1) {psd};
+
+  \draw[psd] ([shift=(50:\psdradius)]psdcenter) arc (50:100:\psdradius);
+  \begin{scope}
+    \clip \psdcircle;
+    \fill[elip] \origelip;
+    \fill[truncated]\truncatedelip;
+  \end{scope}
+
+  \node at (0,0) {$\Eps(r_{\frac{\alpha}{C}})$};
+  \node at (2.8,-.4) {$\Eps(r^+_{\alpha})$};
+\end{scope}
+\end{tikzpicture}

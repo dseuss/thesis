@@ -29,8 +29,16 @@
 \usepackage{algpseudocode}
 
 \usepackage{color}
-\usepackage[color=red!50!white,textsize=small,textwidth=2.5cm]{todonotes}\usepackage{tikz}%for the figures
+\usepackage[color=red!50!white,textsize=small,textwidth=2.5cm]{todonotes}
+\usepackage{tikz}%for the figures
 \usetikzlibrary{calc,fadings,backgrounds,shapes.geometric,decorations.pathreplacing,positioning,fit,patterns}
+
+% Externalize tikz pictures except for todonotes
+% \usetikzlibrary{external}
+% \tikzexternalize[prefix=fig/]
+% \makeatletter
+% \renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[#1]{#2}\tikzexternalenable}
+% \makeatother
 
 
 %% use \[ ... \] for displayed equations

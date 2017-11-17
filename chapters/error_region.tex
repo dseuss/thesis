@@ -530,39 +530,11 @@ So, having obtained a \quotes{small confidence region} in parameter space does n
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}
   \centering
-  \begin{tikzpicture}[scale=0.85]
-    \begin{scope}[shift={(0,0)},rotate=35]
-      \draw[line width=2](0,0)--(5,0)  (0,-1)--(1.5,-1)  (3,-1)--(5,-1);
-      \draw[dashed, line width=2](0,0)--(-1,0)  (0,-1)--(-1,-1)  (5,0)--(6,0)  (5,-1)--(6,-1);
-      \draw[color=green!30!white,line width=2](1.5,-1)--(3,-1);
-      \draw[dashed, line width=1.5](0,0) arc (90:270:.3cm and .5cm);
-      \draw[dashed, line width=1.5](5,0) arc (90:270:.3cm and .5cm);
-      \draw[line width=2](0,0) arc (90:-90:.3cm and .5cm);
-      \draw[line width=2](5,0) arc (90:-90:.3cm and .5cm);
-      \draw[color=red, line width =2](1.5,-1) parabola bend (2.25,-7/16) (3,-1) ;
-      \draw[color=red, dashed, line width =1.25](.5,-3.5) parabola[bend at end] (2.25,-7/16);
-      \draw[color=red, dashed, line width =1.25](4,-3.5) parabola[bend at end] (2.25,-7/16);
-      \draw[fill=black] (2.05,-.68) circle (1.5pt)  node[anchor=west]{{\large $\estim{{\varrho}}$}};
-      \draw[color=red] (1.2,-2.2)  node[anchor=west]{{\LARGE $\States$}};
-      \draw (1.2,1.4)  node[anchor=west]{{\LARGE $\HermTrace$}};
-      \draw (5.6,-1.2)  node[anchor=west]{{\LARGE $A^{-1}(\CR_\vec{y})$}};
-    \end{scope}
-    \begin{scope}[shift={(7,-2.5)}]
-      \draw (0,0) (2,3.5) node[anchor=south]{{\LARGE $A$}} (2,2.5) node[anchor=north]{{\LARGE $A^{-1}$}};
-      \draw[->] (1,3.45) -- (3,3.45);
-      \draw[<-] (1,2.5) -- (3,2.5);
-    \end{scope}
-    \begin{scope}[shift={(10,-2.5)}]
-      \draw[fill=black] (0,0) (2,3) circle (1.5pt) node[anchor=west]{{\large $\estim{\vec{y}}$}};
-      \draw[rotate around={15:(2,3)}] (0,0) (2,3) ellipse (.8 and 1.3);
-      \draw (0,0) (3.5,1.5) node[anchor=south]{{\LARGE $\CR_\vec{y}$}};
-      \draw (0,0) (1.5,0) node[anchor=south]{{\LARGE $\mathbb{R}^m$}};
-    \end{scope}
-  \end{tikzpicture}
+  \input{tikz/error_truncation_construction.tex}
   \caption{\label{fig:ortho.geometry}
     Geometric construction of confidence region for $\estim\varrho$.
     Quantum states are mapped by a measurement matrix $A$ to the respective quantum expectation values $\vec y$.
-    Conversely, the pre-image of a confidence region $\CR_\vec{y}$ under $A$ gives rise to a confidence region for $\estim\varrho$.
+    Conversely, the pre-image of a confidence region $\CR_\vec{y}$ under $A$ gives rise to a confidence region for $\varrho_0$.
     These may be unbounded if the measurements are not tomographically complete -- a drawback that can be cured by taking into account the physical constraints on quantum states, i.e.\ positivity.
     }
 \end{figure*}
@@ -890,51 +862,7 @@ Also, there is no closed-form analogue to Eq.~\eqref{eq:bayesian.radius} due to 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[t]
   \centering
-  \begin{tikzpicture}[
-    elip/.style={fill=yellow, line width=0},
-    truncated/.style={pattern=north west lines, pattern color=blue},
-    truncelip/.style={dashed, line width=2pt, fill=blue},
-    psd/.style={dashed, color=red, line width=2pt}
-  ]
-    \clip (-3,-3) rectangle (13,3);
-
-    \def\origelip{(0,0) ellipse [x radius=1.5, y radius=2, rotate=-30]}
-    \def\truncatedelip{(0,0) ellipse [x radius=2, y radius=2.66666, rotate=-30]}
-
-    \def\psdradius{5.5}
-    \def\psdcircle{(psdcenter) [draw=none] circle (\psdradius)}
-
-    \begin{scope}[shift={(0,0)}]
-      \draw[elip]\origelip;
-      \draw[truncated]\origelip;
-      \node at (0.2,0) {$\Eps(r_{\frac{\alpha}{C}})$};
-      \node at (2.4,-.2) {$\Eps(r^+_{\alpha})$};
-
-
-      \node at (0,-3) (psdcenter) {};
-      \node[color=red] at (3,1) {psd};
-      \draw[psd] ([shift=(50:\psdradius)]psdcenter) arc (50:100:\psdradius);
-    \end{scope}
-
-
-    \begin{scope}[shift={(8,0)}]
-      \draw[truncelip]\origelip;
-      \draw\truncatedelip;
-
-      \node at (-1,-4) (psdcenter) {};
-      \node[color=red] at (3,1) {psd};
-
-      \draw[psd] ([shift=(50:\psdradius)]psdcenter) arc (50:100:\psdradius);
-      \begin{scope}
-        \clip \psdcircle;
-        \fill[elip] \origelip;
-        \fill[truncated]\truncatedelip;
-      \end{scope}
-
-      \node at (0,0) {$\Eps(r_{\frac{\alpha}{C}})$};
-      \node at (2.8,-.4) {$\Eps(r^+_{\alpha})$};
-    \end{scope}
-  \end{tikzpicture}
+  \input{tikz/error_ellipsoids.tex}
   \caption{\label{fig:bayesian.ellipsoids}
     The two possible cases for the credible regions.
     \emph{Left:} The original ellipsoid $\Eps(r_\frac{\alpha}{C})$ with credibility $\frac{\alpha}{C}$ (yellow) lies completely inside the psd states and is, therefore, equal to the ellipsoid taking into account positivity $\Eps(r^+_{\alpha})$ with credibility $\alpha$ (blue hatched).
