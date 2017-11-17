@@ -1,0 +1,15 @@
+#!/bin/sh
+
+TIKZ_PREVIEW_FILE=tikz_preview.pdf
+
+if [ "$#" -ne 1 ]; then
+    echo "Illegal number of parameters. Just pass path to tikz file."
+fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+latexrun -o "$TIKZ_PREVIEW_FILE" "\\def\\inputfile{$1}\\input{$DIR/../tikz/template.tex}"
+
+if [ $? -eq 0 ]; then
+    open_skim "$TIKZ_PREVIEW_FILE"
+fi
