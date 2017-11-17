@@ -1,0 +1,44 @@
+\begin{tikzpicture}
+\tikzstyle{every path}=[very thick]
+
+\edef\sizetape{0.7cm}
+\tikzstyle{tmtape}=[draw,minimum size=\sizetape]
+\tikzstyle{tmregister}=[thin,draw,minimum size=\sizetape]
+\tikzstyle{tmhead}=[draw,minimum size=.5cm,rounded corners]
+
+%% Draw TM tape
+\begin{scope}[start chain=tape going right,node distance=-0.15mm]
+    \node [on chain=tape,tmtape,draw=none] {$\ldots$};
+    \node [on chain=tape,tmtape] {$\blank$};
+    \node [on chain=tape,tmtape] (input) {1};
+    \node [on chain=tape,tmtape] {0};
+    \node [on chain=tape,tmtape] {1};
+    \node [on chain=tape,tmtape] {1};
+    \node [on chain=tape,tmtape] {0};
+    \node [on chain=tape,tmtape] {1};
+    \node [on chain=tape,tmtape] {$\blank$};
+    \node [on chain=tape,tmtape,draw=none] {$\ldots$};
+    \node [on chain=tape] {Input/Output Tape};
+\end{scope}
+
+%% Draw TM Finite Control
+\begin{scope}[xshift=15em,yshift=-1.5cm,start chain=register going right,node distance=-0.15mm]
+  \node [on chain=register,tmregister] {$q_0$};
+  \node [on chain=register,tmregister] {$q_h$};
+  \node [on chain=register,tmregister,ultra thick] {$\mathbf{q_1}$};
+  \node [on chain=register,tmregister] {$\ldots$};
+  \node [on chain=register,tmregister] {$q_N$};
+\end{scope}
+\node[rounded corners,draw=black,thick,
+  fit=(register-1) (register-2) (register-3) (register-4) (register-5),
+  label=below:{Register}] (registerbox)
+  {};
+
+%% Draw TM head below (input) tape cell
+  \node [tmhead,yshift=-.3cm,label=below:{Read/Write Head}] at (input.south) (head) {};
+\path[->,draw] (head) -> ($ (head) + (-1, 0)  $);
+\path[->,draw] (head) -> ($ (head) + (+1, 0)  $);
+
+%% Link Finite Control with Head
+\path[->,draw,dotted] (registerbox.west) .. controls (2,-1.5) .. node[right] {} (head.south);
+\end{tikzpicture}

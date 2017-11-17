@@ -1,4 +1,4 @@
- % -*- root: ../thesis.tex -*-
+ %-*- root: ../thesis.tex -*-
 \chapter{Uncertainty Quantification for quantum state estimation}
 \label{chap:error}
 
@@ -272,6 +272,7 @@ The constant $\lambda$ is determined by the saturation of the credibility level 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction to Computational Complexity Theory}
 \label{sec:error.complexity}
 
@@ -289,7 +290,15 @@ Although so far no proof of an advantage of quantum computers exists, there is o
 The rest of this section provides...
 For a more thorough treatment, we refer the reader to~\cite{Arora_2009_Computational}.
 
-\todo{Picture of TM}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+  \centering
+  \input{tikz/error_turingmachine.tex}
+  \caption{\label{fig:complexity.turingmachine}
+    Illustration of a Turing machine with alphabet $\Gamma = \{0, 1, \blank\}$ and register $Q = \{q_0, q_h, q_1, \ldots, q_N\}$.
+    }
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 A Turing machine (TM) can be thought of as a simplified and idealized model of an electronic computer.
 It is described by a tuple $(\Gamma, Q, \delta)$ and consists of
@@ -303,6 +312,7 @@ It is described by a tuple $(\Gamma, Q, \delta)$ and consists of
       \delta\colon Q \times \Gamma \to Q \times \Gamma \times \{L, S, R\}.
     \]
 \end{itemize}
+\cref{fig:complexity.turingmachine} shows an illustration of a TM.
 Initially, the reading head of the tape is over a certain cell and the register is in state $q_0$.
 Furthermore, we assume that only a finite number of tape cells have a value different from $\blank$ -- these are referred to as the input.
 For one step of the computation, denote by $\gamma \in \Gamma$ the value of tape cell under the reading head and by $q \in Q$ the current value of the register.
