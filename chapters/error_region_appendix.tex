@@ -439,37 +439,7 @@ We will now show how the explicitly parameterized ellipsoid~\eqref{eq:bayesian.p
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[t]
   \centering
-  \begin{tikzpicture}[
-    elip/.style={fill=white, line width=0},
-    truncated/.style={pattern=north west lines, pattern color=blue},
-    truncelip/.style={dashed, line width=2pt, fill=blue},
-    rest/.style={pattern=north west lines, pattern color=green},
-    psd/.style={dashed, color=red, line width=2pt}
-  ]
-    \clip (-4,-3) rectangle (5,3);
-
-    \def\origelip{(0,0) ellipse [x radius=1.5, y radius=2, rotate=-30]}
-    \def\truncatedelip{(0,0) ellipse [x radius=2, y radius=2.66666, rotate=-30]}
-
-    \def\psdradius{5.5}
-    \def\psdcircle{(psdcenter) [draw=none] circle (\psdradius)}
-    \fill[rest]\truncatedelip;
-    \draw[truncelip]\origelip;
-    \draw\truncatedelip;
-
-    \node at (-1,-4) (psdcenter) {};
-    \node[fill=red] at (3,1) {psd};
-
-    \draw[psd] ([shift=(50:\psdradius)]psdcenter) arc (50:100:\psdradius);
-    \begin{scope}
-      \clip \psdcircle;
-      \fill[truncated]\truncatedelip;
-      \fill[elip] \origelip;
-    \end{scope}
-
-    \node at (0,0) {$\Eps(r_{\frac{1-\alpha}{C}})$};
-    \node at (2.8,-.4) {$\Eps(r^+_{1-\alpha})$};
-  \end{tikzpicture}
+  \input{tikz/error_volume_truncation.tex}
   \caption{\label{fig:bayesian.r_separation}
     Same as Fig.~\ref{fig:bayesian.ellipsoids} (right).
     Note that the solid blue and hatched blue regions need to have the same volume.
