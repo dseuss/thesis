@@ -1,17 +1,35 @@
- %-*- root: ../thesis.tex -*-
 \chapter{Uncertainty Quantification for quantum state estimation}
 \label{chap:error}
 
-% postivity of quantum states for error regions
-% what is QSE -> turning measurement data to estimates of quantum states
-% postivity -> constraints -> useful!
-% QSE = statistical inference under constraints
-% introduce States and HermTrace
-% why error bars?
-% statistical model & gaussian approximation
+Any information we obtain about a quantum system through measurements is subject to statistical uncertainty due to the intrinsic randomness of quantum mechanics.
+Consequently, we should not only report the final result of an experiment but also should answer the question whether this result is statistically reliable or simply due to chance.
+Of course, such problems not only arises in the analysis of quantum experiments but in all kinds of empirical sciences such as psychology, demography, or medicine.
+In order to answer this question, the field of statistical inference provides a vast number of methods such as hypothesis testing or \quotes{error bars}.
+In this chapter, we are investigating the problem of providing error bars for quantum state estimation~(QSE), i.e.\ the task of reconstructing the density matrix of a finite dimensional quantum system associated to a experimental preparation procedure from measurements.
 
-\todo{Write this intr}
+More precisely, we consider the task of non-adaptive QSE, where a fixed set of measurements specified by the choice of positive operator valued measure (POVM) is performed on independent copies of the system.
+For a given POVM, the measurement outcomes of this setup can be described in terms of a generalized linear model (GLM) with parameter $\varrho$ -- the quantum mechanical state or density matrix of the system.
+The well-established theory of GLMs then provides \quotes{good} estimators and error bars for $\varrho$~\cite{FIXME}.
+However, what sets the task of QSE apart from standard GLMs are the \emph{quantum mechanical shape constraints}:
+For $\varrho$ to be a valid quantum state, it has be a hermitian, positive semi-definite (psd) matrix with unit trace.
+While the hermiticity and trace constraints are linear and easily satisfiable by means of a suitable parametrization, the psd constraint is non-linear and, hence, more problematic.
+Nevertheless, estimators for $\varrho$ exist, which on one hand always yield a psd density matrix, and on the other hand, are well-understood theoretically with near-optimal performance and scalable to intermediate sized quantum experiments~\cite{FIXME}.
+Unfortunately, the same cannot be said for error bars for $\varrho$.
 
+The motivation for studying uncertainty quantification under quantum constraints is that these constraints can lead to a significant reduction in uncertainty -- in particular if the true state is close to the boundary of state space:
+In this case, it is plausible that a large fraction of possible estimates that seem compatible with the observations can be discarded, as they lie outside of state space.
+Indeed, it is known that taking the psd constraint into account can result in a dramatic -- even unbounded -- reduction in uncertainty.
+Prime examples are results that employ positivity to show that even \emph{informationally incomplete} measurements can be used to identify a quantum state with arbitrarily small error~\cite{Cramer_2010_Efficient,Gross_2010_Quantum,Gross_2011_Recovering,Flammia_2012_Quantum,Nickl_2013_Confidence,Kalev_2015_Quantum}.
+More precisely, these papers describe ways to rigorously bound the size of a confidence region for the quantum state based only on the observed data and on the knowledge that the data comes from measurements on a valid quantum state.
+While these uncertainty bounds can always be trusted without further assumptions, only in very particular situations have they been proven to actually become small.
+These situations include the cases where the true state is of low rank~\cite{Flammia_2012_Quantum,Nickl_2013_Confidence}, or admits an economical description as a matrix-product state~\cite{Cramer_2010_Efficient}.
+
+It stands to reason that there are further cases -- not yet identified -- for which the size of an error region can be substantially reduced simply by taking into account the quantum shape constraints.
+This motivates the research program this work is part of: \emph{Understand the general impact of positivity constraints on uncertainty quantification in QSE}.
+
+% one question: is there an efficient algorithm that computes optimal error regions  for the QSE problem with especial emphasis on the psd constraints
+% this work: provide evicdence that no such algorithmn can exist if well accepted conjectures in computational complexity hold
+% more specifically, by considering models that render the unconstrained problem tractable, we show that computaional intractability arises due to constraints and not due to general difficulties of stats in high dimensions
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -154,7 +172,6 @@ Even worse, to the best of the author's knowledge, no admissible construction ex
 
 
 \todo{Asymptotic normality}
-
 
 
 
@@ -456,9 +473,17 @@ It is often considered the \quotes{easiest hard problem} because although it is 
 Furthermore, considering only the worst-case behavior is often too pessimistic in practice.
 A more appropriate classification of the difficulty of \quotes{typical} is given in terms of \emph{average case} complexity~\cite{Arora_2009_Computational}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Estimation under quantum constraints}
+\label{sec:error.qse}
+
+% why tomography? -> other tasks
+% model, linear gaussian
+%
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Hardness results for confidence regions}
 \label{sec:error.ortho}
