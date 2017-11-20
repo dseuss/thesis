@@ -178,11 +178,7 @@ The James-Stein estimator~\eqref{eq:stat.frequentist.stein_estimator} cannot be 
 \Cref{eq:stat.frequentist.stein_estimator} can also be generalized to the case of more than one observation, i.e.\ $m > 1$.
 Finally, note that the James-Stein estimator is also not admissible:
 More elaborate shrinkage estimators are known to outperform~\eqref{eq:stat.frequentist.stein_estimator} w.r.t.\ the MSE.
-Even worse, to the best of the author's knowledge, no admissible construction exists for estimating the mean of a $d$-variate Gaussian w.r.t.\ MSE for $d \ge 3$.
-
-
-\todo{Asymptotic normality}
-
+Even worse, to the best of the author's knowledge, no admissible construction exists for estimating the mean of a $d$-variate Gaussian w.r.t.\ MSE for $d \ge 3$.\\
 
 
 As already mentioned in the introduction, point estimators cannot convey uncertainty in the estimate.
@@ -212,7 +208,8 @@ Clearly, if we have two confidence regions $\CR_1$ and $\CR_2$ with the same con
 More generally, smaller regions should be preferred since they convey more confidence in the estimate and exclude more alternatives.
 Therefore, measures of size such as (expected) volume or diameter are commonly used as risk functions for region estimators.
 
-% TODO
+We now introduce a notion of optimality similar to~\cref{def:stat.frequentist.admissability_point_estimators}.
+In \cref{sub:ortho.optimal} we show that this notion of admissibility is especially suitable for studying constrained inference problems.
 \begin{definition}{\cite[Def. 2.2]{Joshi_1969_Admissibility}}
   \label{def:stat.frequentist.admissible}
   A confidence region $\CR$ for the parameter estimation of $\theta_0 \in \Omega$ is called (weakly) \emph{admissible} if there is no other confidence region $\CR'$ that fulfils
@@ -223,12 +220,8 @@ Therefore, measures of size such as (expected) volume or diameter are commonly u
   \end{enumerate}
 \end{definition}
 In contrast to the previous discussion, this notion of optimality uses \quotes{pointwise} volume as a risk function instead of the average volume.
-The conditions in Def.~\ref{def:stat.frequentist.admissible} are stated only for ``almost all'' $\vec x$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
+The conditions in Def.~\ref{def:stat.frequentist.admissible} are stated only for \quotes{almost all} $\vec x$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
 A different approach more in line with the previous discussion is to state condition (i) in terms of the expected volume with the average taken over the data $\vec X$ for a fixed true parameter $\theta_0$~\cite[Def.~7.1]{Joshi_1969_Admissibility}.
-
-\todo{Today: Asymptotic optimal, adaptive, ...}
-\todo{Likelihood ratio CR?}
-\todo{Talk about the connection MLE/MSE for 1D Gaussian?}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -503,7 +496,7 @@ Optimal confidence regions for high-dimensional parameter estimation problems in
 
 Since the goal of this work is to demonstrate that quantum shape constraints severely complicate even \quotes{classically} simple confidence regions, in the further discussion we restrict the discussion to a simplified setting:
 We focus on confidence ellipsoids for Gaussian distributions, which are one of the few easily characterizable examples.
-As discussed in \cref{sub:stat.frequentist}, Gaussian distributions arise in the limit of many measurements due to local asymptotic normality.
+Furthermore, Gaussian distributions arise in the limit of many measurements due to \emph{local asymptotic normality}.
 In this section we show that even characterizing these highly simplifying ellipsoids with the quantum constraints taken into account constitutes a hard computational problem.
 This simplification is motivated by the goal to show that the computational intractability exclusively stems from the quantum constraints and that it is not caused by difficulties of high-dimensional statistics in general.
 Furthermore, any less restrictive formulation encompassing this simplified setting must be at least as hard to solve.
