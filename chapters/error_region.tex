@@ -481,9 +481,13 @@ A more appropriate classification of the difficulty of \quotes{typical} is given
 \section{Estimation under quantum constraints}
 \label{sec:error.intro}
 
+
+% \todo{Explain the statistical model \& likelihood function}
+% \todo{Covariance matrix, parameter space.}
+% Use Audenaart Scheel as a bluepritn
 % why tomography? -> other tasks
 % model, linear gaussian
-%
+%Since our goal is to show that this is an intractable problem exclusively due to the quantum constraints -- and not because of the complexity of high-dimensional statistics in general --
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -630,7 +634,7 @@ This improvement is especially far-reaching in the latter case, where it turns a
 
 
 Of course, the question is whether we can somehow characterize the truncated confidence region $\CR_{\varrho_0}^\cap := A^{-1}(\CR_\vec{y}) \cap \States$ computationally efficiently.
-Since our goal is to show that this is an intractable problem exclusively due to the quantum constraints -- and not because of the complexity of high-dimensional statistics in general -- we are going to make the simplifying assumption that the measured frequencies are approximately Gaussian distributed.
+As already mentioned in \cref{sec:error.intro}, we are going to make the simplifying assumption that the measured frequencies are approximately Gaussian distributed.
 Furthermore, we are going to focus on a class of confidence regions that are efficiently characterizable in the unconstrained setting, namely Gaussian confidence ellipsoids or, more precisely, ellipsoidal balls of the form
 \[
   \CR_\vec{y} = \left\{ \vec y \in \Reals^m\colon  {\left(\vec{y}-\estim{\vec{y}}\right)}^T B\left(\vec{y}-\estim{\vec{y}}\right) \leq 1  \right\}
@@ -792,10 +796,18 @@ The details of the proof can be found in \cref{sec:error.ellpos}
 \section{Hardness results for credible regions}
 \label{sec:error.bayesian}
 
-\todo{Explain the statistical model \& likelihood function}
-\todo{Covariance matrix, parameter space.}
-% Use Audenaart Scheel as a bluepritn
-% Let us now turn to the , for a more thorough discussion see e.g.~\cite{Granade_2015_Practical,Audenaert_2009_Quantum}.
+In this section we are going to present the second major result of~\cite{Suess_2016_Error} concerned with Bayesian credible regions in QSE.
+Bayesian techniques in the context of QSE have been introduced by different authors~\cite{Jones_1991_Principles,Slater_1995_Quantum,Derka_1997_From,Schack_2001_Quantum,Buzek_1998_Reconstruction}.
+The main advantage the Bayesian approach to QSE has over the more established Frequentist's methods is the ability to include prior knowlege naturally into the inference procedure.
+Furthermore, the Bayesian framework is conceptually simpler and it provides notion of error region with a more natural interpretation as discussed in \cref{sec:error.bayesian}.
+However, analytical solutions for Bayesian inference problems only exist in special cases when we consider conjugate priors for the likelihood functions.
+In~\cite{Audenaert_2009_Quantum}, the authors use the self-conjugate Gaussian priors to provide an approximative estimate of the state and the corresponding credible region.
+However, in order to deal with the psd constraints, the authors had to resort to an uncontrolled approximation.
+In this work we use the same model and show that the \emph{exact} inference problem under quantum shape constraints cannot be solved efficiently.
+A different approach, which was pioneered in~\cite{Huszar_2012_Adaptive,Ferrie_2014_Quantum}, is to use Monte Carlo algorithms to perform approximate inference.
+Such sampling algorithms also allow the computation of highest posterior density ellipsoids, which are near-optimal credible region for the posteriors relevant to QSE, i.e.\ Pauli measurements on multiple qubits~\cite{Ferrie_2014_High}.
+For more details on the practical application of Bayesian inference to QSE, we refer the reader to~\cite{Granade_2016_Practicala}.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{MVCR for Gaussian distributions}
@@ -918,7 +930,6 @@ Also, there is no closed-form analogue to Eq.~\eqref{eq:bayesian.radius} due to 
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 
 Our main result from this section concerns MVCR for Gaussian posteriors that are fully supported on the psd states.
