@@ -1,6 +1,8 @@
 \chapter{Uncertainty Quantification for quantum state estimation}
 \label{chap:error}
 
+\todo[inline]{fill missing citations and provide some more where necessary}
+
 Any information we obtain about a quantum system through measurements is subject to statistical uncertainty due to the intrinsic randomness of quantum mechanics.
 Consequently, we should not only report the final result of an experiment but also should answer the question whether this result is statistically reliable or simply due to chance.
 Of course, such problems not only arises in the analysis of quantum experiments but in all kinds of empirical sciences such as psychology, demography, or medicine.
@@ -22,20 +24,28 @@ Indeed, it is known that taking the psd constraint into account can result in a 
 Prime examples are results that employ positivity to show that even \emph{informationally incomplete} measurements can be used to identify a quantum state with arbitrarily small error~\cite{Cramer_2010_Efficient,Gross_2010_Quantum,Gross_2011_Recovering,Flammia_2012_Quantum,Nickl_2013_Confidence,Kalev_2015_Quantum}.
 More precisely, these papers describe ways to rigorously bound the size of a confidence region for the quantum state based only on the observed data and on the knowledge that the data comes from measurements on a valid quantum state.
 While these uncertainty bounds can always be trusted without further assumptions, only in very particular situations have they been proven to actually become small.
-These situations include the cases where the true state is of low rank~\cite{Flammia_2012_Quantum,Nickl_2013_Confidence}, or admits an economical description as a matrix-product state~\cite{Cramer_2010_Efficient}.
+These situations include the cases where the true state is of low rank~\cite{Flammia_2012_Quantum,Nickl_2013_Confidence}, or admits an economical description as a matrix-product state~\cite{Cramer_2010_Efficient}.\\
+% It stands to reason that there are further cases -- not yet identified -- for which the size of an error region can be substantially reduced simply by taking into account the quantum shape constraints.
+% This motivates the research program this work is part of: \emph{Understand the general impact of positivity constraints on uncertainty quantification in QSE}.
 
-It stands to reason that there are further cases -- not yet identified -- for which the size of an error region can be substantially reduced simply by taking into account the quantum shape constraints.
-This motivates the research program this work is part of: \emph{Understand the general impact of positivity constraints on uncertainty quantification in QSE}.
 
-% one question: is there an efficient algorithm that computes optimal error regions  for the QSE problem with especial emphasis on the psd constraints
-% this work: provide evicdence that no such algorithmn can exist if well accepted conjectures in computational complexity hold
-% more specifically, by considering models that render the unconstrained problem tractable, we show that computaional intractability arises due to constraints and not due to general difficulties of stats in high dimensions
+In this chapter, we investigating the question whether the lack of an efficient algorithm for computing optimal error regions in QSE simply has not been found yet or if there are fundamental restrictions that prevent the existence of such an algorithm.
+We provide evidence that the latter case is true:
+Based on a generally accepted conjecture in computational complexity we show that no such algorithm can exist.
+More specifically, by considering models that render the unconstrained problem tractable we show that the computational intractability arises due to the quantum shape constraints and not due to general difficulties of statistics in high dimensions.
+
+For this purpose, we introduce the necessary concepts from statistical inference and computational complexity in \cref{sec:error.stat} and \ref{sec:error.complexity}, respectively.
+Then, in \cref{sec:error.intro} we provide more details on QSE and the
+One of the main results of this work concerning the proof of computational intractability of frequentist confidence region is given in \cref{sec:error.ortho}.
+The Bayesian counterpart for credible regions is the topic of \cref{sec:error.bayesian}.
+Finally, we conclude this chapter with remarks on limitations of the hardness results as well as possible future work in \cref{sec:error.outlook}.
+The results in this chapter are published in~\cite{Suess_2016_Error}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction to Statistical Inference}
-\label{sec:error.intro}
+\label{sec:error.stat}
 
 The objective of statistical inference is to obtain information about the distribution of a random variable $X$ from observational data.
 Here, we focus on the special case of inference in parametric models, which can we described as follows~\cite{Wasserman_2013_All}:
@@ -53,14 +63,14 @@ Although the two approaches yield the same results for very simple models or -- 
 So far we have only discussed point estimators, which yield a single value for the parameters.
 However, even if our model describes the data perfectly for some choice of $\theta$, we cannot exactly recover this value from a finite amount of data due to statistical fluctuations.
 The concept of error bars, or more generally error regions, allows for quantifying the uncertainty of a given estimate.
-In \cref{sub:intro.frequentist}, we introduce the basic concepts of frequentist inference and the corresponding notion of \emph{confidence regions}.
-\Cref{sub:intro.bayesian}, is concerned with Bayesian inference and the corresponding notion of error regions, namely \emph{credible regions}.
+In \cref{sub:stat.frequentist}, we introduce the basic concepts of frequentist inference and the corresponding notion of \emph{confidence regions}.
+\Cref{sub:stat.bayesian}, is concerned with Bayesian inference and the corresponding notion of error regions, namely \emph{credible regions}.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Frequentist Statistics}
-\label{sub:intro.frequentist}
+\label{sub:stat.frequentist}
 
 In the frequentist (or orthodox) framework, the probability of an outcome of a random experiment is defined in terms of its relative frequency of occurrence when the number of repetitions goes to infinity~\cite{Keynes_2007_Treatise,Kiefer_2012_Introduction}.
 More precisely, denote the number of repetitions of an experiment by $T$ and the number of times the event under consideration $x$ occurred by $n_T$.
@@ -72,38 +82,38 @@ Although there are some intuitive approaches to this problem such as the method 
 The \emph{likelihood function} is defined by
 \[
   \Loss(\theta; \vec X) = \Prob_\theta(\vec X) = \prod_{i=1}^N \Prob_\theta(X_i),
-  \label{eq:intro.frequentist.likelihood_function}
+  \label{eq:stat.frequentist.likelihood_function}
 \]
 where we have assumed independence of the samples.
 The \emph{maximum likelihood estimator} (\apprv{MLE}) is then defined by
 \[
   \estim\theta_\mathrm{MLE}(\vec x) = \operatorname{argmax}_\theta \Loss(\theta; \vec x).
-  \label{eq:intro.frequentist.mle}
+  \label{eq:stat.frequentist.mle}
 \]
-The justification for using~\eqref{eq:intro.frequentist.mle} is that under mild conditions on the model, the MLE posses many appealing properties~\cite[Sec.\ 9.4]{Wasserman_2013_All} such as consistency and efficiency:
+The justification for using~\eqref{eq:stat.frequentist.mle} is that under mild conditions on the model, the MLE posses many appealing properties~\cite[Sec.\ 9.4]{Wasserman_2013_All} such as consistency and efficiency:
 Consistency means that the MLE converges to the true value $\theta_0$ in probability as $N \to \infty$ and efficiency roughly means that among all well behaved estimators, the MLE has the smallest variance in the large sample limit.
 
 A more flexible approach to the problem of how to single out a \quotes{good} estimator is formalized in statistical decision theory~\cite{Casella_2008_Statistical,Lehmann_1998_Theory}.
 For this purpose, we need to introduce a \emph{loss function}
 \[
-  \label{eq:intro.frequentist.loss_function}
+  \label{eq:stat.frequentist.loss_function}
   \Loss\colon \Omega \times \Reals \to \Reals,  (\theta_0, \estim\theta) \mapsto \Loss(\theta_0, \estim\theta),
 \]
 which measures the discrepancy between $\theta_0$ and an estimate $\estim\theta(\vec X)$.
 Keep in mind that since the $X_i$ are random variables, so are $\estim\theta(\vec X)$ and its loss.
 To asses the estimator $\hat\theta$, that is the function mapping data to an estimate, we evaluate the average loss or \emph{risk function}
 \[
-  \label{eq:intro.frequentist.risk}
+  \label{eq:stat.frequentist.risk}
   \Risk(\theta_0, \hat\theta) = \Exp_{\theta_0}(\Loss(\theta_0, \hat\theta(\vec X)))
   = \int \Loss(\theta_0, \hat\theta(\vec x)) \Prob_{\theta_0}(\vec x) \dd x.
 \]
-Then, the problem of finding a good estimator reduces to the problem of finding an estimator that yields small values for \cref{eq:intro.frequentist.risk}.
-However, note that the risk function~\eqref{eq:intro.frequentist.risk} for a given estimator still depends on the unknown true value.
+Then, the problem of finding a good estimator reduces to the problem of finding an estimator that yields small values for \cref{eq:stat.frequentist.risk}.
+However, note that the risk function~\eqref{eq:stat.frequentist.risk} for a given estimator still depends on the unknown true value.
 In order to obtain a single-number summary of the performance of an estimator, there are different strategies such as maximizing or averaging the risk function over all true values~\cite[Sec.\ 12.2]{Wasserman_2013_All}.
 By minimizing these risks over all possible estimators, we try to determine a single estimator that performs best in the worst case or on average, respectively.
 However, in the following we use a less ambitious notion of optimality:
 \begin{definition}{\cite[Def. 12.17]{Wasserman_2013_All}}
-  \label{def:intro.frequentist.admissability_point_estimators}
+  \label{def:stat.frequentist.admissability_point_estimators}
   A point estimator $\estim\theta$ is \emph{inadmissible} if there exists another estimator $\estim\theta'$ such that
   \begin{align*}
     \Risk(\theta_0, \estim\theta') \le \Risk(\theta_0, \estim\theta) &\quad\mbox{for all } \theta_0 \in \Omega \\
@@ -122,24 +132,24 @@ Some examples for commonly used loss functions include the $0/1$-loss for discre
     1 & \theta_0 = \theta \\
     0 & \mathrm{otherwise}
   \end{cases},
-  \label{eq:intro.frequentist.01loss}
+  \label{eq:stat.frequentist.01loss}
 \]
 and the mean squared error (MSE)
 \[
   \Loss(\theta_0, \theta) = \left( \theta_0 - \theta \right)^2,
-  \label{eq:intro.frequentist.l2loss}
+  \label{eq:stat.frequentist.l2loss}
 \]
 which is often used for continuous parameter models e.g. $\Omega = \Reals$.
 The use of the MSE is often motivated by the fact that it yields the MLE for certain models.
 For example, consider iid random variables $X\ind{k} \sim \Normal(\theta_0, \sigma)$ with $\sigma \in \Reals_+$ known and define the empirical mean
 \[
-  \label{eq:intro.frequentist.empirical_mean}
+  \label{eq:stat.frequentist.empirical_mean}
   \bar X := \frac{1}{m} \sum_{i = 1}^m X\ind{k}.
 \]
 Then, $\bar X$ is an admissible estimator of $\theta_0$ with respect to MSE~\cite[Thm.\ 12.20]{Wasserman_2013_All}.
 Furthermore, $\bar X$ is also the MLE:
 \[
-  \label{eq:intro.frequentist.mle_derivation}
+  \label{eq:stat.frequentist.mle_derivation}
   \begin{split}
     \argmax_\theta \Loss(\theta; \vec X)
     &= \argmin_\theta \sum_{k=1}^m \log \Prob_\theta(X\ind{k}) \\
@@ -152,22 +162,22 @@ The right hand side of the last equation is minimized by the choice $\theta = \b
 Now consider the multivariate generalization of the above problem, that is the task of estimating $\vec\theta_0 \in \Reals^d$ from a linear Gaussian model $\vec X \sim \Normal(\vec\theta_0, \1)$ with unit covariance matrix.
 Suppose, we only have a single observation $\vec X$ -- that is $m=1$.
 Since all the components $X_i$ are independent, one expects that $\bar{\vec X} = \vec X$ constitutes a \quotes{good estimator}.
-Indeed, the same computation as in \cref{eq:intro.frequentist.mle_derivation} shows that the empirical mean is the MLE for this model as well.
+Indeed, the same computation as in \cref{eq:stat.frequentist.mle_derivation} shows that the empirical mean is the MLE for this model as well.
 However, Stein shocked the statistical community when he proved that for $d \ge 3$, this estimator is inadmissible~\cite{Stein_1956_Inadmissibility}.
 It can be shown that the \emph{James-Stein} estimator
 \[
-  \label{eq:intro.frequentist.stein_estimator}
+  \label{eq:stat.frequentist.stein_estimator}
   \estim{\vec\theta}_{\mathrm{S}} := \max\left\{0, \left( 1 - \frac{d - d}{\norm{\vec X}_2} \right) \right\} \vec X
 \]
 has smaller MSE risk than the empirical mean~\cite{Stein_1956_Inadmissibility,Lehmann_1998_Theory}.
 It is often referred to as \emph{shrinkage estimator} because it shrinks the empirical mean estimate $\vec X$ towards 0.
 Note however, that the choice of the origin as fix point of the shrinkage operation is arbitrary -- the James-Stein estimator outperforms the empirical mean estimator for any choice of fix point.
-Interestingly, \cref{eq:intro.frequentist.stein_estimator} shows that by taking into account all the components $X_i$, we can improve the MSE of the mean-estimator even if the $X_i$ are independent.
+Interestingly, \cref{eq:stat.frequentist.stein_estimator} shows that by taking into account all the components $X_i$, we can improve the MSE of the mean-estimator even if the $X_i$ are independent.
 However, this only applies to the \emph{simultaneous} MSE error of all the components of $\vec \theta_0$.
-The James-Stein estimator~\eqref{eq:intro.frequentist.stein_estimator} cannot be used to improve the MSE of a single component.
-\Cref{eq:intro.frequentist.stein_estimator} can also be generalized to the case of more than one observation, i.e.\ $m > 1$.
+The James-Stein estimator~\eqref{eq:stat.frequentist.stein_estimator} cannot be used to improve the MSE of a single component.
+\Cref{eq:stat.frequentist.stein_estimator} can also be generalized to the case of more than one observation, i.e.\ $m > 1$.
 Finally, note that the James-Stein estimator is also not admissible:
-More elaborate shrinkage estimators are known to outperform~\eqref{eq:intro.frequentist.stein_estimator} w.r.t.\ the MSE.
+More elaborate shrinkage estimators are known to outperform~\eqref{eq:stat.frequentist.stein_estimator} w.r.t.\ the MSE.
 Even worse, to the best of the author's knowledge, no admissible construction exists for estimating the mean of a $d$-variate Gaussian w.r.t.\ MSE for $d \ge 3$.
 
 
@@ -177,26 +187,26 @@ Even worse, to the best of the author's knowledge, no admissible construction ex
 
 As already mentioned in the introduction, point estimators cannot convey uncertainty in the estimate.
 For this purpose we need to introduce a precise notion of \quotes{error bars}, namely \emph{confidence regions}.
-\begin{definition}\label{def:intro.frequentist.cr}
+\begin{definition}\label{def:stat.frequentist.cr}
   A confidence region $\CR$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data $\vec x$ to a subset $\CR(\vec x) \subset \Omega$ of the parameter space -- such that the true parameter is contained in $\CR$ with probability greater than $\alpha$:
   \[
-    \label{eq:intro.frequentist.coverage}
+    \label{eq:stat.frequentist.coverage}
     \forall \theta_0\in\Omega \colon \Prob_{\theta_0}\left( \CR(X_1, \ldots, X_N) \ni \theta_0 \right) \ge 1 - \alpha.
   \]
 \end{definition}
-Note that the coverage condition~\eqref{eq:intro.frequentist.coverage} is not a probabilistic statement about the true parameter $\theta_0$ for fixed observed data $\vec x$.
-Instead, \cref{def:intro.frequentist.cr} should be interpreted as a statistical guarantee for the region estimator $\CR$:
+Note that the coverage condition~\eqref{eq:stat.frequentist.coverage} is not a probabilistic statement about the true parameter $\theta_0$ for fixed observed data $\vec x$.
+Instead, \cref{def:stat.frequentist.cr} should be interpreted as a statistical guarantee for the region estimator $\CR$:
 Say we repeat an experiment $M$ times and obtain data $\vec x\ind{1}$, \ldots $\vec x\ind{M}$ from a distribution with true parameter $\theta_0$.
 Then, in the limit $M \to \infty$ a fraction of $1 - \alpha$ of the regions $\CR(\vec x\ind{1})$, \ldots, $\CR(\vec x\ind{M})$ contain the true parameter $\theta_0$.
 
-Similar to point estimators, \cref{eq:intro.frequentist.coverage} does not uniquely determine a confidence region construction.
+Similar to point estimators, \cref{eq:stat.frequentist.coverage} does not uniquely determine a confidence region construction.
 Furthermore, additional constraints are necessary to exclude trivial constructions such as the following:
 Take the region estimator, which is always equal to the full parameter space independent of the data $\CR(X_1, \ldots X_N) = \Omega$, then
 \[
   \Prob_\theta\left(  \CR(X_1, \ldots, X_N) \ni \theta_0  \right) = 1 \ge 1 - \alpha
 \]
 for all confidence levels $\alpha$.
-Although, this construction trivially fulfils the coverage condition~\eqref{eq:intro.frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
+Although, this construction trivially fulfils the coverage condition~\eqref{eq:stat.frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
 Therefore, we have to impose a notion of what constitutes a good confidence region by introducing a loss function.
 Clearly, if we have two confidence regions $\CR_1$ and $\CR_2$ with the same confidence level and $\CR_1 \subset \CR_2$, then $\CR_1$ is more informative.
 More generally, smaller regions should be preferred since they convey more confidence in the estimate and exclude more alternatives.
@@ -204,7 +214,7 @@ Therefore, measures of size such as (expected) volume or diameter are commonly u
 
 % TODO
 \begin{definition}{\cite[Def. 2.2]{Joshi_1969_Admissibility}}
-  \label{def:intro.frequentist.admissible}
+  \label{def:stat.frequentist.admissible}
   A confidence region $\CR$ for the parameter estimation of $\theta_0 \in \Omega$ is called (weakly) \emph{admissible} if there is no other confidence region $\CR'$ that fulfils
   \begin{enumerate}
     \item(equal or smaller volume) $\Vol(\CR'(\vec x)) \le \Vol(\CR(\vec x))$ for almost all observations $\vec x$.
@@ -213,7 +223,7 @@ Therefore, measures of size such as (expected) volume or diameter are commonly u
   \end{enumerate}
 \end{definition}
 In contrast to the previous discussion, this notion of optimality uses \quotes{pointwise} volume as a risk function instead of the average volume.
-The conditions in Def.~\ref{def:intro.frequentist.admissible} are stated only for ``almost all'' $\vec x$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
+The conditions in Def.~\ref{def:stat.frequentist.admissible} are stated only for ``almost all'' $\vec x$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
 A different approach more in line with the previous discussion is to state condition (i) in terms of the expected volume with the average taken over the data $\vec X$ for a fixed true parameter $\theta_0$~\cite[Def.~7.1]{Joshi_1969_Admissibility}.
 
 \todo{Today: Asymptotic optimal, adaptive, ...}
@@ -223,7 +233,7 @@ A different approach more in line with the previous discussion is to state condi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Bayesian Statistics}
-\label{sub:intro.bayesian}
+\label{sub:stat.bayesian}
 
 
 Let us now introduce the Bayesian point of view on inference:
@@ -234,13 +244,13 @@ Generally, Bayesian inference for a parametric model is carried out in the follo
 First, we choose a \emph{prior distribution} $\Prob(\theta)$, which expresses our belief about the parameter $\theta$ before taking any data into account.
 Given an observation $X$, the distribution of $\theta$ is updated according to Bayes' rule~\cite{}
 \[
-  \label{eq:intro.bayesian.bayes_rule}
+  \label{eq:stat.bayesian.bayes_rule}
   \Prob(\theta | X) = \frac{\Prob(X | \theta) \Prob(\theta)}{\Prob(X)}.
 \]
-Here, $\Prob(X|\theta)$ is the \emph{likelihood function} of the model analogous to~\eqref{eq:intro.frequentist.likelihood_function} and $\Prob(\theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\theta$.
-Of course, the update in \cref{eq:intro.bayesian.bayes_rule} is not limited to a single observation and can be iterated for independent data.
+Here, $\Prob(X|\theta)$ is the \emph{likelihood function} of the model analogous to~\eqref{eq:stat.frequentist.likelihood_function} and $\Prob(\theta | X)$ is the \emph{posterior distribution} -- or short posterior -- of $\theta$.
+Of course, the update in \cref{eq:stat.bayesian.bayes_rule} is not limited to a single observation and can be iterated for independent data.
 
-Computing the Bayesian update~\eqref{eq:intro.bayesian.bayes_rule} analytically is possible only in a few rare cases:
+Computing the Bayesian update~\eqref{eq:stat.bayesian.bayes_rule} analytically is possible only in a few rare cases:
 If for a given likelihood function, the prior and the posterior are in the same family of distributions, the prior is called a \emph{conjugate prior} for the likelihood function.
 For example, consider a Gaussian random variable $X \sim \Normal(\theta, \tau^2)$ with known variance $\tau^2$.
 If we assume a Gaussian prior $\theta \sim \Normal(\mu, \sigma^2)$, we have~\cite{}
@@ -249,13 +259,13 @@ If we assume a Gaussian prior $\theta \sim \Normal(\mu, \sigma^2)$, we have~\cit
 \]
 with
 \[
-  \label{eq:intro.bayesian.kalman}
+  \label{eq:stat.bayesian.kalman}
   \mu' = \frac{ \frac{\mu}{\sigma^2} + \frac{x}{\tau^2} }{ \frac{1}{\sigma^2} + \frac{1}{\tau^2} },
   \quad\mbox{and}\quad
   \sigma' = \left( \frac{1}{\sigma^2} + \frac{1}{\tau^2} \right)^{- \tfrac{1}{2}}.
 \]
 In other words, an update of a Gaussian prior with a Gaussian likelihood function yields a Gaussian posterior distribution.
-Although there are other well-known conjugate priors with explicit formulas for the parameter update, in practice the Bayesian update~\eqref{eq:intro.bayesian.bayes_rule} can only be approximated numerically.
+Although there are other well-known conjugate priors with explicit formulas for the parameter update, in practice the Bayesian update~\eqref{eq:stat.bayesian.bayes_rule} can only be approximated numerically.
 Commonly used methods include sampling techniques such as Markov Chain Monte Carlo and Sequential Monte Carlo~\cite{} as well as variational Bayes~\cite{}.\\
 
 
@@ -273,37 +283,37 @@ provided the loss function $\Loss$ is a \emph{Bregman divergence}.
 Note that the expectation is taken over $\theta$ w.r.t.\ the posterior with observation $X$.
 
 Another example of a point estimator is the \emph{maximum a posteriori} (MAP) estimator.
-As the name suggests, the MAP estimator is obtained by maximizing the posterior~\eqref{eq:intro.bayesian.bayes_rule}.
-Since this does not require the expensive computation of the denominator in \cref{eq:intro.bayesian.bayes_rule} and (at least local minima) of the posterior can be found efficiently via gradient descent, the MAP estimator is often used in high dimensional problem~\cite{Murphy_2012_Machine}.\\
+As the name suggests, the MAP estimator is obtained by maximizing the posterior~\eqref{eq:stat.bayesian.bayes_rule}.
+Since this does not require the expensive computation of the denominator in \cref{eq:stat.bayesian.bayes_rule} and (at least local minima) of the posterior can be found efficiently via gradient descent, the MAP estimator is often used in high dimensional problem~\cite{Murphy_2012_Machine}.\\
 
 
 Let us now introduce the concept of error regions in the Bayesian framework.
 \begin{definition}
-  \label{def:intro.bayesian.cr}
+  \label{def:stat.bayesian.cr}
   A \emph{credible region}\footnote{%
     We use the same letter for confidence and credible regions when the meaning is clear from the context.
   }
   $\CR$ with credibility $1-\alpha$ is a subset of the parameter space $\Omega$ containing at least mass $1-\alpha$ of the posterior
   \[
-    \label{eq:intro.bayesian.credibility}
+    \label{eq:stat.bayesian.credibility}
     \Prob(\theta \in \CR | X_1, \ldots, X_N) \ge 1-\alpha.
   \]
 \end{definition}
-Notice the different notion of randomness compared to \cref{eq:intro.frequentist.coverage}:
-Confidence regions are random variables due to their dependence on the data and \cref{eq:intro.frequentist.coverage} demands that the true value is contained in the confidence region with high probability.
+Notice the different notion of randomness compared to \cref{eq:stat.frequentist.coverage}:
+Confidence regions are random variables due to their dependence on the data and \cref{eq:stat.frequentist.coverage} demands that the true value is contained in the confidence region with high probability.
 Here, \quotes{probability} refers to (possibly hypothetical) repetitions of the experiment -- no statement can be made for a single run of an experiment with given outcomes.
-In contrast, the definition of credible regions~\eqref{eq:intro.bayesian.credibility} only refers to probability w.r.t.\ the posterior and, therefore, is well defined even for a single run of the experiment.
+In contrast, the definition of credible regions~\eqref{eq:stat.bayesian.credibility} only refers to probability w.r.t.\ the posterior and, therefore, is well defined even for a single run of the experiment.
 
 In order to single out \quotes{good} credible regions, we need to introduce a notion of optimality.
-As argued in \cref{sub:intro.frequentist}, smaller error regions are generally more informative.
+As argued in \cref{sub:stat.frequentist}, smaller error regions are generally more informative.
 Therefore, good credible regions are minimal-volume credible regions (MVCRs) or credible regions with the smallest diameter.
 Although in the following we deal with MVCRs w.r.t.\ a geometric notion of volume, some authors have proposed to measure the volume of a region by its prior probability~\cite{Evans_2006_Optimally,Shang_2013_Optimal}.
 In case the posterior has probability density $\pi$ w.r.t.\ the volume measure under consideration, the MVCR is given by
 \[
-  \label{eq:intro.bayesian.mvcr}
+  \label{eq:stat.bayesian.mvcr}
   \CR = \{ \theta \in \Omega\colon \pi(\theta) \ge \lambda \}.
 \]
-The constant $\lambda$ is determined by the saturation of the credibility level condition~\eqref{eq:intro.bayesian.credibility}.
+The constant $\lambda$ is determined by the saturation of the credibility level condition~\eqref{eq:stat.bayesian.credibility}.
 
 
 
@@ -476,7 +486,7 @@ A more appropriate classification of the difficulty of \quotes{typical} is given
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Estimation under quantum constraints}
-\label{sec:error.qse}
+\label{sec:error.intro}
 
 % why tomography? -> other tasks
 % model, linear gaussian
@@ -493,7 +503,7 @@ Optimal confidence regions for high-dimensional parameter estimation problems in
 
 Since the goal of this work is to demonstrate that quantum shape constraints severely complicate even \quotes{classically} simple confidence regions, in the further discussion we restrict the discussion to a simplified setting:
 We focus on confidence ellipsoids for Gaussian distributions, which are one of the few easily characterizable examples.
-As discussed in \cref{sub:intro.frequentist}, Gaussian distributions arise in the limit of many measurements due to local asymptotic normality.
+As discussed in \cref{sub:stat.frequentist}, Gaussian distributions arise in the limit of many measurements due to local asymptotic normality.
 In this section we show that even characterizing these highly simplifying ellipsoids with the quantum constraints taken into account constitutes a hard computational problem.
 This simplification is motivated by the goal to show that the computational intractability exclusively stems from the quantum constraints and that it is not caused by difficulties of high-dimensional statistics in general.
 Furthermore, any less restrictive formulation encompassing this simplified setting must be at least as hard to solve.
@@ -519,7 +529,7 @@ Finally, the truncation approach simplifies the discussion but as we discuss in 
 
 
 We start by showing that the truncation of confidence regions preservers admissibility.
-Notice that \cref{def:intro.frequentist.admissible} can be stated for both, the unconstrained estimation problem $\theta_0 \in \Omega$ as well as the constrained estimation problem $\theta_0 \in \Omega_\mrc$.
+Notice that \cref{def:stat.frequentist.admissible} can be stated for both, the unconstrained estimation problem $\theta_0 \in \Omega$ as well as the constrained estimation problem $\theta_0 \in \Omega_\mrc$.
 The question is: How are admissible confidence regions for the constrained setting related to admissible confidence regions for the unconstrained estimation problem?
 \begin{lemma}\label{lem:ortho.admissible_truncation}
   Let $\CR$ denote an admissible confidence region for the unconstrained estimation problem for the parameter $\theta_0 \in \Omega$.
@@ -554,7 +564,7 @@ A similar procedure of computing optimal point estimators for constrained proble
 
 
 One criticism raised against the use of the truncated confidence regions is the possibility that they may yield empty realizations and, hence, are considered \quotes{unphysical}~\cite{Feldman_1998_Unified}.
-However, according to the standard definition in \cref{sub:intro.frequentist}, a procedure that reports 95\% confidence regions is allowed to give any result 5\% of the time.
+However, according to the standard definition in \cref{sub:stat.frequentist}, a procedure that reports 95\% confidence regions is allowed to give any result 5\% of the time.
 
 Furthermore, a different strategy often adopted for point estimator is to use an unconstrained parametrization for the constrained parameter space.
 A typical example is a coin toss model with bias $p \in [0, 1]$.
@@ -637,8 +647,8 @@ centered at the the empirical frequencies  $\estim{\vec y}$.
 The $m\times m$, symmetric, positive semi-definite matrix $B$ completely specifies the ellipsoidal shape of this confidence region.
 These are the natural generalizations of the well-known $2\sigma$ confidence intervals to multivariate Gaussian distributions.
 
-However, even in the unconstrained setting, the ellipsoidal construction~\eqref{eq:ortho.confelip} is known to be admissible only for $m=\left\{ 1,2\right\}$~\cite{Joshi_1969_Admissibility}, while it is not admissible for $m\geq3$~\cite{Joshi_1967_Inadmissibility} due to Stein's phenomenon discussed in \cref{sub:intro.frequentist}:
-By shifting the center of the ellipsoid from the empirical mean $\hat{\vec y}$ to the Stein estimator~\eqref{eq:intro.frequentist.stein_estimator}, one can improve the coverage while keeping the volume constant~\cite{Joshi_1967_Inadmissibility}.
+However, even in the unconstrained setting, the ellipsoidal construction~\eqref{eq:ortho.confelip} is known to be admissible only for $m=\left\{ 1,2\right\}$~\cite{Joshi_1969_Admissibility}, while it is not admissible for $m\geq3$~\cite{Joshi_1967_Inadmissibility} due to Stein's phenomenon discussed in \cref{sub:stat.frequentist}:
+By shifting the center of the ellipsoid from the empirical mean $\hat{\vec y}$ to the Stein estimator~\eqref{eq:stat.frequentist.stein_estimator}, one can improve the coverage while keeping the volume constant~\cite{Joshi_1967_Inadmissibility}.
 Smaller confidence ellipsoids with the same coverage can be obtained by shifting the center slightly~\cite{Tseng_1997_Good,Hwang_1982_Minimax} or even by using more complicated shapes~\cite{Shinozaki_????_Improved,Brown_1995_Optimal}.
 Nevertheless, non of these constructions is known to be optimal and, to the best of the author's knowledge, no optimal confidence region for multivariate Gaussians in dimensions $m \ge 3$ is known.
 But since our discussion is focused on the question how the physical psd constraints can be used to improve confidence regions, we are still going to use the ellipsoids~\eqref{eq:ortho.confelip} as a tractable example:
@@ -801,7 +811,7 @@ The details of the proof can be found in \cref{sec:error.ellpos}
 As a first step towards obtaining good credible regions for the QSE model we ignore the positivity constraints in this section.
 The Gaussian approximation of the measurement statistics in \cref{???} suggests that we use a Gaussian prior for $\varrho$:
 \todo{Fill in reference!}
-On the one hand, this yields a Gaussian posterior as well and the parameters can be computed analytically by means of \emph{linear Kalman filter update equations} similar to \cref{eq:intro.bayesian.kalman} \cite[Sec.\ 2.4]{Audenaert_2009_Quantum}.
+On the one hand, this yields a Gaussian posterior as well and the parameters can be computed analytically by means of \emph{linear Kalman filter update equations} similar to \cref{eq:stat.bayesian.kalman} \cite[Sec.\ 2.4]{Audenaert_2009_Quantum}.
 On the other hand, the MVCR for Gaussian distributions are simply ellipsoids, and therefore, can be characterized by a few parameters.
 Below, we show how those parameters can be computed efficiently.
 
@@ -817,13 +827,13 @@ where
   \norm{\varrho - \theta}_\Sigma := \sqrt{{(\varrho - \theta)}^T \Sigma^{-1} (\varrho - \theta)}
 \end{equation}
 is the Mahalanobis distance and  $\abs{\Sigma}$ denotes the determinant of $\Sigma$.
-As elaborated in \cref{sub:intro.bayesian}, the MVCRs are exactly the highest posterior density sets as defined in \cref{eq:intro.bayesian.mvcr}.
+As elaborated in \cref{sub:stat.bayesian}, the MVCRs are exactly the highest posterior density sets as defined in \cref{eq:stat.bayesian.mvcr}.
 Therefore, the MVCR with credibility $\alpha$ for the Gaussian posterior~\eqref{eq:bayesian.gaussian_density} is given by
 \begin{equation}
   \label{eq:bayesian.gaussian_cr}
   \CR = \{ \vec x \in \Reals^N\colon \norm{\vec x - \vec\theta}_\Sigma \le r_{\alpha} \} =: \Eps(r_{\alpha}).
 \end{equation}
-This is an ellipsoid centered at $\vec\theta$ with radius $r_{\alpha}$ determined by the saturated credibility condition~\eqref{eq:intro.bayesian.credibility}:
+This is an ellipsoid centered at $\vec\theta$ with radius $r_{\alpha}$ determined by the saturated credibility condition~\eqref{eq:stat.bayesian.credibility}:
 \begin{equation}
   \label{eq:bayesian.radius}
   \begin{split}
@@ -878,7 +888,7 @@ $\chi(\varrho)$ is the indicator function of $\States$ and $C_{\theta,\Sigma}$ i
   \label{eq:bayes.normalization_factor}
   C_{\theta,\Sigma}^{-1} = \int_{\States} \pi_{\theta,\Sigma}(\varrho) \,\dd\varrho.
 \end{equation}
-Since the numerator in Bayes rule~\eqref{eq:intro.bayesian.bayes_rule} is linear in the prior, the posterior distribution updated with Gaussian likelihood function is also of the form~\eqref{eq:bayesian.density_plus}.
+Since the numerator in Bayes rule~\eqref{eq:stat.bayesian.bayes_rule} is linear in the prior, the posterior distribution updated with Gaussian likelihood function is also of the form~\eqref{eq:bayesian.density_plus}.
 Furthermore, we can use the same linear Kalman filter update equations for both the standard and the truncated Gaussian distributions.
 The only additional complication of computing the posterior corresponding to the truncated prior~\eqref{eq:bayesian.density_plus} is that the normalization factor $C_{\theta,\Sigma}$ needs to be reevaluated after each update step in order to obtain a properly normalized probability distribution.
 From now on we only consider a fixed posterior distribution and drop the subscripts indicating the mean $\theta$ and the covariance matrix $\Sigma$ if no confusion arises.
@@ -886,7 +896,7 @@ It is then important to remember that the constant in question is denoted by $C$
 
 The problem we try to solve is the following:
 Given the mean $\theta$, covariance matrix $\Sigma$, and credibility $\alpha$, can we find the MVCR for the truncated Gaussian distribution supported on $\States$?
-Since the truncated density~\eqref{eq:bayesian.density_plus} is supported on the psd states and MVCRs are highest-density sets due to~\eqref{eq:intro.bayesian.mvcr}, the MVCR is of the form
+Since the truncated density~\eqref{eq:bayesian.density_plus} is supported on the psd states and MVCRs are highest-density sets due to~\eqref{eq:stat.bayesian.mvcr}, the MVCR is of the form
 \begin{equation}
   \Eps(r^+_{\alpha}) \cap \States = \{ \varrho \in \States \colon \norm{\varrho - \theta}_\Sigma \le r^+_{\alpha} \}.
   \label{eq:bayesian.mvcr}
@@ -964,7 +974,7 @@ The main technical problem is that we are dealing with finite-precision arithmet
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion \& Outlook}
-\label{sec:outlook}
+\label{sec:error.outlook}
 
 \todo{Finsih these conclusion}
 
@@ -994,7 +1004,7 @@ Recently, the mathematical statistics community has started to analyze the trade
 Early papers concentrated on the problem of \emph{sparse principal component analysis}, which roughly asks whether the covariance matrix of a random vector possess a sparse eigenvector with large eigenvalue~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower}.
 Later works have addressed the much better-studied problem of sparse inference~\cite{Zhang_2014_Lower}.
 The main difference between these papers and the present one is that we always condition on a data set and show that certain operations for quantifying uncertainty given the data are hard.
-This approach is canonical for a Bayesian analysis, but merely ``natural'' for orthodox error regions (c.f.~Sec.~\ref{sub:intro.error_regions}).
+This approach is canonical for a Bayesian analysis, but merely ``natural'' for orthodox error regions (c.f.~Sec.~\ref{sub:stat.error_regions}).
 In contrast, Refs.~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower} analyze the ``global'' performance of orthodox estimators -- i.e.\ they do not require looking at worst-case scenarios over the data.
 References~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower} achieve this by reducing a certain problem (``hidden clique'') -- that is conjectured to be hard in the average case -- to the sparse PCA problem; while~\cite{Zhang_2014_Lower} employs a more subtle argument involving the non-uniform complexity class $P/\mathrm{poly}$.
 It would be very interesting to adapt such arguments to the problem of quantum uncertainty quantification.
