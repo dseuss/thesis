@@ -14,3 +14,38 @@ Whereas compressive sensing and low-rank matrix recovery provide a polynomial (l
 \section{Matrix Product States}
 \label{sec:tensors.mps}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Alternating Least Squares for Matrices}
+\label{sec:tensors.matrix_als}
+
+In this section we recap existing work on low-rank matrix recovery via alternating least squares (ALS).
+
+% \begin{algorithm}
+%   \caption{%
+%    \label{alg:AltMin}
+%     Step-wise least squares minimization
+%   }
+%   \begin{algorithmic}[1] % The number tells where the line numbering should start
+
+%   \State \textbf{Input:} Measurement matrix $A$, measurement outcomes $y$, target TT-rank $D$, and number of epochs $H$
+%   \State Divide $(A, y)$ in $HN + 1$ subsets (each of size $m$), which are denoted by $(A^{(0)}, y^{(0)})$ and $(A^{(h, n)}, y^{(h, n)}$ ($h=1,\ldots,H$, $n=1,\ldots,N$)
+%   \State \textbf{Initialization:} $X^0 \gets Compress_D(\sum_l y^{(0)}_l A^{(0)}_l)$
+%   \State $(T^0_i)_i \gets (X^0)$ \Comment{This step is trivial since $X^0$ defined in terms of $T^0_i$}
+%   \For{$h=1 \to H$} \Comment{Loop over epochs}
+%       \State  $(T^{h}_i)_i \gets (T^{h - 1}_i)_i$ \Comment{Notational baggage since all updates are inplace!}
+%       \For{$n=1 \to N$} \Comment{Loop over the TT core tensors}
+%         \State Done
+%       \EndFor
+%   \EndFor
+%   \end{algorithmic}
+% \end{algorithm}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{ALS for Tensors}
+\subsection{Theory}
+\subsection{Numerics}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Python Library mpnum}
