@@ -1,3 +1,4 @@
+ % -*- root: ../thesis.tex -*-
 \chapter{Uncertainty Quantification for quantum state estimation}
 \label{chap:error}
 
@@ -478,16 +479,43 @@ A more appropriate classification of the difficulty of \quotes{typical} is given
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Estimation under quantum constraints}
+\section{Introduction to QSE}
 \label{sec:error.intro}
+
+The goal of state estimation is to provide a complete description of an experimental preparation procedure from experimental feasible measurements.
+In the case of QSE, this complete description is given in terms of the density matrix $\varrho$ of the system~\cite{Paris_2004_Quantum}.
+Another common procedure performed in quantum experiments is \emph{quantum process estimation}, where the goal is to recover a \emph{quantum channel}~\cite{Nielsen_2010_Quantum}.
+However, the task of process estimation can be mapped to QSE by way of the Choi-Jamiolkowski isomorphism~\cite{Nielsen_2010_Quantum,Jezek_2003_Quantum,Altepeter_2003_AncillaAssisted}, and therefore, we are only concerned with the problem of QSE in this work.
+
+Since its inception in the fifties~\cite{Fano_1957_Description}, QSE has proven to be a crucial experimental tool -- in particular in quantum information-inspired setups.
+It has been used to characterize quantum states in a large number of different platforms \cite{Brien_2004_Quantum,Lundeen_2009_Tomography,Terriza_2004_Triggered,Karpinski_2008_FiberOptic,Rippe_2008_Experimental,Steffen_2006_Measurement,Childress_2006_Coherent,Riebe_2007_Quantum,Schwemmer_2014_Experimental} and even been scaled to systems with dimension on the order of 100~\cite{Haeffner_2005_Scalable}.
+However, as the Hilbert space dimensions of quantum systems implemented in the lab grow, it is unclear whether this approach to \quotes{quantum characterization} will continue to make sense.
+On the one hand, there is the question what use is a giant density matrix with millions of entries to an experimentalist?
+On the other hand, acquiring and post processing the data necessary for full-fledged QSE is already prohibitively costly for intermediated sized quantum experiments.
+As an extreme example, the eight qubit MLE reconstruction with bootstrapped error bars in~\cite{Haeffner_2005_Scalable} purportedly required weeks of computation in 2005.
+This triggered the search for more efficient reconstruction algorithms~\cite{Smolin_2012_Maximum,Qi_2013_Quantum,Hou_2016_Full,Shang_2017_Superfast} as well as approaches exploiting structural assumptions to improve the sampling and computational complexity of state estimation~\cite{Cramer_2010_Efficient,Gross_2010_Quantum,Flammia_2012_Quantum,Schwemmer_2015_Systematic,Baumgratz_2013_Scalablea,Baumgratz_2013_Scalable}.
+However, for some applications even those approaches are unreasonably costly and full QSE unnecessary:
+For example, consider the case when a single number such as the fidelity of the state in the lab w.r.t.\ some target state is sufficient whether the experiment works \quotes{sufficiently well} or not.
+For this purpose, a variety of theoretical tools for \emph{quantum hypothesis testing}, \emph{certification}, and scalar \emph{quantum parameter estimation}~\cite{Donnell_2015_Quantum,Audenaert_2008_Asymptotic,Guehne_2009_Entanglement,Flammia_2011_Direct,Schwemmer_2015_Systematic,Li_2016_Optimal} have been developed in the past years that avoid the costly step of full QSE.
+
+However, there remain use cases that necessitate full-fledged QSE.
+We see a particularly important role in the emergent field of \emph{quantum technologies}:
+Any technology requires means of certifying that components function as intended and, should they fail to do so, identify the way in which they deviate from the specification.
+As an example, consider the implementation of a quantum gate that is designed to act as a component of a universal quantum computing setup.
+One could use a certification procedure -- direct fidelity estimation, say -- to verify that the implementation is sufficiently close to the theoretical target that it meets the stringent demands of the quantum error correction threshold.
+If it does, the need for QSE has been averted.
+However, should it fail this test, the certification methods give no indication \emph{in which way} it deviated from the intended behavior.
+They yield no actionable information that could be used to adjust the preparation procedure.
+The pertinent question \quotes{what went wrong} cannot be cast as a hypothesis test.
+Thus, while many estimation and certification schemes can -- and should -- be formulated without resorting to full state estimation, the above example shows that QSE remains an important primitive.
 
 
 % \todo{Explain the statistical model \& likelihood function}
 % \todo{Covariance matrix, parameter space.}
 % Use Audenaart Scheel as a bluepritn
-% why tomography? -> other tasks
-% model, linear gaussian
 %Since our goal is to show that this is an intractable problem exclusively due to the quantum constraints -- and not because of the complexity of high-dimensional statistics in general --
+% model, linear gaussian
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
