@@ -645,9 +645,9 @@ So, having obtained a \quotes{small confidence region} in parameter space does n
     Quantum states are mapped by a measurement matrix $A$ to the respective quantum expectation values $\vec y$.
     Conversely, the pre-image of a confidence region $\CR_\vec{y}$ under $A$ gives rise to a confidence region for $\varrho_0$.
     These may be unbounded if the measurements are not tomographically complete -- a drawback that can be cured by taking into account the physical constraints on quantum states, i.e.\ positivity.
-    }
+    \todo[inline]{Update figure}
+  }
 \end{figure*}
-\todo{Update figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -870,8 +870,7 @@ For more details on the practical application of Bayesian inference to QSE, we r
 \label{sub:bayesian.gaussian}
 
 As a first step towards obtaining good credible regions for the QSE model we ignore the positivity constraints in this section.
-The Gaussian approximation of the measurement statistics in \cref{???} suggests that we use a Gaussian prior for $\varrho$:
-\todo{Fill in reference!}
+The Gaussian approximation of the measurement statistics in \cref{eq:intro.gauss_approx} suggests that we use a Gaussian prior for $\varrho$:
 On the one hand, this yields a Gaussian posterior as well and the parameters can be computed analytically by means of \emph{linear Kalman filter update equations} similar to \cref{eq:stat.bayesian.kalman} \cite[Sec.\ 2.4]{Audenaert_2009_Quantum}.
 On the other hand, the MVCR for Gaussian distributions are simply ellipsoids, and therefore, can be characterized by a few parameters.
 Below, we show how those parameters can be computed efficiently.
