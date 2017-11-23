@@ -331,22 +331,22 @@ Simple minimization with respect to $ \ket{\Psi} $ leads to the final result sta
 Let us now construct the polynomial time reduction of \cref{prob:ortho.ellpos} to \cref{prob:bayesian.cr}.
 We will begin with the main observation of this proof, namely Eq.~\eqref{eq:bayesian.criterion}.
 \begin{lemma}\label{lem:bayesian.criterion}
-  Let $\pi(\varrho)$ denote a Gaussian distribution on $\HermTrace$ and $\pi^+(\varrho) = C \pi(\varrho) \chi(\varrho)$ the corresponding restricted Gaussian with the same mean and covariance matrix, as defined in Eq.~\eqref{eq:bayesian.density_plus}.
-  For any $\alpha \in [0,1]$, the credible ellipsoid $\Eps(r_\frac{\alpha}{C})$ with credibility $\frac{\alpha}{C}$ is contained in the psd if and only if the credible ellipsoid for $\pi^+$, $\Eps(r^+_{\alpha})$, with credibility $\alpha$ has the same radius, that is Eq.~\eqref{eq:bayesian.criterion} holds.
+  Let $\Pdf(\varrho)$ denote a Gaussian distribution on $\HermTrace$ and $\Pdf^+(\varrho) = C \Pdf(\varrho) \chi(\varrho)$ the corresponding restricted Gaussian with the same mean and covariance matrix, as defined in Eq.~\eqref{eq:bayesian.density_plus}.
+  For any $\alpha \in [0,1]$, the credible ellipsoid $\Eps(r_\frac{\alpha}{C})$ with credibility $\frac{\alpha}{C}$ is contained in the psd if and only if the credible ellipsoid for $\Pdf^+$, $\Eps(r^+_{\alpha})$, with credibility $\alpha$ has the same radius, that is Eq.~\eqref{eq:bayesian.criterion} holds.
 \end{lemma}
 \begin{proof}
   The two cases of  $\Eps(r_\frac{\alpha}{C})$ being contained and not being contained in the psd states are illustrated in Fig.~\ref{fig:bayesian.ellipsoids}.
   First, assume that $\Eps(r_\frac{\alpha}{C}) \subset \States$, then
   \[
-    \frac{\alpha}{C} = \int_{\Eps(r_\frac{\alpha}{C})} \pi(\varrho) \, \dd \varrho.
+    \frac{\alpha}{C} = \int_{\Eps(r_\frac{\alpha}{C})} \Pdf(\varrho) \, \dd \varrho.
     \implies
-    \alpha = \int_{\Eps(r_\frac{\alpha}{C}) \cap \States } C \pi(\varrho) \, \dd \varrho.
+    \alpha = \int_{\Eps(r_\frac{\alpha}{C}) \cap \States } C \Pdf(\varrho) \, \dd \varrho.
   \]
   Note that the right equation is exactly the defining Eq.~\eqref{eq:bayesian.radius_plus} for the positive radius $r^+_{\alpha}$ if $r^+_\alpha = r_\frac{\alpha}{C}$.
 
   Now, assume that a part of the ellipsoid $O = \Eps(r_\frac{\alpha}{C})  \setminus \States \neq \emptyset$ lies outside the psd states.
   Then, as can be seen on the right side of Fig.~\ref{fig:bayesian.ellipsoids}, we need to enlarge $r^+_{\alpha}$ to compensate for the lost probability weight of $O$.
-  The latter cannot be vanishing, since the Gaussian density $\pi(\varrho)$ is strictly positive.
+  The latter cannot be vanishing, since the Gaussian density $\Pdf(\varrho)$ is strictly positive.
   Therefore, $r^+_\alpha > r_\frac{\alpha}{C}$ in this case.
 \end{proof}
 Of course, the difference between $r_\frac{\alpha}{C}$ and $r^+_{\alpha}$ may in general become too small to be efficiently detectable.
@@ -452,7 +452,7 @@ Based on the gap proven in Lemma~\ref{lem:bayesian.positivity_violation}, we wil
 In case Eq.~\eqref{eq:bayesian.criterion} does not hold -- that is the corresponding ellipsoid is not fully contained in the psd states -- is the corresponding gap always large enough to be efficiently detectable?
 \begin{lemma}\label{lem:bayesian.r_separation}
    Let $\vec a \in \mathbb{N}^d$ be an instance of the number partition problem and denote by $\Eps_{\vec{a}}$ the corresponding encoding ellipsoid as given by Eq.~\eqref{eq:bayesian.positivity_violation.ellipsoid}.
-  Furthermore, denote by $\pi_{\varrho_0,\Sigma}$ the Gaussian density, which encodes $\Eps_{\vec{a}} = \Eps(r_\frac{\alpha}{C})$ as an $\frac{\alpha}{C}$ credible region as given by Lemma~\ref{lem:bayesian.encoded_ellipsoid}.
+  Furthermore, denote by $\Pdf_{\varrho_0,\Sigma}$ the Gaussian density, which encodes $\Eps_{\vec{a}} = \Eps(r_\frac{\alpha}{C})$ as an $\frac{\alpha}{C}$ credible region as given by Lemma~\ref{lem:bayesian.encoded_ellipsoid}.
   Assume that $\vec a$ has a balanced sum partition and, therefore, $\Eps_{\vec{a}}$ is not a subset of $\States$.
 
   Then, there exists a polynomial $p$ such that
@@ -529,7 +529,7 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
 
 \begin{lemma}\label{lem:bayesian.always_contained}
   Let $\vec a \in \mathbb{N}^d$ be an instance of the number partition problem and denote by $\Eps_{\vec{a}}$ the corresponding encoding ellipsoid as defined by Eq.~\eqref{eq:bayesian.positivity_violation.ellipsoid}.
-  Denote by $\pi_{\varrho_0,\Sigma}$ the Gaussian density, which encodes $\Eps_{\vec{a}}$ as an $\alpha$ credible region according to Lemma~\ref{lem:bayesian.encoded_ellipsoid}.
+  Denote by $\Pdf_{\varrho_0,\Sigma}$ the Gaussian density, which encodes $\Eps_{\vec{a}}$ as an $\alpha$ credible region according to Lemma~\ref{lem:bayesian.encoded_ellipsoid}.
   Then, the ellipsoid $\Eps(r)$ is fully contained in the psd states provided
   \[
     \label{eq:bayesian.always_contained}
@@ -552,7 +552,7 @@ This allows us to leverage Eq.~\eqref{eq:bayesian.criterion} to compute $C$.
 \begin{lemma}\label{lem:bayesian.normalization_constant}
   Using the same notation as Lem.~\ref{lem:bayesian.always_contained} and assuming Prob.~\ref{prob:bayesian.trucated_cr} can be solved efficiently.
   Then, for every instance $\vec a$ of the number partition problem consider the corresponding ellipsoid encoding distribution according to \cref{lem:bayesian.encoded_ellipsoid} with parameters $\theta, \Sigma$.
-  Then, we can efficiently approximate the normalization constant $C$ of $\pi^+_{\theta,\Sigma}$ with exponentially small multiplicative error.
+  Then, we can efficiently approximate the normalization constant $C$ of $\Pdf^+_{\theta,\Sigma}$ with exponentially small multiplicative error.
   More precisely, we have
   \[
     C = \tilde C (1 + \epsilon),
