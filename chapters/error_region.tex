@@ -1037,25 +1037,25 @@ The main technical problem is that we are dealing with finite-precision arithmet
 
 \todo{Finsih these conclusion}
 
-The goal of this work is to provide an absolute ``upper bound'' on what we can expect from algorithms computing error regions for QST and to demonstrate that there is a trade-off between optimality and efficiency.
-This paper should not be understood as providing a no-go theorem for efficient algorithms in practice since the negative result of this work does not rule out efficient algorithms for practically acceptable approximations to optimal regions.
+The goal of this work is to provide an absolute \quotes{upper bound} on what we can expect from algorithms computing error regions for QSE and to demonstrate that there is a trade-off between optimality and efficiency.
+This paper should not be understood as providing a no-go theorem for efficient algorithms in practice.
+As discussed in the end of \cref{sec:error.complexity}, the negative result of this work does not rule out efficient algorithms for practically acceptable approximations to optimal regions.
 Also, there is no indication that the various approaches used in practice give rise to regions that are far from optimal or do not have the advertised coverage.
 The reason our result leaves room for feasible approaches in practice are twofold:
-First, like any result showing NP-hardness, we prove that there is no efficient algorithm solving the exact problem deterministically for any instances.
+First, like any result showing $\NP$-hardness, we prove that there is no efficient algorithm solving the exact problem deterministically for any instance.
 Hence, our result neither precludes the existence of efficient approximate or probabilistic algorithms, nor cannot make any statement about average case hardness.
-Second, although the experimental effort necessary for full-fledged tomography scales polynomially in the dimension of the system -- and is, therefore, efficient in the sense of computational complexity -- in practice other characterization techniques such as randomized benchmarking or direct fidelity estimation become more important for larger dimensions.
+Second, although the experimental effort necessary for full-fledged QSE scales polynomially in the dimension of the system -- and is, therefore, efficient in the sense of computational complexity -- in practice other characterization techniques such as randomized benchmarking or direct fidelity estimation become more important for larger dimensions.
 It should now be the goal of future work to further close down the gap between existing positive results and the proven no-go theorems from either side.
-
 
 More specifically, due to the simplifying assumptions made we investigate computational intractability that is solely caused by the quantum constraints and not by the general complications in high-dimensional statistics.
 In the Bayesian settings we show that minimal volume (w.r.t.\ the Hilbert-Schmidt measure) credible regions for truncated Gaussian posterior distributions are hard to compute.
-Therefore, the problem of determining MVCR for QST cannot be solved efficiently as well, since any algorithm solving the latter must also be able to solve instances with the specific prior used in Prob.~\ref{prob:bayesian.trucated_cr}.
+Therefore, the problem of determining MVCR for QSE cannot be solved efficiently as well, since any algorithm solving the latter must also be able to solve instances with the specific prior used in Prob.~\ref{prob:bayesian.trucated_cr}.
 
 The result for frequentist confidence regions is somewhat weaker since optimal confidence regions for high-dimensional Gaussian distributions are not known for most natural notions of optimality.
 Nevertheless, Gaussian confidence ellipsoids constitute a viable choice due to their simplicity and tractability.
 However, our results show that the constraints imposed by quantum mechanics render the task of characterizing the confidence regions for the constrained problem computationally intractable -- even under the simplifying assumptions made.
 Of course, any more general setting encompassing the Gaussian approximation will be at least as hard to treat as the one used in this work.
-Furthermore, it also shows that computing any confidence region estimator yielding ellipsoids when the constraints are not active (and anything possibly better when they are) involves solving NP-hard problems.\\
+Furthermore, it also shows that computing any confidence region estimator yielding ellipsoids when the constraints are not active (and anything possibly better when they are) involves solving $\NP$-hard problems.\\
 
 
 Recently, the mathematical statistics community has started to analyze the trade-offs between computational complexity and optimality in inference problems -- see e.g.\
@@ -1072,6 +1072,6 @@ It would be very interesting to adapt such arguments to the problem of quantum u
 Of course, from the practical point of view, ``positive'' results -- i.e.\ new algorithms to solve the problem -- would be more beneficial.
 Here, recent work on sampling distributions restricted to convex bodies~\cite{Cousins_2013_Cubic,Cousins_2015_Bypassing} could be a starting point for further investigations.
 
-Beside quantum st
+Beside quantum state tomography, our results might also be relevant to problems involving psd constraints such as the estimation of covariance matrices.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
