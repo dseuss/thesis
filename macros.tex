@@ -5,7 +5,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\quotes}[1]{{``#1''}}
-\newcommand{\apprv}[1]{{\textsc{#1}}}
+\newcommand{\apprv}[1]{{\textsc{\MakeLowercase{#1}}}}
 \newcommand{\inlinecode}[1]{{\texttt{#1}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -22,6 +22,7 @@
 
 \newcommand{\1}{\mathbbm{1}}
 \newcommand{\blank}{\square}
+\let\truesubset\subset{}
 \renewcommand{\subset}{\subseteq}
 
 \newcommand{\Prob}{\mathbb{P}}

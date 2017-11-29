@@ -1,5 +1,5 @@
  % -*- root: ../thesis.tex -*-
-\chapter{Uncertainty Quantification for quantum state estimation}
+\chapter{Uncertainty Quantification for quantum state estimation}%
 \label{chap:error}
 
 \todo[inline]{fill missing citations and provide some more where necessary}
@@ -36,7 +36,7 @@ It stands to reason that there are further cases -- not yet identified -- for wh
 
 
 This chapter is structured as follows:
-We introduce the necessary concepts from statistical inference and computational complexity in \cref{sec:error.stat} and \ref{sec:error.complexity}, respectively.
+We introduce the necessary concepts from statistical inference and computational complexity in \cref{sec:error.stat} and~\ref{sec:error.complexity}, respectively.
 Then, in \cref{sec:error.intro} we provide more details on QSE and the
 One of the main results of this work concerning the proof of computational intractability of frequentist confidence region is given in \cref{sec:error.ortho}.
 The Bayesian counterpart for credible regions is the topic of \cref{sec:error.bayesian}.
@@ -49,50 +49,52 @@ Finally, we conclude this chapter with remarks on limitations of the hardness re
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction to Statistical Inference}
+\section{Introduction to Statistical Inference}%
 \label{sec:error.stat}
 
 The objective of statistical inference is to obtain information about the distribution of a random variable $X$ from observational data.
-Here, we focus on the special case of inference in parametric models, which can we described as follows~\cite{Wasserman_2013_All}:
-A \emph{parametric model} is a family of distributions $\Prob_\theta$ labeled by a finite number of parameters $\theta \in \Omega$, where $\Omega \subset \Reals^k$ is called the \emph{state space} of the model.
-For now, we consider only the scalar case $k=1$.
-Then, any function $\estim\theta$ mapping observations to the parameter space $\Reals$ is called a \emph{point estimator} for the parameters $\theta$.
-In general, we do not require $\estim\theta$ to map to the state space $\Omega$ as this restriction would preclude many relevant estimators.
-However, since we are interested in learning about the distribution $X$, not every estimator is equally useful.
-Indeed, the goal should be to find the estimator yielding the parameter value that describes the observed data best.
-
-What we mean by \quotes{best} in this context not only depends on the specific model and what the estimate is supposed to be used for, but also on how we interpret the probabilities.
+Here, we focus on the special case of inference in parametric models, which can be described as follows~\cite{Wasserman_2013_All}:
+A \emph{parametric model} is a family of distributions ${\{\Prob_\theta\}}_{\theta \in \Omega}$ labeled by a finite number of parameters $\theta$, where $\Omega \subset \Reals^k$ is called the \emph{state space} of the model.
+For simplicity, we only consider the scalar case $k=1$ for now.
+Then, any function $\estim\theta$ mapping observations to the space $\Reals$ containing the parameter space is called a \emph{point estimator} for the parameter $\theta$.
+In general, we do not require $\estim\theta$ to map to the state space $\Omega$ as this restriction would preclude many relevant estimators such as the linear inversion estimator introduced in \cref{sub:ortho.linear_inversion}.
+However, since we are interested in learning about the distribution of $X$, not every estimator is equally useful.
+Indeed, the goal should be to find an estimator, which yields the parameter value that describes the observed data best.
+What we mean by \quotes{best} in this context not only depends on the specific model and what the estimate is supposed to be used for, but also on the fundamental interpretation of probability.
 Broadly speaking, there are two different interpretations of probability, namely the frequentist (or orthodox) interpretation and the Bayesian interpretation~\cite{Hajek_2012_Interpretations,Caves_2000_Probabilities}, which lead to distinct schools of inference~\cite{Kiefer_2012_Introduction,Bolstad_2007_Introduction,Wasserman_2013_All}.
 Although the two approaches yield the same results for very simple models or -- under mild regularity assumptions -- in the limit of many measurements, they generally differ and in some cases even yield contradictory results~\cite[Sec. 11.9]{Wasserman_2013_All}.
 
 So far we have only discussed point estimators, which yield a single value for the parameters.
-However, even if our model describes the data perfectly for some choice of $\theta$, we cannot exactly recover this value from a finite amount of data due to statistical fluctuations.
-The concept of error bars, or more generally error regions, allows for quantifying the uncertainty of a given estimate.
+However, even if our model describes the data perfectly for some choice of $\theta$, we cannot exactly recover this value from a finite amount of data due to statistical fluctuations in general.
+The concept of error bars, or more specifically error regions, allows for quantifying the uncertainty of a given estimate.
 In \cref{sub:stat.frequentist}, we introduce the basic concepts of frequentist inference and the corresponding notion of \emph{confidence regions}.
-\Cref{sub:stat.bayesian}, is concerned with Bayesian inference and the corresponding notion of error regions, namely \emph{credible regions}.
+\Cref{sub:stat.bayesian} is concerned with Bayesian inference and the corresponding notion of error regions, namely \emph{credible regions}.
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Frequentist Statistics}
+\subsection{Frequentist Statistics}%
 \label{sub:stat.frequentist}
 
-In the frequentist (or orthodox) framework, the probability of an outcome of a random experiment is defined in terms of its relative frequency of occurrence when the number of repetitions goes to infinity~\cite{Keynes_2007_Treatise,Kiefer_2012_Introduction}.
-More precisely, denote the number of repetitions of an experiment by $T$ and the number of times the event under consideration $x$ occurred by $n_T$.
-Then, a Frequentist interprets the probability $\Prob(x)$ as the statement that if $T \to \infty$, $\frac{n_T}{T} \to \Prob(x)$.
+In the frequentist framework, the probability of an outcome of a random experiment is defined in terms of its relative frequency of occurrence when the number of repetitions goes to infinity~\cite{Keynes_2007_Treatise,Kiefer_2012_Introduction}.
+More precisely, denote the number of repetitions of an experiment by $N$ and the number of times the event under consideration $x$ occurred by $n_N$.
+Then, a Frequentist interprets the probability $\Prob(x)$ as the statement that $\frac{n_N}{N} \to \Prob(x)$ as $N \to \infty$.
 
-For the task of parameter estimation, we assume that the observed data are generated from the parametric model with the fixed \quotes{true} parameter $\theta_0 \in \Omega$, which is unknown.
+For the task of parameter estimation, we assume that the model is well-specified, i.e.\ that the observed data are generated from the parametric model with the fixed \quotes{true} parameter $\theta_0 \in \Omega$, which is unknown.
 From a finite number of observations $X_1, \ldots X_N$, we must construct an estimate $\hat\theta(\vec X)$ for $\theta_0$.
 Although there are some intuitive approaches to this problem such as the method of moments~\cite[Sec.\ 9.2]{Wasserman_2013_All}, the \emph{principle of maximum likelihood} is often employed to construct an estimator with good frequentist properties.
-The \emph{likelihood function} is defined by
+First, let us introduce the \emph{likelihood function} of the model
 \[
   \Loss(\theta; \vec X) = \Prob_\theta(\vec X) = \prod_{i=1}^N \Prob_\theta(X_i),
   \label{eq:stat.frequentist.likelihood_function}
 \]
-where we have assumed independence of the samples.
-The \emph{maximum likelihood estimator} (\apprv{MLE}) is then defined by
+where we have assumed independence of the samples for the second equality.
+The \emph{maximum likelihood estimator} (\apprv{MLE}) is then defined by\footnote{%
+  Note that we have constrained the values of the MLE to the state space $\Omega$ of the model.
+  Otherwise, the right hand side of \cref{eq:stat.frequentist.mle} might not be well defined.
+}
 \[
-  \estim\theta_\mathrm{MLE}(\vec x) = \operatorname{argmax}_\theta \Loss(\theta; \vec x).
+  \estim\theta_\mathrm{MLE}(\vec x) = \operatorname{argmax}_{\theta \in \Omega} \Loss(\theta; \vec x).
   \label{eq:stat.frequentist.mle}
 \]
 The justification for using~\eqref{eq:stat.frequentist.mle} is that under mild conditions on the model, the MLE posses many appealing properties~\cite[Sec.\ 9.4]{Wasserman_2013_All} such as consistency and efficiency:
@@ -104,31 +106,30 @@ For this purpose, we need to introduce a \emph{loss function}
   \label{eq:stat.frequentist.loss_function}
   \Loss\colon \Omega \times \Reals \to \Reals,  (\theta_0, \estim\theta) \mapsto \Loss(\theta_0, \estim\theta),
 \]
-which measures the discrepancy between $\theta_0$ and an estimate $\estim\theta(\vec X)$.
-Keep in mind that since the $X_i$ are random variables, so are $\estim\theta(\vec X)$ and its loss.
-To asses the estimator $\hat\theta$, that is the function mapping data to an estimate, we evaluate the average loss or \emph{risk function}
+which measures the discrepancy between the true value $\theta_0$ and an estimate $\estim\theta(\vec X)$.
+Keep in mind that since the $X_i$ are random variables, so is $\estim\theta(\vec X)$ and its loss.
+In order to asses the estimator $\hat\theta$, that is the function mapping data to an estimate, we evaluate the average loss or \emph{risk function}
 \[
   \label{eq:stat.frequentist.risk}
   \Risk(\theta_0, \hat\theta) = \Exp_{\theta_0}(\Loss(\theta_0, \hat\theta(\vec X)))
-  = \int \Loss(\theta_0, \hat\theta(\vec x)) \Prob_{\theta_0}(\vec x) \dd x.
+  = \int \Loss(\theta_0, \hat\theta(\vec x)) \, \Prob_{\theta_0}(\vec x) \, \dd x.
 \]
 Then, the problem of finding a good estimator reduces to the problem of finding an estimator that yields small values for \cref{eq:stat.frequentist.risk}.
 However, note that the risk function~\eqref{eq:stat.frequentist.risk} for a given estimator still depends on the unknown true value.
-In order to obtain a single-number summary of the performance of an estimator, there are different strategies such as maximizing or averaging the risk function over all true values~\cite[Sec.\ 12.2]{Wasserman_2013_All}.
+To obtain a single-number summary of the performance of an estimator for all possible values of $\theta_0$, there are different strategies such as maximizing or averaging the risk function over all $\theta_0$~\cite[Sec.\ 12.2]{Wasserman_2013_All}.
 By minimizing these risks over all possible estimators, we try to determine a single estimator that performs best in the worst case or on average, respectively.
-However, in the following we use a less ambitious notion of optimality:
-\begin{definition}{\cite[Def. 12.17]{Wasserman_2013_All}}
+However, in the following we introduce a less ambitious notion of optimality, namely \emph{admissibility}.
+\begin{definition}{\cite[Def. 12.17]{Wasserman_2013_All}}%
   \label{def:stat.frequentist.admissability_point_estimators}
   A point estimator $\estim\theta$ is \emph{inadmissible} if there exists another estimator $\estim\theta'$ such that
   \begin{align*}
     \Risk(\theta_0, \estim\theta') \le \Risk(\theta_0, \estim\theta) &\quad\mbox{for all } \theta_0 \in \Omega \\
     \Risk(\theta_0, \estim\theta') <   \Risk(\theta_0, \estim\theta) &\quad\mbox{for at least one } \theta_0 \in \Omega.
   \end{align*}
-  Otherwise, we call $\estim\theta$ admissible.
+  Otherwise, we call $\estim\theta$ \emph{admissible}.
 \end{definition}
-In words, $\estim\theta$ is admissible if there is no other confidence region $\estim\theta'$ that performs at least as good as $\estim\theta$ and strictly better for at least one value of $\theta_0$.
+In words, $\estim\theta$ is admissible if there is no other estimator $\estim\theta'$ that performs at least as good as $\estim\theta$ and strictly better for at least one value of the true value $\theta_0$.
 
-Of course, the problem remains to choose an appropriate loss function for the problem at hand.
 The choice of loss function generally depends on the problem at hand and determines the properties of the corresponding estimator.
 Some examples for commonly used loss functions include the $0/1$-loss for discrete parameter models
 \[
@@ -141,42 +142,44 @@ Some examples for commonly used loss functions include the $0/1$-loss for discre
 \]
 and the mean squared error (MSE)
 \[
-  \Loss(\theta_0, \theta) = \left( \theta_0 - \theta \right)^2,
+  \Loss(\theta_0, \theta) = {\left( \theta_0 - \theta \right)}^2,
   \label{eq:stat.frequentist.l2loss}
 \]
-which is often used for continuous parameter models e.g. $\Omega = \Reals$.
-The use of the MSE is often motivated by the fact that it yields the MLE for certain models.
-For example, consider iid random variables $X\ind{k} \sim \Normal(\theta_0, \sigma)$ with $\sigma \in \Reals_+$ known and define the empirical mean
+which is often used for continuous parameter models, e.g.\ $\Omega = \Reals$.
+The use of the MSE loss is often motivated by the fact that it gives the same results as the principle of maximum likelihood for many problems.
+As an example, consider the task of estimating the mean from iid normal random variables $X\ind{k} \sim \Normal(\theta_0, \sigma)$ with $\sigma \in \Reals_+$ known.
+In this case, a straightforward estimator for $\theta_0$ is the \emph{empirical mean}
 \[
   \label{eq:stat.frequentist.empirical_mean}
-  \bar X := \frac{1}{m} \sum_{i = 1}^m X\ind{k}.
+  \bar X := \frac{1}{m} \sum_{i = 1}^m X\ind{k},
 \]
-Then, $\bar X$ is an admissible estimator of $\theta_0$ with respect to MSE~\cite[Thm.\ 12.20]{Wasserman_2013_All}.
-Furthermore, $\bar X$ is also the MLE:
+which is admissible with respect to MSE~\cite[Thm.\ 12.20]{Wasserman_2013_All}.
+Furthermore, $\bar X$ is also the MLE as a transformation to log-likelihood shows:
 \[
   \label{eq:stat.frequentist.mle_derivation}
   \begin{split}
-    \argmax_\theta \Loss(\theta; \vec X)
-    &= \argmin_\theta \sum_{k=1}^m \log \Prob_\theta(X\ind{k}) \\
-    &= \argmin_\theta \sum_{k=1}^m \frac{1}{2\sigma^2} \left( X\ind{k} - \theta \right)^2,
+    \argmax_\theta \Loss(\theta; x\ind{1}, \ldots, x\ind{m})
+    &= \argmax_\theta \sum_{k=1}^m \log \Prob_\theta(X\ind{k}=x\ind{k}) \\
+    &= \argmin_\theta \sum_{k=1}^m \frac{1}{2\sigma^2} {\left( x\ind{k} - \theta \right)}^2,
   \end{split}
 \]
-where we have used that the $X_i$ are independent, that the logarithm is monotonic, and discarded all contributions independent of $\theta$ is the second line.
-The right hand side of the last equation is minimized by the choice $\theta = \bar X$, which proofs the claim.
+where we have used that the $X\ind{k}$ are independent and that the logarithm is monotonic increasing.
+Furthermore, we discarded all contributions independent of $\theta$ is the second line.
+Finally, note that the right hand side of the last equation is minimized by the choice $\theta = \bar{x}$, which proofs the claim.
 
-Now consider the multivariate generalization of the above problem, that is the task of estimating $\vec\theta_0 \in \Reals^d$ from a linear Gaussian model $\vec X \sim \Normal(\vec\theta_0, \1)$ with unit covariance matrix.
-Suppose, we only have a single observation $\vec X$ -- that is $m=1$.
-Since all the components $X_i$ are independent, one expects that $\bar{\vec X} = \vec X$ constitutes a \quotes{good estimator}.
+Now we consider a multivariate generalization of the above problem, that is the task of estimating $\vec\theta_0 \in \Reals^d$ from a linear Gaussian model $\vec X \sim \Normal(\vec\theta_0, \1)$ with unit covariance matrix.
+Suppose we only have a single observation $\vec X$, i.e.\ $m=1$.
+Since all the components $X_i$ are independent, one expects that a separate estimation of the components via $\bar{\vec X} = \vec X$ constitutes a \quotes{good estimator}.
 Indeed, the same computation as in \cref{eq:stat.frequentist.mle_derivation} shows that the empirical mean is the MLE for this model as well.
 However, Stein shocked the statistical community when he proved that for $d \ge 3$, this estimator is inadmissible~\cite{Stein_1956_Inadmissibility}.
 It can be shown that the \emph{James-Stein} estimator
 \[
   \label{eq:stat.frequentist.stein_estimator}
-  \estim{\vec\theta}_{\mathrm{S}} := \max\left\{0, \left( 1 - \frac{d - d}{\norm{\vec X}_2} \right) \right\} \vec X
+  \estim{\vec\theta}_{\mathrm{S}} := \max\left\{0, \left( 1 - \frac{d - 2}{\norm{\vec X}_2} \right) \right\} \vec X
 \]
-has smaller MSE risk than the empirical mean~\cite{Stein_1956_Inadmissibility,Lehmann_1998_Theory}.
-It is often referred to as \emph{shrinkage estimator} because it shrinks the empirical mean estimate $\vec X$ towards 0.
-Note however, that the choice of the origin as fix point of the shrinkage operation is arbitrary -- the James-Stein estimator outperforms the empirical mean estimator for any choice of fix point.
+has smaller MSE risk than the empirical mean for all values of $\vec \theta_0$~\cite{Stein_1956_Inadmissibility,Lehmann_1998_Theory}.
+It is often referred to as a \emph{shrinkage estimator} because it shrinks the empirical mean estimate $\vec X$ towards 0.
+Note however, that the choice of the origin as the fix point of the shrinkage operation is arbitrary -- the James-Stein estimator outperforms the empirical mean estimator for any choice of fix point.
 Interestingly, \cref{eq:stat.frequentist.stein_estimator} shows that by taking into account all the components $X_i$, we can improve the MSE of the mean-estimator even if the $X_i$ are independent.
 However, this only applies to the \emph{simultaneous} MSE error of all the components of $\vec \theta_0$.
 The James-Stein estimator~\eqref{eq:stat.frequentist.stein_estimator} cannot be used to improve the MSE of a single component.
@@ -187,46 +190,47 @@ Even worse, to the best of the author's knowledge, no admissible construction ex
 
 
 As already mentioned in the introduction, point estimators cannot convey uncertainty in the estimate.
-For this purpose we need to introduce a precise notion of \quotes{error bars}, namely \emph{confidence regions}.
+For this purpose, we need to introduce a precise notion of \quotes{error bars}, namely \emph{confidence regions} in the framework of frequentist statistics.
 \begin{definition}\label{def:stat.frequentist.cr}
-  A confidence region $\CR$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data $\vec x$ to a subset $\CR(\vec x) \subset \Omega$ of the parameter space -- such that the true parameter is contained in $\CR$ with probability greater than $\alpha$:
+  Consider a statistical model with $k$ parameters, that is $\Omega \subset \Reals^k$.
+  A confidence region $\CR$ with coverage $\alpha \in [0,1]$ is a region estimator -- that is a function that maps observed data $x$ to a subset $\CR(x) \subset \Reals^k$ of the space containing the state space -- such that the true parameter is contained in $\CR$ with probability greater than $\alpha$:
   \[
     \label{eq:stat.frequentist.coverage}
-    \forall \theta_0\in\Omega \colon \Prob_{\theta_0}\left( \CR(X_1, \ldots, X_N) \ni \theta_0 \right) \ge 1 - \alpha.
+    \forall \theta_0\in\Omega \colon \Prob_{\theta_0}\left( \CR(X) \ni \theta_0 \right) \ge 1 - \alpha.
   \]
 \end{definition}
-Note that the coverage condition~\eqref{eq:stat.frequentist.coverage} is not a probabilistic statement about the true parameter $\theta_0$ for fixed observed data $\vec x$.
+Note that the coverage condition~\eqref{eq:stat.frequentist.coverage} is not a probabilistic statement about the true parameter $\theta_0$ for fixed observed data $x$.
 Instead, \cref{def:stat.frequentist.cr} should be interpreted as a statistical guarantee for the region estimator $\CR$:
-Say we repeat an experiment $M$ times and obtain data $\vec x\ind{1}$, \ldots $\vec x\ind{M}$ from a distribution with true parameter $\theta_0$.
-Then, in the limit $M \to \infty$ a fraction of $1 - \alpha$ of the regions $\CR(\vec x\ind{1})$, \ldots, $\CR(\vec x\ind{M})$ contain the true parameter $\theta_0$.
+Say we repeat an experiment $m$ times and obtain data $x\ind{1}$, \ldots $x\ind{M}$ from a distribution with true parameter $\theta_0$.
+Then, in the limit $m \to \infty$ at least a fraction of $1-\alpha$ of the regions $\CR(x\ind{1})$, \ldots, $\CR(x\ind{m})$ contain the true parameter $\theta_0$.
+In other words, the probabilistic statement in~\eqref{eq:stat.frequentist.coverage} refers to the random variable $\CR(X)$ for fixed $\theta_0$.
 
-Similar to point estimators, \cref{eq:stat.frequentist.coverage} does not uniquely determine a confidence region construction.
-Furthermore, additional constraints are necessary to exclude trivial constructions such as the following:
-Take the region estimator, which is always equal to the full parameter space independent of the data $\CR(X_1, \ldots X_N) = \Omega$, then
+Similarly to point estimators, \cref{eq:stat.frequentist.coverage} does not uniquely determine a confidence region construction.
+Additional constraints are necessary to exclude trivial constructions such as the following:
+Take the region estimator that is always equal to the full parameter space independent of the data $\CR(X) = \Omega$, then
 \[
-  \Prob_\theta\left(  \CR(X_1, \ldots, X_N) \ni \theta_0  \right) = 1 \ge 1 - \alpha
+  \Prob_\theta\left(  \CR(X) \ni \theta_0  \right) = 1 \ge 1 - \alpha
 \]
 for all confidence levels $\alpha$.
 Although, this construction trivially fulfils the coverage condition~\eqref{eq:stat.frequentist.coverage}, it does not provide useful information on the uncertainty as it does not restrict the parameter space at all.
 Therefore, we have to impose a notion of what constitutes a good confidence region by introducing a loss function.
-Clearly, if we have two confidence regions $\CR_1$ and $\CR_2$ with the same confidence level and $\CR_1 \subset \CR_2$, then $\CR_1$ is more informative.
+Clearly, if we have two confidence regions $\CR_1$ and $\CR_2$ with the same confidence level and $\CR_1 \truesubset \CR_2$, then $\CR_1$ is more informative.
 More generally, smaller regions should be preferred since they convey more confidence in the estimate and exclude more alternatives.
-Therefore, measures of size such as (expected) volume or diameter are commonly used as risk functions for region estimators.
-
+Therefore, measures of size such as (expected) volume or diameter are commonly used as loss functions for region estimators.
 We now introduce a notion of optimality similar to~\cref{def:stat.frequentist.admissability_point_estimators}.
-In \cref{sub:ortho.optimal} we show that this notion of admissibility is especially suitable for studying constrained inference problems.
-\begin{definition}{\cite[Def. 2.2]{Joshi_1969_Admissibility}}
+\begin{definition}{\cite[Def. 2.2]{Joshi_1969_Admissibility}}%
   \label{def:stat.frequentist.admissible}
   A confidence region $\CR$ for the parameter estimation of $\theta_0 \in \Omega$ is called (weakly) \emph{admissible} if there is no other confidence region $\CR'$ that fulfils
   \begin{enumerate}
-    \item(equal or smaller volume) $\Vol(\CR'(\vec x)) \le \Vol(\CR(\vec x))$ for almost all observations $\vec x$.
-    \item(same or better coverage) $\Prob_{\theta_0}(\CR' \owns \theta_0) \ge \Prob_{\theta_0}(\CR \owns \theta_0)$ for all $\theta_0 \in \Omega$
+    \item(equal or smaller volume) $\Vol(\CR'(x)) \le \Vol(\CR(x))$ for almost all observations $x$.
+    \item(same or better coverage) $\Prob_{\theta_0}(\CR' \owns \theta_0) \ge \Prob_{\theta_0}(\CR \owns \theta_0)$ for all $\theta_0 \in \Omega$.
     \item(strictly better) strict inequality holds for one $\theta_0 \in \Omega$ in (ii) or on a set of positive measure in (i).
   \end{enumerate}
 \end{definition}
-In contrast to the previous discussion, this notion of optimality uses \quotes{pointwise} volume as a risk function instead of the average volume.
-The conditions in Def.~\ref{def:stat.frequentist.admissible} are stated only for \quotes{almost all} $\vec x$, since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
-A different approach more in line with the previous discussion is to state condition (i) in terms of the expected volume with the average taken over the data $\vec X$ for a fixed true parameter $\theta_0$~\cite[Def.~7.1]{Joshi_1969_Admissibility}.
+This notion of optimality uses \quotes{pointwise} volume as a risk function instead of the average volume.
+The conditions in \cref{def:stat.frequentist.admissible} are stated only for \quotes{almost all} $x$ since one can always modify the region estimators on sets of measure zero without changing their statistical performance.
+In \cref{sub:ortho.optimal} we show that this notion of admissibility is especially suitable for studying constrained inference problems.
+% A different approach more in line with the previous discussion is to state condition (i) in terms of the expected volume with the average taken over the data $X$ for a fixed true parameter $\theta_0$~\cite[Def.~7.1]{Joshi_1969_Admissibility}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
