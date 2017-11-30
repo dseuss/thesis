@@ -320,60 +320,60 @@ The constant $\lambda$ is determined by the saturation of the credibility level 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction to Computational Complexity Theory}
+\section{Introduction to Computational Complexity Theory}%
 \label{sec:error.complexity}
 
-% classifying computational problems according to their inherent difficulty -> here: runtime; other: space, communication, etc.
-
 The objective of computational complexity theory is to classify computational problems according to their inherent difficulty.
-Here, difficulty is quantified by the time needed to solve the problem.
-Other resources, which one may want to consider, are the least amount of memory or communication between parties required.
+Broadly speaking, we quantify the difficulty by the runtime needed to solve the problem.
+Other resources, which one may want to consider, are the amount of memory or communication between parties required.
 At a first glance, an answer to the question whether a given problem can be solved efficiently might depend on what we consider as a \quotes{computer}:
-Clearly, a modern high-performance cluster can solve problems, which would take a human with pen and paper more than a lifetime to finish.
+Clearly, a modern high-performance cluster can solve problems in seconds, which would take a human equipped with pen and paper more than a lifetime to finish.
 Maybe surprisingly, it turns out that a single, simple mathematical model -- the \emph{Turing machine} -- describes the capabilities and restrictions of almost all physical implementations of computation well enough for the purpose of complexity theory.
 The only conceivable exception so far are quantum computers that exploit quantum mechanical phenomena.
 Although so far no proof of an advantage of quantum computers exists, there is overwhelming evidence that they are able to solve problems efficiently for which there is no efficient classical algorithm.
-The rest of this introduces provides the main concepts needed for the hardness results of \cref{sec:error.ortho} and \ref{sec:error.bayesian}.
-Especially the definition of $\NP$-hard computational problems and polynomial-reductions is crucial for the rest of this chapter.
+This section introduces the main concepts needed for the hardness results of \cref{sec:error.ortho} and \ref{sec:error.bayesian}.
+Especially the definition of $\NP$-hard computational problems and polynomial-time reductions is crucial for the rest of this chapter.
 For a more thorough treatment, we refer the reader to~\cite{Arora_2009_Computational,Garey_2002_Computers}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}
   \centering
   \input{tikz/error_turingmachine.tex}
-  \caption{\label{fig:complexity.turingmachine}
+  \caption{%
     Illustration of a Turing machine with alphabet $\Gamma = \{0, 1, \blank\}$ and register $Q = \{q_0, q_h, q_1, \ldots, q_N\}$.
-    }
+    }%
+  \label{fig:complexity.turingmachine}
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-A Turing machine (TM) can be thought of as a simplified and idealized model of an electronic computer.
-It is described by a tuple $(\Gamma, Q, \delta)$ and consists of
+A Turing machine (TM) can be thought of as a simplified and idealized mathematical model of an electronic computer.
+It is defined by a tuple $(\Gamma, Q, \delta)$ and figuratively speaking consists of the following parts as shown in \cref{fig:complexity.turingmachine}:
 \begin{itemize}
   \item An infinite tape, that is a bi-directional line of cells that can take the values from a finite set $\Gamma$ called the \emph{alphabet}.
     $\Gamma$ must contain a designated symbol $\blank$ called \quotes{blank}.
   \item A register that can take on values from a finite set of states $Q$.
-    $Q$ contains an initial state $q_0$ and a halting state $q_h$.
+    $Q$ must contain the initial state $q_0$ and the halting state $q_h$.
   \item A transition function
     \[
-      \delta\colon Q \times \Gamma \to Q \times \Gamma \times \{L, S, R\}.
+      \delta\colon Q \times \Gamma \to Q \times \Gamma \times \{L, S, R\},
     \]
+    which describes the \quotes{programming} of the TM.
 \end{itemize}
-\cref{fig:complexity.turingmachine} shows an illustration of a TM.
-Initially, the reading head of the tape is over a certain cell and the register is in state $q_0$.
+The operation of a TM can be summarized as follows.
+Initially, the reading head of the tape is over a certain cell and the register is in the initial state $q_0$.
 Furthermore, we assume that only a finite number of tape cells have a value different from $\blank$ -- these are referred to as the input.
 For one step of the computation, denote by $\gamma \in \Gamma$ the value of tape cell under the reading head and by $q \in Q$ the current value of the register.
 The action of the TM is determined by the transition function
-\(
+\[
   (q', \gamma', h) = \delta(q, \gamma).
-\)
+\]
 as follows:
 The register is set to value $q'$, the tape head overwrites the cell with symbol $\gamma'$, and it moves depending on the value of $h$:
 If $h = L$ or $h = R$, it moves one cell to the left or right, respectively and if $h = S$ it stays in the current position.
 This cycle repeats until the register takes on the halting state $q_h$.
 If the TM halts, the state of the tape with leading and trailing blanks removed is taken as its output.
-Note that many different definitions of TMs exist, e.g. with additional scratch tapes or with tapes that extend to infinity only in one direction.
-However, they are all equivalent, i.e., the architecture above can simulate and can be simulated on the other architectures with a small overhead.
+Note that the definition of a TM given above is one of many; others may include additional scratch tapes or have tapes that only extend to infinity only in one direction~\cite{Arora_2009_Computational}.
+However, they are all equivalent, i.e. the architecture given above can simulate all the other architectures with a small overhead and vice versa.
 Furthermore, we can assume $\Gamma = \{0, 1, \blank\}$, that is, we use a binary encoding for all non-blank values of the alphabet.
 
 We now formalize the notion of runtime of a TM and the complexity of a given problem.
@@ -383,7 +383,7 @@ Denote by
 \]
 the set of all finite bit strings.
 
-\begin{definition}{\cite[Def.\ 1.3]{Arora_2009_Computational}}
+\begin{definition}{\cite[Def.\ 1.3]{Arora_2009_Computational}}%
   \label{def:complexity.runtime}
   Let $f\colon \BitStrings \to \BitStrings$ and $T\colon \Naturals \to \Naturals$ be some functions.
   Furthermore, let $M$ be a Turing machine.
@@ -391,20 +391,12 @@ the set of all finite bit strings.
   Here, $\abs{x}$ denotes the length of $x$.
 \end{definition}
 
-% may seem arbitrary, since large coefficients and exponents may be more impractical than a slow exponential sclaing for practical relevant size
-% but:
-%   - asymptoic behavior -> arbitrary sized problems
-%   - except for some exceptions (semi-def. optimization, ...) -> exponents usually small
-%   - invariant under changing details of computational model [Aurora, Sec. 1]; not the case if we just restrict to e.g. linear scaling
-%   - efficient computations + efficient subroutines -> Arora p.27
-%   - relative growth rate
-
-In words, \cref{def:complexity.runtime} gives a formal notion of the runtime of a TM for computing a function $f$.
+In words, \cref{def:complexity.runtime} gives a formal notion of the runtime of a TM for computing a function $f$ in terms of the number of elemental steps required.
 But as stated in the introduction, we are more interested in the intrinsic complexity of computing the function $f$ instead of a specific implementation.
 For this purpose, we introduce \emph{complexity classes}, which are sets of functions that can be computed within given resource bounds.
 The most important examples of complexity classes pertain to boolean functions $f\colon \BitStrings \to \{0, 1\}$, which correspond to decision problems.
 The corresponding set of \quotes{truthy} inputs $L = \{x \ in \BitStrings\colon f(x) = 1\}$ is referred to as a \emph{language}.
-\begin{definition}
+\begin{definition}%
   \label{def:complexity.p}
   Let $T\colon \Naturals \to \Naturals$ be some function.
   We say that a language $L$ is in $\DTIME(T(n))$ if and only if there is a TM $M$ that computes $f$ in time $c \times T(n)$ for some constant $c > 0$.
@@ -413,13 +405,14 @@ The corresponding set of \quotes{truthy} inputs $L = \{x \ in \BitStrings\colon 
     \P = \bigcup_{\lambda \ge 1} \DTIME(n^\lambda).
   \]
 \end{definition}
-In words, $\P$ is the set of all languages that can be decided by a TM in a number of steps that scales polynomially in the input size in the worst case.
-All problems in $\P$ are considered to be efficiently solvable.
-
-Therefore, in order to show that some problem is \quotes{easy}, we just have to provide a TM, or put differently, an algorithm that decides the problem in polynomial time.
-On the other hand, proving the nonexistence of efficient algorithms for certain natural computational problems has turned out to be a tremendous challenge -- notwithstanding deep results for computational models strictly less powerful than the TM model~\cite[Part Two]{Arora_2009_Computational}.
+In words, $\P$ is the set of all languages that can be decided by a TM in a number of steps that scales polynomially in the input size.
+The problems in $\P$ are considered to be efficiently solvable.
+Therefore, in order to show that some problem is \quotes{easy}, we just have to provide a TM, or put differently an algorithm, that decides the problem in polynomial time.
+On the other hand, showing that no polynomial-time algorithm exists for a given problem shows that it is computationally hard.
+However, proving the nonexistence of efficient algorithms for many natural computational problems has turned out to be a tremendous challenge -- notwithstanding deep results for computational models strictly less powerful than the TM model~\cite[Part Two]{Arora_2009_Computational}.
 Hence, we are going to follow a less ambitious, but very fruitful strategy:
-Instead of proving that a given problem is infeasible to solve efficiently, we are comparing its computational complexity to other problems that are considered computationally infeasible.
+Instead of proving that a given problem is infeasible to solve efficiently, we are comparing its computational complexity to other problems that are conjectured to be computationally infeasible.
+If we can show that the problem under consideration is at least as hard as many other problems, which could not be solved efficiently by a myriad of computer scientists in the last decades, then we have strong evidence to believe it is intrinsically hard.
 This idea is formalized in the definition of polynomial-time reductions.
 
 \begin{definition}{Def. 2.2 from \cite{Arora_2009_Computational}}
