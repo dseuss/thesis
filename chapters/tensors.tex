@@ -2,50 +2,82 @@
 \chapter{Tensors}
 \label{chap:tensors}
 
-As we already mentioned in \cref{chap:phaselift}, low-rank matrix recovery is a natural progression from compressed sensing, which deals with sparse vectors, to matrices, which are sparse in their eigenbasis.
-\todo{More specific reference.}
-In this chapter, we deal with the next logical step in this progression, namely low-rank tensor recovery.
-Besides practical applications in quantum physics, machine learning, and many more, it is also a fascinating subject from the theoretical point of view:
-Whereas compressive sensing and low-rank matrix recovery provide a polynomial (linear) advantage in the sample complexity compared to \quotes{naive} approaches, the ultimate goal of low-rank tensor recovery is to provide protocols with an exponentially reduced sample complexity.
-\todo{Exponential with respect to what?}
+In the last chapter, we discussed a solution to the phase retrieval problem based on ideas from \emph{low-rank matrix recovery}.
+The latter can be summarized as follows.
+Consider a matrix\footnote{%
+  Here, we choose $X$ to be real to simplify some notation -- an adaption of the statements made to the complex case is straight forward.
+}
+$X \in \Reals^{d_1 \times d_2}$ of rank $r$ that is $X$ has only $r$ non-zero singular values
+The goal is to reconstruct $X$ from $m$ linear measurements of the form
+\[
+  y_l = {\braket{A\ind{l}, X}}, \quad l=1,\ldots,m
+  \label{eq:tensors.lin_measurements}
+\]
+where $\braket{A, B} = \tr (\transpose{A} B)$ denotes the Frobenius inner product, $A\ind{l} \in \Reals^{d_1 \times d_2}$ the \emph{measurement matrices}, and $y_l \in \Reals$ the corresponding measurement data.
+In other words, we are looking for a solution $X$ of the linear problem defined by \cref{eq:tensors.lin_measurements}.
+In case the $A_i$ span $\Reals^{d_1 \times d_2}$, this can be solved simply by computing the (pseudo-)inverse similar to \cref{sub:ortho.linear_inversion}.
+However, in the underdetermined case $m < d_1 d_2$, this constitutes an ill-posed linear problem.
+Nevertheless, we can still single out a unique solution in some cases by exploiting the additional structure, namely the low-rank assumption.
+\todo[noline]{Check log factors}
+For example, in \cref{thm:FIXME} we show that $m = C d$ random measurements sampled from an appropriate distribution are sufficient to reconstruct any positive semidefinite, Hermitian $X \in \Complex^{d \times d}$ of rank one.
+More generally, we can recover any $X \in \Reals^{d_1 \times d_2}$ with $\rank X = r$ from $m = C (d_1 + d_n) r$ randomly chosen measurements~\cite{FIXME}.
+Note that this is asymptotically optimal since we need at least $(d_1 + d_2) r$ real parameters to specify the left- and right-singular vectors of $X$.
+But \cref{thm:FIXME} not only guarantees identifiability of $X$, it also provides a positive semidefinite program to compute the reconstruction.
+The existence of such an efficient algorithm is crucial since the straight-forward reconstruction via rank minimization
+\[
+  \estim{X} = \argmin_{X'} \rank X' \quad\mathrm{s.t.}\ \braket(A\ind{i}, X') = y_i (i = 1, \ldots, m)
+\]
+is known to be $\NP$-hard~\cite{FIXME}.
 
 
+% other example: compressed sensing. here, low-complexity structure = sparseness; number of parameters s * log(d) -> log(d) to specify which components nonzero
+%      cite recovery guarantees
+% general problem: "signal" with low-dimensional structure in high-dimensional embedding space
+% task: recover signal from linear measurements where the number of measurements scales with intrinsic dimension and not the embedinng space dimension
+
+
+
+
+% in this chapter: natural generalization compressed sensing -> lr recovery -> ? LOW LANK TENSORS!
+% consider tensor in R or C d_1 \times ... \times d_N. But usually d_1 = ... = d_N
+% different notions of rank:
+%   - canonical rank -> captures natural structure of many problems, e.g. recommender systems; but problematic, unstable, hard computational problems
+%   - here: MPS/TT rank: numerical advantageous, captures structure well of many problems in physics; especially well suited for linear local structure; recently quite popular
+% connected to the MPS/TT tensor decomposition; first use: Hidden Markov model -> factorization of probabliilty distributions. Quantum Physics -> Werner (finetly correlated states); tensor train -> machine learning
+% low-rank tensor = low TT rank tensor
+
+% introduce exact notion later, but important for us: fixed rank r and local dimension d -> number of parameters scales as r^2 d N
+% compare to ambient dimnsion d^N
+% Question: can we recover tensor from a number of measurements scaling polynomially in all parameters with efficient algorithm?
+% big problem: standard model (fully Gaussian measurements) also not efficient; partially solved in Zeljka
+% in this chapter, partial result trying to answer this question for efficeint product measurements (work in progress!):
+%   - introduction   to MPS
+%   - recall idea for low-
+%   - generalize alt min algorithm and proof idea from ... for low-rank matrices to the low-rank tensor case in ...
+%   - products of Gaussians arise -> connection to products of Gaussian papers -> expansion
+%   - numerical evidence
+
+
+
+\subsection*{Relevant publications}
+\begin{itemize}
+  \item Ž.\ Stojanac, D.\ Suess, M.\ Kliesch: \textit{On the distribution of a product of N Gaussian random variables}, Proceedings Volume 10394, Wavelets and Sparsity XVII; 1039419 (2017)
+  \item Ž.\ Stojanac, D.\ Suess, M.\ Kliesch, \textit{On products of Gaussian random variables}, arXiv:1711.10516
+  \item D.\ Suess, M.\ Holzaepfel, \textit{mpnum: A matrix product representation library for Python}, ???
+\end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Matrix Product States}
 \label{sec:tensors.mps}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Alternating Least Squares for Matrices}
-\label{sec:tensors.matrix_als}
-
-In this section we recap existing work on low-rank matrix recovery via alternating least squares (ALS).
-
-% \begin{algorithm}
-%   \caption{%
-%    \label{alg:AltMin}
-%     Step-wise least squares minimization
-%   }
-%   \begin{algorithmic}[1] % The number tells where the line numbering should start
-
-%   \State \textbf{Input:} Measurement matrix $A$, measurement outcomes $y$, target TT-rank $D$, and number of epochs $H$
-%   \State Divide $(A, y)$ in $HN + 1$ subsets (each of size $m$), which are denoted by $(A^{(0)}, y^{(0)})$ and $(A^{(h, n)}, y^{(h, n)}$ ($h=1,\ldots,H$, $n=1,\ldots,N$)
-%   \State \textbf{Initialization:} $X^0 \gets Compress_D(\sum_l y^{(0)}_l A^{(0)}_l)$
-%   \State $(T^0_i)_i \gets (X^0)$ \Comment{This step is trivial since $X^0$ defined in terms of $T^0_i$}
-%   \For{$h=1 \to H$} \Comment{Loop over epochs}
-%       \State  $(T^{h}_i)_i \gets (T^{h - 1}_i)_i$ \Comment{Notational baggage since all updates are inplace!}
-%       \For{$n=1 \to N$} \Comment{Loop over the TT core tensors}
-%         \State Done
-%       \EndFor
-%   \EndFor
-%   \end{algorithmic}
-% \end{algorithm}
-
+% graphical notation
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{ALS for Tensors}
+
 \subsection{Theory}
 \subsection{Numerics}
+% Implementation details; how to speed up initialization, why suitable for GPU
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The Python Library mpnum}
+

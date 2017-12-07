@@ -10,6 +10,12 @@
 \usepackage{bbm}
 \usepackage{graphicx,subcaption}
 
+\usepackage[T1]{fontenc}
+\usepackage{ifpdf}
+\ifpdf{}
+    \usepackage[utf8]{inputenc}
+\fi
+
 \usepackage[backend=biber,bibencoding=utf8]{biblatex}
 \bibliography{references_ds}
 
@@ -66,7 +72,8 @@
 
 % if \makefull is defined (e.g. by commandline argument, include everything)
 \ifdefined\makefull\else
-  \includeonly{chapters/error_region,chapters/error_region_appendix}
+  % \includeonly{chapters/error_region,chapters/error_region_appendix}
+  \includeonly{chapters/tensors}
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
