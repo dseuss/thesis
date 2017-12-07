@@ -19,23 +19,34 @@ In case the $A_i$ span $\Reals^{d_1 \times d_2}$, this can be solved simply by c
 However, in the underdetermined case $m < d_1 d_2$, this constitutes an ill-posed linear problem.
 Nevertheless, we can still single out a unique solution in some cases by exploiting the additional structure, namely the low-rank assumption.
 \todo[noline]{Check log factors}
-For example, in \cref{thm:FIXME} we show that $m = C d$ random measurements sampled from an appropriate distribution are sufficient to reconstruct any positive semidefinite, Hermitian $X \in \Complex^{d \times d}$ of rank one.
-More generally, we can recover any $X \in \Reals^{d_1 \times d_2}$ with $\rank X = r$ from $m = C (d_1 + d_n) r$ randomly chosen measurements~\cite{FIXME}.
+For example, in \cref{thm:FIXME} we show that $m = \Order(d)$ random measurements sampled from an appropriate distribution are sufficient to reconstruct any positive semidefinite, Hermitian $X \in \Complex^{d \times d}$ of rank one.
+More generally, we can recover any $X \in \Reals^{d_1 \times d_2}$ with $\rank X = r$ from $m = \Order(d_1 + d_n) r$ randomly chosen measurements~\cite{FIXME}.
 Note that this is asymptotically optimal since we need at least $(d_1 + d_2) r$ real parameters to specify the left- and right-singular vectors of $X$.
+For more details see~\cite{Li_Paper}
 But \cref{thm:FIXME} not only guarantees identifiability of $X$, it also provides a positive semidefinite program to compute the reconstruction.
 The existence of such an efficient algorithm is crucial since the straight-forward reconstruction via rank minimization
 \[
-  \estim{X} = \argmin_{X'} \rank X' \quad\mathrm{s.t.}\ \braket(A\ind{i}, X') = y_i (i = 1, \ldots, m)
+  \estim{X} = \argmin_{X'} \rank X' \quad\mathrm{s.t.}\ \braket{A\ind{i}, X'} = y_i (i = 1, \ldots, m)
 \]
-is known to be $\NP$-hard~\cite{FIXME}.
+is $\NP$-hard~\cite{FIXME}.
 
+A closely related problem is studied under the name of \emph{compressed sensing}:
+The goal is to recover an $s$-sparse vector $X \in \Reals^d$ from linear measurements as in \cref{eq:tensors.lin_measurements} with $\braket{\cdot, \cdot}$ denoting the Euclidean scalar product on $\Reals^d$.
+Here, a vector is $s$-sparse if it has $s$ non-vanishing components with respect to a certain basis.
+Therefore, the property of having low-rank may be regarded as a non-commutative analogue of sparsity since a matrix has low-rank if and only if it is sparse in its eigenbasis.
+\todo[noline]{Check log factors}
+Similar to the matrix case, $X$ can be recovered from $m = \Order(s \log d)$ randomly chosen measurement vectors $A\ind{l} \in \Reals^d$ using a linear program~\cite{Rauhut}.
+Hence, the number of measurements required scales with the \emph{intrinsic complexity} of the sparse signal vector:
+If we encode each component of $X$ using $N$ bits, we can encode the full vector using
+\[
+  N \times s + s \log d = \Order(s \log d)
+\]
+bits.
+The second summand on the left hand side is necessary to encode the positions of the non-zero components.
 
-% other example: compressed sensing. here, low-complexity structure = sparseness; number of parameters s * log(d) -> log(d) to specify which components nonzero
-%      cite recovery guarantees
-% general problem: "signal" with low-dimensional structure in high-dimensional embedding space
-% task: recover signal from linear measurements where the number of measurements scales with intrinsic dimension and not the embedinng space dimension
-
-
+In conclusion, both compressed sensing and low-rank matrix recovery provide techniques to efficiently reconstruct a low-complexity, compressible signal embedded in a higher-dimensional space from linear measurements.
+Here, \quotes{efficiently} refers to both, low computational and sample complexity.
+The latter refers to the fact that the number of measurements required scales with the intrinsic complexity of the signal and not the dimension of the ambient space as necessary for standard linear inversion.\\
 
 
 % in this chapter: natural generalization compressed sensing -> lr recovery -> ? LOW LANK TENSORS!
