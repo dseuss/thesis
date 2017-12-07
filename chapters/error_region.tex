@@ -875,23 +875,23 @@ Below, we show how those parameters can be computed efficiently.
 Since credible regions are purely defined in terms of the posterior, we can ignore the details how the posterior arose.
 Hence, we assume that the posterior distribution of $\varrho$ under consideration is a Gaussian with mean $\theta$ and covariance matrix $\Sigma$.
 In other words, we assume the posterior for $\varrho$ has probability density
-\begin{equation}
+\[
   \label{eq:bayesian.gaussian_density}
   \Pdf_{\theta,\Sigma}(\varrho) = {(2\pi)}^{-\Nhalf} \abs{\Sigma}^{-\frac{1}{2}} \exp\left( -\frac{1}{2} \norm{\varrho - \theta}_\Sigma^2 \right).
-\end{equation}
+\]
 where
-\begin{equation}
+\[
   \norm{\varrho - \theta}_\Sigma := \sqrt{{(\varrho - \theta)}^T \Sigma^{-1} (\varrho - \theta)}
-\end{equation}
+\]
 is the Mahalanobis distance and  $\abs{\Sigma}$ denotes the determinant of $\Sigma$.
 As elaborated in \cref{sub:stat.bayesian}, the MVCRs are exactly the highest posterior density sets as defined in \cref{eq:stat.bayesian.mvcr}.
 Therefore, the MVCR with credibility $\alpha$ for the Gaussian posterior~\eqref{eq:bayesian.gaussian_density} is given by
-\begin{equation}
+\[
   \label{eq:bayesian.gaussian_cr}
   \CR = \{ \vec x \in \Reals^N\colon \norm{\vec x - \vec\theta}_\Sigma \le r_{\alpha} \} =: \Eps(r_{\alpha}).
-\end{equation}
+\]
 This is an ellipsoid centered at $\vec\theta$ with radius $r_{\alpha}$ determined by the saturated credibility condition~\eqref{eq:stat.bayesian.credibility}:
-\begin{equation}
+\[
   \label{eq:bayesian.radius}
   \begin{split}
     \alpha
@@ -899,7 +899,7 @@ This is an ellipsoid centered at $\vec\theta$ with radius $r_{\alpha}$ determine
     &= \frac{\gamma\left( \Nhalf, \frac{r^2_{\alpha}}{2} \right)}{\Gamma\left( \Nhalf \right)}
     \equiv P\left( \Nhalf, \tfrac{r^2_{\alpha}}{2} \right).
     \end{split}
-\end{equation}
+\]
 By $\gamma(\cdot,\cdot)$ we denote the incomplete $\Gamma$-function and $P(\cdot,\cdot)$ is its normalized version.
 The above condition fixes $r_{\alpha}$ uniquely since $x \mapsto P(\Nhalf, x)$ is strictly monotonic for any $N > 0$.
 Hence, determining the MVCR for a multivariate Gaussian posterior with known mean and covariances reduces to computing the radius $r_\alpha$, which is formalized in the following problem.
@@ -934,17 +934,17 @@ With the shorthand notation $x = r^2_{\alpha}/2$, the algorithm is outlined belo
 In order to incorporate the positivity constraints on $\varrho$ imposed by quantum mechanics, we choose a prior distribution that is concentrated on $\States$ and vanishes on its complement.
 One possible choice are truncated Gaussian priors.
 These are defined in terms of their density $\Pdf_{\theta,\Sigma}^+(\varrho)$ with respect to the flat Hilbert-Schmidt measure $\dd\varrho$ on $\HermTrace$
-\begin{equation}
+\[
   \label{eq:bayesian.density_plus}
   \Pdf^+_{\theta,\Sigma}(\varrho) = C_{\theta,\Sigma}\ \chi(\varrho)\ \Pdf_{\theta,\Sigma}(\varrho).
-\end{equation}
+\]
 Here, $\Pdf_{\theta,\Sigma}$ is the multivariate Gaussian from Eq.~\eqref{eq:bayesian.gaussian_density} with $\theta \in \HermTrace$.
 The other factors in Eq.~\eqref{eq:bayesian.density_plus} ensure that $\Pdf^+_{\theta,\Sigma}$ is a proper probability distribution supported on $\States$:
 $\chi(\varrho)$ is the indicator function of $\States$ and $C_{\theta,\Sigma}$ is the normalization constant defined by
-\begin{equation}
+\[
   \label{eq:bayes.normalization_factor}
   C_{\theta,\Sigma}^{-1} = \int_{\States} \Pdf_{\theta,\Sigma}(\varrho) \,\dd\varrho.
-\end{equation}
+\]
 Since the numerator in Bayes rule~\eqref{eq:stat.bayesian.bayes_rule} is linear in the prior, the posterior distribution updated with Gaussian likelihood function is also of the form~\eqref{eq:bayesian.density_plus}.
 Furthermore, we can use the same linear Kalman filter update equations for both the standard and the truncated Gaussian distributions.
 The only additional complication of computing the posterior corresponding to the truncated prior~\eqref{eq:bayesian.density_plus} is that the normalization factor $C_{\theta,\Sigma}$ needs to be reevaluated after each update step in order to obtain a properly normalized probability distribution.
@@ -954,15 +954,15 @@ It is then important to remember that the constant in question is denoted by $C$
 The problem we try to solve is the following:
 Given the mean $\theta$, covariance matrix $\Sigma$, and credibility $\alpha$, can we find the MVCR for the truncated Gaussian distribution supported on $\States$?
 Since the truncated density~\eqref{eq:bayesian.density_plus} is supported on the psd states and MVCRs are highest-density sets due to~\eqref{eq:stat.bayesian.mvcr}, the MVCR is of the form
-\begin{equation}
+\[
   \Eps(r^+_{\alpha}) \cap \States = \{ \varrho \in \States \colon \norm{\varrho - \theta}_\Sigma \le r^+_{\alpha} \}.
   \label{eq:bayesian.mvcr}
-\end{equation}
+\]
 Similar to Eq.~\eqref{eq:bayesian.radius}, the radius is determined by the credibility condition
-\begin{equation}
+\[
   \label{eq:bayesian.radius_plus}
   \alpha = C \int_{\Eps(r^+_{\alpha}) \cap \States} \Pdf_{\theta,\Sigma}(\varrho) \dd \varrho.
-\end{equation}
+\]
 However, this case involves the normalization constant $C$ from~\eqref{eq:bayesian.density_plus} and the integral is restricted to the psd states.
 Also, there is no closed-form analogue to Eq.~\eqref{eq:bayesian.radius} due to the psd constraint.
 
@@ -997,24 +997,24 @@ This reduction runs along the following lines:
   \item Assume that Prob.~\ref{prob:bayesian.trucated_cr} can be solved efficiently.
 
   \item As we will prove later, every ellipsoid $\Eps^*$ in $\HermTrace$ can be encoded as a minimum volume credible ellipsoid for some Gaussian distribution $\Pdf$ with a suitable choice of $\theta$, $\Sigma$, and $R$:
-  \begin{equation}
+  \[
     \Eps^* = \Eps_{\theta,\Sigma}(R).
-  \end{equation}
+  \]
   Note that only $\theta$ is uniquely defined.
   $\Sigma$ is defined only up to a multiplicative, positive constant, since every rescaling of $\Sigma$ can be compensated by an appropriate rescaling of $R$.
 
   \item  Using the assumed efficient algorithm for Prob.~\ref{prob:bayesian.trucated_cr}, we can compute the normalization constant $C$ of the truncated distribution~\eqref{eq:bayesian.density_plus} for given $\theta$ and $\Sigma$ with sufficient precision in polynomial time.
 
   \item Based on this, we can compute a credibility $\alpha$ such that $R = r_\frac{\alpha}{C}$ and, therefore,
-  \begin{equation}
+  \[
     \Eps^* = \Eps_{\theta,\Sigma}(r_\frac{\alpha}{C}).
-  \end{equation}
+  \]
 
   \item The crucial observation is that this ellipsoid is contained in the psd states if and only if the corresponding MVCR for the truncated distribution $\Pdf^+$ fulfills
-  \begin{equation}
+  \[
     \label{eq:bayesian.criterion}
     r^+_{\alpha} = r_\frac{\alpha}{C}.
-  \end{equation}
+  \]
   See Fig.~\ref{fig:bayesian.ellipsoids} for an illustration.
   Since we can compute $r^+_{\alpha}$ efficiently by assumption, checking Eq.~\eqref{eq:bayesian.criterion} allows us to decide Prob.~\ref{prob:ortho.ellpos}.
 \end{enumerate}
