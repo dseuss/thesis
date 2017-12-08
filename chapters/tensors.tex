@@ -45,29 +45,39 @@ bits.
 The second summand on the left hand side is necessary to encode the positions of the non-zero components.
 
 In conclusion, both compressed sensing and low-rank matrix recovery provide techniques to efficiently reconstruct a low-complexity, compressible signal embedded in a higher-dimensional space from linear measurements.
-Here, \quotes{efficiently} refers to both, low computational and sample complexity.
-The latter refers to the fact that the number of measurements required scales with the intrinsic complexity of the signal and not the dimension of the ambient space as necessary for standard linear inversion.\\
+Here, \quotes{efficiently} refers to both, low computational as well as sample complexity -- that is the number of measurements required scales with the intrinsic complexity of the signal and not the dimension of the ambient space.\\
 
 
-% in this chapter: natural generalization compressed sensing -> lr recovery -> ? LOW LANK TENSORS!
-% consider tensor in R or C d_1 \times ... \times d_N. But usually d_1 = ... = d_N
-% different notions of rank:
-%   - canonical rank -> captures natural structure of many problems, e.g. recommender systems; but problematic, unstable, hard computational problems
-%   - here: MPS/TT rank: numerical advantageous, captures structure well of many problems in physics; especially well suited for linear local structure; recently quite popular
-% connected to the MPS/TT tensor decomposition; first use: Hidden Markov model -> factorization of probabliilty distributions. Quantum Physics -> Werner (finetly correlated states); tensor train -> machine learning
-% low-rank tensor = low TT rank tensor
 
-% introduce exact notion later, but important for us: fixed rank r and local dimension d -> number of parameters scales as r^2 d N
-% compare to ambient dimnsion d^N
-% Question: can we recover tensor from a number of measurements scaling polynomially in all parameters with efficient algorithm?
-% big problem: standard model (fully Gaussian measurements) also not efficient; partially solved in Zeljka
-% in this chapter, partial result trying to answer this question for efficeint product measurements (work in progress!):
-%   - introduction   to MPS
-%   - recall idea for low-
-%   - generalize alt min algorithm and proof idea from ... for low-rank matrices to the low-rank tensor case in ...
-%   - products of Gaussians arise -> connection to products of Gaussian papers -> expansion
-%   - numerical evidence
+In this chapter, we consider a natural extension of the ideas introduced above to the problem of recovering low-rank tensors.
+For this purpose, consider a tensor $X \in \Reals^{d_1 \times \cdots \times d_N}$.
+If not stated otherwise, we assume $d_1 = \cdots = d_N = d$ throughout this chapter.
+Contrary to the case of matrices, there are many inequivalent definitions of \quotes{rank} for tensors.
+The most natural generalization of the matrix rank is given by the \emph{canonical tensor rank} of $X$, which is defined by the smallest number of rank-1 tensors that add up to $X$~\cite{Kolda}
+In other words, the canonical tensor rank is the smallest number $r$ such that
+\[
+  X = \sum_{l=1}^r a\ind{l}_1 \otimes \cdots a\ind{l}_N
+  \label{eq:tensors.canonical_decomposition}
+\]
+with $a\ind{l}_i \in \Reals^{d_i}$.
+The decomposition~\eqref{eq:tensors.canoncial_decomposition} is known under many names such as \emph{CANDECOMP/PARAFAC}~\cite{Kolda}.
+Although it captures the natural structure of many problems well~\cite{FIXME} and only requires $\Order(r N d)$ parameters, it has shortcomings in practice:
+Not only does the best rank-$r$ approximation not exist for certain tensors~\cite{Kolda}, it is also hard to compute if it does~\cite{FIMXE}.
+In general, the CANDECOMP/PARAFAC decomposition is often hard to deal with computationally.
+\todo{Some compressed sensing results for canonical low-rank tensors}
 
+A different notion of tensor rank is induced by the tensor decomposition known under many different names such as \emph{matrix-product states} (MPS) and \emph{finitely correlated states} in quantum physics or \emph{tensor train} in the applied math community.
+We introduce the exact definition in \cref{sec:tensors.mps}, but let use point out that a tensor $X \in \Reals^{d^{\otimes N}}$ with MPS-rank $r$ can be parametrized by $\Order{r^2 N d}$ real numbers.
+This motivated the main question we are trying to answer in this chapter:
+Can we efficiently reconstruct a tensor with low MPS-rank from few linear measurements?
+In the ideal case, the number of measurements required for reconstructing a tensor with low MPS-rank would scale as $m = \Order{r^2 N d}$, which is an exponential improvement over the naïve linear inversion requiring $m = d^N$.
+In contrast, compressed sensing or low-rank matrix recovery techniques can only yield polynomial improvement in the sample complexity.
+
+This chapter is structured as follows:
+In \cref{sec:tensors.mps}, we introduce the MPS tensor decomposition.
+\Cref{sec:tensors.als} reports on work in progress, which is concerned with recovering tensors with low MPS-rank from few linear measurements using an \emph{Alternating Least Squares} (ALS) algorithm.
+Finally, in \cref{sec:tensors.mpnum} we present the software library \mpnum dealing with tensors in MPS representation.
+\mpnum was developed as part of this work to facilitate numerical computations in a user friendly and reusable manner.
 
 
 \subsection*{Relevant publications}
@@ -77,18 +87,25 @@ The latter refers to the fact that the number of measurements required scales wi
   \item D.\ Suess, M.\ Holzaepfel, \textit{mpnum: A matrix product representation library for Python}, ???
 \end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Matrix Product States}
+\section{Matrix Product States}%
 \label{sec:tensors.mps}
 
 % graphical notation
+% connected to the MPS/TT tensor decomposition; first use: Hidden Markov model -> factorization of probabliilty distributions. Quantum Physics -> Werner (finetly correlated states); tensor train -> machine learning
+%   - here: MPS/TT rank: numerical advantageous, captures structure well of many problems in physics; especially well suited for linear local structure; recently quite popular
+% low-rank tensor = low TT rank tensor
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{ALS for Tensors}
+\section{ALS for Tensors}%
+\label{sec:tensors.als}
 
-\subsection{Theory}
-\subsection{Numerics}
-% Implementation details; how to speed up initialization, why suitable for GPU
+% big problem: standard model (fully Gaussian measurements) also not efficient; partially solved in Zeljka
+
+\subsection{Theory}%
+\subsection{Numerics}%
+% Implementation details; how to speed up initialization, why suitable for GPU%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{The Python Library mpnum}
+\section{The Python Library mpnum}%
+\label{sec:tensors.mpnum}
 
