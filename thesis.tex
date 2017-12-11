@@ -5,17 +5,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Begin of dumped preamble
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{amsmath,amsbsy,amssymb,amsthm}
-\usepackage{braket}
-\usepackage{bbm}
-\usepackage{graphicx,subcaption}
-
 \usepackage[T1]{fontenc}
 \usepackage{ifpdf}
 \ifpdf{}
     \usepackage[utf8]{inputenc}
 \fi
 
+\usepackage{graphicx,subcaption}
 \usepackage[backend=biber,bibencoding=utf8]{biblatex}
 \bibliography{references_ds}
 
@@ -29,22 +25,17 @@
   citecolor   = red %Colour of citations
 }
 \usepackage[nameinlink,capitalize]{cleveref}
-
-\usepackage{algorithmicx}
-\usepackage{algorithm}
-\usepackage{algpseudocode}
-
-\usepackage{color}
 \usepackage[color=red!50!white,textsize=small,textwidth=2.5cm]{todonotes}
-\usepackage{tikz}%for the figures
-\usetikzlibrary{calc,fadings,backgrounds,shapes.geometric,decorations.pathreplacing,positioning,fit,patterns,chains}
 
 % Externalize tikz pictures except for todonotes
-% \usetikzlibrary{external}
-% \tikzexternalize[prefix=fig/]
-% \makeatletter
-% \renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[#1]{#2}\tikzexternalenable}
-% \makeatother
+\usepackage{tikz}%for the figures
+\usetikzlibrary{external}
+\tikzexternalize[prefix=fig/]
+\tikzset{external/mode=graphics if exists}
+\tikzset{external/system call={lualatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
+\makeatletter
+\renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[noline,#1]{#2}\tikzexternalenable}
+\makeatother
 
 
 %% use \[ ... \] for displayed equations
