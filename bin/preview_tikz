@@ -1,6 +1,7 @@
 #!/bin/sh
 
 TIKZ_PREVIEW_FILE=tikz_preview.pdf
+TEXENGINE=lualatex
 
 if [ "$#" -ne 1 ]; then
     echo "Illegal number of parameters. Just pass path to tikz file."
