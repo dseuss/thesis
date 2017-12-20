@@ -4,7 +4,7 @@
 
 Due to the intrinsic randomness of quantum mechanics, any information we obtain about a quantum system through measurements is subject to statistical uncertainty.
 Consequently, one should not only report the final result of an experiment, but also answer the question whether this result is statistically reliable or simply arose due to chance.
-This motivated the recent development of techniques for uncertainty quantification in quantum state estimation (QSE)~\cite{Kohout_2012_Robust,Ferrie_2014_High,Shang_2013_Optimal,Faist_2015_Practical,Christandl_2012_Reliable,Audenaert_2009_Quantum}.
+This motivated the recent development of techniques for uncertainty quantification in quantum state estimation (QSE)~\cite{Kohout_2012_Robust,Ferrie_2014_High,Shang_2013_Optimal,Faist_2015_Practical,Christandl_2012_Reliable,Audenaert_2009_Quantum,Audenaert_2008_Asymptotic}.
 Despite the large body of work concerned with this problem, none of these constructions are known to be both optimal and computationally feasible.
 
 In this chapter, we investigate the question whether the lack of an efficient algorithm for computing optimal error regions in QSE simply is due to a lack of imagination or if there are fundamental restrictions that prevent the existence of such an algorithm.
@@ -510,7 +510,38 @@ They yield no actionable information that could be used to adjust the preparatio
 The pertinent question \quotes{what went wrong} cannot be cast as a hypothesis test.
 Thus, while many estimation and certification schemes can -- and should -- be formulated without resorting to full state estimation, the above example shows that QSE remains an important primitive.\\
 
+\subsection{Existing work on error regions}
 
+In practice (e.g.~\cite{Haeffner_2005_Scalable}), uncertainty quantification for tomography experiments is usually based on general-purpose resampling techniques such as \quotes{bootstrapping}~\cite{Efron_1994_Introduction}.
+A common procedure is this: For every fixed measurement setting, several repeated experiments are performed.
+This gives rise to an empirical distribution of outcomes for this particular setting.
+One then creates a number of simulated data sets by sampling randomly from a multinomial distribution with parameters given by the empirical values.
+Each simulated data set is mapped to a quantum state using maximum likelihood estimation.
+The variation between these reconstructions is then reported as the uncertainty region.
+There is no indication that this procedure grossly misrepresents the actual statistical fluctuations.
+However, it seems fair to say that its behavior is not well-understood.
+Indeed, it is simple to come up with pathological cases in which the method would be hopelessly optimistic:
+E.g.\ one could estimate the quantum state by performing only one repetition each, but for a large number of randomly chosen settings.
+The above method would then spuriously find a variance of zero.
+
+On the theoretical side, some techniques to compute rigorously defined error bars for quantum tomographic experiments have been proposed in recent years.
+The works of Blume-Kohout~\cite{Kohout_2012_Robust} as well as Christandl, Renner, and Faist~\cite{Christandl_2012_Reliable,Faist_2015_Practical} exhibit methods for constructing confidence regions for QST based on likelihood level sets.
+While very general, neither paper provides a method that has both a runtime guarantee and also adheres to some notion of non-asymptotic optimality~\cite{Kiefer_2012_Introduction,Cam_2012_Asymptotic}.
+
+Some  authors have proposed a ``sample-splitting'' approach, where the first part of the data is used to construct an estimate of the true state, whereas the second part serves to construct an error region around it~\cite{Flammia_2012_Quantum} (based on~\cite{Flammia_2011_Direct}), as well as~\cite{Carpentier_2015_Uncertainty}.
+These approaches are efficient, but rely on specific measurement ensembles (operator bases with low operator norm), approach optimality only up to poly-logarithmic factors, and -- in the case of~\cite{Flammia_2012_Quantum, Flammia_2011_Direct} -- rely on adaptive measurements.
+
+Regarding Bayesian methods, the \emph{Kalman filtering} techniques of~\cite{Audenaert_2008_Asymptotic} provide a efficient algorithm for computing credible regions.
+This is achieved by approximating all Bayesian distributions over density matrices by Gaussians and restricting attention to ellipsoidal credible regions.
+The authors develop a heuristic method for taking positivity constraints into account -- but the degree to which the resulting construction deviates from being optimal remains unknown.
+A series of recent papers aim to improve this construction by employing the \emph{particle filter} method for Bayesian estimation and uncertainty quantification
+\cite{Granade_2016_Practicala,Wiebe_2015_Bayesian,Ferrie_2014_High}.
+Here, Bayesian distributions are approximated as superpositions of delta distributions and credible regions constructed using Monte Carlo sampling. These methods lead to fast algorithms and are more flexible than Kalman filters with regard to modelling prior distributions that may not be well-approximated by any Gaussian. However, once more, there seems to be no rigorous estimate for how far the estimated credible regions deviate from optimality.
+Finally, the work in~\cite{Shang_2013_Optimal} constructs optimal credible regions w.r.t.\ a different notion of optimality:
+Instead of penalizing sets with larger volume, they aim to minimize the prior probability as suggested by~\cite{Evans_2006_Optimally}.
+
+
+\subsection{The QSE statistical model}
 We now introduce the statistical model and the corresponding likelihood function used for the rest of this chapter.
 The first major assumption is that the system's state in the lab is sufficiently stable for the duration of the experiment.
 Therefore, we can assume that all data is generated from a fixed, but unknown state $\varrho_0 \in \States$, where
