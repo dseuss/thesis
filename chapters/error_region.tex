@@ -176,8 +176,8 @@ Indeed, the same computation as in \cref{eq:stat.frequentist.mle_derivation} sho
 However, Stein shocked the statistical community when he proved that for $d \ge 3$, this estimator is inadmissible~\cite{Stein_1956_Inadmissibility}.
 It can be shown that the \emph{James-Stein} estimator
 \[
-  \label{eq:stat.frequentist.stein_estimator}
   \estim{\vec\theta}_{\mathrm{S}} := \max\left\{0, \left( 1 - \frac{d - 2}{\norm{\vec X}_2} \right) \right\} \vec X
+  \label{eq:stat.frequentist.stein_estimator}
 \]
 has smaller MSE risk than the empirical mean for all values of $\vec \theta_0$~\cite{Stein_1956_Inadmissibility,Lehmann_1998_Theory}.
 It is often referred to as a \emph{shrinkage estimator} because it shrinks the empirical mean estimate $\vec X$ towards 0.
@@ -539,7 +539,7 @@ On the theoretical side, some techniques to compute rigorously defined error bar
 The works of Blume-Kohout~\cite{Kohout_2012_Robust} as well as Christandl, Renner, and Faist~\cite{Christandl_2012_Reliable,Faist_2015_Practical} exhibit methods for constructing confidence regions for QST based on likelihood level sets.
 While very general, neither paper provides a method that has both a runtime guarantee and also adheres to some notion of non-asymptotic optimality~\cite{Kiefer_2012_Introduction,Cam_2012_Asymptotic}.
 
-Some  authors have proposed a ``sample-splitting'' approach, where the first part of the data is used to construct an estimate of the true state, whereas the second part serves to construct an error region around it~\cite{Flammia_2012_Quantum} (based on~\cite{Flammia_2011_Direct}), as well as~\cite{Carpentier_2015_Uncertainty}.
+Some  authors have proposed a \quotes{sample-splitting} approach, where the first part of the data is used to construct an estimate of the true state, whereas the second part serves to construct an error region around it~\cite{Flammia_2012_Quantum} (based on~\cite{Flammia_2011_Direct}), as well as~\cite{Carpentier_2015_Uncertainty}.
 These approaches are efficient, but rely on specific measurement ensembles (operator bases with low operator norm), approach optimality only up to poly-logarithmic factors, and -- in the case of~\cite{Flammia_2012_Quantum, Flammia_2011_Direct} -- rely on adaptive measurements.
 
 Regarding Bayesian methods, the \emph{Kalman filtering} techniques of~\cite{Audenaert_2008_Asymptotic} provide a efficient algorithm for computing credible regions.
@@ -571,11 +571,11 @@ However, in reality the quantum expectation values are never observed directly.
 Instead, when the experiment is repeated on $N$ independent copies of $\varrho_0$, the observations are counts $n_i \ge 0$ with $\sum_i n_i = N$
 following a multinomial distribution
 \[
-  \label{eq:intro.mulitnomial}
+  \label{eq:intro.multinomial}
   \Prob_{\vec p}(n_1, \ldots, n_m) = \frac{N!}{n_1! \cdots n_m!} \, p_1^{n_1} \times \cdots \times p_m^{n_m}.
 \]
 In case $N$ is large and all the $p_i$ are sufficiently large, the multinomial distribution~\eqref{eq:intro.multinomial} is local asymptotic normal~\cite{Severini_2005_Elements}.
-Therefore, we can approximate \cref{eq:intro.mulitnomial} by a Gaussian distribution
+Therefore, we can approximate \cref{eq:intro.multinomial} by a Gaussian distribution
 \[
   \label{eq:intro.gauss_approx}
   \Prob_{\vec p}(y_1, \ldots, y_m) \approx \Pdf_{\vec p, \Sigma}(y_1, \ldots, y_m)
@@ -835,7 +835,7 @@ By characterizing we mean computing any property of $\CR_{\varrho_0}^\cap$ that 
 Note, however, that there are also properties such as the diameter that might be unaffected by the truncation in certain special cases and, hence, their computational complexity cannot be classified using \cref{thm:ortho.hard}.
 Furthermore, the more general problem of characterizing truncated confidence regions in general (without the Gaussian approximation) is hard as well since it subsumes \cref{prob:ortho.ellpos}.
 
-Another consequence of the theorem concerns confidence regions for the constrained problem, which output ``good regions'' for the unconstrained problem when the constraints are not active:
+Another consequence of the theorem concerns confidence regions for the constrained problem, which output \quotes{good regions} for the unconstrained problem when the constraints are not active:
 More precisely, it is extremely natural to use likelihood ratio-based ellipsoidal confidence regions for unconstrained Gaussian data although they cannot be optimal due to Stein's phenomenon.
 So it is natural to require any quantum region estimator to behave this way in the particular case that the likelihood function is concentrated well away from the boundary of state space.
 What \cref{thm:ortho.hard} shows is that any region estimator subject to this criterion must necessarily solve NP-hard problems.\\
@@ -1101,18 +1101,17 @@ Of course, any more general setting encompassing the Gaussian approximation will
 Furthermore, it also shows that computing any confidence region estimator yielding ellipsoids when the constraints are not active (and anything possibly better when they are) involves solving $\NP$-hard problems.\\
 
 
-Recently, the mathematical statistics community has started to analyze the trade-offs between computational complexity and optimality in inference problems -- see e.g.\
-\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower}.
+Recently, the mathematical statistics community has started to analyze the trade-offs between computational complexity and optimality in inference problems -- see e.g.~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower}.
 Early papers concentrated on the problem of \emph{sparse principal component analysis}, which roughly asks whether the covariance matrix of a random vector possess a sparse eigenvector with large eigenvalue~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower}.
 Later works have addressed the much better-studied problem of sparse inference~\cite{Zhang_2014_Lower}.
 The main difference between these papers and the present one is that we always condition on a data set and show that certain operations for quantifying uncertainty given the data are hard.
-This approach is canonical for a Bayesian analysis, but merely ``natural'' for orthodox error regions (c.f.~Sec.~\ref{sub:stat.error_regions}).
-In contrast, Refs.~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower} analyze the ``global'' performance of orthodox estimators -- i.e.\ they do not require looking at worst-case scenarios over the data.
-References~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower} achieve this by reducing a certain problem (``hidden clique'') -- that is conjectured to be hard in the average case -- to the sparse PCA problem; while~\cite{Zhang_2014_Lower} employs a more subtle argument involving the non-uniform complexity class $P/\mathrm{poly}$.
+This approach is canonical for a Bayesian analysis, but merely \quotes{natural} for frequentist confidence regions (c.f.\ \cref{sub:stat.frequentist}).
+In contrast, Refs.~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower} analyze the \quotes{global} performance of orthodox estimators -- i.e.\ they do not require looking at worst-case scenarios over the data.
+References~\cite{Berthet_2013_Complexity,Berthet_2013_Computational,Zhang_2014_Lower} achieve this by reducing a certain problem (\quotes{hidden clique}) -- that is conjectured to be hard in the average case -- to the sparse PCA problem; while~\cite{Zhang_2014_Lower} employs a more subtle argument involving the non-uniform complexity class $\P/\mathrm{poly}$.
 It would be very interesting to adapt such arguments to the problem of quantum uncertainty quantification.
 
 
-Of course, from the practical point of view, ``positive'' results -- i.e.\ new algorithms to solve the problem -- would be more beneficial.
+Of course, from the practical point of view, \quotes{positive} results -- i.e.\ new algorithms to solve the problem -- would be more beneficial.
 Here, recent work on sampling distributions restricted to convex bodies~\cite{Cousins_2013_Cubic,Cousins_2015_Bypassing} could be a starting point for further investigations.
 
 Beside quantum state tomography, our results might also be relevant to problems involving psd constraints such as the estimation of covariance matrices.

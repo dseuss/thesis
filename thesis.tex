@@ -15,16 +15,6 @@
 \usepackage[backend=biber,bibencoding=utf8]{biblatex}
 \bibliography{references_ds}
 
-\usepackage[breaklinks=true]{hyperref}
-%getting rid of hyperref's ugly boxes.
-%From:http://tex.stackexchange.com/a/51349
-\hypersetup{
-  colorlinks   = true, %Colours links instead of ugly boxes
-  urlcolor     = blue, %Colour for external hyperlinks
-  linkcolor    = blue, %Colour of internal links
-  citecolor   = red %Colour of citations
-}
-\usepackage[nameinlink,capitalize]{cleveref}
 \usepackage[color=red!50!white,textsize=small,textwidth=2.5cm]{todonotes}
 
 % Externalize tikz pictures except for todonotes
@@ -37,7 +27,20 @@
 \renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[noline,#1]{#2}\tikzexternalenable}
 \makeatother
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{macros}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[breaklinks=true]{hyperref}
+%getting rid of hyperref's ugly boxes.
+%From:http://tex.stackexchange.com/a/51349
+\hypersetup{
+  colorlinks   = true, %Colours links instead of ugly boxes
+  urlcolor     = blue, %Colour for external hyperlinks
+  linkcolor    = blue, %Colour of internal links
+  citecolor   = red %Colour of citations
+}
+\usepackage[nameinlink,capitalize]{cleveref}
 
 %% use \[ ... \] for displayed equations
 \newcommand{\myequation}{\begin{equation}}
