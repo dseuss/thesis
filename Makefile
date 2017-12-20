@@ -21,4 +21,4 @@ GARBAGE := $(foreach DIR,$(DIRS),$(addprefix $(DIR)/,$(GARBAGE_PATTERNS)))
 
 .PHONY: clean
 clean:
-	rm -f $(GARBAGE) thesis.pdf tikz/*.md5
+	rm -f $(GARBAGE) thesis.pdf tikz/*.md5 tikz_preview.*

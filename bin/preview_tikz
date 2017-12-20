@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TIKZ_PREVIEW_FILE=tikz_preview.pdf
+TIKZ_PREVIEW_FILE=tikz_preview.tex
 TEXENGINE=lualatex
 
 if [ "$#" -ne 1 ]; then
@@ -9,8 +9,12 @@ fi
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-latexrun -o "$TIKZ_PREVIEW_FILE" "\\def\\inputfile{$1}\\input{$DIR/../tikz/template.tex}"
+clear
+echo "\\def\\inputfile{$1}\\input{$DIR/../tikz/template.tex}" > tikz_preview.tex
+latexrun --latex-cmd lualatex "$TIKZ_PREVIEW_FILE"
 
 if [ $? -eq 0 ]; then
-    open_skim "$TIKZ_PREVIEW_FILE"
+    PDF_FILE="$(basename "$TIKZ_PREVIEW_FILE" .tex).pdf"
+    echo "Opening $PDF_FILE..."
+    open_skim "$PDF_FILE"
 fi

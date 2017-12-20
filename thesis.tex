@@ -37,34 +37,21 @@
 \renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[noline,#1]{#2}\tikzexternalenable}
 \makeatother
 
+\input{macros}
 
 %% use \[ ... \] for displayed equations
 \newcommand{\myequation}{\begin{equation}}
 \newcommand{\myendequation}{\end{equation}}
 \let\[\myequation{}
 \let\]\myendequation{}
+
 %% Only referenced equations are numbered
 % \usepackage{autonum}
 
-
-\newtheorem{theorem}{Theorem}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{remark}[theorem]{Remark}
-\newtheorem{problem}[theorem]{Problem}
-
-% \endofdump
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% End of dumped preamble
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\input{macros}
-
 % if \makefull is defined (e.g. by commandline argument, include everything)
 \ifdefined\makefull\else
-  % \includeonly{chapters/error_region,chapters/error_region_appendix}
-  \includeonly{chapters/tensors}
+  \includeonly{chapters/error_region,chapters/error_region_appendix}
+  % \includeonly{chapters/tensors}
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

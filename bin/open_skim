@@ -5,7 +5,7 @@ if [ "$#" -ne 1 ]; then
 fi
 FILENAME=$(realpath "$1")
 
-/usr/bin/osascript << EOF
+/usr/bin/osascript >> /dev/null << EOF
   set theFile to POSIX file "${FILENAME}" as alias
   tell application "Skim"
   set theDocs to get documents whose path is (get POSIX path of theFile)
