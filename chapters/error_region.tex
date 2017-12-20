@@ -16,7 +16,8 @@ For $\varrho$ to constitute a valid quantum state, it has to be a hermitian, pos
 The Hermiticity and trace constraints are linear and easily satisfiable by means of a suitable linear parametrization.
 In contrast, the psd constraint is non-linear, and hence, more problematic to satisfy.
 
-The motivation for studying uncertainty quantification under quantum constraints is that these constraints can lead to a significant reduction in uncertainty -- in particular if the true state is close to the boundary of state space:
+The motivation for studying uncertainty quantification under quantum constraints is that these constraints can lead to a significant reduction in uncertainty.
+This is particularly evident if the true state is close to the boundary of state space, e.g.\ in the case of almost pure states, which are of interest in quantum information processing experiments.
 In this case, it is plausible that a large fraction of possible estimates that seem compatible with the observations can be discarded, as they lie outside of state space.
 
 Indeed, it is known that taking the quantum constraints into account can result in a dramatic -- even unbounded -- reduction in uncertainty.
@@ -32,7 +33,7 @@ For a given POVM, the measurement outcomes of this setup can be described in ter
 The well-established theory of GLMs then provides methods for inferring $\varrho$~\cite{Mccullagh_1989_Generalized}.
 
 However, what sets the task of QSE apart from inference in GLMs in general are the additional quantum mechanical shape constraints.
-Nevertheless, there are estimators for $\varrho$ that on one hand always yield a psd density matrix, and on the other hand, are well-understood theoretically with near-optimal performance and scalable to intermediate sized quantum experiments~\cite{Paris_2004_Quantum}.
+Nevertheless, there are estimators for $\varrho$ that on the one hand always yield a psd density matrix, and on the other hand, are well-understood theoretically with near-optimal performance and scalable to intermediate sized quantum experiments~\cite{Paris_2004_Quantum}.
 Unfortunately, the same cannot be said for error bars for $\varrho$.\\
 
 
@@ -79,7 +80,7 @@ In \cref{sub:stat.frequentist}, we introduce the basic concepts of frequentist i
 
 In the frequentist framework, the probability of an outcome of a random experiment is defined in terms of its relative frequency of occurrence when the number of repetitions goes to infinity~\cite{Keynes_2007_Treatise,Kiefer_2012_Introduction}.
 More precisely, denote the number of repetitions of an experiment by $N$ and the number of times the event under consideration $x$ occurred by $n_N$.
-Then, a Frequentist interprets the probability $\Prob(x)$ as the statement that $\frac{n_N}{N} \to \Prob(x)$ as $N \to \infty$.
+Then, a frequentist interprets the probability $\Prob(x)$ as the statement that $\frac{n_N}{N} \to \Prob(x)$ as $N \to \infty$.
 
 For the task of parameter estimation, we assume that the model is well-specified, i.e.\ that the observed data are generated from the parametric model with the fixed \quotes{true} parameter $\theta_0 \in \Omega$, which is unknown.
 From a finite number of observations $X_1, \ldots X_N$, we must construct an estimate $\hat\theta(\vec X)$ for $\theta_0$.
@@ -327,11 +328,19 @@ The constant $\lambda$ is determined by the saturation of the credibility level 
 The objective of computational complexity theory is to classify computational problems according to their inherent difficulty.
 Broadly speaking, we quantify the difficulty by the runtime needed to solve the problem.
 Other resources, which one may want to consider, are the amount of memory or communication between parties required.
+
 At a first glance, an answer to the question whether a given problem can be solved efficiently might depend on what we consider as a \quotes{computer}:
 Clearly, a modern high-performance cluster can solve problems in seconds, which would take a human equipped with pen and paper more than a lifetime to finish.
 Maybe surprisingly, it turns out that a single, simple mathematical model -- the \emph{Turing machine} -- describes the capabilities and restrictions of almost all physical implementations of computation well enough for the purpose of complexity theory.
 The only conceivable exception so far are quantum computers that exploit quantum mechanical phenomena.
-Although so far no proof of an advantage of quantum computers exists, there is overwhelming evidence that they are able to solve problems efficiently for which there is no efficient classical algorithm.
+Although so far no unconditional proof of an advantage of quantum computers exists, there is overwhelming evidence that they are able to solve problems efficiently for which there is no efficient classical algorithm.
+\todo{Maybe explain what unconditional means}
+Note that quantum computers only provide efficient algorithms for problems that are considered hard classically.
+The class of uncomputable functions is the same for classical and quantum computers~\cite{Arora_2009_Computational}.
+
+
+
+
 This section introduces the main concepts needed for the hardness results of \cref{sec:error.ortho} and \ref{sec:error.bayesian}.
 Especially the definition of $\NP$-hard computational problems and polynomial-time reductions is crucial for the rest of this chapter.
 For a more thorough treatment, we refer the reader to~\cite{Arora_2009_Computational,Garey_2002_Computers}.
@@ -491,15 +500,18 @@ However, the task of process estimation can be mapped to QSE by way of the Choi-
 Since its inception in the fifties~\cite{Fano_1957_Description}, QSE has proven to be a crucial experimental tool -- in particular in quantum information-inspired setups.
 It has been used to characterize quantum states in a large number of different platforms \cite{Brien_2004_Quantum,Lundeen_2009_Tomography,Terriza_2004_Triggered,Karpinski_2008_FiberOptic,Rippe_2008_Experimental,Steffen_2006_Measurement,Childress_2006_Coherent,Riebe_2007_Quantum,Schwemmer_2014_Experimental} and even been scaled to systems with dimension on the order of 100~\cite{Haeffner_2005_Scalable}.
 However, as the Hilbert space dimensions of quantum systems implemented in the lab grow, it is unclear whether this approach to \quotes{quantum characterization} will continue to make sense.
-On the one hand, there is the question what use is a giant density matrix with millions of entries to an experimentalist?
-On the other hand, acquiring and post processing the data necessary for full-fledged QSE is already prohibitively costly for intermediated sized quantum experiments.
-As an extreme example, the eight qubit MLE reconstruction with bootstrapped error bars in~\cite{Haeffner_2005_Scalable} purportedly required weeks of computation in 2005.
-This triggered the search for more efficient reconstruction algorithms~\cite{Smolin_2012_Maximum,Qi_2013_Quantum,Hou_2016_Full,Shang_2017_Superfast} as well as approaches exploiting structural assumptions to improve the sampling and computational complexity of state estimation~\cite{Cramer_2010_Efficient,Gross_2010_Quantum,Flammia_2012_Quantum,Schwemmer_2015_Systematic,Baumgratz_2013_Scalablea,Baumgratz_2013_Scalable}.
-However, for some applications even those approaches are unreasonably costly and full QSE unnecessary:
-For example, consider the case when a single number such as the fidelity of the state in the lab w.r.t.\ some target state is sufficient whether the experiment works \quotes{sufficiently well} or not.
-For this purpose, a variety of theoretical tools for \emph{quantum hypothesis testing}, \emph{certification}, and scalar \emph{quantum parameter estimation}~\cite{Donnell_2015_Quantum,Audenaert_2008_Asymptotic,Guehne_2009_Entanglement,Flammia_2011_Direct,Schwemmer_2015_Systematic,Li_2016_Optimal} have been developed in the past years that avoid the costly step of full QSE.
 
-However, there remain use cases that necessitate full-fledged QSE.
+Acquiring and post-processing the data necessary for fully-fledged QSE is already prohibitively costly for intermediated sized quantum experiments.
+As an extreme example, the eight qubit MLE reconstruction with bootstrapped error bars in~\cite{Haeffner_2005_Scalable} required weeks of computation in 2005 (private communication, see~\cite{Gross_2010_Quantum}).
+Some sol
+This problem can be partially mitigated by means of more efficient algorihtms~\cite{Smolin_2012_Maximum,Qi_2013_Quantum,Hou_2016_Full,Shang_2017_Superfast} or approaches exploiting structural assumptions to improve the sampling and computational complexity of state estimation~\cite{Cramer_2010_Efficient,Gross_2010_Quantum,Flammia_2012_Quantum,Schwemmer_2015_Systematic,Baumgratz_2013_Scalablea,Baumgratz_2013_Scalable}.
+
+There is also the question what use is a giant density matrix with millions of entries to an experimentalist?
+In many cases, the full quantum state contains more information than necessary.
+For example, consider the case when a single number such as the fidelity of the state in the lab w.r.t.\ some target state is sufficient whether the experiment works \quotes{sufficiently well} or not.
+For this purpose, a variety of theoretical tools for \emph{quantum hypothesis testing}, \emph{certification}, and scalar \emph{quantum parameter estimation}~\cite{Donnell_2015_Quantum,Audenaert_2008_Asymptotic,Guehne_2009_Entanglement,Flammia_2011_Direct,Schwemmer_2015_Systematic,Li_2016_Optimal} have been developed in the past years that avoid the costly step of full QSE.\\
+
+However, there remain use cases that necessitate fully-fledged QSE.
 We see a particularly important role in the emergent field of \emph{quantum technologies}:
 Any technology requires means of certifying that components function as intended and, should they fail to do so, identify the way in which they deviate from the specification.
 As an example, consider the implementation of a quantum gate that is designed to act as a component of a universal quantum computing setup.
@@ -508,10 +520,9 @@ If it does, the need for QSE has been averted.
 However, should it fail this test, the certification methods give no indication \emph{in which way} it deviated from the intended behavior.
 They yield no actionable information that could be used to adjust the preparation procedure.
 The pertinent question \quotes{what went wrong} cannot be cast as a hypothesis test.
-Thus, while many estimation and certification schemes can -- and should -- be formulated without resorting to full state estimation, the above example shows that QSE remains an important primitive.\\
+Thus, while many estimation and certification schemes can -- and should -- be formulated without resorting to full state estimation, the above example shows that QSE remains an important primitive.
 
 \subsection{Existing work on error regions}
-
 In practice (e.g.~\cite{Haeffner_2005_Scalable}), uncertainty quantification for tomography experiments is usually based on general-purpose resampling techniques such as \quotes{bootstrapping}~\cite{Efron_1994_Introduction}.
 A common procedure is this: For every fixed measurement setting, several repeated experiments are performed.
 This gives rise to an empirical distribution of outcomes for this particular setting.
@@ -549,7 +560,7 @@ Therefore, we can assume that all data is generated from a fixed, but unknown st
   \States := \left\{ \varrho \in \Complex^{d \times d}\colon \adj{\varrho} = \varrho, \tr \varrho = 1, \varrho \ge 0 \right\}
 \]
 denotes the state space of density matrices.
-Note that this assumption is not necessary for QSE in general as e.g.\ Bayesian methods allow for tracking time-dependent states as well~\cite{Granade_2016_Practicala}.
+Note that this assumption is not necessary for QSE in general, see e.g.~\cite{Granade_2016_Practicala} for Bayesian methods that allow for tracking time-dependent states.
 
 
 Since we consider the case of non-adaptive state estimation, the measurements performed are characterized by a fixed POVM $\{E_k\}_{k=1}^m$ and the probability of the event $k$ when the system is in the state $\varrho_0$ is given by the \emph{Born rule}
@@ -888,7 +899,7 @@ The details of the proof can be found in \cref{sec:error.ellpos}
 
 In this section we are going to present the second major result of~\cite{Suess_2016_Error} concerned with Bayesian credible regions in QSE.
 Bayesian techniques in the context of QSE have been introduced by different authors~\cite{Jones_1991_Principles,Slater_1995_Quantum,Derka_1997_From,Schack_2001_Quantum,Buzek_1998_Reconstruction}.
-The main advantage the Bayesian approach to QSE has over the more established Frequentist's methods is the ability to include prior knowlege naturally into the inference procedure.
+The main advantage the Bayesian approach to QSE has over the more established frequentist's methods is the ability to include prior knowlege naturally into the inference procedure.
 Furthermore, the Bayesian framework is conceptually simpler and it provides notion of error region with a more natural interpretation as discussed in \cref{sec:error.bayesian}.
 However, analytical solutions for Bayesian inference problems only exist in special cases when we consider conjugate priors for the likelihood functions.
 In~\cite{Audenaert_2009_Quantum}, the authors use the self-conjugate Gaussian priors to provide an approximative estimate of the state and the corresponding credible region.
