@@ -3,34 +3,37 @@
 \label{chap:error}
 
 Due to the intrinsic randomness of quantum mechanics, any information we obtain about a quantum system through measurements is subject to statistical uncertainty.
-Consequently, we should not only report the final result of an experiment, but we also should answer the question whether this result is statistically reliable or arose due to chance.
-Of course, such problems do not only occur in the analysis of quantum experiments but in all empirical sciences such as psychology, demography, or medicine.
-To answer said question, the field of statistical inference provides a vast number of methods such as hypothesis testing or \quotes{error bars}.
-In this chapter, we investigate the problem of providing error bars for quantum state estimation~(QSE), i.e.\ the task of reconstructing the density matrix of a finite dimensional quantum system associated to a experimental preparation procedure from measurements.
+Consequently, one should not only report the final result of an experiment, but also answer the question whether this result is statistically reliable or simply arose due to chance.
+This motivated the recent development of techniques for uncertainty quantification in quantum state estimation (QSE)~\cite{Kohout_2012_Robust,Ferrie_2014_High,Shang_2013_Optimal,Faist_2015_Practical,Christandl_2012_Reliable,Audenaert_2009_Quantum}.
+Despite the large body of work concerned with this problem, none of these constructions are known to be both optimal and computationally feasible.
 
-More precisely, we consider the task of non-adaptive QSE, where a fixed set of measurements specified by the choice of positive operator valued measure (POVM) is performed on independent copies of the system.
-For a given POVM, the measurement outcomes of this setup can be described in terms of a generalized linear model (GLM) with parameter $\varrho$ -- the quantum mechanical state or density matrix of the system.
-The well-established theory of GLMs then provides methods for inferring $\varrho$~\cite{Mccullagh_1989_Generalized}.
-However, what sets the task of QSE apart from inference in GLMs in general are the \emph{quantum mechanical shape constraints}:
+In this chapter, we investigate the question whether the lack of an efficient algorithm for computing optimal error regions in QSE simply is due to a lack of imagination or if there are fundamental restrictions that prevent the existence of such an algorithm.
+We provide evidence that the latter case is true:
+Based on the generally accepted conjecture that $\P \neq \NP$ in computational complexity we show that no such algorithm can exist.
+More specifically, we show that the computational intractability does not simply arise due to the  general difficulties of statistics in high dimensions.
+Instead, by considering models which render the unconstrained problem tractable, we show that the computational intractability is caused by the \emph{quantum mechanical shape constraints}:
 For $\varrho$ to constitute a valid quantum state, it has to be a hermitian, positive semi-definite (psd) matrix with unit trace.
 The Hermiticity and trace constraints are linear and easily satisfiable by means of a suitable linear parametrization.
 In contrast, the psd constraint is non-linear, and hence, more problematic to satisfy.
-Nevertheless, there are estimators for $\varrho$ that on one hand always yield a psd density matrix, and on the other hand, are well-understood theoretically with near-optimal performance and scalable to intermediate sized quantum experiments~\cite{Paris_2004_Quantum}.
-Unfortunately, the same cannot be said for error bars for $\varrho$.
-
-In this chapter, we investigating the question whether the lack of an efficient algorithm for computing optimal error regions in QSE simply has not been found yet or if there are fundamental restrictions that prevent the existence of such an algorithm.
-We provide evidence that the latter case is true:
-Based on a generally accepted conjecture in computational complexity we show that no such algorithm can exist.
-More specifically, by considering models that render the unconstrained problem tractable we show that the computational intractability arises due to the quantum shape constraints and not due to general difficulties of statistics in high dimensions.
 
 The motivation for studying uncertainty quantification under quantum constraints is that these constraints can lead to a significant reduction in uncertainty -- in particular if the true state is close to the boundary of state space:
 In this case, it is plausible that a large fraction of possible estimates that seem compatible with the observations can be discarded, as they lie outside of state space.
-Indeed, it is known that taking the psd constraint into account can result in a dramatic -- even unbounded -- reduction in uncertainty.
-Prime examples are results that employ positivity to show that even \emph{informationally incomplete} measurements can be used to identify a quantum state with arbitrarily small error~\cite{Cramer_2010_Efficient,Gross_2010_Quantum,Gross_2011_Recovering,Flammia_2012_Quantum,Nickl_2013_Confidence,Kalev_2015_Quantum}.
+
+Indeed, it is known that taking the quantum constraints into account can result in a dramatic -- even unbounded -- reduction in uncertainty.
+Prime examples are results that employ positivity to show that even \emph{informationally incomplete} measurements can be used to identify a state with arbitrarily small error~\cite{Cramer_2010_Efficient,Gross_2010_Quantum,Gross_2011_Recovering,Flammia_2012_Quantum,Nickl_2013_Confidence,Kalev_2015_Quantum}.
 More precisely, these papers describe ways to rigorously bound the size of a confidence region for the quantum state based only on the observed data and on the knowledge that the data comes from measurements on a valid quantum state.
 While these uncertainty bounds can always be trusted without further assumptions, only in very particular situations have they been proven to actually become small.
 These situations include the cases where the true state is of low rank~\cite{Flammia_2012_Quantum,Nickl_2013_Confidence}, or admits an economical description as a matrix-product state~\cite{Cramer_2010_Efficient}.
 It stands to reason that there are further cases -- not yet identified -- for which the size of an error region can be substantially reduced simply by taking into account the quantum shape constraints.\\
+
+
+Throughout this work, we consider the task of non-adaptive QSE, where a fixed set of measurements specified by the choice of positive operator valued measure (POVM) is performed on independent copies of the system.
+For a given POVM, the measurement outcomes of this setup can be described in terms of a generalized linear model (GLM) with parameter $\varrho$ -- the quantum mechanical state or density matrix of the system.
+The well-established theory of GLMs then provides methods for inferring $\varrho$~\cite{Mccullagh_1989_Generalized}.
+
+However, what sets the task of QSE apart from inference in GLMs in general are the additional quantum mechanical shape constraints.
+Nevertheless, there are estimators for $\varrho$ that on one hand always yield a psd density matrix, and on the other hand, are well-understood theoretically with near-optimal performance and scalable to intermediate sized quantum experiments~\cite{Paris_2004_Quantum}.
+Unfortunately, the same cannot be said for error bars for $\varrho$.\\
 
 
 This chapter is structured as follows:
@@ -479,6 +482,7 @@ A more appropriate classification of the difficulty of \quotes{typical} is given
 \section{Introduction to QSE}
 \label{sec:error.intro}
 
+
 The goal of state estimation is to provide a complete description of an experimental preparation procedure from experimental feasible measurements.
 In the case of QSE, this complete description is given in terms of the density matrix $\varrho$ of the system~\cite{Paris_2004_Quantum}.
 Another common procedure performed in quantum experiments is \emph{quantum process estimation}, where the goal is to recover a \emph{quantum channel}~\cite{Nielsen_2010_Quantum}.
@@ -515,6 +519,8 @@ Therefore, we can assume that all data is generated from a fixed, but unknown st
 \]
 denotes the state space of density matrices.
 Note that this assumption is not necessary for QSE in general as e.g.\ Bayesian methods allow for tracking time-dependent states as well~\cite{Granade_2016_Practicala}.
+
+
 Since we consider the case of non-adaptive state estimation, the measurements performed are characterized by a fixed POVM $\{E_k\}_{k=1}^m$ and the probability of the event $k$ when the system is in the state $\varrho_0$ is given by the \emph{Born rule}
 \[
   p_k = \tr E_k \varrho_0.
