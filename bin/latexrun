@@ -71,7 +71,7 @@ def main():
         help='Additional command-line arguments for latex.'
         ' This will be parsed and split using POSIX shell rules.')
     arg_parser.add_argument(
-        '--bibtex-cmd', metavar='CMD', default='bibtex',
+        '--bibtex-cmd', metavar='CMD', default='biber',
         help='Bibtex command (default: %(default)s)')
     arg_parser.add_argument(
         '--bibtex-args', metavar='ARGS', type=arg_parser_shlex,
