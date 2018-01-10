@@ -7,35 +7,37 @@ The latter can be summarized as follows.
 Consider a matrix\footnote{%
   Here, we choose $X$ to be real to simplify some notation -- an adaption of the statements made to the complex case is straight forward.
 }
-$X \in \Reals^{d_1 \times d_2}$ of rank $r$ that is $X$ has only $r$ non-zero singular values
+$X \in \Reals^{d \times d}$ of rank $r$, i.e.\ $X$ has only $r$ non-zero singular values.
 The goal is to reconstruct $X$ from $m$ linear measurements of the form
 \[
   y_l = {\braket{A\ind{l}, X}}, \quad l=1,\ldots,m
   \label{eq:tensors.lin_measurements}
 \]
-where $\braket{A, B} = \tr (\transpose{A} B)$ denotes the Frobenius inner product, $A\ind{l} \in \Reals^{d_1 \times d_2}$ the \emph{measurement matrices}, and $y_l \in \Reals$ the corresponding measurement data.
+where $\braket{A, B} = \tr (\transpose{A} B)$ denotes the Frobenius inner product, $A\ind{l} \in \Reals^{d \times d}$ the \emph{measurement matrices}, and $y_l \in \Reals$ the corresponding measurement data.
 In other words, we are looking for a solution $X$ of the linear problem defined by \cref{eq:tensors.lin_measurements}.
-In case the $A_i$ span $\Reals^{d_1 \times d_2}$, this can be solved simply by computing the (pseudo-)inverse similar to \cref{sub:ortho.linear_inversion}.
-However, in the underdetermined case $m < d_1 d_2$, this constitutes an ill-posed linear problem.
+Note that \cref{eq:tensors.lin_measurements} describes the idealized measurements in the absence of noise.
+
+In case the $A_i$ span $\Reals^{d \times d}$, this can be solved simply by computing the (pseudo-)inverse similar to \cref{sub:ortho.linear_inversion}.
+However, in the underdetermined case $m < d^{2}$, this constitutes an ill-posed linear problem.
 Nevertheless, we can still single out a unique solution in some cases by exploiting the additional structure, namely the low-rank assumption.
-\todo[noline]{Check log factors}
-For example, in \cref{thm:FIXME} we show that $m = \Order(d)$ random measurements sampled from an appropriate distribution are sufficient to reconstruct any positive semidefinite, Hermitian $X \in \Complex^{d \times d}$ of rank one.
-More generally, we can recover any $X \in \Reals^{d_1 \times d_2}$ with $\rank X = r$ from $m = \Order(d_1 + d_n) r$ randomly chosen measurements~\cite{FIXME}.
-Note that this is asymptotically optimal since we need at least $(d_1 + d_2) r$ real parameters to specify the left- and right-singular vectors of $X$.
-For more details see~\cite{Li_Paper}
-But \cref{thm:FIXME} not only guarantees identifiability of $X$, it also provides a positive semidefinite program to compute the reconstruction.
+For example, in \cref{thm:FIXME} we show that $m = \Order(d)$ random measurements sampled from an appropriate distribution are sufficient to reconstruct any positive semidefinite, Hermitian $X \in \Complex^{d \times d}$ with unit rank.
+More generally, we can recover any $X \in \Reals^{d \times d}$ with $\rank X = r$ from $m = \Order(d r)$ randomly chosen measurements~\cite{Candes_2011_Tight,Kueng_2014_Low}.
+Intuitively, this sample complexity is asymptotically optimal since we need at least $2 d r$ real parameters to specify the left- and right-singular vectors of $X$, see~\cite{Eldar_2012_Uniqueness,Li_2017_Optimal} for rigorous lower bounds.
+
+But \cref{thm:FIXME} not only guarantees identifiability of $X$, it also provides a semidefinite program to compute the reconstruction.
+\todo{Why is this solution?}
 The existence of such an efficient algorithm is crucial since the straight-forward reconstruction via rank minimization
 \[
   \estim{X} = \argmin_{X'} \rank X' \quad\mathrm{s.t.}\ \braket{A\ind{i}, X'} = y_i (i = 1, \ldots, m)
 \]
-is $\NP$-hard~\cite{FIXME}.
+is $\NP$-hard~\cite{Mesbahi}.\\
 
 A closely related problem is studied under the name of \emph{compressed sensing}:
 The goal is to recover an $s$-sparse vector $X \in \Reals^d$ from linear measurements as in \cref{eq:tensors.lin_measurements} with $\braket{\cdot, \cdot}$ denoting the Euclidean scalar product on $\Reals^d$.
 Here, a vector is $s$-sparse if it has $s$ non-vanishing components with respect to a certain basis.
 Therefore, the property of having low-rank may be regarded as a non-commutative analogue of sparsity since a matrix has low-rank if and only if it is sparse in its eigenbasis.
 \todo[noline]{Check log factors}
-Similar to the matrix case, $X$ can be recovered from $m = \Order(s \log d)$ randomly chosen measurement vectors $A\ind{l} \in \Reals^d$ using a linear program~\cite{Rauhut}.
+Similar to the matrix case, $X$ can be recovered from $m = \Order(s \log d)$ randomly chosen measurement vectors $A\ind{l} \in \Reals^d$ using a linear program~\cite{Foucart_2013_Mathematical}.
 Hence, the number of measurements required scales with the \emph{intrinsic complexity} of the sparse signal vector:
 If we encode each component of $X$ using $N$ bits, we can encode the full vector using
 \[
@@ -53,20 +55,21 @@ In this chapter, we consider a natural extension of the ideas introduced above t
 For this purpose, consider a tensor $X \in \Reals^{d_1 \times \cdots \times d_N}$.
 If not stated otherwise, we assume $d_1 = \cdots = d_N = d$ throughout this chapter.
 Contrary to the case of matrices, there are many inequivalent definitions of \quotes{rank} for tensors.
-The most natural generalization of the matrix rank is given by the \emph{canonical tensor rank} of $X$, which is defined by the smallest number of rank-1 tensors that add up to $X$~\cite{Kolda}
+The most natural generalization of the matrix rank is given by the \emph{canonical tensor rank} of $X$, which is defined by the smallest number of rank-1 tensors that add up to $X$~\cite{Kolda_2009_Tensor}
 In other words, the canonical tensor rank is the smallest number $r$ such that
 \[
   X = \sum_{l=1}^r a\ind{l}_1 \otimes \cdots a\ind{l}_N
   \label{eq:tensors.canonical_decomposition}
 \]
 with $a\ind{l}_i \in \Reals^{d_i}$.
-The decomposition~\eqref{eq:tensors.canoncial_decomposition} is known under many names such as \emph{CANDECOMP/PARAFAC}~\cite{Kolda}.
+The decomposition~\eqref{eq:tensors.canoncial_decomposition} is known under many names such as \emph{CANDECOMP/PARAFAC}~\cite{Kolda_2009_Tensor}.
 Although it captures the natural structure of many problems well~\cite{FIXME} and only requires $\Order(r N d)$ parameters, it has shortcomings in practice:
-Not only does the best rank-$r$ approximation not exist for certain tensors~\cite{Kolda}, it is also hard to compute if it does~\cite{FIMXE}.
-In general, the CANDECOMP/PARAFAC decomposition is often hard to deal with computationally.
+First and foremost, computing the canonical tensor rank is $\NP$-complete~\cite{Hastad_1990_Tensor}.
+Furthermore, the best rank-$r$ approximation of a given tensor may not exist~\cite{Kolda_2009_Tensor} and it is also hard to compute if it exists~\cite{Hillar_2013_Most}.
+In general, the CANDECOMP/PARAFAC decomposition is hard to deal with computationally.
 \todo{Some compressed sensing results for canonical low-rank tensors}
 
-A different notion of tensor rank is induced by the tensor decomposition known under many different names such as \emph{matrix-product states} (MPS) and \emph{finitely correlated states} in quantum physics or \emph{tensor train} in the applied math community.
+A different notion of tensor rank is induced by the tensor decomposition known under many different names such as \emph{matrix-product states} (MPS)~\cite{Garcia_2006_Matrix,Verstraete_2008_Matrix,Orus_2014_Practical} and \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} in quantum physics or \emph{tensor train}~\cite{Oseledets_2011_TensorTrain} in the applied math community.
 We introduce the exact definition in \cref{sec:tensors.mps}, but let use point out that a tensor $X \in \Reals^{d^{\otimes N}}$ with MPS-rank $r$ can be parametrized by $\Order{r^2 N d}$ real numbers.
 This motivated the main question we are trying to answer in this chapter:
 Can we efficiently reconstruct a tensor with low MPS-rank from few linear measurements?
@@ -99,6 +102,11 @@ Finally, in \cref{sec:tensors.mpnum} we present the software library \mpnum deal
 \section{ALS for Tensors}%
 \label{sec:tensors.als}
 
+\begin{definition}
+  HELLO
+\end{definition}
+
+%
 % big problem: standard model (fully Gaussian measurements) also not efficient; partially solved in Zeljka
 
 \subsection{Theory}%
