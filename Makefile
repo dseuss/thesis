@@ -1,8 +1,9 @@
-MAKE_FULL_CMD := pdflatex -interaction=nonstopmode -synctex=1 -shell-escape "\def\makefull{1}\input{thesis.tex}"
+LATEXCMD := lualatex
+MAKE_FULL_CMD := $(LATEXCMD) -interaction=nonstopmode -synctex=1 -shell-escape "\def\makefull{1}\input{thesis.tex}"
 
 .PHONY: partial
 partial:
-	latexmk thesis.tex
+	latexmk -pdflatex=$(LATEXCMD) thesis.tex
 
 .PHONY: full
 full:
@@ -12,7 +13,7 @@ full:
 	-$(MAKE_FULL_CMD)
 
 preamble: thesis.tex
-	pdflatex -interaction=nonstopmode -ini -jobname="thesis" "&pdflatex" mylatexformat.ltx """thesis.tex"""
+	$(LATEXCMD) -interaction=nonstopmode -ini -jobname="thesis" "&pdflatex" mylatexformat.ltx """thesis.tex"""
 
 SUBDIR_ROOTS := chapters
 DIRS := . $(shell find $(SUBDIR_ROOTS) -type d)
