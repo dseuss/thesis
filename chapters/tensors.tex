@@ -34,10 +34,6 @@ Finally, in \cref{sec:tensors.mpnum} we present the software library \mpnum deal
 \section{Matrix Product States}%
 \label{sec:tensors.mps}
 
-% generalization of matrices; order N tensor -> scalars, vectors matrices
-% graphical notation -> represent tensor by rectangle with legs attached, which represent the indices of the tensor
-%   - easy to represent tensor operations: contractions, tensor product, grouping, transposition
-
 Tensors are a generalization of vectors and matrices.
 Although there is a coordinate-free definition for tensors in terms of multi-linear forms~\cite{BROUWER?}, we are going to identify a tensor with it's coordinate representation here.
 A complex tensor of order $N$ is an element $X \in \Complex^{d_1 \times \cdots \times d_N}$ and the $d_i$ are called \emph{local dimensions}.
@@ -49,9 +45,9 @@ A tensor $X \in \Complex^{d^N}$ is represented by a geometric shape with legs at
 For example, consider the case $N = 3$, then
 \[
   X_{ijk}
-  \iff
+  =
   \begin{tikzpicture}[baseline=-.5ex]
-    \tensor{{S=3, tensor_width=2}}
+    \tensor{{S=3, tensor_width=2, len_vertical_legs=0.5}}
     \node at (T) {$X$};
     \node [anchor=west] at (T_S1) {\small $i$};
     \node [anchor=west] at (T_S2) {\small $j$};
@@ -61,29 +57,65 @@ For example, consider the case $N = 3$, then
 \]
 The advantage of this graphical notation becomes clear once we express tensors composed of other tensors by operations such as index contraction or tensor products:
 \begin{description}[font=$\bullet$\ \scshape\bfseries]
-  \item[Contractions] are indicated by joining two legs using a line, e.g.\ for two matrices $A, B \in \Complex^{d \ times d}$ we have
+  \item[Contractions] are indicated by joining two legs, e.g.\ for matrices $A, B \in \Complex^{d \times d}$ their product $AB$ is written as
     \[
-      (AB)_{i,j} = \sum_k A_{i,k} B_{k,j}
-      \iff
       \begin{tikzpicture}[baseline=-.5ex]
         \tensor{{W=1, E=1, tensor_name='AB'}}
         \node at (AB) {$AB$};
-        \node [anchor=south] at (AB_W1) {\small $i$};
-        \node [anchor=south] at (AB_E1) {\small $j$};
       \end{tikzpicture}
       =
       \begin{tikzpicture}[baseline=-.5ex]
         \tensor{{W=1, E=1, tensor_name='A'}}
         \node at (A) {$A$};
-        \node [anchor=south] at (A_W1) {\small $i$};
-        \node [anchor=south] at (A_E1e) {\small $k$};
         \tensor{{W=1, E=1, tensor_name='B', x=1.25}}
         \node at (B) {$B$};
-        \node [anchor=south] at (B_E1) {\small $j$};
+      \end{tikzpicture}
+      :=
+      \sum_k
+      \left(
+      \begin{tikzpicture}[baseline=-.5ex]
+        \tensor{{W=1, E=1, tensor_name='A'}}
+        \node at (A) {$A$};
+        \node[anchor=west] at (A_E1e) {\small $k$};
+        \tensor{{W=1, E=1, tensor_name='B', x=2.5}}
+        \node at (B) {$B$};
+        \node[anchor=east] at (B_W1e) {\small $k$};
+      \end{tikzpicture}
+      \right)
+    \]
+
+  \item[Tensor products] correspond to drawing two tensors side by side, e.g.\ for $x, y \in \Complex^d$ their tensor product $x \otimes y$ is written as
+    \[
+      \begin{tikzpicture}[baseline=-.5ex]
+        \tensor{{S=2, tensor_width=1.5, tensor_name='xy'}}
+        \node at (xy) {$x \otimes y$};
+      \end{tikzpicture}
+      =
+      \begin{tikzpicture}[baseline=-.5ex]
+        \tensor{{S=1, tensor_name='x'}}
+        \node at (x) {$x$};
+        \tensor{{S=1, tensor_name='y', x=1.25}}
+        \node at (y) {$y$};
       \end{tikzpicture}
     \]
-\end{description}
 
+  \item[Grouping] indices -- that is the canonical identification $\Complex^{d_1} \otimes \Complex^{d_2} \cong \Complex^{d_1 d_2}$ -- is indicated by merging two or more legs together.
+    \[
+      \tikz[baseline=-.5ex]{\mpa{2}{{W=3, virtual=2, E=1}}}
+      \cong
+      \begin{tikzpicture}[baseline=-.5ex]
+        \tensor{{W=1, E=1, len_horizontal_legs=0, tensor_name='A'}}
+        \tensor{{W=1, E=1, len_horizontal_legs=0, tensor_name='B', x=1.25}}
+        \draw[line width=2pt] (A_W1) -- +(-0.25,0);
+        \draw[line width=1.5pt] (A_E1) -- (B_W1);
+        \draw (B_E1) -- +(0.25,0);
+      \end{tikzpicture}
+      \label{eq:tensors.intro.grouping}
+    \]
+    This operation is often used in numerical implementations of tensor network algorithms as it reduces most tensor operations to standard matrix  operations.
+    For example, the twofold contraction on the left hand side of \cref{eq:tensors.intro.grouping} is converted to a matrix multiplication on the right hand side.
+    In the following, we often implicitly perform grouping on neighbouring tensor legs.
+\end{description}
 
 
 % MPS -> 1D special case of tensor networks; first introduced to quantum physics under name FCS [Werner] and subsequently rediscovered in other context (DRMG, MPS, quantum Markov chain, TT applied math)
