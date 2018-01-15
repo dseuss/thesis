@@ -3,11 +3,12 @@
 \label{chap:tensors}
 
 The theoretical and numerical study of many-body quantum systems is severely hindered by the \emph{curse of dimensionality}, which in this context refers to the exponential growth of the Hilbert space of quantum states w.r.t.\ the number of constituents.
-However, many realistic systems do not exhibit this pathological complexity but can be described efficiently in terms of \emph{tensor networks}~\cite{}.
+However, many realistic systems do not exhibit this pathological complexity and can be described efficiently in terms of \emph{tensor networks}~\cite{}.
 An especially simple but important special case of tensor networks is known under names such as \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} or \emph{matrix-product states} (MPS)~\cite{Garcia_2006_Matrix,Verstraete_2008_Matrix,Orus_2014_Practical}.
 \todo{Check this!}
-Examples for quantum states that can be efficiently described as MPS include W-, GHZ-, and cluster states as well as ground states of one-dimensional gapped Hamiltonians~\cite{}.
-Here, \quotes{efficient description} refers to the fact that the number of parameters required to describe such a state scales linearly w.r.t.\ the number of subsystem.
+Examples for quantum states that can be efficiently described as MPS include W-, GHZ-, and cluster states.
+More generally, low energy states of one-dimensional gapped Hamiltonians with local interactions have an efficient MPS description and vice versa~\cite{}.
+Here, \quotes{efficient description} refers to the fact that the number of parameters required to describe such a state scales polynomially in the number of subsystem.
 
 The question we are attempting to answer in this chapter is whether such MPS can be efficiently reconstructed from few linear measurements\footnote{%
   Note that since we assume a linear measurement model, the results of this section do not apply to the problem of estimating pure quantum states.
@@ -15,7 +16,7 @@ The question we are attempting to answer in this chapter is whether such MPS can
 }.
 More precisely, we provide evidence that the number of measurements required to recover a MPS is related to its intrinsic complexity -- and hence, scales polynomially in the number of constituents -- although its Hilbert space is exponentially large.
 This work is a natural extension of \emph{low-rank matrix recovery}, which formed the foundation of the results in \cref{chap:phaselift}, to higher-order tensors.\\
-
+\todo{tensors -> higher order, rank}
 
 This chapter is structured as follows:
 In \cref{sec:tensors.mps}, we introduce the MPS tensor format.
@@ -36,6 +37,7 @@ Finally, in \cref{sec:tensors.mpnum} we present the software library \mpnum deal
 
 Tensors are a generalization of vectors and matrices.
 Although there is a coordinate-free definition for tensors in terms of multi-linear forms~\cite{BROUWER?}, we are going to identify a tensor with it's coordinate representation here.
+\todo{Also no distinguishing co/contravariant indices -> euclidean}
 A complex tensor of order $N$ is an element $X \in \Complex^{d_1 \times \cdots \times d_N}$ and the $d_i$ are called \emph{local dimensions}.
 Hence, a vector is a tensor of order 1 and a matrix is a tensor of order 2.
 For the sake of simplicity, we assume that $d_1 = \cdots = d_N$ throughout this chapter.
@@ -44,17 +46,32 @@ Since formulas with higher-order tensors may become incomprehensible due to the 
 A tensor $X \in \Complex^{d^N}$ is represented by a geometric shape with legs attached, one for each index.
 For example, consider the case $N = 3$, then
 \[
-  X_{ijk}
+  X_{i,j,k}
   =
   \begin{tikzpicture}[baseline=-.5ex]
     \tensor{{S=3, tensor_width=2, len_vertical_legs=0.5}}
-    \node at (T) {$X$};
-    \node [anchor=west] at (T_S1) {\small $i$};
-    \node [anchor=west] at (T_S2) {\small $j$};
-    \node [anchor=west] at (T_S3) {\small $k$};
+    \node at (X) {$X$};
+    \node [anchor=north] at (X_S1e) {\small $i$};
+    \node [anchor=north] at (X_S2e) {\small $j$};
+    \node [anchor=north] at (X_S3e) {\small $k$};
   \end{tikzpicture}
   .
 \]
+A variable written next to a leg fixes the corresponding index to the given value, while an anonymous tensor leg represents an unmatched index.
+In the following, we will make use of the following notation for an unmatched index inspired by Python's and Matlab's syntax:
+Given above $X \in \Complex^{d^3}$, we define the slice $X_{:,j,:} \in \Complex^{d^2}$ by
+\[
+  \label{eq:mps.slicing}
+  X_{:,j,:}
+  =
+  \begin{tikzpicture}[baseline=-.5ex]
+    \tensor{{S=3, tensor_width=2, len_vertical_legs=0.5}}
+    \node at (X) {$X$};
+    \node [anchor=north] at (X_S2e) {\small $j$};
+  \end{tikzpicture}
+  .
+\]
+For the components, we have the slightly cumbersome equality $\left(X_{:,j,:}\right)_{i,k} = X_{i,j,k}$.
 The advantage of this graphical notation becomes clear once we express tensors composed of other tensors by operations such as index contraction or tensor products:
 \begin{description}[font=$\bullet$\ \scshape\bfseries]
   \item[Contractions] are indicated by joining two legs, e.g.\ for matrices $A, B \in \Complex^{d \times d}$ their product $AB$ is written as
@@ -121,24 +138,175 @@ The advantage of this graphical notation becomes clear once we express tensors c
 % MPS -> 1D special case of tensor networks; first introduced to quantum physics under name FCS [Werner] and subsequently rediscovered in other context (DRMG, MPS, quantum Markov chain, TT applied math)
 % constitute variational classes of states that can efficiently parametrize interesting states such as...
 %   -> linear local structure
+%   - Link figure, area laws
+%   - exponentially small corner, but very important, variational class of low-dimensiona
+%   - time evolution stays there -> see Orus 3.4
+%   - capture well physics
 % on the other hand, also allow for an efficient implementation of crucial operations
-% curse of dimensionaliy not exclusive to quantum physics -> also in classical probablity theory. general distribution of problem with d outcomes N times repeated -> d^N
-% related variational classes known as hidden markov models/finite Hankel rank processes -> see Kliesch
 
-% to introduce MPS, consider a general state psi on N sites with local diemsnoin d (general case of different local dim straight forward)
-% fully described by order N tensor w.r.t. fixed PRODUCT basis <-> we'll identify the two
-% matrication of psi + SVD -> split off first site -> bond/virtual leg
-% successive SVD of the remaining side gives factorization of PSI
-% absorbing singular values into one of the local tensors -> MPS form
-% completly general construction, but rank ~ exponential
-% however, suppose that only r non-vanishing singular values on each bond leg -> number of parameters O(r^2 N d) instead of d^N
-% case for states with strong area laws [citatoin], but generally every state with an area law can be approximated arbitatarly well with bond dimension scaling polynomially in N -> efficient description!
+The tensor representation we are interested in has been established in quantum physics independently under the names \emph{finitely correlated states}~\cite{Werner} and \emph{matrix-product states}~\cite{Klumper}.
+Subsequently, it has been rediscovered in other contexts:
+It is known under the guise of the \emph{density matrix renormalization group}~\cite{White,Schollwoeck} in condensed matter physics.
+Furthermore, the MPS representation is also known as a special case of the \emph{Hierarchical Tucker} tensor format~\cite{Hackbusch,Grasedyck} and under name \emph{tensor-train}~\cite{Oseledets_2011_TensorTrain} in the applied math community.
+However, similar structures have been known for much longer in the form of \emph{deterministic finite automata}~\cite{Hopcroft} and \emph{hidden Markov models}~\cite{Baum}.
+
+\todo{More motivation?}
+
+To introduce the MPS representation, consider a tensor $X \in \Complex^{d^N}$.
+By splitting off the first index, grouping the remaining $N-1$ indices, and performing a SVD on the resulting matrix, we can factor $X$ into three parts
+\[
+  \begin{tikzpicture}[baseline=-.5ex]
+    \tensor{{S=4, tensor_width=3}}
+    \node (X) {$X$};
+    \draw[dashed] (-.6,-.8) -- (-.6, .8);
+  \end{tikzpicture}
+  =
+  \begin{tikzpicture}[baseline=-.5ex]
+    \tensor{{S=1, E=1, x=-3.3, tensor_name='L'}}
+    \node at (L) {$M\ind{1}$};
+    \tensor{{W=1, E=1, x=-2.1, tensor_name='lambda', tensor_style='tensornode, rounded corners=0.375cm, fill=red!30'}}
+    \node at (lambda) {$\Lambda\ind{1}$};
+    \tensor{{W=1, S=3, tensor_width=2.5, tensor_name='R'}}
+    \node (R) {$\tilde R_{N-1}$};
+  \end{tikzpicture}
+\]
+where $M\ind{1}$ denotes the left-singular vectors, $\Lambda\ind{1}$ the diagonal matrix composed of the singular values $\lambda\ind{i}$, and $\tilde R_{N-1}$ the left-singular vectors after the index-grouping has been reversed.
+For convenience, we contract the singular values with the remainder $\tilde R_{N-1}$ and obtain
+\[
+  \begin{tikzpicture}[baseline=-.5ex]
+    \tensor{{S=4, tensor_width=3}}
+    \node (X) {$X$};
+  \end{tikzpicture}
+  =
+  \begin{tikzpicture}[baseline=-.5ex]
+    \tensor{{S=1, E=1, x=-2.1, tensor_name='L'}}
+    \node at (L) {$M\ind{1}$};
+    \tensor{{W=1, S=3, tensor_width=2.5, tensor_name='R'}}
+    \node (R) {$R_{N-1}$};
+  \end{tikzpicture}
+\]
+This procedure can now be iterated by performing the same steps on $R_{N-1}$:
+\begin{align}
+  \begin{tikzpicture}[baseline=-.5ex]
+    \tensor{{S=4, tensor_width=3}}
+    \node (X) {$X$};
+    \draw[dashed] (-.6,-.8) -- (-.6, .8);
+  \end{tikzpicture}
+  &=
+  \begin{tikzpicture}[baseline=-.5ex]
+    \tensor{{S=1, E=1, x=-2.1, tensor_name='L'}}
+    \node at (L) {$M\ind{1}$};
+    \tensor{{W=1, S=3, tensor_width=2.5, tensor_name='R'}}
+    \node (R) {$R_{N-1}$};
+    \draw[dashed] (-.3,-.8) -- (-.3, .8);
+  \end{tikzpicture}\\
+  &=
+  \begin{tikzpicture}[baseline=-.5ex]
+    \mpa{{1,2}}{{S=1, E=1, x=-3.1, tensor_name='L'}}
+    \node at (L_1) {$M\ind{1}$};
+    \node at (L_2) {$M\ind{2}$};
+    \tensor{{W=1, S=2, tensor_width=2}}
+    \node (R) {$R_{N-2}$};
+    \draw[dashed] (0,-.8) -- (0, .8);
+  \end{tikzpicture}\\
+  &=
+  \begin{tikzpicture}[baseline=-.5ex]
+    \mpa{4}{{S=1, tensor_name='L'}}
+    \node at (L_1) {$M\ind{1}$};
+    \node at (L_2) {$M\ind{2}$};
+    \node at (L_3) {$M\ind{3}$};
+    \node at (L_4) {$M\ind{4}$};
+  \end{tikzpicture}
+  \label{eq:mps.matrix_product}
+\end{align}
+This yields a representation of $X$ in terms of the \emph{local tensors} $M\ind{l}$.
+The above algorithm for computing the local tensors is referred to as TT-SVD in \cite{Oseledets_2011_TensorTrain}.
+In the following, we identify the index order as follows:
+\[
+  M\ind{l}_{k,i,j} =
+  \begin{tikzpicture}[baseline=-.5ex]
+    \tensor{{W=1, S=1, E=1}}
+    \node at (X) {$M\ind{l}$};
+    \node [anchor=east] at (X_W1e) {\small $i$};
+    \node [anchor=west] at (X_E1e) {\small $j$};
+    \node [anchor=north] at (X_S1e) {\small $k$};
+  \end{tikzpicture}
+\]
+The horizontal, contracted legs corresponding to the indices $i$ and $j$, are often referred to as \emph{bond} or \emph{virtual legs} and the vertical, unmatched ones corresponding to $k$ are referred to as \emph{physical} legs.
+By fixing each unmatched leg to some value $k_l$ in \cref{eq:mps.matrix_product}, we see that each component of $X$ is given by product of $N$ matrices $M\ind{l}_{k_l,:,:}$ -- hence the name \quotes{matrix-product representation}.
+
+So far this construction is exact and completely general, i.e.\ every tensor can be represented in MPS form, but not efficient:
+Generically, the SVD in the $i$-th step yields $r_i = \min{d^i, d^{N - i}}$ non-zero singular values $\lambda\ind{i}$, and therefore, the local tensors $M\ind{i}$ have shape $(d, r_{i-1}, r_i)$.
+However, suppose that all but $r$ of the singular values in each cut vanish, then we can truncate the local tensor $M\ind{i}$ to shape $(d, r, r)$.
+In this case, the number of parameters scales as $\mathcal{O}(r^2 N d)$ and $X$ can be represented efficiently by matrix products according to \cref{eq:mps.matrix_product}.
+Although this assumption may seem overly strict on a first glance, many tensors in our applications of interest are well approximated by such an MPS with small $r$.
+The following definition sums up this section so far.
+
+\begin{definition}%
+  \label{def:mps.mps}
+  A \emph{matrix-product state representation} of a tensor $X \in \Complex^{d^N}$ is defined in terms of a tuple of local tensors $(M\ind{l})_{l \in [N]}$ with $M\ind{l} \in \Complex^{d \times r_{l - 1} \times r_l}$ where $r_0 = r_N$.
+  Then, the components of $X$ are given by
+  \[
+    X_{i_1,\ldots,i_N} = \tr \left( M\ind{1}_{i_1,:,:}\ \cdots\  M\ind{N}_{i_N,:,:} \right).
+  \]
+  We say that the MPS representation has \emph{open boundary conditions} if $r_0 = r_N = 1$, otherwise the representation has \emph{periodic boundary conditions}.
+\end{definition}
+
+For the sake of simplicity, we restrict our attention to the open boundary case in the following.
+As already noted above, the crucial parameter balancing the efficiency of the MPS representation on one hand and its expressive power on the other hand is the size of the virtual legs $r_l$.
+
+\begin{definition}%
+  \label{def:mps.rank}
+  Let $(M\ind{l})_{l \in [N]}$ denote an MPS representation with $M\ind{l} \in \Complex^{d \times r_{l - 1} \times r_l}$.
+  We call $\max_l r_l$ the \emph{rank} or \emph{bond dimension} of the MPS.
+  Furthermore, for any tensor $X$, we define its \emph{MPS-rank} to be the smallest rank of any MPS representation of $X$.
+\end{definition}
+
+Note that by \cite[Thm.\ 2.2]{Oseledets_2011_TensorTrain}, the definition of MPS-rank in \cref{def:mps.rank} agrees with the usual definition using matrications of $X$.
 
 % gauge freedom -> canoncial form
 % arithmetical operations: addition, multiplication, ...
 % -> increases rank -> compression algorithms
 % -> implementatoin see next section
 
+
+
+Contrary to the case of matrices, there are many inequivalent definitions of \quotes{rank} for tensors.
+The most natural generalization of the matrix rank is given by the \emph{canonical tensor rank} of $X$, which is defined by the smallest number of rank-1 tensors that add up to $X$~\cite{Kolda_2009_Tensor}
+In other words, the canonical tensor rank is the smallest number $r$ such that
+\[
+  X = \sum_{l=1}^r a\ind{l}_1 \otimes \cdots a\ind{l}_N
+  \label{eq:tensors.canonical_decomposition}
+\]
+with $a\ind{l}_i \in \Reals^{d_i}$.
+The decomposition~\eqref{eq:tensors.canoncial_decomposition} is known under many names such as \emph{CANDECOMP/PARAFAC}~\cite{Kolda_2009_Tensor}.
+Although it captures the natural structure of many problems and only requires $\Order(r N d)$ parameters, it has shortcomings in practice:
+First and foremost, computing the canonical tensor rank is $\NP$-complete~\cite{Hastad_1990_Tensor}.
+Furthermore, the best rank-$r$ approximation of a given tensor may not exist~\cite{Kolda_2009_Tensor} and it is also hard to compute if it exists~\cite{Hillar_2013_Most}.
+In general, the CANDECOMP/PARAFAC decomposition is hard to deal with computationally.
+\todo{Some compressed sensing results for canonical low-rank tensors}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}[t]
+  \centering
+  \begin{tikzpicture}
+    \fill[fill=yellow!30,line width=0] (0,0) ellipse (3cm and 1.5cm) node[anchor=south] {\textbf{Many-body Hilbert space}};
+    \coordinate (mpsstates) at (1.7, -1);
+    \fill[fill=blue!30,line width=0] (mpsstates) ellipse (0.2cm and 0.1cm);
+    \draw[<-] (mpsstates) -- (3,-0.5) node[anchor=west] {States with efficient MPS description};
+  \end{tikzpicture}
+  \caption{\label{tensors.mps_cartoon}%
+    The manifold of quantum states with an efficient MPS description occupies only a tiny corner in the full Hilbert space.
+  }
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% application in physics:
+%   - fully described by order N tensor w.r.t. fixed PRODUCT basis <-> we'll identify the two
+%   - captures entanglement structure of local interacctions
+% case for states with strong area laws [citatoin], but generally every state with an area law can be approximated arbitatarly well with bond dimension scaling polynomially in N -> efficient description!
+% case for states with strong area laws [citatoin], but generally every state with an area law can be approximated arbitatarly well with bond dimension scaling polynomially in N -> efficient description!
 % generalizations:
 %   - MPO -> 2 legs per site -> useful to describe multi-body mixed states -> positvity hard [Kliesch], but more expressive [Cuevas]
 %   - PMPS -> local purification such that tracing out aux legs gives mixed states -> guaranteed to be positive
@@ -167,6 +335,8 @@ The goal is to reconstruct $X$ from $m$ linear measurements of the form
 \[
   y_l = {\braket{A\ind{l}, X}}, \quad l=1,\ldots,m
   \label{eq:tensors.lin_measurements}
+
+
 \]
 where $\braket{A, B} = \tr (\transpose{A} B)$ denotes the Frobenius inner product, $A\ind{l} \in \Reals^{d \times d}$ the \emph{measurement matrices}, and $y_l \in \Reals$ the corresponding measurement data.
 In other words, we are looking for a solution $X$ of the linear problem defined by \cref{eq:tensors.lin_measurements}.
@@ -224,7 +394,7 @@ Furthermore, the best rank-$r$ approximation of a given tensor may not exist~\ci
 In general, the CANDECOMP/PARAFAC decomposition is hard to deal with computationally.
 \todo{Some compressed sensing results for canonical low-rank tensors}
 
-A different notion of tensor rank is induced by the tensor decomposition known under many different names such as \emph{matrix-product states} (MPS)~\cite{Garcia_2006_Matrix,Verstraete_2008_Matrix,Orus_2014_Practical} and \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} in quantum physics or \emph{tensor train}~\cite{Oseledets_2011_TensorTrain} in the applied math community.
+A different notion of tensor rank is induced by the tensor decomposition known under many different names such as \emph{matrix-product states} (MPS)~\cite{Garcia_2006_Matrix,Verstraete_2008_Matrix,Orus_2014_Practical} and \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} in quantum physics or \emph{tensor train} (TT)~\cite{Oseledets_2011_TensorTrain} in the applied math community.
 We introduce the exact definition in \cref{sec:tensors.mps}, but let use point out that a tensor $X \in \Reals^{d^{\otimes N}}$ with MPS-rank $r$ can be parametrized by $\Order{r^2 N d}$ real numbers.
 This motivated the main question we are trying to answer in this chapter:
 Can we efficiently reconstruct a tensor with low MPS-rank from few linear measurements?

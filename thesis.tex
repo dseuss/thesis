@@ -29,12 +29,14 @@
 \tikzset{external/system call={lualatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
 
 \usepackage{mptikz}
+\tikzstyle{tensornode}=[draw, fill=yellow!40, rounded corners=0.1cm]
 \tensorstyle{{
     len_vertical_legs = 0.25,
     len_horizontal_legs = 0.25,
     tensor_height = 0.75,
     tensor_width = 0.75,
-    tensor_style = 'draw, fill=yellow!40, rounded corners=0.1cm',
+    tensor_style = 'tensornode',
+    tensor_name = 'X',
     leg_style = ''
 }}
 
