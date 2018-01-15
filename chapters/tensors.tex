@@ -42,6 +42,11 @@ A complex tensor of order $N$ is an element $X \in \Complex^{d_1 \times \cdots \
 Hence, a vector is a tensor of order 1 and a matrix is a tensor of order 2.
 For the sake of simplicity, we assume that $d_1 = \cdots = d_N$ throughout this chapter.
 
+
+
+\subsection{Graphical Notation}
+\label{sub:mps.graphical_notation}
+
 Since formulas with higher-order tensors may become incomprehensible due to the large amount of indices necessary, we introduce a common graphical notation~\cite{Dance,???}.
 A tensor $X \in \Complex^{d^N}$ is represented by a geometric shape with legs attached, one for each index.
 For example, consider the case $N = 3$, then
@@ -135,14 +140,9 @@ The advantage of this graphical notation becomes clear once we express tensors c
 \end{description}
 
 
-% MPS -> 1D special case of tensor networks; first introduced to quantum physics under name FCS [Werner] and subsequently rediscovered in other context (DRMG, MPS, quantum Markov chain, TT applied math)
-% constitute variational classes of states that can efficiently parametrize interesting states such as...
-%   -> linear local structure
-%   - Link figure, area laws
-%   - exponentially small corner, but very important, variational class of low-dimensiona
-%   - time evolution stays there -> see Orus 3.4
-%   - capture well physics
-% on the other hand, also allow for an efficient implementation of crucial operations
+
+\subsection{MPS tensor representation}
+\label{sub:mps.tensor_representation}
 
 The tensor representation we are interested in has been established in quantum physics independently under the names \emph{finitely correlated states}~\cite{Werner} and \emph{matrix-product states}~\cite{Klumper}.
 Subsequently, it has been rediscovered in other contexts:
@@ -254,6 +254,7 @@ The following definition sums up this section so far.
 
 For the sake of simplicity, we restrict our attention to the open boundary case in the following.
 As already noted above, the crucial parameter balancing the efficiency of the MPS representation on one hand and its expressive power on the other hand is the size of the virtual legs $r_l$.
+This warrants the following definition.
 
 \begin{definition}%
   \label{def:mps.rank}
@@ -262,13 +263,7 @@ As already noted above, the crucial parameter balancing the efficiency of the MP
   Furthermore, for any tensor $X$, we define its \emph{MPS-rank} to be the smallest rank of any MPS representation of $X$.
 \end{definition}
 
-Note that by \cite[Thm.\ 2.2]{Oseledets_2011_TensorTrain}, the definition of MPS-rank in \cref{def:mps.rank} agrees with the usual definition using matrications of $X$.
-
-% gauge freedom -> canoncial form
-% arithmetical operations: addition, multiplication, ...
-% -> increases rank -> compression algorithms
-% -> implementatoin see next section
-
+Note that by~\cite[Thm.\ 2.2]{Oseledets_2011_TensorTrain}, the definition of MPS-rank in \cref{def:mps.rank} agrees with the usual definition using matrications of $X$, and hence, is well defined.\\
 
 
 Contrary to the case of matrices, there are many inequivalent definitions of \quotes{rank} for tensors.
@@ -284,7 +279,34 @@ Although it captures the natural structure of many problems and only requires $\
 First and foremost, computing the canonical tensor rank is $\NP$-complete~\cite{Hastad_1990_Tensor}.
 Furthermore, the best rank-$r$ approximation of a given tensor may not exist~\cite{Kolda_2009_Tensor} and it is also hard to compute if it exists~\cite{Hillar_2013_Most}.
 In general, the CANDECOMP/PARAFAC decomposition is hard to deal with computationally.
-\todo{Some compressed sensing results for canonical low-rank tensors}
+
+
+\subsection{Applications of the MPS format}
+\label{sub:mps.applications}
+
+
+
+% MPS -> 1D special case of tensor networks; first introduced to quantum physics under name FCS [Werner] and subsequently rediscovered in other context (DRMG, MPS, quantum Markov chain, TT applied math)
+% constitute variational classes of states that can efficiently parametrize interesting states such as...
+%   -> linear local structure
+%   - Link figure, area laws
+%   - exponentially small corner, but very important, variational class of low-dimensiona
+%   - time evolution stays there -> see Orus 3.4
+%   - capture well physics
+% on the other hand, also allow for an efficient implementation of crucial operations
+
+
+\subsection{Operations on MPS}
+\label{sub:mps.operations}
+
+% gauge freedom -> canoncial form
+% arithmetical operations: addition, multiplication, ...
+% -> increases rank -> compression algorithms
+% -> implementatoin see next section
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -335,8 +357,6 @@ The goal is to reconstruct $X$ from $m$ linear measurements of the form
 \[
   y_l = {\braket{A\ind{l}, X}}, \quad l=1,\ldots,m
   \label{eq:tensors.lin_measurements}
-
-
 \]
 where $\braket{A, B} = \tr (\transpose{A} B)$ denotes the Frobenius inner product, $A\ind{l} \in \Reals^{d \times d}$ the \emph{measurement matrices}, and $y_l \in \Reals$ the corresponding measurement data.
 In other words, we are looking for a solution $X$ of the linear problem defined by \cref{eq:tensors.lin_measurements}.
