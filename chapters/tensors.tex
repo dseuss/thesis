@@ -266,25 +266,41 @@ This warrants the following definition.
 Note that by~\cite[Thm.\ 2.2]{Oseledets_2011_TensorTrain}, the definition of MPS-rank in \cref{def:mps.rank} agrees with the usual definition using matrications of $X$, and hence, is well defined.\\
 
 
-Contrary to the case of matrices, there are many inequivalent definitions of \quotes{rank} for tensors.
-The most natural generalization of the matrix rank is given by the \emph{canonical tensor rank} of $X$, which is defined by the smallest number of rank-1 tensors that add up to $X$~\cite{Kolda_2009_Tensor}
-In other words, the canonical tensor rank is the smallest number $r$ such that
+
+\todo{From here on, it needs a lot of work}
+\Cref{def:mps.rank} generalizes the notion of \quotes{matrix rank} to tensors of higher orders based on the MPS tensor format.
+Similar to the approach given in this section, the matrix rank can be defined in terms of a factorizing representation:
+The rank of a $d \times d$ matrix $X$ is the smallest integer $r$ such that $X$ can be written as a product of two $d \times r$ matrices $U$ and $V$:
 \[
-  X = \sum_{l=1}^r a\ind{l}_1 \otimes \cdots a\ind{l}_N
-  \label{eq:tensors.canonical_decomposition}
+  A = U \adj{V}
+  \label{eq:mps.matrix_rank}
 \]
-with $a\ind{l}_i \in \Reals^{d_i}$.
-The decomposition~\eqref{eq:tensors.canoncial_decomposition} is known under many names such as \emph{CANDECOMP/PARAFAC}~\cite{Kolda_2009_Tensor}.
-Although it captures the natural structure of many problems and only requires $\Order(r N d)$ parameters, it has shortcomings in practice:
+Alternatively, the matrix rank can be defined in terms of sums of rank-1 matrices, i.e.\ as the smallest number of summands $r$ such that $X$ can be written as
+\[
+  A = \sum_{l=1}^r \ket{u\ind{l}} \bra{v\ind{l}}
+  \label{eq:mps.matrix_cannon_rank}
+\]
+with $u\ind{l}, v\ind{l} \in \Complex^d$.
+Of course, Eqs.~\eqref{eq:mps.matrix_rank} and \eqref{eq:mps.matrix_cannon_rank} are equivalent by the simple identification $u\ind{l} = U_{:,l}$ and $v\ind{l} = V_{:,l}$.
+
+The natural generalization of the matrix rank induced by \eqref{eq:mps.matrix_cannon_rank} to tensors of higher order is known as the \emph{canonical tensor rank}~\cite{Kolda_2009_Tensor}.
+For $X \in \Complex^{d^N}$, it defined as the smallest number of rank-1 tensors that add up to $X$:
+\[
+  X = \sum_{l=1}^r a\ind{l}_1 \otimes \cdots a\ind{l}_N, \quad a\ind{l}_i \in \Complex^d.
+  \label{eq:mps.canonical_decomposition}
+\]
+In other words, the canonical tensor rank is induced by the tensor decomposition~\eqref{eq:mps.canonical_decomposition}, which is known as \emph{CANDECOMP/PARAFAC}~\cite{Kolda_2009_Tensor}.
+In contrast to the matrix case, these two notions of tensor rank are not equivalent~\cite{}.
+
+Although it captures the natural structure of many problems~\cite{} and only requires $\Order(r N d)$ parameters, it has shortcomings in practice:
 First and foremost, computing the canonical tensor rank is $\NP$-complete~\cite{Hastad_1990_Tensor}.
-Furthermore, the best rank-$r$ approximation of a given tensor may not exist~\cite{Kolda_2009_Tensor} and it is also hard to compute if it exists~\cite{Hillar_2013_Most}.
+Furthermore, the best rank-$r$ approximation of a given tensor may not exist and it is also hard to compute if it exists~\cite{Hastad_1990_Tensor,Hillar_2013_Most,Lim}.
 In general, the CANDECOMP/PARAFAC decomposition is hard to deal with computationally.
+This is the reason why the MPS tensor format is becoming more popular.
 
 
 \subsection{Applications of the MPS format}
 \label{sub:mps.applications}
-
-
 
 % MPS -> 1D special case of tensor networks; first introduced to quantum physics under name FCS [Werner] and subsequently rediscovered in other context (DRMG, MPS, quantum Markov chain, TT applied math)
 % constitute variational classes of states that can efficiently parametrize interesting states such as...
@@ -294,6 +310,16 @@ In general, the CANDECOMP/PARAFAC decomposition is hard to deal with computation
 %   - time evolution stays there -> see Orus 3.4
 %   - capture well physics
 % on the other hand, also allow for an efficient implementation of crucial operations
+
+% application in physics:
+%   - fully described by order N tensor w.r.t. fixed PRODUCT basis <-> we'll identify the two
+%   - captures entanglement structure of local interacctions
+% case for states with strong area laws [citatoin], but generally every state with an area law can be approximated arbitatarly well with bond dimension scaling polynomially in N -> efficient description!
+% case for states with strong area laws [citatoin], but generally every state with an area law can be approximated arbitatarly well with bond dimension scaling polynomially in N -> efficient description!
+% generalizations:
+%   - MPO -> 2 legs per site -> useful to describe multi-body mixed states -> positvity hard [Kliesch], but more expressive [Cuevas]
+%   - PMPS -> local purification such that tracing out aux legs gives mixed states -> guaranteed to be positive
+%   - in mpnum -> general data strucutre -> MPArray -> arbitatary legs per site
 
 
 \subsection{Operations on MPS}
@@ -323,16 +349,6 @@ In general, the CANDECOMP/PARAFAC decomposition is hard to deal with computation
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% application in physics:
-%   - fully described by order N tensor w.r.t. fixed PRODUCT basis <-> we'll identify the two
-%   - captures entanglement structure of local interacctions
-% case for states with strong area laws [citatoin], but generally every state with an area law can be approximated arbitatarly well with bond dimension scaling polynomially in N -> efficient description!
-% case for states with strong area laws [citatoin], but generally every state with an area law can be approximated arbitatarly well with bond dimension scaling polynomially in N -> efficient description!
-% generalizations:
-%   - MPO -> 2 legs per site -> useful to describe multi-body mixed states -> positvity hard [Kliesch], but more expressive [Cuevas]
-%   - PMPS -> local purification such that tracing out aux legs gives mixed states -> guaranteed to be positive
-%   - in mpnum -> general data strucutre -> MPArray -> arbitatary legs per site
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
