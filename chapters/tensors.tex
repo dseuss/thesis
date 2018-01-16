@@ -262,8 +262,9 @@ For the sake of simplicity, we restrict our attention to the open boundary case 
 In this case, we have
 \[
   \label{eq:mps.open_boundary}
-  X_{i_1,\ldots,i_N} = M\ind{1}_{:,i_1,:}\ \cdots\  M\ind{N}_{:,i_N,:}.
+  X_{i_1,\ldots,i_N} = M\ind{1}_{i_1}\ \cdots\  M\ind{N}_{i_N},
 \]
+where we used the shorthand notation from \cref{eq:mps.local_matrices}
 As already noted above, the crucial parameter balancing the efficiency of the MPS representation on one hand and its expressive power on the other hand is the size of the virtual legs $r_l$.
 This warrants the following definition.
 
@@ -281,6 +282,42 @@ Note that by~\cite[Thm.\ 2.2]{Oseledets_2011_TensorTrain}, the definition of MPS
 % arithmetical operations: addition, multiplication, ...
 % -> increases rank -> compression algorithms
 % -> implementatoin see next section
+
+With the factorization of the tensor $X$ in \cref{def:mps.mps}, we have introduced new virtual degrees of freedom such that the partial trace over them equals $X$.
+Clearly, the following gauge transformation leaves \cref{eq:mps.open_boundary} invariant
+\begin{align}
+  \tilde M\ind{1}_i = M\ind{1}_i R\ind{1},
+  \tilde M\ind{N}_i = R\ind{N - 1} M\ind{N}_i, \\
+  \tilde M\ind{l}_i = L\ind{l - 1} M\ind{l}_i R\ind{l} \quad (1 < l < N)
+\end{align}
+provided the (generally non-square) matrices $L\ind{l}$ and $R\ind{l}$ satisfy $L\ind{l} R\ind{l} = \1$ as then
+\begin{equation}
+  \begin{tikzpicture}[baseline=-.5ex]
+    \mpa{4}{{S=1, tensor_name='A', len_horizontal_legs=0.1}}
+    \node at (A_1) {$M\ind{1}$};
+    \node at (A_2) {$M\ind{2}$};
+    \node at (A_3) {$M\ind{3}$};
+    \node at (A_4) {$M\ind{4}$};
+  \end{tikzpicture}
+  =
+  \begin{tikzpicture}[baseline=-.5ex]
+    \mpa{{1,4,7,10}}{{S=1,tensor_name='B', len_horizontal_legs=0.1}}
+    \node at (B_1) {$M\ind{1}$};
+    \node at (B_4) {$M\ind{2}$};
+    \node at (B_7) {$M\ind{3}$};
+    \node at (B_10) {$M\ind{4}$};
+    \mpa{{2,5,8}}{{tensor_name='R', E=1, len_horizontal_legs=0.1, tensor_style='tensornode, fill=red!30'}}
+    \node at (R_2) {$R\ind{1}$};
+    \node at (R_5) {$R\ind{2}$};
+    \node at (R_8) {$R\ind{3}$};
+    \mpa{{3,6,9}}{{tensor_name='L', len_horizontal_legs=0.1, tensor_style='tensornode, fill=red!30'}}
+    \node at (L_3) {$L\ind{1}$};
+    \node at (L_6) {$L\ind{2}$};
+    \node at (L_9) {$L\ind{3}$};
+  \end{tikzpicture}
+\end{equation}
+As shown in~\cite[Thm. 2]{Perez-Garcia}, these local transformations on the virtual degrees of freedom are the only possible gauge transformations leaving $X$ invariant.
+
 
 
 
