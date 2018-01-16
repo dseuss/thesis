@@ -223,17 +223,22 @@ This yields a representation of $X$ in terms of the \emph{local tensors} $M\ind{
 The above algorithm for computing the local tensors is referred to as TT-SVD in \cite{Oseledets_2011_TensorTrain}.
 In the following, we identify the index order as follows:
 \[
-  M\ind{l}_{k,i,j} =
+  M\ind{l}_{i,j,k} =
   \begin{tikzpicture}[baseline=-.5ex]
     \tensor{{W=1, S=1, E=1}}
     \node at (X) {$M\ind{l}$};
     \node [anchor=east] at (X_W1e) {\small $i$};
-    \node [anchor=west] at (X_E1e) {\small $j$};
-    \node [anchor=north] at (X_S1e) {\small $k$};
+    \node [anchor=west] at (X_S1e) {\small $j$};
+    \node [anchor=north] at (X_W1e) {\small $k$};
   \end{tikzpicture}
 \]
-The horizontal, contracted legs corresponding to the indices $i$ and $j$, are often referred to as \emph{bond} or \emph{virtual legs} and the vertical, unmatched ones corresponding to $k$ are referred to as \emph{physical} legs.
-By fixing each unmatched leg to some value $k_l$ in \cref{eq:mps.matrix_product}, we see that each component of $X$ is given by product of $N$ matrices $M\ind{l}_{k_l,:,:}$ -- hence the name \quotes{matrix-product representation}.
+The horizontal, contracted legs corresponding to the indices $i$ and $k$, are often referred to as \emph{bond} or \emph{virtual legs} and the vertical, unmatched ones corresponding to $j$ are referred to as \emph{physical} legs.
+By fixing each physical leg to some value $k_l$ in \cref{eq:mps.matrix_product}, we see that each component of $X$ is given by product of $N$ matrices
+\[
+  \label{eq:mps.local_matrices}
+  M\ind{l}_{k_l} := M\ind{l}_{:,k_l,:},
+\]
+hence the name \quotes{matrix-product representation}.
 
 So far this construction is exact and completely general, i.e.\ every tensor can be represented in MPS form, but not efficient:
 Generically, the SVD in the $i$-th step yields $r_i = \min{d^i, d^{N - i}}$ non-zero singular values $\lambda\ind{i}$, and therefore, the local tensors $M\ind{i}$ have shape $(d, r_{i-1}, r_i)$.
@@ -244,86 +249,33 @@ The following definition sums up this section so far.
 
 \begin{definition}%
   \label{def:mps.mps}
-  A \emph{matrix-product state representation} of a tensor $X \in \Complex^{d^N}$ is defined in terms of a tuple of local tensors $(M\ind{l})_{l \in [N]}$ with $M\ind{l} \in \Complex^{d \times r_{l - 1} \times r_l}$ where $r_0 = r_N$.
+  A \emph{matrix-product state representation} of a tensor $X \in \Complex^{d^N}$ is defined in terms of a tuple of local tensors $(M\ind{l})_{l \in [N]}$ with $M\ind{l} \in \Complex^{r_{l - 1} \times d \times r_l}$ where $r_0 = r_N$.
   Then, the components of $X$ are given by
   \[
-    X_{i_1,\ldots,i_N} = \tr \left( M\ind{1}_{i_1,:,:}\ \cdots\  M\ind{N}_{i_N,:,:} \right).
+    \label{eq:mps.periodic_boundary}
+    X_{i_1,\ldots,i_N} = \tr \left( M\ind{1}_{:,i_1,:}\ \cdots\  M\ind{N}_{:,i_N,:} \right).
   \]
   We say that the MPS representation has \emph{open boundary conditions} if $r_0 = r_N = 1$, otherwise the representation has \emph{periodic boundary conditions}.
 \end{definition}
 
 For the sake of simplicity, we restrict our attention to the open boundary case in the following.
+In this case, we have
+\[
+  \label{eq:mps.open_boundary}
+  X_{i_1,\ldots,i_N} = M\ind{1}_{:,i_1,:}\ \cdots\  M\ind{N}_{:,i_N,:}.
+\]
 As already noted above, the crucial parameter balancing the efficiency of the MPS representation on one hand and its expressive power on the other hand is the size of the virtual legs $r_l$.
 This warrants the following definition.
 
 \begin{definition}%
   \label{def:mps.rank}
-  Let $(M\ind{l})_{l \in [N]}$ denote an MPS representation with $M\ind{l} \in \Complex^{d \times r_{l - 1} \times r_l}$.
+  Let $(M\ind{l})_{l \in [N]}$ denote an MPS representation with $M\ind{l} \in \Complex^{r_{l - 1} \times d \times r_l}$.
   We call $\max_l r_l$ the \emph{rank} or \emph{bond dimension} of the MPS.
   Furthermore, for any tensor $X$, we define its \emph{MPS-rank} to be the smallest rank of any MPS representation of $X$.
 \end{definition}
 
 Note that by~\cite[Thm.\ 2.2]{Oseledets_2011_TensorTrain}, the definition of MPS-rank in \cref{def:mps.rank} agrees with the usual definition using matrications of $X$, and hence, is well defined.\\
 
-
-
-\todo{From here on, it needs a lot of work}
-\Cref{def:mps.rank} generalizes the notion of \quotes{matrix rank} to tensors of higher orders based on the MPS tensor format.
-Similar to the approach given in this section, the matrix rank can be defined in terms of a factorizing representation:
-The rank of a $d \times d$ matrix $X$ is the smallest integer $r$ such that $X$ can be written as a product of two $d \times r$ matrices $U$ and $V$:
-\[
-  A = U \adj{V}
-  \label{eq:mps.matrix_rank}
-\]
-Alternatively, the matrix rank can be defined in terms of sums of rank-1 matrices, i.e.\ as the smallest number of summands $r$ such that $X$ can be written as
-\[
-  A = \sum_{l=1}^r \ket{u\ind{l}} \bra{v\ind{l}}
-  \label{eq:mps.matrix_cannon_rank}
-\]
-with $u\ind{l}, v\ind{l} \in \Complex^d$.
-Of course, Eqs.~\eqref{eq:mps.matrix_rank} and \eqref{eq:mps.matrix_cannon_rank} are equivalent by the simple identification $u\ind{l} = U_{:,l}$ and $v\ind{l} = V_{:,l}$.
-
-The natural generalization of the matrix rank induced by \eqref{eq:mps.matrix_cannon_rank} to tensors of higher order is known as the \emph{canonical tensor rank}~\cite{Kolda_2009_Tensor}.
-For $X \in \Complex^{d^N}$, it defined as the smallest number of rank-1 tensors that add up to $X$:
-\[
-  X = \sum_{l=1}^r a\ind{l}_1 \otimes \cdots a\ind{l}_N, \quad a\ind{l}_i \in \Complex^d.
-  \label{eq:mps.canonical_decomposition}
-\]
-In other words, the canonical tensor rank is induced by the tensor decomposition~\eqref{eq:mps.canonical_decomposition}, which is known as \emph{CANDECOMP/PARAFAC}~\cite{Kolda_2009_Tensor}.
-In contrast to the matrix case, these two notions of tensor rank are not equivalent~\cite{}.
-
-Although it captures the natural structure of many problems~\cite{} and only requires $\Order(r N d)$ parameters, it has shortcomings in practice:
-First and foremost, computing the canonical tensor rank is $\NP$-complete~\cite{Hastad_1990_Tensor}.
-Furthermore, the best rank-$r$ approximation of a given tensor may not exist and it is also hard to compute if it exists~\cite{Hastad_1990_Tensor,Hillar_2013_Most,Lim}.
-In general, the CANDECOMP/PARAFAC decomposition is hard to deal with computationally.
-This is the reason why the MPS tensor format is becoming more popular.
-
-
-\subsection{Applications of the MPS format}
-\label{sub:mps.applications}
-
-% MPS -> 1D special case of tensor networks; first introduced to quantum physics under name FCS [Werner] and subsequently rediscovered in other context (DRMG, MPS, quantum Markov chain, TT applied math)
-% constitute variational classes of states that can efficiently parametrize interesting states such as...
-%   -> linear local structure
-%   - Link figure, area laws
-%   - exponentially small corner, but very important, variational class of low-dimensiona
-%   - time evolution stays there -> see Orus 3.4
-%   - capture well physics
-% on the other hand, also allow for an efficient implementation of crucial operations
-
-% application in physics:
-%   - fully described by order N tensor w.r.t. fixed PRODUCT basis <-> we'll identify the two
-%   - captures entanglement structure of local interacctions
-% case for states with strong area laws [citatoin], but generally every state with an area law can be approximated arbitatarly well with bond dimension scaling polynomially in N -> efficient description!
-% case for states with strong area laws [citatoin], but generally every state with an area law can be approximated arbitatarly well with bond dimension scaling polynomially in N -> efficient description!
-% generalizations:
-%   - MPO -> 2 legs per site -> useful to describe multi-body mixed states -> positvity hard [Kliesch], but more expressive [Cuevas]
-%   - PMPS -> local purification such that tracing out aux legs gives mixed states -> guaranteed to be positive
-%   - in mpnum -> general data strucutre -> MPArray -> arbitatary legs per site
-
-
-\subsection{Operations on MPS}
-\label{sub:mps.operations}
 
 % gauge freedom -> canoncial form
 % arithmetical operations: addition, multiplication, ...
@@ -334,6 +286,41 @@ This is the reason why the MPS tensor format is becoming more popular.
 
 
 
+
+% \todo{From here on, it needs a lot of work}
+% \Cref{def:mps.rank} generalizes the notion of \quotes{matrix rank} to tensors of higher orders based on the MPS tensor format.
+% Similar to the approach given in this section, the matrix rank can be defined in terms of a factorizing representation:
+% The rank of a $d \times d$ matrix $X$ is the smallest integer $r$ such that $X$ can be written as a product of two $d \times r$ matrices $U$ and $V$:
+% \[
+%   A = U \adj{V}
+%   \label{eq:mps.matrix_rank}
+% \]
+% Alternatively, the matrix rank can be defined in terms of sums of rank-1 matrices, i.e.\ as the smallest number of summands $r$ such that $X$ can be written as
+% \[
+%   A = \sum_{l=1}^r \ket{u\ind{l}} \bra{v\ind{l}}
+%   \label{eq:mps.matrix_cannon_rank}
+% \]
+% with $u\ind{l}, v\ind{l} \in \Complex^d$.
+% Of course, Eqs.~\eqref{eq:mps.matrix_rank} and \eqref{eq:mps.matrix_cannon_rank} are equivalent by the simple identification $u\ind{l} = U_{:,l}$ and $v\ind{l} = V_{:,l}$.
+
+% The natural generalization of the matrix rank induced by \eqref{eq:mps.matrix_cannon_rank} to tensors of higher order is known as the \emph{canonical tensor rank}~\cite{Kolda_2009_Tensor}.
+% For $X \in \Complex^{d^N}$, it defined as the smallest number of rank-1 tensors that add up to $X$:
+% \[
+%   X = \sum_{l=1}^r a\ind{l}_1 \otimes \cdots a\ind{l}_N, \quad a\ind{l}_i \in \Complex^d.
+%   \label{eq:mps.canonical_decomposition}
+% \]
+% In other words, the canonical tensor rank is induced by the tensor decomposition~\eqref{eq:mps.canonical_decomposition}, which is known as \emph{CANDECOMP/PARAFAC}~\cite{Kolda_2009_Tensor}.
+% In contrast to the matrix case, these two notions of tensor rank are not equivalent~\cite{}.
+
+% Although it captures the natural structure of many problems~\cite{} and only requires $\Order(r N d)$ parameters, it has shortcomings in practice:
+% First and foremost, computing the canonical tensor rank is $\NP$-complete~\cite{Hastad_1990_Tensor}.
+% Furthermore, the best rank-$r$ approximation of a given tensor may not exist and it is also hard to compute if it exists~\cite{Hastad_1990_Tensor,Hillar_2013_Most,Lim}.
+% In general, the CANDECOMP/PARAFAC decomposition is hard to deal with computationally.
+% This is the reason why the MPS tensor format is becoming more popular.
+
+
+\subsection{Applications of the MPS format}
+\label{sub:mps.applications}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[t]
@@ -349,6 +336,26 @@ This is the reason why the MPS tensor format is becoming more popular.
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% constitute variational classes of states that can efficiently parametrize interesting states such as...
+%   -> linear local structure
+%   - Link figure, area laws
+%   - exponentially small corner, but very important, variational class of low-dimensiona
+%   - time evolution stays there -> see Orus 3.4
+%   - capture well physics
+% on the other hand, also allow for an efficient implementation of crucial operations
+% application in physics:
+%   - fully described by order N tensor w.r.t. fixed PRODUCT basis <-> we'll identify the two
+%   - captures entanglement structure of local interacctions
+% case for states with strong area laws [citatoin], but generally every state with an area law can be approximated arbitatarly well with bond dimension scaling polynomially in N -> efficient description!
+
+
+% generalizations:
+%   - MPO -> 2 legs per site -> useful to describe multi-body mixed states -> positvity hard [Kliesch], but more expressive [Cuevas]
+%   - PMPS -> local purification such that tracing out aux legs gives mixed states -> guaranteed to be positive
+%   - in mpnum -> general data strucutre -> MPArray -> arbitatary legs per site
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
