@@ -240,6 +240,46 @@ By fixing each physical leg to some value $k_l$ in \cref{eq:mps.matrix_product},
 \]
 hence the name \quotes{matrix-product representation}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+  \centering
+  \begin{tikzpicture}
+    \tensor{{S=4, tensor_name='psi', tensor_width=3, tensor_height=1,
+             len_vertical_legs=.5, x=-2.5}}
+    \node at (psi) {$X_{ijkl}$};
+
+    \node at (0,0) {\Huge $=$};
+
+    \begin{luacode*}
+      local indices = {'i', 'j', 'k', 'l'}
+      -- local bond_indices = {'a', 'b', 'c'}
+
+      mptikz.draw_mpa(4, {S=1, tensor_name='A', tensor_width=1, tensor_height=1,
+                          len_vertical_legs=.5, len_horizontal_legs=.5, x=1.5})
+
+      for i = 1, 4 do
+        t('\\node[anchor=west] at (psi_S%i) {$%s$};', i, indices[i])
+        t('\\node[anchor=west] at (A_%i_S1) {$%s$};', i, indices[i])
+          t('\\node at (A_%i) {$M\\ind{%i}$};', i, i)
+      end
+
+      -- for i =1, 3 do
+      --  t('\\node[anchor=north] at (A_%i_E1e) {$%s$};', i, bond_indices[i])
+      -- end
+    \end{luacode*}
+
+    \draw[pointerline] (psi) -- +(2,-1) node[pointernode] {global tensor};
+    \draw[pointerline] (A_2) -- +(1,1) node[pointernode] {local tensor};
+    \draw[pointerline] (A_3_E1e) -- +(0.5,1) node[pointernode] {virtual leg};
+    \draw[pointerline] (A_3_S1) -- +(-0.5,-0.5) node[pointernode,anchor=east] {physical leg};
+  \end{tikzpicture}
+  \caption{%
+    \label{fig:mps.mps}
+    A 4th order tensor in MPS representation with open boundary condition as described in \cref{eq:mps.open_boundary}.
+  }
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 So far this construction is exact and completely general, i.e.\ every tensor can be represented in MPS form, but not efficient:
 Generically, the SVD in the $i$-th step yields $r_i = \min{d^i, d^{N - i}}$ non-zero singular values $\lambda\ind{i}$, and therefore, the local tensors $M\ind{i}$ have shape $(d, r_{i-1}, r_i)$.
 However, suppose that all but $r$ of the singular values in each cut vanish, then we can truncate the local tensor $M\ind{i}$ to shape $(d, r, r)$.
@@ -357,22 +397,50 @@ The following definition summarizes the corresponding gauge conditions
 
 The exceptions for the local tensors at the beginning and end of the chain are necessary to accommodate tensors with Frobenius norm different from one.
 In practice, we often deal with a mixed left-right-canonical form, e.g.\ in variational algorithms updating one local tensor at a time such as DMRG or the alternating least squares algorithm presented in \cref{sec:tensors.als}.
-For these purposes, efficient algorithms exist that transform an MPS to a canonical form.
+For these purposes, efficient algorithms exist that transform an MPS to a canonical form~\cite{schollwoeck,orus}.
 If we neglect transformations that change the bond dimensions, the remaining gauge group is unitary, and hence, computations on canonical MPS are far more stable numerically.\\
 
-% arithmetical operations: addition, multiplication, ...
-% -> increases rank -> compression algorithms
-% -> implementatoin see next section
+
+We have already emphasized the ability of the MPS representation to represent certain tensors efficiently, i.e.\ with a number of parameters scaling polynomially in the order of the tensor.
+One crucial advantage of this tensor format is that it also facilitates efficient arithmetical operations for tensors~\cite{Schollwoeck}.
+In other words, operations such as sums and contractions of MPS are also MPS and the corresponding local tensors can be computed efficiently from the local tensors of the inputs.
+For example, consider the scalar product of two tensors $A, B \in \Complex^{d^N}$:
+\[
+  \braket{A, B} =
+  \begin{tikzpicture}[baseline=-.5ex]
+    \mpa{3}{{S=1, y=.5, tensor_name='B'}}
+    \mpa{3}{{N=1, y=-.5, tensor_name='A'}}
+    \begin{luacode*}
+      for i = 1,3 do
+        t('\\node at (A_%i) {$A\\ind{%i}$};', i, i)
+        t('\\node at (B_%i) {$B\\ind{%i}$};', i, i)
+      end
+    \end{luacode*}
+  \begin{scope}[on background layer]
+    \fill[tensornode,fill=black, opacity=0.1] ($ (A_1) - (0.5,0.5) $) rectangle ($ (B_1) + (0.5,0.5) $);
+    \fill[tensornode,fill=black, opacity=0.1] ($ (A_2) - (0.5,0.5) $) rectangle ($ (B_2) + (0.5,0.5) $);
+    \fill[tensornode,fill=black, opacity=0.1] ($ (A_3) - (0.5,0.5) $) rectangle ($ (B_3) + (0.5,0.5) $);
+  \end{scope}
+  \end{tikzpicture}
+\]
+By contracting the physical legs of the local tensors first as indicated by the gray boxes\footnote{%
+  Note that this strategy is not optimal in many cases~\cite{schollwoecc} but suffices as an example here.
+},
+we obtain an MPS representation of a tensor of 0th order, i.e.\ a scalar, which can be contracted afterwards to compute its value.
+
+As most arithmetic operations increase the virtual dimension substantially, we need methods to approximate the result by another MPS with lower virtual dimension while keeping the approximation error small.
+Although computing the \emph{best} rank $r$ approximation of an MPS is computationally infeasible in general~\cite{Hillar_2013_Most}, there are efficient algorithms that produce good results in practice:
+One of them is \emph{SVD compression}, which successively performs an SVD followed by a truncation of negligible singular values on the local tensors similar to the higher-order SVD introduced in \cref{eq:mps.matrix_product}~\cite{schollwoeck}.
+If we truncate all but the $r$ largest singular values in each step, we obtain a quasi-optimal rank $r$ approximation of $X \in \Complex^{d^N}$, i.e.\
+\[
+  \norm{X - X_\mathrm{SVD}} \le \sqrt{N - 1} \norm{X - X_\mathrm{best}}.
+  \label{eq:mps.quasi_optimal}
+\]
+Here, $\norm{\cdot}$ denotes the Frobenius norm of tensors, $X_\mathrm{SVD}$ the rank $r$ SVD compression, and $X_\mathrm{best}$ the best rank $r$ approximation of $X$.
 
 
 
-
-
-
-
-
-
-% \todo{From here on, it needs a lot of work}
+\todo{Mention CANDECOMP/PARAFAC}
 % \Cref{def:mps.rank} generalizes the notion of \quotes{matrix rank} to tensors of higher orders based on the MPS tensor format.
 % Similar to the approach given in this section, the matrix rank can be defined in terms of a factorizing representation:
 % The rank of a $d \times d$ matrix $X$ is the smallest integer $r$ such that $X$ can be written as a product of two $d \times r$ matrices $U$ and $V$:

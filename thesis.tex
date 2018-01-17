@@ -23,7 +23,7 @@
 
 % Externalize tikz pictures except for todonotes
 \usepackage{tikz}%for the figures
-\usetikzlibrary{external}
+\usetikzlibrary{external,calc,backgrounds}
 \tikzexternalize[prefix=fig/]
 \tikzset{external/mode=graphics if exists}
 \tikzset{external/system call={lualatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
@@ -31,6 +31,9 @@
 \usepackage{mptikz}
 \tikzstyle{tensornode}=[draw, fill=yellow!40, rounded corners=0.1cm]
 \tikzstyle{tensorleg}=[]
+\tikzstyle{pointerline}=[thin,shorten <=3pt, color=gray]
+\tikzstyle{pointernode}=[font=\sffamily, anchor=west, align=center, color=black]
+
 \tensorstyle{{
     len_vertical_legs = 0.25,
     len_horizontal_legs = 0.25,
@@ -40,6 +43,14 @@
     tensor_name = 'X',
     leg_style = 'tensorleg'
 }}
+\usepackage{luacode}
+\begin{luacode*}
+  function t(str, ...)
+    local arg = {...}
+    tex.print(string.format(str, unpack(arg)))
+  end
+\end{luacode*}
+
 
 \makeatletter
 \renewcommand{\todo}[2][]{\tikzexternaldisable\@todo[noline,#1]{#2}\tikzexternalenable}
