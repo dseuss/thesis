@@ -278,11 +278,6 @@ This warrants the following definition.
 Note that by~\cite[Thm.\ 2.2]{Oseledets_2011_TensorTrain}, the definition of MPS-rank in \cref{def:mps.rank} agrees with the usual definition using matrications of $X$, and hence, is well defined.\\
 
 
-% gauge freedom -> canoncial form
-% arithmetical operations: addition, multiplication, ...
-% -> increases rank -> compression algorithms
-% -> implementatoin see next section
-
 With the factorization of the tensor $X$ in \cref{def:mps.mps}, we have introduced new virtual degrees of freedom such that the partial trace over them equals $X$.
 Clearly, the following gauge transformation leaves \cref{eq:mps.open_boundary} invariant
 \begin{align}
@@ -290,7 +285,7 @@ Clearly, the following gauge transformation leaves \cref{eq:mps.open_boundary} i
   \tilde M\ind{N}_i = R\ind{N - 1} M\ind{N}_i, \\
   \tilde M\ind{l}_i = L\ind{l - 1} M\ind{l}_i R\ind{l} \quad (1 < l < N)
 \end{align}
-provided the (generally non-square) matrices $L\ind{l}$ and $R\ind{l}$ satisfy $L\ind{l} R\ind{l} = \1$ as then
+provided the (generally non-square) matrices $L\ind{l}$ and $R\ind{l}$ satisfy $L\ind{l} R\ind{l} = \1$ since then
 \begin{equation}
   \begin{tikzpicture}[baseline=-.5ex]
     \mpa{4}{{S=1, tensor_name='A', len_horizontal_legs=0.1}}
@@ -316,7 +311,60 @@ provided the (generally non-square) matrices $L\ind{l}$ and $R\ind{l}$ satisfy $
     \node at (L_9) {$L\ind{3}$};
   \end{tikzpicture}
 \end{equation}
-As shown in~\cite[Thm. 2]{Perez-Garcia}, these local transformations on the virtual degrees of freedom are the only possible gauge transformations leaving $X$ invariant.
+As shown in~\cite[Thm. 2]{Perez-Garcia}, these local transformations on the virtual degrees of freedom are the only possible gauge transformations of the MPS representation.
+A number of canonical forms exist that partially fix the gauge~\cite{Perez,Schollwoeck,Chubb}.
+The following definition summarizes the corresponding gauge conditions
+
+\begin{definition}%
+  \label{def:mps.canonical}
+  We say that a local tensor $M\ind{l}$ is \emph{left-normalized} if it satisfies
+  \[
+    \sum_k \adj{M\ind{l}_k} M\ind{l}_k = \1 \quad\quad\quad\quad
+    \begin{tikzpicture}[baseline=-.5ex]
+      \tensor{{W=1,S=1,E=1,tensor_name='A',y=0.5}}
+      \tensor{{W=1,N=1,E=1,tensor_name='B',y=-0.5}}
+      \draw[tensorleg] (A_W1e) -- (B_W1e);
+    \end{tikzpicture}
+    =
+    \begin{tikzpicture}[baseline=-.5ex]
+      \coordinate (A) at (0,0.5);
+      \coordinate (B) at (0,-0.5);
+      \draw[tensorleg] (A) -- (B);
+      \draw[tensorleg] (A) -- +(.5,0);
+      \draw[tensorleg] (B) -- +(.5,0);
+    \end{tikzpicture}
+  \]
+  A MPS with all but the rightmost local tensors in left-normalized form is called \emph{left-canonical}.
+  Similarly, a \emph{right-normalized} local tensor fulfills
+  \[
+    \sum_k M\ind{l}_k \adj{M\ind{l}_k} = \1 \quad\quad\quad\quad
+    \begin{tikzpicture}[baseline=-.5ex]
+      \tensor{{W=1,S=1,E=1,tensor_name='A',y=0.5}}
+      \tensor{{W=1,N=1,E=1,tensor_name='B',y=-0.5}}
+      \draw[tensorleg] (A_E1e) -- (B_E1e);
+    \end{tikzpicture}
+    =
+    \begin{tikzpicture}[baseline=-.5ex]
+      \coordinate (A) at (0,0.5);
+      \coordinate (B) at (0,-0.5);
+      \draw[tensorleg] (A) -- (B);
+      \draw[tensorleg] (A) -- +(-.5,0);
+      \draw[tensorleg] (B) -- +(-.5,0);
+    \end{tikzpicture}
+  \]
+  and a \emph{right-canonical} MPS has all local tensors in right-normalized form except for the first.
+\end{definition}
+
+The exceptions for the local tensors at the beginning and end of the chain are necessary to accommodate tensors with Frobenius norm different from one.
+In practice, we often deal with a mixed left-right-canonical form, e.g.\ in variational algorithms updating one local tensor at a time such as DMRG or the alternating least squares algorithm presented in \cref{sec:tensors.als}.
+For these purposes, efficient algorithms exist that transform an MPS to a canonical form.
+If we neglect transformations that change the bond dimensions, the remaining gauge group is unitary, and hence, computations on canonical MPS are far more stable numerically.\\
+
+% arithmetical operations: addition, multiplication, ...
+% -> increases rank -> compression algorithms
+% -> implementatoin see next section
+
+
 
 
 
