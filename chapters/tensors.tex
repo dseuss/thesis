@@ -472,7 +472,7 @@ Here, $\norm{\cdot}$ denotes the Frobenius norm of tensors, $X_\mathrm{SVD}$ the
 % This is the reason why the MPS tensor format is becoming more popular.
 
 
-\subsection{Applications of the MPS format}
+\subsection{Applications of the MPS format}%
 \label{sub:mps.applications}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -482,26 +482,33 @@ Here, $\norm{\cdot}$ denotes the Frobenius norm of tensors, $X_\mathrm{SVD}$ the
     \fill[fill=yellow!30,line width=0] (0,0) ellipse (3cm and 1.5cm) node[anchor=south] {\textbf{Many-body Hilbert space}};
     \coordinate (mpsstates) at (1.7, -1);
     \fill[fill=blue!30,line width=0] (mpsstates) ellipse (0.2cm and 0.1cm);
-    \draw[<-] (mpsstates) -- (3,-0.5) node[anchor=west] {States with efficient MPS description};
+    \draw[<-] (mpsstates) -- (3,-0.5) node[anchor=west] {MPS with small bond dimension};
   \end{tikzpicture}
-  \caption{\label{tensors.mps_cartoon}%
+  \caption{\label{fig:mps.cartoon}%
     The manifold of quantum states with an efficient MPS description occupies only a tiny corner in the full Hilbert space.
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% constitute variational classes of states that can efficiently parametrize interesting states such as...
-%   -> linear local structure
-%   - Link figure, area laws
-%   - exponentially small corner, but very important, variational class of low-dimensiona
+The main application of the MPS representation in quantum information and condensed matter physics is the efficient description of certain many-body states.
+As the corresponding Hilbert space grows exponentially fast in the number of constituents $N$, the full description of any state in terms of its coefficients w.r.t.\ a fixed basis is only feasible for small $N$.
+Fortunately, not all quantum states of a many-body system are equally relevant in practice.
+Many systems of interest are well described by a Hamiltonian with local interactions, e.g.\ nearest neighbour interactions, which reflects in the structure of correlations in their low energy spectrum.
+More specifically, low energy eigenstates of gapped Hamiltonians with local interactions obey the \emph{area-law} for entanglement entropy~\cite{Hastings,Cirac}:
+For those states, the entanglement entropy of a subsystem asymptotically only depends on its boundary size and not on its volume.
+Although those stats occupy only a small corner of the enormous many-body Hilbert space as depicted in \cref{fig:mps.cartoon}, they are exceptionally important in practice.
 %   - time evolution stays there -> see Orus 3.4
-%   - capture well physics
-% on the other hand, also allow for an efficient implementation of crucial operations
-% application in physics:
-%   - fully described by order N tensor w.r.t. fixed PRODUCT basis <-> we'll identify the two
-%   - captures entanglement structure of local interacctions
-% case for states with strong area laws [citatoin], but generally every state with an area law can be approximated arbitatarly well with bond dimension scaling polynomially in N -> efficient description!
 
+In one dimensional systems, any many-body state $\ket{psi}$ with an area law\footnote{%
+  In one dimension, the boundary area of any connected region is constant and independent of the size of the region, and therefore, the area law implies constant entanglement entropy.
+}
+also has an efficient representation.
+If we expand $\ket{\psi}$ in a product basis with coefficient tensor $C$,
+\[
+  \ket\psi = \sum_{i_1,\ldots,i_N} C_{i_1,\ldots,i_N} \, \ket{i_1} \otimes \cdots \otimes \ket{i_N},
+\]
+then $C$ can be efficiently approximated by an MPS with bond dimension scaling polynomially in $N$ and the inverse approximation error~\cite{hastings,arad}.
+% explains DMRG, TEBD
 
 % generalizations:
 %   - MPO -> 2 legs per site -> useful to describe multi-body mixed states -> positvity hard [Kliesch], but more expressive [Cuevas]
@@ -509,7 +516,7 @@ Here, $\norm{\cdot}$ denotes the Frobenius norm of tensors, $X_\mathrm{SVD}$ the
 %   - in mpnum -> general data strucutre -> MPArray -> arbitatary legs per site
 
 
-
+% machine learning applications
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{The Python Library mpnum}%
