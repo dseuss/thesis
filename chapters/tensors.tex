@@ -629,12 +629,16 @@ Unfortunately, this problem is $\NP$-hard, even if we restrict to dimensions $d=
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 One way to cope with this problem is to use an inherently psd parameterization of the mixed state.
-For a any, $D \times D$ mixed state $\rho$, a purification is a pure state $\ket{\psi} \in \Complex^{D \times D}$ such that~\cite{Nielsen_2010_Quantum}
+Denote by $\mathcal{H}_1$ the Hilbert space of the system and by $\rho$ the corresponding mixed state.
+By introducing a second \emph{auxiliary} Hilbert space $\mathcal{H}_2$, we can write~\cite{Nielsen_2010_Quantum}
 \[
-  \rho = \tr_2 \ket{\psi}\bra{\psi}.
+  \rho = \tr_{\mathcal{H}_2} \ket{\psi}\bra{\psi},
+  \label{eq:mps.purification}
 \]
-Here, the partial trace is taken over the second auxiliary Hilbert space.
-Similarly, for a MPDO $\rho$, a \emph{local purification matrix product state} (PMPS) is a matrix product state with two legs per site as depicted in \cref{fig:mps.pmps} such that
+where $\ket{\psi} \in \mathcal{H}_1 \otimes \mathcal{H}_2$.
+Note that we can take $\mathcal{H}_2$ to be of the same dimension as $\mathcal{H}_1$.
+
+Similarly, a \emph{local purification matrix product state} (PMPS) is a matrix product state with two legs per site as depicted in \cref{fig:mps.pmps} such that
 \[
   \underbrace{%
     \begin{tikzpicture}[baseline=-.5ex]
@@ -650,10 +654,15 @@ Similarly, for a MPDO $\rho$, a \emph{local purification matrix product state} (
     \draw[tensorleg] (up_3_N2e) to[out=75,in=-75] (down_3_S2e);
     \draw[tensorleg] (up_4_N2e) to[out=75,in=-75] (down_4_S2e);
   \end{tikzpicture}
+  \label{eq:mps.pmps}
 \]
 This is an inherently positive semidefinite parametrization of $\rho$ in matrix product form.
-But this advantages comes at a price:
-\todo{Cuevas Paper}
+However, this advantage comes at a price:
+The PMPS representation of a state can be arbitrarily more costly than its MPDO representation.
+More precisely, there a families of states $(\rho_N)_{N \in \Naturals}$  with $\rho_N \in \Complex^{d^N}$ such that $\rho_N$ has constant MPO-rank, but the PMPS-rank of $rho_N$ scales as $\mathcal{O}(N)$.
+This and the hardness result from~\cite{Kliesch} shows that no efficient algorithm for computing an exact local purification from an MPDO exists in general.
+However, the questions how generic this hardness is and how hard approximative versions of this problem are remain open?
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
