@@ -661,8 +661,24 @@ However, this advantage comes at a price:
 The PMPS representation of a state can be arbitrarily more costly than its MPDO representation.
 More precisely, there a families of states $(\rho_N)_{N \in \Naturals}$  with $\rho_N \in \Complex^{d^N}$ such that $\rho_N$ has constant MPO-rank, but the PMPS-rank of $rho_N$ scales as $\mathcal{O}(N)$.
 This and the hardness result from~\cite{Kliesch} shows that no efficient algorithm for computing an exact local purification from an MPDO exists in general.
-However, the questions how generic this hardness is and how hard approximative versions of this problem are remain open?
+However, the questions how generic this hardness is and how hard approximative versions of this problem are remain open?\\
 
+
+
+Besides the original applications in physics, the MPS tensor format has recently also found applications in the field of machine learning:
+Deploying the latest neural networks on mobile devices such as smart phones or IOT devices is challenging due to the high dimensional hidden layers, e.g. a single weight matrix of a fully connected layer can have millions of parameters.
+By approximating this weight matrix by an MPS with small bond dimension, the authors in~\cite{Novikov} were able to compress state-of-art image detection networks by a factor of seven with only minor performance penalties.
+Other examples of applications of tensor decompositions in deep learning include regularization~\cite{Tai} and deep representation learning~\cite{YangHospedales}.
+
+Another use of the MPS tensor format in machine learning was pioneered in~\cite{Stoudenmire}.
+They consider a support vector machine classifier, which for the binary (yes/no) outcome is given by
+\[
+  f(X) = \braket{W, X},
+\]
+where $X$ is the input vector and $W$ is the model vector.
+The goal is to determine $W$ in such a way that $f(X) > 0$ if $X$ is in the \quotes{yes} class and $f(X) < 0$ otherwise.
+By using a MPS representation for $W$ and $X$, they are able to efficiently learn such a model even in very higher-dimensional settings.
+A similar can also be applied to learning polynomial classifiers~\cite{Chen}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
