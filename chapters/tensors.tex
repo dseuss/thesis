@@ -685,6 +685,7 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen}.
 \section{The Python Library mpnum}%
 \label{sec:tensors.mpnum}
 
+\input{notebooks/Introduction}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{ALS for Tensors}%
@@ -739,34 +740,6 @@ The second summand on the left hand side is necessary to encode the positions of
 
 In conclusion, both compressed sensing and low-rank matrix recovery provide techniques to efficiently reconstruct a low-complexity, compressible signal embedded in a higher-dimensional space from linear measurements.
 Here, \quotes{efficiently} refers to both, low computational as well as sample complexity -- that is the number of measurements required scales with the intrinsic complexity of the signal and not the dimension of the ambient space.\\
-
-
-
-In this chapter, we consider a natural extension of the ideas introduced above to the problem of recovering low-rank tensors.
-For this purpose, consider a tensor $X \in \Reals^{d_1 \times \cdots \times d_N}$.
-If not stated otherwise, we assume $d_1 = \cdots = d_N = d$ throughout this chapter.
-Contrary to the case of matrices, there are many inequivalent definitions of \quotes{rank} for tensors.
-The most natural generalization of the matrix rank is given by the \emph{canonical tensor rank} of $X$, which is defined by the smallest number of rank-1 tensors that add up to $X$~\cite{Kolda_2009_Tensor}
-In other words, the canonical tensor rank is the smallest number $r$ such that
-\[
-  X = \sum_{l=1}^r a\ind{l}_1 \otimes \cdots a\ind{l}_N
-  \label{eq:tensors.canonical_decomposition}
-\]
-with $a\ind{l}_i \in \Reals^{d_i}$.
-The decomposition~\eqref{eq:tensors.canoncial_decomposition} is known under many names such as \emph{CANDECOMP/PARAFAC}~\cite{Kolda_2009_Tensor}.
-Although it captures the natural structure of many problems and only requires $\Order(r N d)$ parameters, it has shortcomings in practice:
-First and foremost, computing the canonical tensor rank is $\NP$-complete~\cite{Hastad_1990_Tensor}.
-Furthermore, the best rank-$r$ approximation of a given tensor may not exist~\cite{Kolda_2009_Tensor} and it is also hard to compute if it exists~\cite{Hillar_2013_Most}.
-In general, the CANDECOMP/PARAFAC decomposition is hard to deal with computationally.
-\todo{Some compressed sensing results for canonical low-rank tensors}
-
-A different notion of tensor rank is induced by the tensor decomposition known under many different names such as \emph{matrix-product states} (MPS)~\cite{Garcia_2006_Matrix,Verstraete_2008_Matrix,Orus_2014_Practical} and \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} in quantum physics or \emph{tensor train} (TT)~\cite{Oseledets_2011_TensorTrain} in the applied math community.
-We introduce the exact definition in \cref{sec:tensors.mps}, but let use point out that a tensor $X \in \Reals^{d^{\otimes N}}$ with MPS-rank $r$ can be parametrized by $\Order{r^2 N d}$ real numbers.
-This motivated the main question we are trying to answer in this chapter:
-Can we efficiently reconstruct a tensor with low MPS-rank from few linear measurements?
-In the ideal case, the number of measurements required for reconstructing a tensor with low MPS-rank would scale as $m = \Order{r^2 N d}$, which is an exponential improvement over the naïve linear inversion requiring $m = d^N$.
-In contrast, compressed sensing or low-rank matrix recovery techniques can only yield polynomial improvement in the sample complexity.
-
 
 %
 % big problem: standard model (fully Gaussian measurements) also not efficient; partially solved in Zeljka
