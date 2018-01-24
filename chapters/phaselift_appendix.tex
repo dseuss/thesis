@@ -3,7 +3,7 @@
 \section{Proof of \cref{thm:phaselift_noisy}}
 \label{sec:main_proof}
 
-Our analysis is inspired by Ref.~\cite{dirksen_gap_2015} (who derived strong results for sparse vector recovery using similar assumptions) and Ref.~\cite{kabanava_stable_2016} in the non-commutative setting. Moreover, Krahmer and Liu considered a real-valued version of the problem addressed here, see Ref.~\cite{krahmer_phase_2017}.
+Our analysis is inspired by Ref.~\cite{Dirksen_2017_On} (who derived strong results for sparse vector recovery using similar assumptions) and Ref.~\cite{Kabanava_2015_Stable} in the non-commutative setting. Moreover, Krahmer and Liu considered a real-valued version of the problem addressed here, see Ref.~\cite{Krahmer_2016_Phase}.
 
 
 
@@ -32,7 +32,7 @@ Then,
 \end{theorem}
 
 
-The second result is a generalization of ``Gordon's escape through a mesh''-Theorem \cite{gordon_milman_1988} (a random subspace avoids a subset provided the subset is small in some sense) that is due to Mendelson \cite{mendelson_learning_2015,koltchinskii_bounding_2015}, see also see also \cite{tropp_convex_2015}.
+The second result is a generalization of ``Gordon's escape through a mesh''-Theorem \cite{Gordon_1988_On} (a random subspace avoids a subset provided the subset is small in some sense) that is due to Mendelson \cite{Mendelson_2015_Learning,Koltchinskii_2015_Bounding}, see also see also \cite{Tropp_2014_Convex}.
 
 \begin{theorem}[Mendelson's small ball method] \label{thm:mendelson}
   Suppose that the measurement operator $\mathcal{A}:\Hermitian_n \to \mathbb{R}^m$ contains $m$ independent copies $A_k$ of a random matrix $A \in \Hermitian_n$, that is
@@ -64,8 +64,8 @@ It maps the signal matrix $Z$ to the vector of (noiseless) measurement outcomes 
 
 \subsection{Convex geometry}
 
-This section summarizes several results presented in Ref.~\cite{kabanava_stable_2016} and adapts them to the task at hand: phase retrieval.
-Compared to~\cite{kabanava_stable_2016} the analysis presented here is somewhat more direct and exploits the positive semidefinite constraint in a different way.
+This section summarizes several results presented in Ref.~\cite{Kabanava_2015_Stable} and adapts them to the task at hand: phase retrieval.
+Compared to~\cite{Kabanava_2015_Stable} the analysis presented here is somewhat more direct and exploits the positive semidefinite constraint in a different way.
 
 \begin{proposition} \label{prop:nsp_implication}
   Let $\Sphere^{n^2-1}=\left\{ Z \in \Hermitian_n: \| Z \|_2=1 \right\}$ be the (Frobenius norm) unit sphere in $\Hermitian_n$ and $\mathcal{B}_1 = \mathrm{conv} \left\{ \pm | x \rangle \! \langle  x| \colon  x \in \Sphere^{n-1} \right\}$ denote the trace-norm ball.
@@ -112,7 +112,7 @@ Thus, \eqref{eq:nsp} is applicable and yields
 which establishes \cref{eq:rec_guarantee} for case I in \eqref{eq:nsp_case1}.
 
 
-For the second case, we use a consequence of von Neumann's trace inequality, see e.g. \cite[Theorem~7.4.9.1]{horn_topics_1991}: Let $A, B$ be matrices with singular values $\sigma_k (A),\sigma_k (B)$ arranged in non-increasing order.
+For the second case, we use a consequence of von Neumann's trace inequality, see e.g. \cite[Theorem~7.4.9.1]{Horn_1994_Topics}: Let $A, B$ be matrices with singular values $\sigma_k (A),\sigma_k (B)$ arranged in non-increasing order.
 Then
 \begin{equation*}
   \| A - B \|_1 \geq \sum_{k=1}^d | \sigma_k (A) - \sigma_k (B)|
@@ -370,9 +370,9 @@ Techniques from representation theory -- more precisely: Schur's Lemma -- then i
   %\mathbb{E} \left[ U^{\otimes N} (|a_0 \rangle \! \langle a_0|)^{\otimes N} (U^\dagger)^{\otimes N} \right] = \binom{n+N-1}{n}^{-1} \| a_0\|_{\ell_2}^N P_{\vee^N} =
   n^N \binom{n+N-1}{N}^{-1} P_{\vee^N},
 \]
-see e.g.\ \cite[Lemma~1]{scott_tight_2006}.
+see e.g.\ \cite[Lemma~1]{Scott_2006_Tight}.
 Here, $P_{\vee^N}$, denotes the projector onto the totally symmetric subspace $\bigvee\!^N \subset \left( \mathbb{C}^n \right)^{\otimes N}$.
-Note that $\left(| z \rangle \! \langle  z| \right)^{\otimes N} \in \bigvee\!^N$ and, moreover $2 \mathrm{tr} \left( P_{\vee^2} Z^2 \right)= \| Z \|_2^2 + \mathrm{tr} (Z)^2$ for any matrix $Z$, see e.g.\ \cite[Lemma~17]{kueng_low_2016}.
+Note that $\left(| z \rangle \! \langle  z| \right)^{\otimes N} \in \bigvee\!^N$ and, moreover $2 \mathrm{tr} \left( P_{\vee^2} Z^2 \right)= \| Z \|_2^2 + \mathrm{tr} (Z)^2$ for any matrix $Z$, see e.g.\ \cite[Lemma~17]{Kueng_2016_Low}.
 Consequently,
 \begin{align*}
   \mathbb{E} \left[ | \langle\alpha, z \rangle|^2 \right]

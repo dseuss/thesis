@@ -1,13 +1,13 @@
  % -*- root: ../thesis.tex -*-
-\chapter{Phaselift}%
+\chapter{Characterizing linear-optical networks via PhaseLift}%
 \label{chap:phaselift}
 
 
 
 Linear-optical networks composed of beamsplitting and phaseshifting operations are fundamental to the quantum and classical processing of information with light.
-Passive and reconfigurable linear optical circuits have been proposed and demonstrated for many applications including telecommunications~\cite{Miller2015}, machine learning~\cite{Shen2017} and quantum computation~\cite{Carolan2015} and simulation~\cite{Harris2017}.
-With the continuing development of large-scale integrated photonic platforms~\cite{Silverstone2016,Seok2016}, practical and reliable techniques for characterising and validating the operation of these devices are crucial.
-In this work, we present new protocols for characterising linear optical devices with low experimental resources by exploiting a connection to the phase retrieval problem \cite{walther_question_1963}.
+Passive and reconfigurable linear optical circuits have been proposed and demonstrated for many applications including telecommunications~\cite{Miller_2015_Sorting}, machine learning~\cite{Shen_2017_Deep} and quantum computation~\cite{Carolan_2015_Universal} and simulation~\cite{Harris_2017_Quantum}.
+With the continuing development of large-scale integrated photonic platforms~\cite{Silverstone_2016_Silicon,Seok_2016_LargeScale}, practical and reliable techniques for characterising and validating the operation of these devices are crucial.
+In this work, we present new protocols for characterising linear optical devices with low experimental resources by exploiting a connection to the phase retrieval problem \cite{Walther_1963_Question}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
@@ -16,10 +16,6 @@ In this work, we present new protocols for characterising linear optical devices
 Theoretically, a linear optical device is fully characterized by its \emph{transfer matrix} ${M}$.
 We consider as input to the device classical light described by a multimode coherent state $\ket{{\alpha}} = \ket{\alpha_1, \ldots, \alpha_n}$.
 Due to the linearity of the device, this input is mapped to a coherent state $\ket{{\beta}}$ in the output via
-% \footnote{% chktex 42
-%   Note that we deviate from the customary definition of ${M}$ by a reversal of indices.
-%   In this convention, the action of the linear optical network on a coherent state is described by a matrix-vector multiplication.
-% }
 \[
   \beta_j = \sum_k M_{j,k} \,\alpha_k.
   \label{eq:coherent_transfer_matrix}
@@ -37,9 +33,9 @@ Here, $\epsilon_j$ describes noise due to statistical fluctuations or systematic
 Although the output coherent states~\eqref{eq:coherent_transfer_matrix} are linear in ${M}$, the resulting intensity measurements~\eqref{eq:intensities} are quadratic in ${M}$ and oblivious to the phases of $\beta$.
 Therefore, the problem of reconstructing ${M}$ from such measurements is ill-posed and requires deliberate utilization of inference between the modes to recover the phases of $M$.
 
-Well-known techniques for fully characterising photonic circuits include quantum process tomography with non-classical~\cite{OBrien2004} or coherent~\cite{rahimi-keshari_quantum_2011} states, though these approaches scale exponentially with the number of modes.
-Simpler protocols tailored to linear optics have been proposed that use either single and two-photon probe states~\cite{laing_super-stable_2012,Dhand2016,Spagnolo2017} or multimode coherent states~\cite{rahimi_direct_2013,Tillmann2016}.
-The most similar scheme to the one presented here is~\cite{rahimi_direct_2013}, where coherent light is input into single modes and split over pairs of modes with the intensity at each output measured.
+Well-known techniques for fully characterising photonic circuits include quantum process tomography with non-classical~\cite{Brien_2004_Quantum} or coherent~\cite{Keshari_2011_Quantum} states, though these approaches scale exponentially with the number of modes.
+Simpler protocols tailored to linear optics have been proposed that use either single and two-photon probe states~\cite{Laing_2012_SuperStable,Dhand_2016_Accurate,Spagnolo_2017_Learning} or multimode coherent states~\cite{Keshari_2013_Direct,Tillmann_2016_On}.
+The most similar scheme to the one presented here is~\cite{Keshari_2013_Direct}, where coherent light is input into single modes and split over pairs of modes with the intensity at each output measured.
 While their recovery method is strikingly simple and relies only on $2n-1$ input configurations, for each configuration it requires varying over a phase shift between the two modes until maximal constructive interference is observed.
 Furthermore, by construction, it propagates information about ${M}$'s first row to the remaining ones.
 The first requirement results in an interactive experiment, where the inputs need to be adjusted gradually throughout an individual measurement.
@@ -58,14 +54,14 @@ The crucial observation in this paper is that measurements~\eqref{eq:intensities
   \label{eq:phase_retrieval_measurements}
 \]
 Here, $\alpha^{(l)} \in \Complex^n$ denote measurement vectors and $\epsilon^{(l)}$ the additive measurement errors.
-One practical solution to the phase retrieval problem~\cite{balan_painless_2009} -- and hence, for recovering transfer matrices -- is based on its connection to the field of low-rank matrix recovery~\cite{ahrero12,candes_exact_2009,capl11,recht_guaranteed_2010,gross_recovering_2011,chen_incoherence_2013} by noting that
+One practical solution to the phase retrieval problem~\cite{} -- and hence, for recovering transfer matrices -- is based on its connection to the field of low-rank matrix recovery~\cite{Ahmed_2014_Blind,Candes_2009_Exact,Candes_2011_Tight,Recht_2010_Guaranteed,Gross_2011_Recovering,Chen_2015_IncoherenceOptimal} by noting that
 \[
   % y^{(l)}
   \left| \langle {x}, \alpha^{(l)} \rangle \right|^2
   = \tr \left( (\ket{\alpha^{(l)}}\bra{\alpha^{(l)}}) (\ket{{x}}\bra{{x}}) \right).
 \]
 This ``lifts'' the phase retrieval problem to the problem of recovering the positive semi-definite (psd) rank-1 matrix $\ket{ x}\bra{ x}$ from linear measurements.
-The latter can be solved efficiently via the semi-definite program dubbed \emph{PhaseLift}~\cite{candes_phaselift_2012}
+The latter can be solved efficiently via the semi-definite program dubbed \emph{PhaseLift}~\cite{Candes_2013_Phaselift}
 \begin{align}
   \underset{{Z}}{\textrm{minimize}} & \quad \sum_{l=1}^m \left| \tr \left( \ket{\alpha^{(l)}} \bra{\alpha^{(l)}} \, {Z} \right) - y^{(l)} \right| \label{eq:PhaseLift} \\
   \textrm{subject to} &\quad  {Z} \geq 0. \nonumber
@@ -75,7 +71,7 @@ Denote by $\lambda$ the largest eigenvalue of ${ Z}^\sharp$ and set ${ x}^\sharp
 Several analytic proofs of convergence have been established for phase retrieval via PhaseLift.
 With very few notable exceptions~\cite{Kech_2016_Explicit}, these are probabilistic in nature and assume that each measurement vector is chosen according to some random distribution.
 A paradigmatic example is the uniform (Gaussian) measurement ensemble, where the $\alpha^{(l)}$ are chosen uniformly from the complex unit sphere~\cite{Candes_2013_Phaselift}.
-Subsequently, similar results have been established for measurement ensembles that feature less randomness~\cite{gross_partial_2013,kueng_low_2014,kueng_low_2016} or additional structure tailored to specific applications~\cite{candes_phase_2015,gross_improved_2017,voroninski_quantum_2013,kueng_low_2015}.
+Subsequently, similar results have been established for measurement ensembles that feature less randomness~\cite{Gross_2014_Partial,Kueng_2014_Low,Kueng_2014_Low,Kueng_2016_Low} or additional structure tailored to specific applications~\cite{Candes_2013_Phaselift,Gross_2017_Improved,Voroninski_2013_Quantum,Kueng_2015_Low}.
 The main theoretical contribution of this work is such a recovery guarantee for a measurement ensemble motivated by the experimental architecture of linear optical devices:
 The \emph{randomly erased complex Rademacher} (RECR) ensemble requires only four phase shifter settings per mode, and hence, is easier to implement experimentally than e.g.\ the uniform ensemble, which necessitates the ability to prepare any phase shift.
 
@@ -104,7 +100,7 @@ For this we propose the following protocol:
 Two important questions remain:
 (i) from which ensemble should we sample the input coherent states and (ii) how many such inputs are sufficient for a successful reconstruction?
 In this section we provide two different answers to these questions.
-First, we show that the established uniform measurement ensemble~\cite{kueng_low_2014} allows for reconstructing $ M$ from an asymptotically optimal number of measurements.
+First, we show that the established uniform measurement ensemble~\cite{Kueng_2014_Low} allows for reconstructing $ M$ from an asymptotically optimal number of measurements.
 Second, we introduce a new sampling scheme tailored to the specific application.
 While the latter is easier to implement experimentally, it provably performs as well as the uniform ensemble.
 
@@ -116,7 +112,7 @@ Fixing the norm of the input vectors to a constant is crucial for our particular
   Note the difference between the normalisation of the coherent state vector $\alpha$ and the corresponding quantum state $\singleket{\alpha}$:
   While the latter always has unit norm, the normalisation of the former corresponds to the total intensity of the classical state of light, and hence, can in principle assume any value in $[0,\infty)$.
 }.
-Strong analytic reconstruction guarantees exist for phase retrieval with this measurement ensemble~\cite{candes_solving_2012, tropp_convex_2015, kueng_low_2014}.
+Strong analytic reconstruction guarantees exist for phase retrieval with this measurement ensemble~\cite{Candes_2012_Solving,Tropp_2014_Convex,Kueng_2014_Low}.
 We provide a specific formulation for the problem at hand and a simplified proof strategy in the supplemental material.
 %We will show in the supplemental material that these results suffice to assure that the protocol described above also allows for reconstructing transfer matrices ${M}$.
 
@@ -270,9 +266,9 @@ Not only does the number of measurements scale linearly in the system size but t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 To demonstrate its practical utility, we used our protocol to perform experimental characterisations of a reconfigurable integrated photonic circuit.
-The silica-on-silicon device performs a linear-optical circuit comprising 30 directional couplers and 30 tunable thermo-optic phase-shifters on six optical waveguides \cite{Carolan2015}.
+The silica-on-silicon device performs a linear-optical circuit comprising 30 directional couplers and 30 tunable thermo-optic phase-shifters on six optical waveguides \cite{Carolan_2015_Universal}.
 As shown in \cref{fig:experimental.schematic}, inputting coherent light into the bottom waveguide of the device, an initial cascade of five Mach-Zehnder interferometers (MZIs) and accompanying phase-shifters can be used to prepare any five-mode input vector $\ket{{\alpha}}$.
-The remaining triangular array of components is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck1994}.
+The remaining triangular array of components is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck_1994_Experimental}.
 Reconfiguring the target $M$ then enables us to experimentally test the protocol across a number of configurations including Identity, Swap, and Fourier matrices as well as Haar random unitaries.
 One advantage of the RECR scheme over the uniform scheme becomes clear from~\cref{fig:experimental.schematic}:
 Since the RECR scheme only requires four different phase values in each mode, these configurations can be calibrated more precisely.
