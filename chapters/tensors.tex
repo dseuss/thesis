@@ -15,6 +15,7 @@ The question we are attempting to answer in this chapter is whether such MPS can
   We use the term \quotes{matrix product state} to not only refer to quantum states, but to general tensors in the MPS format.
 }.
 More precisely, we provide evidence that the number of measurements required to recover a MPS is related to its intrinsic complexity -- and hence, scales polynomially in the number of constituents -- although its Hilbert space is exponentially large.
+\todo{Two fold: compressed sensing and scalable MMLE}
 This work is a natural extension of \emph{low-rank matrix recovery}, which formed the foundation of the results in \cref{chap:phaselift}, to higher-order tensors.\\
 \todo{tensors -> higher order, rank}
 
@@ -687,62 +688,56 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen}.
 
 \input{notebooks/Introduction}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Scalable maximum likelihood estimation for quantum states}%
+\label{sec:tensors.mle}
+
+\todo{Leave this out?}
+% QSE -> see chapter ..., number of measurements without further assumptions ~ dimension of hilber space ^2 -> exponential for many body states
+% slight reduction using low-rank matrix recovery, but still exponential
+% here: assuming efficient MPO description -> # of measurements -> linear in N
+%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{ALS for Tensors}%
 \label{sec:tensors.als}
 
-\subsection{Introduction}
-\label{sub:tensors.als.introduction}
-
-In the last chapter, we discussed a solution to the phase retrieval problem based on ideas from \emph{low-rank matrix recovery}.
-The latter can be summarized as follows.
-Consider a matrix\footnote{%
-  Here, we choose $X$ to be real to simplify some notation -- an adaption of the statements made to the complex case is straight forward.
-}
-$X \in \Reals^{d \times d}$ of rank $r$, i.e.\ $X$ has only $r$ non-zero singular values.
-The goal is to reconstruct $X$ from $m$ linear measurements of the form
-\[
-  y_l = {\braket{A\ind{l}, X}}, \quad l=1,\ldots,m
-  \label{eq:tensors.lin_measurements}
-\]
-where $\braket{A, B} = \tr (\transpose{A} B)$ denotes the Frobenius inner product, $A\ind{l} \in \Reals^{d \times d}$ the \emph{measurement matrices}, and $y_l \in \Reals$ the corresponding measurement data.
-In other words, we are looking for a solution $X$ of the linear problem defined by \cref{eq:tensors.lin_measurements}.
-Note that \cref{eq:tensors.lin_measurements} describes the idealized measurements in the absence of noise.
-
-In case the $A_i$ span $\Reals^{d \times d}$, this can be solved simply by computing the (pseudo-)inverse similar to \cref{sub:ortho.linear_inversion}.
-However, in the underdetermined case $m < d^{2}$, this constitutes an ill-posed linear problem.
-Nevertheless, we can still single out a unique solution in some cases by exploiting the additional structure, namely the low-rank assumption.
-For example, in \cref{thm:FIXME} we show that $m = \Order(d)$ random measurements sampled from an appropriate distribution are sufficient to reconstruct any positive semidefinite, Hermitian $X \in \Complex^{d \times d}$ with unit rank.
-More generally, we can recover any $X \in \Reals^{d \times d}$ with $\rank X = r$ from $m = \Order(d r)$ randomly chosen measurements~\cite{Candes_2011_Tight,Kueng_2014_Low}.
-Intuitively, this sample complexity is asymptotically optimal since we need at least $2 d r$ real parameters to specify the left- and right-singular vectors of $X$, see~\cite{Eldar_2012_Uniqueness,Li_2017_Optimal} for rigorous lower bounds.
-
-But \cref{thm:FIXME} not only guarantees identifiability of $X$, it also provides a semidefinite program to compute the reconstruction.
-\todo{Why is this solution?}
-The existence of such an efficient algorithm is crucial since the straight-forward reconstruction via rank minimization
-\[
-  \estim{X} = \argmin_{X'} \rank X' \quad\mathrm{s.t.}\ \braket{A\ind{i}, X'} = y_i (i = 1, \ldots, m)
-\]
-is $\NP$-hard~\cite{Mesbahi}.\\
-
-A closely related problem is studied under the name of \emph{compressed sensing}:
-The goal is to recover an $s$-sparse vector $X \in \Reals^d$ from linear measurements as in \cref{eq:tensors.lin_measurements} with $\braket{\cdot, \cdot}$ denoting the Euclidean scalar product on $\Reals^d$.
-Here, a vector is $s$-sparse if it has $s$ non-vanishing components with respect to a certain basis.
-Therefore, the property of having low-rank may be regarded as a non-commutative analogue of sparsity since a matrix has low-rank if and only if it is sparse in its eigenbasis.
-\todo[noline]{Check log factors}
-Similar to the matrix case, $X$ can be recovered from $m = \Order(s \log d)$ randomly chosen measurement vectors $A\ind{l} \in \Reals^d$ using a linear program~\cite{Foucart_2013_Mathematical}.
-Hence, the number of measurements required scales with the \emph{intrinsic complexity} of the sparse signal vector:
-If we encode each component of $X$ using $N$ bits, we can encode the full vector using
-\[
-  N \times s + s \log d = \Order(s \log d)
-\]
-bits.
-The second summand on the left hand side is necessary to encode the positions of the non-zero components.
-
-In conclusion, both compressed sensing and low-rank matrix recovery provide techniques to efficiently reconstruct a low-complexity, compressible signal embedded in a higher-dimensional space from linear measurements.
-Here, \quotes{efficiently} refers to both, low computational as well as sample complexity -- that is the number of measurements required scales with the intrinsic complexity of the signal and not the dimension of the ambient space.\\
-
+% MPS: efficient tesnor description, structure well suited for many practical applications
+% problem in practice: recover tensor X from measurable quantities -> how many measurements? algorithm to reconstruct?
+% due to curse of dimensionality -> efficiency and low sample complexity important in tensor case.
 %
-% big problem: standard model (fully Gaussian measurements) also not efficient; partially solved in Zeljka
+% example: QSE for MPS -> cite
+% measurements: informationally complete k-local with k << N => sample complexity ~ N; 
+% computationally efficient algorithm in MPS rep; convergence proof only for ineffient version
+
+% similar problem: phaselift chapter -> low-rank matrix recovery -> structure leads to reduced sample complexity
+% The goal is to reconstruct $X$ from $m$ linear measurements of the form
+% \[
+%   y_l = {\braket{A\ind{l}, X}}, \quad l=1,\ldots,m
+%   \label{eq:tensors.lin_measurements}
+% \]
+% where $\braket{A, B} = \tr (\transpose{A} B)$ denotes the Frobenius inner product, $A\ind{l} \in \Reals^{d \times d}$ the \emph{measurement matrices}, and $y_l \in \Reals$ the corresponding measurement data.
+% naive aproach -> d^2 such measurements
+% put generaliztt of THM -> 
+% Nevertheless, we can still single out a unique solution in some cases by exploiting the additional structure, namely the low-rank assumption.
+% For example, in \cref{thm:FIXME} we show that $m = \Order(d)$ random measurements sampled from an appropriate distribution are sufficient to reconstruct any positive semidefinite, Hermitian $X \in \Complex^{d \times d}$ with unit rank.
+% More generally, we can recover any $X \in \Reals^{d \times d}$ with $\rank X = r$ from $m = \Order(d r)$ randomly chosen measurements~\cite{Candes_2011_Tight,Kueng_2014_Low}.
+% Intuitively, this sample complexity is asymptotically optimal since we need at least $2 d r$ real parameters to specify the left- and right-singular vectors of $X$, see~\cite{Eldar_2012_Uniqueness,Li_2017_Optimal} for rigorous lower bounds.
+% computationally efficient -> SDP or other algorithmk
+
+
+% In conclusion, both compressed sensing and low-rank matrix recovery provide techniques to efficiently reconstruct a low-complexity, compressible signal embedded in a higher-dimensional space from linear measurements.
+% Here, \quotes{efficiently} refers to both, low computational as well as sample complexity -- that is the number of measurements required scales with the intrinsic complexity of the signal and not the dimension of the ambient space.\\
+% result for MPS of rank k and order 2 -> generalization to arbitary orderes
+% The goal is to reconstruct $X$ from $m$ linear measurements of the form simlar to above, with measuemetn tensors $A$
+
+
+% existing work: canonical and tucker decompositoin -> still exponential sampling complexity
+% zeljka: projected gradient method for MPS, poly sample complexity BUT: fully gaussian measurements
+% cannot be computed efficeintly since measurements ~ exponential
+% similar to matrix case; usually first step: rank 1 measuement model with gaussian local tensors
+% 
 
 \subsection{Theory}%
 \subsection{Numerics}%
