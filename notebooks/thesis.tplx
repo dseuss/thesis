@@ -52,7 +52,7 @@
 
 ((* block input scoped *))
 \begin{pythoncode}
-((( cell.source )))
+((( cell.source | add_prompts)))
 \end{pythoncode}
 ((* endblock input *))
 
