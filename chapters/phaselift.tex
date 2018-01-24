@@ -3,21 +3,338 @@
 \label{chap:phaselift}
 
 
+Linear-optical networks composed of beamsplitting and phaseshifting operations are fundamental to the quantum and classical processing of information with light.
+Passive and reconfigurable linear optical circuits have been proposed and demonstrated for many applications including telecommunications~\cite{Miller2015}, machine learning~\cite{Shen2017} and quantum computation~\cite{Carolan2015} and simulation~\cite{Harris2017}.
+With the continuing development of large-scale integrated photonic platforms~\cite{Silverstone2016,Seok2016}, practical and reliable techniques for characterising and validating the operation of these devices are crucial.
+In this work, we present new protocols for characterising linear optical devices with low experimental resources by exploiting a connection to the phase retrieval problem \cite{walther_question_1963}.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 \subsection{Linear Optics}
+
+Theoretically, a linear optical device is fully characterized by its \emph{transfer matrix} ${M}$.
+We consider as input to the device classical light described by a multimode coherent state $\ket{{\alpha}} = \ket{\alpha_1, \ldots, \alpha_n}$.
+Due to the linearity of the device, this input is mapped to a coherent state $\ket{{\beta}}$ in the output via
+% \footnote{% chktex 42
+%   Note that we deviate from the customary definition of ${M}$ by a reversal of indices.
+%   In this convention, the action of the linear optical network on a coherent state is described by a matrix-vector multiplication.
+% }
+\begin{equation}
+  \beta_j = \sum_k M_{j,k} \,\alpha_k.
+  \label{eq:coherent_transfer_matrix}
+\end{equation}
+Determining ${M}$ experimentally is the crucial step to validate and verify an existing linear optical circuit.
+The standard measurable quantities in an optical experiment are the \emph{intensities} of the output modes
+\begin{equation}
+  I_j({\alpha})
+  = \left| \beta_j \right|^2 + \epsilon_j
+  = \left| \sum_k M_{j,k} \, \alpha_k \right|^2 + \epsilon_j
+  \label{eq:intensities}
+\end{equation}
+for certain coherent inputs $\ket{{\alpha}}$.
+Here, $\epsilon_j$ describes noise due to statistical fluctuations or systematic errors.
+Although the output coherent states~\eqref{eq:coherent_transfer_matrix} are linear in ${M}$, the resulting intensity measurements~\eqref{eq:intensities} are quadratic in ${M}$ and oblivious to the phases of $\beta$.
+Therefore, the problem of reconstructing ${M}$ from such measurements is ill-posed and requires deliberate utilization of inference between the modes to recover the phases of $M$.
+
+Well-known techniques for fully characterising photonic circuits include quantum process tomography with non-classical~\cite{OBrien2004} or coherent~\cite{rahimi-keshari_quantum_2011} states, though these approaches scale exponentially with the number of modes.
+Simpler protocols tailored to linear optics have been proposed that use either single and two-photon probe states~\cite{laing_super-stable_2012,Dhand2016,Spagnolo2017} or multimode coherent states~\cite{rahimi_direct_2013,Tillmann2016}.
+The most similar scheme to the one presented here is~\cite{rahimi_direct_2013}, where coherent light is input into single modes and split over pairs of modes with the intensity at each output measured.
+While their recovery method is strikingly simple and relies only on $2n-1$ input configurations, for each configuration it requires varying over a phase shift between the two modes until maximal constructive interference is observed.
+Furthermore, by construction, it propagates information about ${M}$'s first row to the remaining ones.
+The first requirement results in an interactive experiment, where the inputs need to be adjusted gradually throughout an individual measurement.
+\todo{Not quite correct.}
+Moreover, the second feature of the recovery protocol makes it a priori susceptible towards noise as any error in the determination of the first row propagates to the remaining rows.
+
+
+
+
 \subsection{Phase Retrieval}
+
+The crucial observation in this paper is that measurements~\eqref{eq:intensities} closely resemble the model of the \textit{phase retrieval problem}, i.e.\ the problem of recovering a complex vector ${x} \in \BC^n$ from $m$ measurements of the form
+\begin{equation}
+  y^{(l)} = \left| \langle {x}, \alpha^{(l)} \rangle \right|^2 + \epsilon^{(l)}
+  \quad l=1,\ldots,m.
+  \label{eq:phase_retrieval_measurements}
+\end{equation}
+Here, $\alpha^{(l)} \in \BC^n$ denote measurement vectors and $\epsilon^{(l)}$ the additive measurement errors.
+One practical solution to the phase retrieval problem~\cite{balan_painless_2009} -- and hence, for recovering transfer matrices -- is based on its connection to the field of low-rank matrix recovery~\cite{ahrero12,candes_exact_2009,capl11,recht_guaranteed_2010,gross_recovering_2011,chen_incoherence_2013} by noting that
+\begin{equation}
+  % y^{(l)}
+  \left| \langle {x}, \alpha^{(l)} \rangle \right|^2
+  = \tr \left( (\ket{\alpha^{(l)}}\bra{\alpha^{(l)}}) (\ket{{x}}\bra{{x}}) \right).
+\end{equation}
+This ``lifts'' the phase retrieval problem to the problem of recovering the positive semi-definite (psd) rank-1 matrix $\ket{ x}\bra{ x}$ from linear measurements.
+The latter can be solved efficiently via the semi-definite program dubbed \emph{PhaseLift}~\cite{candes_phaselift_2012}
+\begin{align}
+  \underset{{Z}}{\textrm{minimize}} & \quad \sum_{l=1}^m \left| \tr \left( \ket{\alpha^{(l)}} \bra{\alpha^{(l)}} \, {Z} \right) - y^{(l)} \right| \label{eq:PhaseLift} \\
+  \textrm{subject to} &\quad  {Z} \geq 0. \nonumber
+\end{align}
+From the minimizer ${ Z}^\sharp$ of \cref{eq:PhaseLift}, we obtain the recovered signal vector ${ x}^\sharp$ as follows:
+Denote by $\lambda$ the largest eigenvalue of ${ Z}^\sharp$ and set ${ x}^\sharp$ to be the largest eigenvalue of ${ Z}^\sharp$ scaled to $\norm{{ x}^\sharp} = \sqrt\lambda$.
+Several analytic proofs of convergence have been established for phase retrieval via PhaseLift.
+With very few notable exceptions~\cite{Kech_2016_Explicit}, these are probabilistic in nature and assume that each measurement vector is chosen according to some random distribution.
+A paradigmatic example is the uniform (Gaussian) measurement ensemble, where the $\alpha^{(l)}$ are chosen uniformly from the complex unit sphere~\cite{Candes_2013_Phaselift}.
+Subsequently, similar results have been established for measurement ensembles that feature less randomness~\cite{gross_partial_2013,kueng_low_2014,kueng_low_2016} or additional structure tailored to specific applications~\cite{candes_phase_2015,gross_improved_2017,voroninski_quantum_2013,kueng_low_2015}.
+The main theoretical contribution of this work is such a recovery guarantee for a measurement ensemble motivated by the experimental architecture of linear optical devices:
+The \emph{randomly erased complex Rademacher} (RECR) ensemble requires only four phase shifter settings per mode, and hence, is easier to implement experimentally than e.g.\ the uniform ensemble, which necessitates the ability to prepare any phase shift.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Theory for Characterization via PhaseLift}
-\subsection{Uniform Scheme}
-\subsection{RECR Scheme}
+
+Let us now turn to connecting the two problems introduced in the last section, namely determining the transfer matrix ${M}$ of a linear optical device on one hand and phase retrieval on the other hand.
+Note that the measured intensity at detector $j$ as given by \cref{eq:intensities} exclusively provides us with information about the $j$-th row vector of ${M}$:
+\begin{equation}
+  I_j({\alpha})
+  = \left| \sum_{k=1}^n M_{j,k} \alpha_k \right|^2 + \epsilon_j
+  = \left\vert  \langle {M}_j, \alpha \rangle  \right\vert^2 + \epsilon_j. \quad 1 \leq j \leq n
+  \label{eq:intensities_as_overlap}
+\end{equation}
+Here, we have defined ${M}_j$ as the (complex conjugated) row vectors of ${M}$.
+Since the measured intensities in \cref{eq:intensities_as_overlap} exactly resemble the measurement model of the phase retrieval problem in \cref{eq:phase_retrieval_measurements}, we can use the ideas mentioned in the introduction to reconstruct the transfer matrix.
+For this we propose the following protocol:
+\begin{protocol}{(for recovering the transfer matrix $ M$)}%
+  \label{prot:characterization}
+  \begin{enumerate}
+    \item Sample $m$ random coherent input states $\ket{ \alpha^{(l)}}$ from an appropriate ensemble.
+    \item Measure the $m \times n$ intensities $I_1(\alpha^{(l)}), \ldots, I_n ( \alpha^{(l)})$ with $l=1,\ldots,m$.
+    \item Use PhaseLift~\eqref{eq:PhaseLift} to recover each ${M}_j$ individually.
+  \end{enumerate}
+\end{protocol}
+Two important questions remain:
+(i) from which ensemble should we sample the input coherent states and (ii) how many such inputs are sufficient for a successful reconstruction?
+In this section we provide two different answers to these questions.
+First, we show that the established uniform measurement ensemble~\cite{kueng_low_2014} allows for reconstructing $ M$ from an asymptotically optimal number of measurements.
+Second, we introduce a new sampling scheme tailored to the specific application.
+While the latter is easier to implement experimentally, it provably performs as well as the uniform ensemble.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \paragraph*{Uniform measurement ensemble}
+The uniform sampling scheme amounts to choosing $ \alpha$ uniformly from the complex unit sphere.
+Up to normalisation, this is equivalent to choosing the real and imaginary part of the components of $\alpha^{(l)}$ to be centred Gaussian random variables with variance $\tfrac{1}{2}$.
+Fixing the norm of the input vectors to a constant is crucial for our particular application as it amounts to fixing the intensity of the input light and, therefore, simplifies the preparation procedure~\footnote{%
+  Note the difference between the normalisation of the coherent state vector $\alpha$ and the corresponding quantum state $\singleket{\alpha}$:
+  While the latter always has unit norm, the normalisation of the former corresponds to the total intensity of the classical state of light, and hence, can in principle assume any value in $[0,\infty)$.
+}.
+Strong analytic reconstruction guarantees exist for phase retrieval with this measurement ensemble~\cite{candes_solving_2012, tropp_convex_2015, kueng_low_2014}.
+We provide a specific formulation for the problem at hand and a simplified proof strategy in the supplemental material.
+%We will show in the supplemental material that these results suffice to assure that the protocol described above also allows for reconstructing transfer matrices ${M}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \paragraph*{RECR measurement ensemble}
+The uniform ensemble mentioned above is well-suited for a theoretical analysis.
+This sampling scheme places high demands on the experimental implementation since it necessitates the ability to prepare any coherent input state $\ket{ \alpha}$ with $\alpha$ from the complex unit sphere.
+Therefore, we propose an alternative measurement ensemble that lends itself to implementations in linear optics:
+For $p \in [0,1]$, we define a \emph{randomly erased complex Rademacher} (RECR) random variable $a$ to be distributed according to
+\begin{equation}
+  a \sim
+  \begin{cases}
+    \pm 1, \pm \ii & \textrm{each with prob. } p/4 \\
+    0 & \textrm{with prob. } 1 - p.
+  \end{cases}
+  \label{eq:recr_definition}
+\end{equation}
+For the RECR measurement model, we sample the components $\alpha_k$ of the input state $\ket{ \alpha}$ according to \cref{eq:recr_definition}, but with constant total intensity $\norm{\alpha} = 1$.
+Since there are only four different values for the phases of the components~\eqref{eq:recr_definition}, the RECR scheme is easier to implement experimentally as described below.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \paragraph*{Performance guarantees}
+
+One important theoretical contribution of this work is to provide a rigorous proof of convergence for the proposed reconstruction scheme, which we outline now.
+We refer the reader to the supplemental material for an exact formulation and the proofs.
+\begin{theorem}[Informal version]%
+  \label{thm:performance_guarantee}
+  Suppose that $m \geq Cn$ coherent input states have been chosen from either the uniform or the RECR ensemble.
+  Then, with high probability, any transfer matrix ${M}$ can be reconstructed via \cref{prot:characterization}.
+\end{theorem}
+%For the exact definitions as well as more details see the supplemental material.
+
+This statement is to be understood as a theoretical performance guarantee in terms of an upper bound on the reconstruction error
+\(
+  \min_{{\mu}}\left\| {M}^\sharp -  {D} ({\mu}) {M}) \right\|_2.
+\)
+Here, ${M}^\sharp$ is the reconstruction and ${D}(\mu) = hrm{diag}(\mu_1, \ldots, \mu_n)$ with $\abs{\mu_j} = 1$ are the row-phases of ${M}$ that cannot be  recovered from the measurements~\eqref{eq:intensities}.
+Our proofs do not give a tight bound for the constant $C$.
+The numerical simulations reported on below show that, roughly, $C\simeq 4$.
+%The constant $C$ -- while being bounded and in principle retrievable from the proofs -- is very unlikely to be optimal.
+%This is why we run numerical simulations in the following section in order to determine a practical value of $C$ which is conjectured to be 4.
+% Arriving at the robust recovery guarantee for ${M}$ in the presence of additive noise is arguably one of the advantages of using phase retrieval techniques.
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
 \subsection{Numerical Results}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tbp]
+  \begin{subfigure}{.475\columnwidth}
+    \includegraphics[width=\linewidth]{fig/sim_noisy_gaussian.pdf}
+    \caption{\label{sfig:simplot.gaussian}%
+      Uniform sampling
+    }
+   \end{subfigure}
+  \begin{subfigure}{.475\columnwidth}
+    \includegraphics[width=\linewidth]{fig/sim_noisy_recr.pdf}
+    \caption{\label{sfig:simplot.recr}%
+      RECR sampling
+    }
+   \end{subfigure}
+  \caption{\label{fig:simplot}%
+    Simulated recovery-probability using the two different sampling schemes under noisy measurements with $\sigma = 0.05$.
+    For each given dimension, the transfer matrices to be recovered consist of 97 Haar random unitaries as well as the identity, the swap-matrix, and the discrete Fourier transform.
+    The red line indicates the conjectured phase transition at $4 n - 4$.
+  }
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We demonstrate the practical applicability of the PhaseLift characterisation protocol using simulated experiments.
+The simulation depicted in \cref{fig:simplot} aims to visualize the performance guarantees from \cref{thm:performance_guarantee}:
+For each given dimension $n$, we choose 100 target unitaries.
+Each of these is reconstructed by means of \cref{prot:characterization} with a varying number of measurements $m$.
+The input vectors are sampled from the uniform ensemble in \cref{sfig:simplot.gaussian} and from the RECR ensemble in \cref{sfig:simplot.recr}.
+For the measurement noise $\epsilon_j$ from \cref{eq:intensities_as_overlap}, we assume independent, centred Gaussian noise with standard deviation $\sigma = 0.05$.
+The density plots show the fraction of successfully recovered unitaries.
+Here, the criterion for success is whether the distance of the reconstruction $M^\sharp$ measured in Frobenius norm is smaller than the threshold  $4 \sigma n$ in accordance with the error bound from \cref{cor:noisy_performance_guarantee} in the supplemental material.
+
+Figs.~\ref{sfig:simplot.gaussian} and \ref{sfig:simplot.recr} show a pronounced phase transition around $4n - 4$.
+This demonstrates the high efficiency of \cref{prot:detailed_reconstruction} with respect to the number of measurements.
+Not only does the number of measurements scale linearly in the system size but the scaling coefficient is small as well.
+
+
+
 \subsection{Experimental Implementation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=0.95\columnwidth]{fig/phaselift_schematic}%
+  \caption{%
+    Schematic of phaselift characterisation protocol and experiment.
+     a) Protocol summary (see \cref{prot:characterization}).
+     A calibrated and trusted network is used to prepare multimode coherent states $\singleket{\boldsymbol{\alpha}}$, sampled from the uniform or RECR ensembles.
+     This state is then input to an unknown linear optical device described by the transfer matrix $ M$, and the intensities at each output port are measured.
+     b) Experimental schematic.
+     Heralded single photons are input into the bottom waveguide of a six-mode integrated photonic device.
+     A cascade of Mach-Zehnder interferometers is used to prepare single-photon states $\singleket{\psi( \alpha)}$ over the bottom five modes of the device.
+     The remainder of the device is used to implement arbitrary 2, 3 and 5 dimensional unitary transformations which are to be characterised.
+     Each output port is coupled to a single photon detector.
+   }
+  \label{fig:experimental.schematic}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure*}[tbp]
+  \centering
+  \includegraphics[width=0.95\textwidth]{fig/ex_overview}
+  \caption{%
+     \label{fig:experimental.overview}
+     Comparing reconstructions from experimental data for different target transfer matrices and sampling schemes.
+     For each matrix and sampling scheme, we subsample $m = 5n$ preparation vectors and the corresponding measured intensities from the experimental data 100 times.
+     The coloured diamonds indicate the median and the coloured area sketches the distribution of the discrepancy between the PhaseLift reconstruction and an alternative method.
+     Since for $n=2$ there are only six distinct RECR vectors up to a global phase, there is only one reconstruction.
+     In the left picture, the reference is obtained through a HOM-dip reconstruction as discussed in the appendix.
+     However, since this technique is too costly for larger dimensions, the five dimensional reconstructions on the right are only compared in magnitude to a reference from single photon data neglecting all phase information.
+     For more details on the data analysis see the supplemental material.
+  }
+\end{figure*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=\columnwidth]{fig/ex_targetref}
+  \caption{%
+     \label{fig:experimental.targetref}
+     Same as \cref{fig:experimental.overview}, but the reconstructions are compared to the theoretical target unitaries.
+     \quotes{HOM-dip} refers to the reconstructions used as references in \cref{fig:experimental.overview}.
+     We do not show the results for the 5 dimensional unitaries since the corresponding HOM-dip reconstructions were too costly to take.
+  }
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{figure}[tbp]
+%   \centering
+%   \includegraphics[width=0.95\columnwidth]{fig/ex_details}
+%   \caption{%
+%     \label{fig:experimental.details}
+%    Reconstruction errors for a random $5 \times 5$ matrix from experimental data.
+%    For each picture, we plot the mean (solid) as well as min- and max- errors over 25 samples.
+%    In the left picture, each sample consists of a recovery from $m$ preparation vectors and the corresponding photon counts measured over $t = 30\,hrm{s}$
+%    In the right picture, we fix a randomly selected set of $m=20$ preparation vectors and run the recovery with the photon counts from $t$ randomly selected time bins, each of which is one second long.
+%   }
+% \end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+To demonstrate its practical utility, we used our protocol to perform experimental characterisations of a reconfigurable integrated photonic circuit.
+The silica-on-silicon device performs a linear-optical circuit comprising 30 directional couplers and 30 tunable thermo-optic phase-shifters on six optical waveguides \cite{Carolan2015}.
+As shown in \cref{fig:experimental.schematic}, inputting coherent light into the bottom waveguide of the device, an initial cascade of five Mach-Zehnder interferometers (MZIs) and accompanying phase-shifters can be used to prepare any five-mode input vector $\ket{{\alpha}}$.
+The remaining triangular array of components is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck1994}.
+Reconfiguring the target $M$ then enables us to experimentally test the protocol across a number of configurations including Identity, Swap, and Fourier matrices as well as Haar random unitaries.
+One advantage of the RECR scheme over the uniform scheme becomes clear from~\cref{fig:experimental.schematic}:
+Since the RECR scheme only requires four different phase values in each mode, these configurations can be calibrated more precisely.
+In contrast, for the uniform scheme the preparation stage needs to be able to prepare any phase shift in each mode, and therefore, it is much more demanding for the experiment.
+
+Although, as we have described, the protocol can be performed using coherent states and photodiodes, for this experimental demonstration we instead use heralded single photons and single photon detectors.
+This is because the properties of the components and, therefore $ M$ are generally mode-dependent, that is dependent on the wavelength, polarisation, etc.\ of the light.
+Since it is the goal to characterise the device for quantum experiments, the most accurate characterisation for this purpose is achieved using the same mode of light used in the future quantum experiments. .
+When a single photon Fock state is input in the bottom waveguide, the prepared state prior to $ M$ is
+\begin{equation}
+  \ket{\psi({\alpha})} = \sum_k \alpha_k a_k^{\dag} \ket{hfrak{0}}
+\end{equation}
+where $\ket{hfrak{0}}$ denotes the vacuum state.
+The transfer matrix $M$ performs the mapping $a_k^{\dag} \rightarrow \sum_j M_{j,k}a_j^{\dag}$.
+The probability of measuring the photon at detector $j$ is then given by
+\begin{equation}
+  hbb{P}(j|{\alpha}) = \left| \sum_k M_{j,k} \alpha_k \right|^2.
+  \label{eq:experiment.probabilities}
+\end{equation}
+Hence, finite-sample frequency estimates of the probabilities~\eqref{eq:experiment.probabilities} are equivalent to the noisy intensity measurements~\eqref{eq:intensities}.
+In the experiment, a spontaneous parametric down-conversion process is used to produce a heralded single photon via the detection of its correlated pair photon in the idler mode.
+The photon is coupled into and out of the photonic chip via optical fibre and all output modes are simultaneously measured by an array of single photon avalanche photodiodes.
+For all $ M$ of the same size, data is collected for the same set of randomly chosen input vectors.
+For more details on the experimental setup and the data analysis, see the supplemental material.\\
+
+
+
 \subsection{Experimental Results}
+In \cref{fig:experimental.overview}, we show the discrepancy of the PhaseLift recoveries compared to another experimental reconstruction.
+The number of input vectors used in each reconstruction is $m = 5n$.
+This slight overhead compared to the numerically conjectured phase transition in \cref{fig:simplot} is used to counteract systematic errors in the generation of the random vectors, which we conjecture to be the main source of error in this experiment.
+Since our aim is to benchmark the performance of the PhaseLift characterisation, and not the performance of the chip itself, we compare to reconstructions obtained through established but more costly techniques: for the smaller transfer matrices of dimension two and three, we perform a complete HOM-dip-reconstruction based on two photon interference (see supplemental material).
+However, since this is infeasibly costly for the five-dimensional transfer matrices, we only compare these to single-photon reconstructions of the absolute values of the transfer matrix components.
+Therefore, for the larger transfer matrices, we neglect the phase information of the reconstruction.
+
+We see that the PhaseLift reconstructions and the references agree well for most settings.
+Even without exploiting the possible advantages of the RECR scheme due to a better calibration, it generally performs as well as the uniform sampling scheme.
+Both display a similar behaviour: for a fixed number of modes, the deviations are generally larger for the random unitaries compared to the more structured identity and Fourier transfer matrices.
+Also, the errors for the two-dimensional transfer matrices are slightly smaller than for the corresponding three-dimensional transfer matrices.
+In general, we expect larger deviations with an increase in the size of the transfer matrix, since errors in the phases of the components accumulate in the reference reconstructions.
+Furthermore, the currently used sequential arrangement of the MZIs in the preparation stage of the experiment also leads to higher reconstruction errors with an increase in dimension -- possible solutions to this problem are discussed in the conclusions.
+Note that the errors for the five-dimensional transfer matrices are relatively small since they only take into account the absolute values of the components and neglect all phases.
+
+In \cref{fig:experimental.targetref} we compare the performance of the PhaseLift reconstruction to the HOM-dip reconstruction.
+In contrast to \cref{fig:experimental.overview}, here we use the theoretical target unitary as a reference.
+Generally, the errors of the PhaseLift reconstructions and the HOM-dip reconstructions are of the same order of magnitude.
+This is despite the fact that the HOM-dip reconstruction is not just insensitive to the row phases, but also to the column phases.
+Therefore, the reported errors for the HOM-dip reconstruction are minimised over $2n$ phases instead of just $n$ phases for the PhaseLift reconstruction.
+The additional free parameters in the minimisation may lead to overfitting, and hence, to an underestimation of the actual error of the HOM-dip reconstruction.
+For more details, please see the supplemental material.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion and Outlook}
+
+In this work, we introduce a solution to the problem of characterising linear optical devices based on recent advances in phase retrieval and low-rank matrix recovery.
+The PhaseLift reconstruction outlined in \cref{prot:characterization} can be used to reconstruct any transfer matrix using only intensity measurements and classical states of light as inputs, which are chosen at random from an appropriate ensemble.
+Not only do the number of measurements required for this approach scale linearly in the number of modes of the device, the theory behind it also provides stringent error bars for the reconstruction.
+As the major contribution of this work, we proof recovery guarantees for the RECR ensemble, which is especially suited for the application in linear optical devices.
+We also report on a successful experimental implementation of the PhaseLift characterisation protocol based on a universally reconfigurable six waveguide device.
+The results from this experiment show that although the experimental effort of our approach is much lower, it provides a similar performance compared to other characterisation techniques.
+
+\todo[inline]{@Bristol: Your future work?}
+Another possible extension of the experimental work is the development of a dedicated state-preparation circuit.
+In the current architecture, possible errors in the preparation state for the coherent state inputs $\ket{\alpha}$ add up linearly due to the serial wiring in the preparation stage.
+With a tree-like arrangement of the directional couplers, we might be able to also benefit from the fact that the RECR scheme allows only for two possible values for the intensity of each input mode $\abs{\alpha_i}$.
