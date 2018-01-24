@@ -1,6 +1,7 @@
  % -*- root: ../thesis.tex -*-
-\chapter{Phaselift}
+\chapter{Phaselift}%
 \label{chap:phaselift}
+
 
 
 Linear-optical networks composed of beamsplitting and phaseshifting operations are fundamental to the quantum and classical processing of information with light.
@@ -19,18 +20,18 @@ Due to the linearity of the device, this input is mapped to a coherent state $\k
 %   Note that we deviate from the customary definition of ${M}$ by a reversal of indices.
 %   In this convention, the action of the linear optical network on a coherent state is described by a matrix-vector multiplication.
 % }
-\begin{equation}
+\[
   \beta_j = \sum_k M_{j,k} \,\alpha_k.
   \label{eq:coherent_transfer_matrix}
-\end{equation}
+\]
 Determining ${M}$ experimentally is the crucial step to validate and verify an existing linear optical circuit.
 The standard measurable quantities in an optical experiment are the \emph{intensities} of the output modes
-\begin{equation}
+\[
   I_j({\alpha})
   = \left| \beta_j \right|^2 + \epsilon_j
   = \left| \sum_k M_{j,k} \, \alpha_k \right|^2 + \epsilon_j
   \label{eq:intensities}
-\end{equation}
+\]
 for certain coherent inputs $\ket{{\alpha}}$.
 Here, $\epsilon_j$ describes noise due to statistical fluctuations or systematic errors.
 Although the output coherent states~\eqref{eq:coherent_transfer_matrix} are linear in ${M}$, the resulting intensity measurements~\eqref{eq:intensities} are quadratic in ${M}$ and oblivious to the phases of $\beta$.
@@ -50,19 +51,19 @@ Moreover, the second feature of the recovery protocol makes it a priori suscepti
 
 \subsection{Phase Retrieval}
 
-The crucial observation in this paper is that measurements~\eqref{eq:intensities} closely resemble the model of the \textit{phase retrieval problem}, i.e.\ the problem of recovering a complex vector ${x} \in \BC^n$ from $m$ measurements of the form
-\begin{equation}
+The crucial observation in this paper is that measurements~\eqref{eq:intensities} closely resemble the model of the \textit{phase retrieval problem}, i.e.\ the problem of recovering a complex vector ${x} \in \Complex^n$ from $m$ measurements of the form
+\[
   y^{(l)} = \left| \langle {x}, \alpha^{(l)} \rangle \right|^2 + \epsilon^{(l)}
   \quad l=1,\ldots,m.
   \label{eq:phase_retrieval_measurements}
-\end{equation}
-Here, $\alpha^{(l)} \in \BC^n$ denote measurement vectors and $\epsilon^{(l)}$ the additive measurement errors.
+\]
+Here, $\alpha^{(l)} \in \Complex^n$ denote measurement vectors and $\epsilon^{(l)}$ the additive measurement errors.
 One practical solution to the phase retrieval problem~\cite{balan_painless_2009} -- and hence, for recovering transfer matrices -- is based on its connection to the field of low-rank matrix recovery~\cite{ahrero12,candes_exact_2009,capl11,recht_guaranteed_2010,gross_recovering_2011,chen_incoherence_2013} by noting that
-\begin{equation}
+\[
   % y^{(l)}
   \left| \langle {x}, \alpha^{(l)} \rangle \right|^2
   = \tr \left( (\ket{\alpha^{(l)}}\bra{\alpha^{(l)}}) (\ket{{x}}\bra{{x}}) \right).
-\end{equation}
+\]
 This ``lifts'' the phase retrieval problem to the problem of recovering the positive semi-definite (psd) rank-1 matrix $\ket{ x}\bra{ x}$ from linear measurements.
 The latter can be solved efficiently via the semi-definite program dubbed \emph{PhaseLift}~\cite{candes_phaselift_2012}
 \begin{align}
@@ -83,12 +84,12 @@ The \emph{randomly erased complex Rademacher} (RECR) ensemble requires only four
 
 Let us now turn to connecting the two problems introduced in the last section, namely determining the transfer matrix ${M}$ of a linear optical device on one hand and phase retrieval on the other hand.
 Note that the measured intensity at detector $j$ as given by \cref{eq:intensities} exclusively provides us with information about the $j$-th row vector of ${M}$:
-\begin{equation}
+\[
   I_j({\alpha})
   = \left| \sum_{k=1}^n M_{j,k} \alpha_k \right|^2 + \epsilon_j
   = \left\vert  \langle {M}_j, \alpha \rangle  \right\vert^2 + \epsilon_j. \quad 1 \leq j \leq n
   \label{eq:intensities_as_overlap}
-\end{equation}
+\]
 Here, we have defined ${M}_j$ as the (complex conjugated) row vectors of ${M}$.
 Since the measured intensities in \cref{eq:intensities_as_overlap} exactly resemble the measurement model of the phase retrieval problem in \cref{eq:phase_retrieval_measurements}, we can use the ideas mentioned in the introduction to reconstruct the transfer matrix.
 For this we propose the following protocol:
@@ -125,14 +126,14 @@ The uniform ensemble mentioned above is well-suited for a theoretical analysis.
 This sampling scheme places high demands on the experimental implementation since it necessitates the ability to prepare any coherent input state $\ket{ \alpha}$ with $\alpha$ from the complex unit sphere.
 Therefore, we propose an alternative measurement ensemble that lends itself to implementations in linear optics:
 For $p \in [0,1]$, we define a \emph{randomly erased complex Rademacher} (RECR) random variable $a$ to be distributed according to
-\begin{equation}
+\[
   a \sim
   \begin{cases}
     \pm 1, \pm \ii & \textrm{each with prob. } p/4 \\
     0 & \textrm{with prob. } 1 - p.
   \end{cases}
   \label{eq:recr_definition}
-\end{equation}
+\]
 For the RECR measurement model, we sample the components $\alpha_k$ of the input state $\ket{ \alpha}$ according to \cref{eq:recr_definition}, but with constant total intensity $\norm{\alpha} = 1$.
 Since there are only four different values for the phases of the components~\eqref{eq:recr_definition}, the RECR scheme is easier to implement experimentally as described below.
 
@@ -169,13 +170,13 @@ The numerical simulations reported on below show that, roughly, $C\simeq 4$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tbp]
   \begin{subfigure}{.475\columnwidth}
-    \includegraphics[width=\linewidth]{fig/sim_noisy_gaussian.pdf}
+    \includegraphics[width=\linewidth]{fig/phaselift_sim_gaussian}
     \caption{\label{sfig:simplot.gaussian}%
       Uniform sampling
     }
    \end{subfigure}
   \begin{subfigure}{.475\columnwidth}
-    \includegraphics[width=\linewidth]{fig/sim_noisy_recr.pdf}
+    \includegraphics[width=\linewidth]{fig/phaselift_sim_recr}
     \caption{\label{sfig:simplot.recr}%
       RECR sampling
     }
@@ -228,7 +229,7 @@ Not only does the number of measurements scale linearly in the system size but t
 
 \begin{figure*}[tbp]
   \centering
-  \includegraphics[width=0.95\textwidth]{fig/ex_overview}
+  \includegraphics[width=0.95\textwidth]{fig/phaselift_ex_dipsref}
   \caption{%
      \label{fig:experimental.overview}
      Comparing reconstructions from experimental data for different target transfer matrices and sampling schemes.
@@ -245,7 +246,7 @@ Not only does the number of measurements scale linearly in the system size but t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[tbp]
   \centering
-  \includegraphics[width=\columnwidth]{fig/ex_targetref}
+  \includegraphics[width=\columnwidth]{fig/phaselift_ex_targetref}
   \caption{%
      \label{fig:experimental.targetref}
      Same as \cref{fig:experimental.overview}, but the reconstructions are compared to the theoretical target unitaries.
@@ -281,16 +282,16 @@ Although, as we have described, the protocol can be performed using coherent sta
 This is because the properties of the components and, therefore $ M$ are generally mode-dependent, that is dependent on the wavelength, polarisation, etc.\ of the light.
 Since it is the goal to characterise the device for quantum experiments, the most accurate characterisation for this purpose is achieved using the same mode of light used in the future quantum experiments. .
 When a single photon Fock state is input in the bottom waveguide, the prepared state prior to $ M$ is
-\begin{equation}
+\[
   \ket{\psi({\alpha})} = \sum_k \alpha_k a_k^{\dag} \ket{hfrak{0}}
-\end{equation}
+\]
 where $\ket{hfrak{0}}$ denotes the vacuum state.
 The transfer matrix $M$ performs the mapping $a_k^{\dag} \rightarrow \sum_j M_{j,k}a_j^{\dag}$.
 The probability of measuring the photon at detector $j$ is then given by
-\begin{equation}
+\[
   hbb{P}(j|{\alpha}) = \left| \sum_k M_{j,k} \alpha_k \right|^2.
   \label{eq:experiment.probabilities}
-\end{equation}
+\]
 Hence, finite-sample frequency estimates of the probabilities~\eqref{eq:experiment.probabilities} are equivalent to the noisy intensity measurements~\eqref{eq:intensities}.
 In the experiment, a spontaneous parametric down-conversion process is used to produce a heralded single photon via the detection of its correlated pair photon in the idler mode.
 The photon is coupled into and out of the photonic chip via optical fibre and all output modes are simultaneously measured by an array of single photon avalanche photodiodes.
