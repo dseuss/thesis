@@ -13,6 +13,7 @@
 \usepackage{ifluatex}
 \ifluatex{}
   \usepackage[utf8]{luainputenc}
+  \usepackage{shellesc}
 \fi
 
 \usepackage{graphicx,subcaption}
@@ -24,9 +25,9 @@
 % Externalize tikz pictures except for todonotes
 \usepackage{tikz}%for the figures
 \usetikzlibrary{external,calc,backgrounds}
-\tikzexternalize[prefix=fig/]
+\tikzexternalize[prefix=build/]
 \tikzset{external/mode=graphics if exists}
-\tikzset{external/system call={lualatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
+% \tikzset{external/system call={lualatex \tikzexternalcheckshellescape -halt-on-error -interaction=batchmode -jobname "\image" "\texsource"}}
 
 \usepackage{mptikz}
 \tikzstyle{tensornode}=[draw, fill=yellow!40, rounded corners=0.1cm]
@@ -82,8 +83,8 @@
 % if \makefull is defined (e.g. by commandline argument, include everything)
 \ifdefined\makefull\else
   % \includeonly{chapters/error_region,chapters/error_region_appendix}
-  % \includeonly{chapters/tensors}
-  \includeonly{chapters/phaselift,chapters/phaselift_appendix}
+  \includeonly{chapters/tensors}
+  % \includeonly{chapters/phaselift,chapters/phaselift_appendix}
 \fi
 
 \input{macros}
