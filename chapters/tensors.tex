@@ -604,7 +604,7 @@ Unfortunately, this problem is $\NP$-hard, even if we restrict to dimensions $d=
   \begin{tikzpicture}
     \tensor{{S=6, tensor_name='psi', tensor_width=4, tensor_height=1,
              len_vertical_legs=.5, x=-3}}
-             \node at (rho) {$\ket{\psi}$};
+             \node at (psi) {$\ket{\psi}$};
 
     \node at (0,0) {\Huge $=$};
 
@@ -687,6 +687,7 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen}.
 \label{sec:tensors.mpnum}
 
 \input{notebooks/Introduction}
+\todo{Examples for thermal state computation}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -703,13 +704,35 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen}.
 \section{ALS for Tensors}%
 \label{sec:tensors.als}
 
-% MPS: efficient tesnor description, structure well suited for many practical applications
-% problem in practice: recover tensor X from measurable quantities -> how many measurements? algorithm to reconstruct?
-% due to curse of dimensionality -> efficiency and low sample complexity important in tensor case.
-%
-% example: QSE for MPS -> cite
-% measurements: informationally complete k-local with k << N => sample complexity ~ N; 
-% computationally efficient algorithm in MPS rep; convergence proof only for ineffient version
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+  \centering
+  \input{tikz/tensors_local_measurements.tex}
+  \caption{%
+    Measurements blablbalba
+    }%
+  \label{fig:als.quantum_measurements}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+With the ability to approximate structured tensors from many applications efficiently in MPS form, one crucial question remains:
+How can we \emph{efficiently} recover this representation in practice from measurable quantities?
+Here, \quotes{efficiency} refers to two different aspects:
+On the one hand, we want to bound the number of measurements required to perform reconstruction, i.e.\ the \emph{sample complexity}.
+On the other hand, it refers to the \quotes{computational complexity} as outlined in \cref{sec:error.complexity}
+Both aspects are especially critical for tensor reconstruction as na\"ive approaches generally suffer from the curse of dimensionality.
+
+In the context of quantum estimation, existing work addresses this question for the reconstruction of MPS~\cite{Cramer_2010_Efficient}, MPDO~\cite{Baumgratz,Baugratz,Lanyon}, and unitary quantum processes~\cite{Holzaepfel} from local measurements.
+More precisely, they consider measurements that act non-trivially only on blocks of $R$ adjacent qudits as depicted in \cref{fig:als.quantum_measurements}.
+This results in a sample complexity scaling as $\mathcal{O}(N \times d^R)$ compared to the $m = \mathcal{O}(d^N)$ for the na\"ive approach.
+Numerical experiments in~\cite{Cramer,Baumgratz,Baumgratz} demonstrate successful recovery of W-states as well as ground and thermal states of nearest-neighbor Hamiltonians for small values of $R$ independent of $N$.
+The drastically reduced sampling complexity makes the approaches efficient and viable for large-scale quantum experiments.
+However, only the numerically inferior algorithm\footnote{%
+  T.\ Baumgratz, private communications.
+}
+from~\cite{Baumgratz} comes with a proof of convergence.
+Similar rigorous recovery guarantees have only been proven for comparable, but inefficient versions of the algorithms in~\cite{Cramer,Baumgratz}.
+
 
 % similar problem: phaselift chapter -> low-rank matrix recovery -> structure leads to reduced sample complexity
 % The goal is to reconstruct $X$ from $m$ linear measurements of the form
@@ -719,7 +742,7 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen}.
 % \]
 % where $\braket{A, B} = \tr (\transpose{A} B)$ denotes the Frobenius inner product, $A\ind{l} \in \Reals^{d \times d}$ the \emph{measurement matrices}, and $y_l \in \Reals$ the corresponding measurement data.
 % naive aproach -> d^2 such measurements
-% put generaliztt of THM -> 
+% put generaliztt of THM ->
 % Nevertheless, we can still single out a unique solution in some cases by exploiting the additional structure, namely the low-rank assumption.
 % For example, in \cref{thm:FIXME} we show that $m = \Order(d)$ random measurements sampled from an appropriate distribution are sufficient to reconstruct any positive semidefinite, Hermitian $X \in \Complex^{d \times d}$ with unit rank.
 % More generally, we can recover any $X \in \Reals^{d \times d}$ with $\rank X = r$ from $m = \Order(d r)$ randomly chosen measurements~\cite{Candes_2011_Tight,Kueng_2014_Low}.
@@ -737,7 +760,7 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen}.
 % zeljka: projected gradient method for MPS, poly sample complexity BUT: fully gaussian measurements
 % cannot be computed efficeintly since measurements ~ exponential
 % similar to matrix case; usually first step: rank 1 measuement model with gaussian local tensors
-% 
+%
 
 \subsection{Theory}%
 \subsection{Numerics}%
