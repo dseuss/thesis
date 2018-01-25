@@ -100,6 +100,33 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                             mptikz                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{mptikz}
+\tikzstyle{tensornode}=[draw, fill=yellow!40, rounded corners=0.1cm]
+\tikzstyle{tensorleg}=[]
+\tikzstyle{pointerline}=[thin,shorten <=3pt, color=gray]
+\tikzstyle{pointernode}=[font=\sffamily, anchor=west, align=center, color=black]
+
+\tensorstyle{{
+    len_vertical_legs = 0.25,
+    len_horizontal_legs = 0.25,
+    tensor_height = 0.75,
+    tensor_width = 0.75,
+    tensor_style = 'tensornode',
+    tensor_name = 'X',
+    leg_style = 'tensorleg'
+}}
+\usepackage{luacode}
+\begin{luacode*}
+  function t(str, ...)
+    local arg = {...}
+    tex.print(string.format(str, unpack(arg)))
+  end
+\end{luacode*}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                             Hyphenation                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hyphenation{CANDECOMP}
