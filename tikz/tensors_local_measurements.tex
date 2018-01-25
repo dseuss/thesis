@@ -1,0 +1,14 @@
+\begin{tikzpicture}
+  \mpa{6}{{tensor_height=1, tensor_width=1, virtual=0, len_horizontal_legs=.5,
+           tensor_style='rounded corners=.5cm, fill=black!40'}}
+  \node[below= 0 of X_2] () {$\sigma\ind{1}_{i_1}$};
+  \node[below= 0 of X_3] () {$\sigma\ind{2}_{2_1}$};
+  \node[below= 0 of X_4] () {$\sigma\ind{3}_{3_1}$};
+
+  \begin{scope}[on background layer]
+	\fill[fill=blue!10, rounded corners=.1cm] ($ (X_2) - (0.75,1.75) $) rectangle ($ (X_4) + (0.75,0.75) $);
+  \end{scope}
+  \draw [thick, decoration={brace}, decorate] ([yshift=1cm]X_1.west) -- node[above=3mm] {$N$} ([yshift=1cm]X_6.east);
+  \draw [thick, decoration={brace, mirror}, decorate] ([yshift=-2cm]X_2.west) -- node[below=3mm] {$R$} ([yshift=-2cm]X_4.east);
+
+\end{tikzpicture}
