@@ -688,8 +688,9 @@ They consider a support vector machine classifier, which for the binary (yes/no)
 \]
 where $X$ is the input vector and $W$ is the model vector.
 The goal is to determine $W$ in such a way that $f(X) > 0$ if $X$ is in the \quotes{yes} class and $f(X) < 0$ otherwise.
-By using a MPS representation for $W$ and $X$, they are able to efficiently learn such a model even in very higher-dimensional settings.
-A similar can also be applied to learning polynomial classifiers~\cite{Chen_2017_Parallelized}.
+By using a MPS representation for $W$ and $X$, they are able to efficiently learn such a model even in high-dimensional settings.
+A similar can also be applied to learning polynomial classifiers~\cite{Chen_2017_Parallelized} as well as for image compression and classification~\cite{Bengua}.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -753,7 +754,7 @@ The latter asks under which conditions we can recover a low-rank matrix $X \in \
 \[
   y_l = \braket{A\ind{l}, X}, \quad l=1, \ldots, m.
   \label{eq:als.matrix_measurements}
-\]
+
 Here, $A\ind{l} \in \Complex^{d \times d}$ denote the measurement matrices and
 \[
   \braket{A, X} = \tr \adj{A} X
@@ -768,30 +769,57 @@ More generally, we can recover any $X \in \Complex^{d \times d}$ with $\rank X =
 Intuitively, this sample complexity is asymptotically optimal since we need at least $2 d r$ complex parameters to specify the left- and right-singular vectors of $X$, see~\cite{Eldar_2012_Uniqueness,Li_2017_Optimal} for rigorous lower bounds.\\
 
 
+
 Here, we consider the generalization of low-rank matrix recovery to higher order tensors\footnote{%
-  In contrast to the rest of this chapter, we consider real tensors in order to simplify the notation.
+  In contrast to the rest of this chapter, we consider real tensors in order to simplify notation.
 }
-$X \in \Reals^{d^N}$.
+$X \in \Reals^{d^N}$ of low MPS-rank.
+For this purpose, we study an \emph{Alternating Least Squares} (ALS) algorithm inspired by DMRG methods in quantum physics.
 The observable quantities are -- analogous to \cref{eq:als.marix_measurements} -- given by overlaps with measurement tensors $A\ind{l} \in \Reals$
 \[
   y_l = \braket{A\ind{l}, X}
   \label{eq:als.tensor_measurements}
 \]
 with the Frobenius inner product of tensors defined by \cref{eq:mps.inner}.
-For this purpose, we study an \emph{Alternating Least Squares} (ALS) algorithm inspired by DMRG methods in quantum physics.
+
+The field of low-rank tensor recovery has attracted increasing attention in recent years.
+Especially the problem of tensor completion, i.e.\ inferring missing values of a low-rank tensor, has been thoroughly studied due to its broad applicability in computer vision, neuroscience, remote sensing, and context-aware recommender systems~\cite{Li_2010_Tensor,Zhu_2016_ContextAware,Wang_2014_LowRank}.
+In contrast to our work, most analytical results in this area are concerned with different notions of tensor rank such as the Tucker rank~\cite{Kressner_2013_LowRank,Zhang_2016_Cross} or the canonical tensor rank~\cite{Krishnamurthy_2013_LowRank,Potechin_2017_Exact}.
+\todo{Why Tucker/canonical bad?, Why TT good}
+
+The best analytical recovery guarantees for low-MPS rank tensor completion require -- to the best of the authors knowledge -- a number of measurements scaling exponentially in the order of the tensor~\cite{Phien_2016_Efficient}.
+Although their result gives a square-root advantage compared to na\"ive reconstruction, it is still infeasible for high-order tensors.
+However, numerical investigations using an alternating least squares algorithm similar to the one used in this work demonstrate successful recovery with sub-exponential sample complexity~\cite{Grasedyck_2015_Variants,Wang_2016_Tensor}.
+
+% low-rank approximation
+% Riemannian optimization -> Lubich
+% ALtmin local convergence for Optimization-> Rohwedder, Uschmajew; Holtz, Rohwedder\tabularnewline
+
+Stronger analytical results exist for a different measurement ensemble:
+The authors in~\cite{Rauhut_2014_Tensor}, consider fully Gaussian measurements, i.e.\ measurement tensors with independent components sampled from a normal distribution.
+In this approach, number of such measurements scaling polynomially in the crucial parameters $d$, $N$, and $r$ is sufficient to recover any rank $r$ tensor.
+Although their result is highly sample efficient, it is still infeasible for high-order tensors due to the exponentially scaling memory requirement for the measurement tensors.\\
 
 
-% existing work: canonical and tucker decompositoin -> still exponential sampling complexity, only of length 3
-% zeljka: projected gradient method for MPS, poly sample complexity BUT: fully gaussian measurements
-% zeljka: theta bodies, analogon to nuclear norm minimization still hard for tensors -> cite
-%   -> further convex relaxation
-% schneider rohwedder: show that minimization converges locally
-% cannot be computed efficeintly since measurements ~ exponential
+
 % similar to matrix case; usually first step: rank 1 measuement model with gaussian local tensors
 % also, no notion of reduced measurement for general tensors -> most natural to use products!
-%
+
+
+
+
+\[
+  A\ind{l} = a\ind{l}_1 \otimes \cdots a\ind{l}_N
+  \label{eq:als.rank1_measurements}
+\]
+with local tensors randomly chosen from a standard multivariate normal distribution $a\ind{l}_k \sim \Normal(0, \1_d)$.
+
 
 \subsection{Theory}%
+
+% algorithm outline,
+
+
 \subsection{Numerics}%
 % Implementation details; how to speed up initialization, why suitable for GPU%
 
