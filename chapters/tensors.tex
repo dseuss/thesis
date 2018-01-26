@@ -40,7 +40,7 @@ Finally, in \cref{sec:tensors.mpnum} we present the software library \mpnum deal
 \label{sec:tensors.mps}
 
 Tensors are a generalization of vectors and matrices.
-Although there is a coordinate-free definition for tensors in terms of multi-linear forms~\cite{BROUWER?}, we are going to identify a tensor with it's coordinate representation here.
+Although there is a coordinate-free definition for tensors in terms of multi-linear functionals~\cite{Browder_2012_Mathematical}, we are going to identify a tensor with its coordinate representation here.
 \todo{Also no distinguishing co/contravariant indices -> euclidean}
 A complex tensor of order $N$ is an element $X \in \Complex^{d_1 \times \cdots \times d_N}$ and the $d_i$ are called \emph{local dimensions}.
 Hence, a vector is a tensor of order 1 and a matrix is a tensor of order 2.
@@ -51,7 +51,7 @@ For the sake of simplicity, we assume that $d_1 = \cdots = d_N$ throughout this 
 \subsection{Graphical Notation}
 \label{sub:mps.graphical_notation}
 
-Since formulas with higher-order tensors may become incomprehensible due to the large amount of indices necessary, we introduce a common graphical notation~\cite{Dance,???}.
+Since formulas with higher-order tensors may become incomprehensible due to the large amount of indices necessary, we introduce a common graphical notation~\cite{Orus_2014_Practical,Bridgeman_2017_HandWaving}.
 A tensor $X \in \Complex^{d^N}$ is represented by a geometric shape with legs attached, one for each index.
 For example, consider the case $N = 3$, then
 \[
@@ -148,11 +148,11 @@ The advantage of this graphical notation becomes clear once we express tensors c
 \subsection{MPS tensor representation}
 \label{sub:mps.tensor_representation}
 
-The tensor representation we are interested in has been established in quantum physics independently under the names \emph{finitely correlated states}~\cite{Werner} and \emph{matrix-product states}~\cite{Klumper}.
+The tensor representation we are interested in has been established in quantum physics independently under the names \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} and \emph{matrix-product states}~\cite{Klumper_1991_Equivalence,Kluemper_1992_Groundstate}.
 Subsequently, it has been rediscovered in other contexts:
-It is known under the guise of the \emph{density matrix renormalization group}~\cite{White,Schollwoeck} in condensed matter physics.
-Furthermore, the MPS representation is also known as a special case of the \emph{Hierarchical Tucker} tensor format~\cite{Hackbusch,Grasedyck} and under name \emph{tensor-train}~\cite{Oseledets_2011_TensorTrain} in the applied math community.
-However, similar structures have been known for much longer in the form of \emph{deterministic finite automata}~\cite{Hopcroft} and \emph{hidden Markov models}~\cite{Baum}.
+It is known under the guise of the \emph{density matrix renormalization group}~\cite{White_1992_Density,Schollwoeck_2011_DensityMatrix} in condensed matter physics.
+Furthermore, the MPS representation is also known as a special case of the \emph{Hierarchical Tucker} tensor format~\cite{Hackbusch_2012_Tensor,Grasedyck_2010_Hierarchical} and under name \emph{tensor-train}~\cite{Oseledets_2011_TensorTrain} in the applied math community.
+However, similar structures have been known for much longer in the form of \emph{deterministic finite automata}~\cite{Hopcroft_2014_Introduction} and \emph{hidden Markov models}~\cite{Cappe_2006_Inference}.
 
 \todo{More motivation?}
 
@@ -361,8 +361,8 @@ provided the (generally non-square) matrices $L\ind{l}$ and $R\ind{l}$ satisfy $
     \node at (L_9) {$L\ind{3}$};
   \end{tikzpicture}
 \end{equation}
-As shown in~\cite[Thm. 2]{Perez-Garcia}, these local transformations on the virtual degrees of freedom are the only possible gauge transformations of the MPS representation.
-A number of canonical forms exist that partially fix the gauge~\cite{Perez,Schollwoeck,Chubb}.
+As shown in~\cite[Thm. 2]{Garcia_2006_Matrix}, these local transformations on the virtual degrees of freedom are the only possible gauge transformations of the MPS representation.
+A number of canonical forms exist that partially fix the gauge~\cite{Garcia_2006_Matrix,Schollwoeck_2011_DensityMatrix,Bridgeman_2017_HandWaving}.
 The following definition summarizes the corresponding gauge conditions
 
 \begin{definition}%
@@ -407,12 +407,12 @@ The following definition summarizes the corresponding gauge conditions
 
 The exceptions for the local tensors at the beginning and end of the chain are necessary to accommodate tensors with Frobenius norm different from one.
 In practice, we often deal with a mixed left-right-canonical form, e.g.\ in variational algorithms updating one local tensor at a time such as DMRG or the alternating least squares algorithm presented in \cref{sec:tensors.als}.
-For these purposes, efficient algorithms exist that transform an MPS to a canonical form~\cite{schollwoeck,orus}.
+For these purposes, efficient algorithms exist that transform an MPS to a canonical form~\cite{Schollwoeck_2011_DensityMatrix,Orus_2014_Practical}.
 If we neglect transformations that change the bond dimensions, the remaining gauge group is unitary, and hence, computations on canonical MPS are far more stable numerically.\\
 
 
 We have already emphasized the ability of the MPS representation to represent certain tensors efficiently, i.e.\ with a number of parameters scaling polynomially in the order of the tensor.
-One crucial advantage of this tensor format is that it also facilitates efficient arithmetical operations for tensors~\cite{Schollwoeck}.
+One crucial advantage of this tensor format is that it also facilitates efficient arithmetical operations for tensors~\cite{Schollwoeck_2011_DensityMatrix,Orus_2014_Practical}.
 In other words, operations such as sums and contractions of MPS are also MPS and the corresponding local tensors can be computed efficiently from the local tensors of the inputs.
 For example, consider the scalar product of two tensors $A, B \in \Complex^{d^N}$:
 \[
@@ -435,13 +435,13 @@ For example, consider the scalar product of two tensors $A, B \in \Complex^{d^N}
   \label{eq:mps.inner}
 \]
 By contracting the physical legs of the local tensors first as indicated by the gray boxes\footnote{%
-  Note that this strategy is not optimal in many cases~\cite{schollwoecc} but suffices as an example here.
+  Note that this strategy is not optimal in many cases~\cite{Schollwoeck_2011_DensityMatrix} but suffices as an example here.
 },
 we obtain an MPS representation of a tensor of 0th order, i.e.\ a scalar, which can be contracted afterwards to compute its value.
 
 As most arithmetic operations increase the virtual dimension substantially, we need methods to approximate the result by another MPS with lower virtual dimension while keeping the approximation error small.
 Although computing the \emph{best} rank $r$ approximation of an MPS is computationally infeasible in general~\cite{Hillar_2013_Most}, there are efficient algorithms that produce good results in practice:
-One of them is \emph{SVD compression}, which successively performs an SVD followed by a truncation of negligible singular values on the local tensors similar to the higher-order SVD introduced in \cref{eq:mps.matrix_product}~\cite{schollwoeck}.
+One of them is \emph{SVD compression}, which successively performs an SVD followed by a truncation of negligible singular values on the local tensors similar to the higher-order SVD introduced in \cref{eq:mps.matrix_product}~\cite{Schollwoeck_2011_DensityMatrix}.
 If we truncate all but the $r$ largest singular values in each step, we obtain a quasi-optimal rank $r$ approximation of $X \in \Complex^{d^N}$, i.e.\
 \[
   \norm{X - X_\mathrm{SVD}} \le \sqrt{N - 1} \norm{X - X_\mathrm{best}}.
@@ -505,7 +505,7 @@ The main application of the MPS representation in quantum information and conden
 As the corresponding Hilbert space grows exponentially fast in the number of constituents $N$, the full description of any state in terms of its coefficients w.r.t.\ a fixed basis is only feasible for small $N$.
 Fortunately, not all quantum states of a many-body system are equally relevant in practice.
 Many systems of interest are well described by a Hamiltonian with local interactions, e.g.\ nearest neighbour interactions, which reflects in the structure of correlations in their low energy spectrum.
-More specifically, low energy eigenstates of gapped Hamiltonians with local interactions obey the \emph{area-law} for entanglement entropy~\cite{Hastings,Cirac}:
+More specifically, low energy eigenstates of gapped Hamiltonians with local interactions obey the \emph{area-law} for entanglement entropy~\cite{Hastings_2006_Solving,Verstraete_2006_Matrix,Eisert_2010_Colloquium}:
 For those states, the entanglement entropy of a subsystem asymptotically only depends on its boundary size and not on its volume.
 Although those stats occupy only a small corner of the enormous many-body Hilbert space as depicted in \cref{fig:mps.cartoon}, they are exceptionally important in practice.
 %   - time evolution stays there -> see Orus 3.4
@@ -519,7 +519,7 @@ If we expand $\ket{\psi}$ in a product basis with coefficient tensor $C$,
   \ket\psi = \sum_{i_1,\ldots,i_N} C_{i_1,\ldots,i_N} \, \ket{i_1} \otimes \cdots \otimes \ket{i_N},
   \label{eq:mps.state_parametrization}
 \]
-then $C$ can be efficiently approximated by an MPS with bond dimension scaling polynomially in $N$ and the inverse approximation error~\cite{hastings,arad}.
+then $C$ can be efficiently approximated by an MPS with bond dimension scaling polynomially in $N$ and the inverse approximation error~\cite{Hastings_2006_Solving,Verstraete_2006_Matrix,Eisert_2010_Colloquium,Arad_2013_Area,Arad_2016_Rigorous}.
 States of the form~\eqref{eq:mps.state_parametrization} are appropriately referred to as matrix product states.
 % explains DMRG, TEBD
 
@@ -599,14 +599,14 @@ Its local tensors $A\ind{l}$ are defined in terms of the local tensors $B\ind{l}
   \label{eq:mps.mpdo_local_tensors}
 \]
 with implicit grouping of the virtual indices of $B\ind{l}$.
-This is an example of a matrix-product density operator (MPDO), which were introduced in \cite{VerstrateGarcia-Ripoll,Zwolak}.
+This is an example of a matrix-product density operator (MPDO), which were introduced in \cite{Verstraete_2004_Matrix,Zwolak_2004_MixedState}.
 In general, any operator acting on the many-body Hilbert space can be expressed as an MPO with local tensors $A\ind{l} \in \Complex^{d \times d \times r \times r}$ as depicted in \cref{fig:mps.mpo}.
 This representation is efficient if the operator acts \quotes{locally}, e.g.\ for a Hamiltonian with nearest neighbor interactions.
 
 The explicit parametrization~\eqref{eq:mps.mpdo_local_tensors} of the local tensors makes it easy to see that the corresponding MPO is positive semidefinite (psd), and hence, represents a valid physical state.
 A crucial question for numerical computations with density operators expressed as MPO is if there is an efficient algorithm that decides whether the
 MPO is psd or not.
-Unfortunately, this problem is $\NP$-hard, even if we restrict to dimensions $d=2$ and translational invariant states~\cite{Kliesch}.
+Unfortunately, this problem is $\NP$-hard, even if we restrict to dimensions $d=2$ and translational invariant states~\cite{Kliesch_2014_Matrix}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}
@@ -649,7 +649,7 @@ By introducing a second \emph{auxiliary} Hilbert space $\mathcal{H}_2$, we can w
 where $\ket{\psi} \in \mathcal{H}_1 \otimes \mathcal{H}_2$.
 Note that we can take $\mathcal{H}_2$ to be of the same dimension as $\mathcal{H}_1$.
 
-Similarly, a \emph{local purification matrix product state} (PMPS) is a matrix product state with two legs per site as depicted in \cref{fig:mps.pmps} such that
+Similarly, a \emph{local purification matrix product state} (PMPS)~\cite{Cuevas_2013_Purifications} is a matrix product state with two legs per site as depicted in \cref{fig:mps.pmps} such that
 \[
   \underbrace{%
     \begin{tikzpicture}[baseline=-.5ex]
@@ -669,19 +669,19 @@ Similarly, a \emph{local purification matrix product state} (PMPS) is a matrix p
 \]
 This is an inherently positive semidefinite parametrization of $\rho$ in matrix product form.
 However, this advantage comes at a price:
-The PMPS representation of a state can be arbitrarily more costly than its MPDO representation.
+The PMPS representation of a state can be arbitrarily more costly than its MPDO representation~\cite{Cuevas_2013_Purifications}.
 More precisely, there a families of states $(\rho_N)_{N \in \Naturals}$  with $\rho_N \in \Complex^{d^N}$ such that $\rho_N$ has constant MPO-rank, but the PMPS-rank of $rho_N$ scales as $\Order(N)$.
-This and the hardness result from~\cite{Kliesch} shows that no efficient algorithm for computing an exact local purification from an MPDO exists in general.
+This and the hardness result from~\cite{Kliesch_2014_Matrix} shows that no efficient algorithm for computing an exact local purification from an MPDO exists in general.
 However, the questions how generic this hardness is and how hard approximative versions of this problem are remain open?\\
 
 
 
 Besides the original applications in physics, the MPS tensor format has recently also found applications in the field of machine learning:
 Deploying the latest neural networks on mobile devices such as smart phones or IOT devices is challenging due to the high dimensional hidden layers, e.g. a single weight matrix of a fully connected layer can have millions of parameters.
-By approximating this weight matrix by an MPS with small bond dimension, the authors in~\cite{Novikov} were able to compress state-of-art image detection networks by a factor of seven with only minor performance penalties.
-Other examples of applications of tensor decompositions in deep learning include regularization~\cite{Tai} and deep representation learning~\cite{YangHospedales}.
+By approximating this weight matrix by an MPS with small bond dimension, the authors in~\cite{Novikov_2015_Tensorizing} were able to compress state-of-art image detection networks by a factor of seven with only minor performance penalties.
+Other examples of applications of tensor decompositions in deep learning include regularization~\cite{Tai_2015_Convolutional} and deep representation learning~\cite{Yang_2016_Deep}.
 
-Another use of the MPS tensor format in machine learning was pioneered in~\cite{Stoudenmire}.
+Another use of the MPS tensor format in machine learning was pioneered in~\cite{Stoudenmire_2016_Supervised}.
 They consider a support vector machine classifier, which for the binary (yes/no) outcome is given by
 \[
   f(X) = \braket{W, X},
@@ -689,7 +689,7 @@ They consider a support vector machine classifier, which for the binary (yes/no)
 where $X$ is the input vector and $W$ is the model vector.
 The goal is to determine $W$ in such a way that $f(X) > 0$ if $X$ is in the \quotes{yes} class and $f(X) < 0$ otherwise.
 By using a MPS representation for $W$ and $X$, they are able to efficiently learn such a model even in very higher-dimensional settings.
-A similar can also be applied to learning polynomial classifiers~\cite{Chen}.
+A similar can also be applied to learning polynomial classifiers~\cite{Chen_2017_Parallelized}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -719,7 +719,7 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen}.
   \centering
   \input{tikz/tensors_local_measurements.tex}
   \caption{%
-    The local measurements used for the reconstruction of MPS, MPO, and unitary channels in~\cite{Cramer_2010_Efficient,Baumgratz,Baumgratz,Lanyon,Holzaepfel}.
+    The local measurements used for the reconstruction of MPS, MPO, and unitary channels in~\cite{Cramer_2010_Efficient,Baumgratz_2013_Scalable,Baumgratz_2013_Scalablea,Lanyon_2017_Efficient,Holzaepfel_2014_Scalable}.
     These consist of informationally complete measurements on blocks of $R$ consecutive qudits, e.g.\ all Pauli product measurements on $R$ qudits.
     }%
   \label{fig:als.quantum_measurements}
@@ -733,17 +733,17 @@ On the one hand, we want to bound the number of measurements required to perform
 On the other hand, it refers to the \quotes{computational complexity} as outlined in \cref{sec:error.complexity}
 Both aspects are especially critical for tensor reconstruction as na\"ive approaches generally suffer from the curse of dimensionality.
 
-In the context of quantum estimation, existing work addresses this question for the reconstruction of MPS~\cite{Cramer_2010_Efficient}, MPDO~\cite{Baumgratz,Baugratz,Lanyon}, and unitary quantum processes~\cite{Holzaepfel} from local measurements.
+In the context of quantum estimation, existing work addresses this question for the reconstruction of MPS~\cite{Cramer_2010_Efficient}, MPDO~\cite{Baumgratz_2013_Scalable,Baumgratz_2013_Scalablea,Lanyon_2017_Efficient}, and unitary quantum processes~\cite{Holzaepfel_2014_Scalable} from local measurements.
 More precisely, they consider measurements that act non-trivially only on blocks of $R$ adjacent qudits as depicted in \cref{fig:als.quantum_measurements}.
 This results in a sample complexity scaling as $\Order(N \times d^R)$ compared to the $m = \Order(d^N)$ for the na\"ive approach.
-Numerical experiments in~\cite{Cramer,Baumgratz,Baumgratz} demonstrate successful recovery of W-states as well as ground and thermal states of nearest-neighbor Hamiltonians for small values of $R$ independent of $N$.
+Numerical experiments in~\cite{Cramer_2010_Efficient,Baumgratz_2013_Scalable,Baumgratz_2013_Scalablea} demonstrate successful recovery of W-states as well as ground and thermal states of nearest-neighbor Hamiltonians for small values of $R$ independent of $N$.
 Naturally, these are all examples of MPS or MPO with small bond dimension.
 The drastically reduced sampling complexity makes the approaches efficient and viable for large-scale quantum experiments.
 However, only the numerically inferior algorithm\footnote{%
   T.\ Baumgratz, private communications.
 }
-from~\cite{Baumgratz} comes with a proof of convergence.
-Similar rigorous recovery guarantees have only been proven for comparable, but inefficient versions of the algorithms in~\cite{Cramer,Baumgratz}.\\
+from~\cite{Baumgratz_2013_Scalable} comes with a proof of convergence.
+Similar rigorous recovery guarantees have only been proven for comparable, but inefficient versions of the algorithms in~\cite{Cramer_2010_Efficient,Baumgratz_2013_Scalablea}.\\
 
 
 
