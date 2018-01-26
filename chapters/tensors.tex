@@ -1,6 +1,9 @@
  % -*- root: ../thesis.tex -*-
-\chapter{Tensors}
+\chapter{Tensors}%
 \label{chap:tensors}
+
+\todo{The $A\ind{l}$ notation is used for two different things here.}
+
 
 The theoretical and numerical study of many-body quantum systems is severely hindered by the \emph{curse of dimensionality}, which in this context refers to the exponential growth of the Hilbert space of quantum states w.r.t.\ the number of constituents.
 However, many realistic systems do not exhibit this pathological complexity and can be described efficiently in terms of \emph{tensor networks}~\cite{}.
@@ -284,7 +287,7 @@ hence the name \quotes{matrix-product representation}.
 So far this construction is exact and completely general, i.e.\ every tensor can be represented in MPS form, but not efficient:
 Generically, the SVD in the $i$-th step yields $r_i = \min{d^i, d^{N - i}}$ non-zero singular values $\lambda\ind{i}$, and therefore, the local tensors $M\ind{i}$ have shape $(d, r_{i-1}, r_i)$.
 However, suppose that all but $r$ of the singular values in each cut vanish, then we can truncate the local tensor $M\ind{i}$ to shape $(d, r, r)$.
-In this case, the number of parameters scales as $\mathcal{O}(r^2 N d)$ and $X$ can be represented efficiently by matrix products according to \cref{eq:mps.matrix_product}.
+In this case, the number of parameters scales as $\Order(r^2 N d)$ and $X$ can be represented efficiently by matrix products according to \cref{eq:mps.matrix_product}.
 Although this assumption may seem overly strict on a first glance, many tensors in our applications of interest are well approximated by such an MPS with small $r$.
 The following definition sums up this section so far.
 
@@ -312,11 +315,17 @@ This warrants the following definition.
 \begin{definition}%
   \label{def:mps.rank}
   Let $(M\ind{l})_{l \in [N]}$ denote an MPS representation with $M\ind{l} \in \Complex^{r_{l - 1} \times d \times r_l}$.
-  We call $\max_l r_l$ the \emph{rank} or \emph{bond dimension} of the MPS.
+  We call $\max_l r_l$ the (MPS-)\emph{rank} or \emph{bond dimension} of the MPS.
   Furthermore, for any tensor $X$, we define its \emph{MPS-rank} to be the smallest rank of any MPS representation of $X$.
 \end{definition}
 
-Note that by~\cite[Thm.\ 2.2]{Oseledets_2011_TensorTrain}, the definition of MPS-rank in \cref{def:mps.rank} agrees with the usual definition using matrications of $X$, and hence, is well defined.\\
+Note that by~\cite[Thm.\ 2.2]{Oseledets_2011_TensorTrain}, the definition of MPS-rank in \cref{def:mps.rank} agrees with the usual definition using matrications of $X$, and hence, is well defined.
+\todo{Fix this}
+In contrast to the matrix case, there are multiple inequivalent definitions rank for tensors~\cite{???}.
+% Each notion of rank is induced by a tensor representation analogous to the MPS case.
+% The choice which format to use in practice is mainly determined by two factors:
+% On the one hand, the natural structure of the problem determines, which tensor format yields the most efficient
+\\
 
 
 With the factorization of the tensor $X$ in \cref{def:mps.mps}, we have introduced new virtual degrees of freedom such that the partial trace over them equals $X$.
@@ -423,6 +432,7 @@ For example, consider the scalar product of two tensors $A, B \in \Complex^{d^N}
     \fill[tensornode,fill=black, opacity=0.1] ($ (A_3) - (0.5,0.5) $) rectangle ($ (B_3) + (0.5,0.5) $);
   \end{scope}
   \end{tikzpicture}
+  \label{eq:mps.inner}
 \]
 By contracting the physical legs of the local tensors first as indicated by the gray boxes\footnote{%
   Note that this strategy is not optimal in many cases~\cite{schollwoecc} but suffices as an example here.
@@ -660,7 +670,7 @@ Similarly, a \emph{local purification matrix product state} (PMPS) is a matrix p
 This is an inherently positive semidefinite parametrization of $\rho$ in matrix product form.
 However, this advantage comes at a price:
 The PMPS representation of a state can be arbitrarily more costly than its MPDO representation.
-More precisely, there a families of states $(\rho_N)_{N \in \Naturals}$  with $\rho_N \in \Complex^{d^N}$ such that $\rho_N$ has constant MPO-rank, but the PMPS-rank of $rho_N$ scales as $\mathcal{O}(N)$.
+More precisely, there a families of states $(\rho_N)_{N \in \Naturals}$  with $\rho_N \in \Complex^{d^N}$ such that $\rho_N$ has constant MPO-rank, but the PMPS-rank of $rho_N$ scales as $\Order(N)$.
 This and the hardness result from~\cite{Kliesch} shows that no efficient algorithm for computing an exact local purification from an MPDO exists in general.
 However, the questions how generic this hardness is and how hard approximative versions of this problem are remain open?\\
 
@@ -709,7 +719,8 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen}.
   \centering
   \input{tikz/tensors_local_measurements.tex}
   \caption{%
-    Measurements blablbalba
+    The local measurements used for the reconstruction of MPS, MPO, and unitary channels in~\cite{Cramer_2010_Efficient,Baumgratz,Baumgratz,Lanyon,Holzaepfel}.
+    These consist of informationally complete measurements on blocks of $R$ consecutive qudits, e.g.\ all Pauli product measurements on $R$ qudits.
     }%
   \label{fig:als.quantum_measurements}
 \end{figure*}
@@ -717,15 +728,16 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen}.
 
 With the ability to approximate structured tensors from many applications efficiently in MPS form, one crucial question remains:
 How can we \emph{efficiently} recover this representation in practice from measurable quantities?
-Here, \quotes{efficiency} refers to two different aspects:
+Here, \quotes{efficiency} refers to two different aspects.
 On the one hand, we want to bound the number of measurements required to perform reconstruction, i.e.\ the \emph{sample complexity}.
 On the other hand, it refers to the \quotes{computational complexity} as outlined in \cref{sec:error.complexity}
 Both aspects are especially critical for tensor reconstruction as na\"ive approaches generally suffer from the curse of dimensionality.
 
 In the context of quantum estimation, existing work addresses this question for the reconstruction of MPS~\cite{Cramer_2010_Efficient}, MPDO~\cite{Baumgratz,Baugratz,Lanyon}, and unitary quantum processes~\cite{Holzaepfel} from local measurements.
 More precisely, they consider measurements that act non-trivially only on blocks of $R$ adjacent qudits as depicted in \cref{fig:als.quantum_measurements}.
-This results in a sample complexity scaling as $\mathcal{O}(N \times d^R)$ compared to the $m = \mathcal{O}(d^N)$ for the na\"ive approach.
+This results in a sample complexity scaling as $\Order(N \times d^R)$ compared to the $m = \Order(d^N)$ for the na\"ive approach.
 Numerical experiments in~\cite{Cramer,Baumgratz,Baumgratz} demonstrate successful recovery of W-states as well as ground and thermal states of nearest-neighbor Hamiltonians for small values of $R$ independent of $N$.
+Naturally, these are all examples of MPS or MPO with small bond dimension.
 The drastically reduced sampling complexity makes the approaches efficient and viable for large-scale quantum experiments.
 However, only the numerically inferior algorithm\footnote{%
   T.\ Baumgratz, private communications.
@@ -734,32 +746,49 @@ from~\cite{Baumgratz} comes with a proof of convergence.
 Similar rigorous recovery guarantees have only been proven for comparable, but inefficient versions of the algorithms in~\cite{Cramer,Baumgratz}.\\
 
 
-% similar problem: phaselift chapter -> low-rank matrix recovery -> structure leads to reduced sample complexity
-% The goal is to reconstruct $X$ from $m$ linear measurements of the form
-% \[
-%   y_l = {\braket{A\ind{l}, X}}, \quad l=1,\ldots,m
-%   \label{eq:tensors.lin_measurements}
-% \]
-% where $\braket{A, B} = \tr (\transpose{A} B)$ denotes the Frobenius inner product, $A\ind{l} \in \Reals^{d \times d}$ the \emph{measurement matrices}, and $y_l \in \Reals$ the corresponding measurement data.
-% naive aproach -> d^2 such measurements
-% put generaliztt of THM ->
-% Nevertheless, we can still single out a unique solution in some cases by exploiting the additional structure, namely the low-rank assumption.
-% For example, in \cref{thm:FIXME} we show that $m = \Order(d)$ random measurements sampled from an appropriate distribution are sufficient to reconstruct any positive semidefinite, Hermitian $X \in \Complex^{d \times d}$ with unit rank.
-% More generally, we can recover any $X \in \Reals^{d \times d}$ with $\rank X = r$ from $m = \Order(d r)$ randomly chosen measurements~\cite{Candes_2011_Tight,Kueng_2014_Low}.
-% Intuitively, this sample complexity is asymptotically optimal since we need at least $2 d r$ real parameters to specify the left- and right-singular vectors of $X$, see~\cite{Eldar_2012_Uniqueness,Li_2017_Optimal} for rigorous lower bounds.
-% computationally efficient -> SDP or other algorithmk
+
+The question that motivated the work presented in this chapter is whether we can identify other measurement schemes and algorithms that \emph{provably} allow for efficiently reconstructing low-rank tensors.
+Recall that we already encountered a similar question in \cref{cha:phaselift} for the problem of \emph{low-rank matrix recovery}.
+The latter asks under which conditions we can recover a low-rank matrix $X \in \Complex^{d \times d}$ from $m$ linear measurements of the form
+\[
+  y_l = \braket{A\ind{l}, X}, \quad l=1, \ldots, m.
+  \label{eq:als.matrix_measurements}
+\]
+Here, $A\ind{l} \in \Complex^{d \times d}$ denote the measurement matrices and
+\[
+  \braket{A, X} = \tr \adj{A} X
+\]
+the Frobenius inner product.
+For a general matrix $X$, the number of measurements $m$ needs to scale as $d^2$ by the pigeonhole principle.
+However, by exploiting the low-rank structure of $X$, we can reduce $m$.
+For example, \cref{thm:???} shows that we can recover any positive semi-definite rank-1 matrix $X$ from only $m = \Order(d)$ measurements provided the $A\ind{l}$ are sampled from an appropriate distribution of random matrices.
+Furthermore, said theorem also provides an efficient reconstruction algorithm, namely the semi-definite program~\eqref{eq:???}.
+
+More generally, we can recover any $X \in \Complex^{d \times d}$ with $\rank X = r$ from $m = \Order(d r)$ randomly chosen measurements~\cite{Candes_2011_Tight,Kueng_2014_Low}.
+Intuitively, this sample complexity is asymptotically optimal since we need at least $2 d r$ complex parameters to specify the left- and right-singular vectors of $X$, see~\cite{Eldar_2012_Uniqueness,Li_2017_Optimal} for rigorous lower bounds.\\
 
 
-% In conclusion, both compressed sensing and low-rank matrix recovery provide techniques to efficiently reconstruct a low-complexity, compressible signal embedded in a higher-dimensional space from linear measurements.
-% Here, \quotes{efficiently} refers to both, low computational as well as sample complexity -- that is the number of measurements required scales with the intrinsic complexity of the signal and not the dimension of the ambient space.\\
-% result for MPS of rank k and order 2 -> generalization to arbitary orderes
-% The goal is to reconstruct $X$ from $m$ linear measurements of the form simlar to above, with measuemetn tensors $A$
+Here, we consider the generalization of low-rank matrix recovery to higher order tensors\footnote{%
+  In contrast to the rest of this chapter, we consider real tensors in order to simplify the notation.
+}
+$X \in \Reals^{d^N}$.
+The observable quantities are -- analogous to \cref{eq:als.marix_measurements} -- given by overlaps with measurement tensors $A\ind{l} \in \Reals$
+\[
+  y_l = \braket{A\ind{l}, X}
+  \label{eq:als.tensor_measurements}
+\]
+with the Frobenius inner product of tensors defined by \cref{eq:mps.inner}.
+For this purpose, we study an \emph{Alternating Least Squares} (ALS) algorithm inspired by DMRG methods in quantum physics.
 
 
-% existing work: canonical and tucker decompositoin -> still exponential sampling complexity
+% existing work: canonical and tucker decompositoin -> still exponential sampling complexity, only of length 3
 % zeljka: projected gradient method for MPS, poly sample complexity BUT: fully gaussian measurements
+% zeljka: theta bodies, analogon to nuclear norm minimization still hard for tensors -> cite
+%   -> further convex relaxation
+% schneider rohwedder: show that minimization converges locally
 % cannot be computed efficeintly since measurements ~ exponential
 % similar to matrix case; usually first step: rank 1 measuement model with gaussian local tensors
+% also, no notion of reduced measurement for general tensors -> most natural to use products!
 %
 
 \subsection{Theory}%
