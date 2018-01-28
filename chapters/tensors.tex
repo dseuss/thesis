@@ -770,6 +770,7 @@ Intuitively, this sample complexity is asymptotically optimal since we need at l
 
 
 
+
 Here, we consider the generalization of low-rank matrix recovery to higher order tensors\footnote{%
   In contrast to the rest of this chapter, we consider real tensors in order to simplify notation.
 }
@@ -797,22 +798,26 @@ However, numerical investigations using an alternating least squares algorithm s
 
 Stronger analytical results exist for a different measurement ensemble:
 The authors in~\cite{Rauhut_2014_Tensor}, consider fully Gaussian measurements, i.e.\ measurement tensors with independent components sampled from a normal distribution.
-In this approach, number of such measurements scaling polynomially in the crucial parameters $d$, $N$, and $r$ is sufficient to recover any rank $r$ tensor.
-Although their result is highly sample efficient, it is still infeasible for high-order tensors due to the exponentially scaling memory requirement for the measurement tensors.\\
+In this approach, a number of such measurements scaling polynomially in the crucial parameters $d$, $N$, and $r$ is sufficient to recover any rank $r$ tensor.
+Although their result is highly sample efficient, it is still infeasible for high-order tensors due to the exponentially scaling memory requirement for the measurement tensors.
 
+In conclusion, the existing rigorous work on recovering low MPS-rank tensors is currently situated at two different ends of a spectrum:
+On the on hand, there is tensor completion, which is highly relevant for practical applications and efficiently implementable, but without any recovery guarantees for a polynomially scaling number of measurements.
+On the other hand, the authors in~\cite{Rauhut_2014_Tensor} prove reconstruction with near-optimal sample complexity, but their full Gaussian measurements are computationally very demanding.
 
-
-% similar to matrix case; usually first step: rank 1 measuement model with gaussian local tensors
-% also, no notion of reduced measurement for general tensors -> most natural to use products!
-
-
-
-
+This situation can be understood better by comparing to the history of low-rank matrix recovery and compressive sensing -- the related problem of reconstructing sparse vectors from few measurements.
+The first rigorous on compressed sensing from Gaussian measurements were due to Donoho~\cite{For_most} in 2006.
+In the same year, Candes and Tao -- a Fields medalist -- proved guarantees for orthonormal basis vector measurements~\cite{Stable_signal}, which can be considered as the analogue of matrix completion for vectors.
+The same authors also proved the first matrix recovery guarantees for Gaussian sampling matrices~\cite{} and for matrix completion~\cite{}.
+Here, we are going to study a measurement ensemble for tensors that combines the advantages of both approaches.
+We take the measurement tensors to be of the form
 \[
   A\ind{l} = a\ind{l}_1 \otimes \cdots a\ind{l}_N
   \label{eq:als.rank1_measurements}
 \]
 with local tensors randomly chosen from a standard multivariate normal distribution $a\ind{l}_k \sim \Normal(0, \1_d)$.
+In contrast to the fully Gaussian model from~\cite{}, the measurement tensors can be represented efficiently as MPS.
+And, unlike the tensor completion problem, history does not dictate that its solution requires at least one Fields medalist.
 
 
 \subsection{Theory}%
