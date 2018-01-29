@@ -60,7 +60,7 @@
 % if \makefull is defined (e.g. by commandline argument, include everything)
 \ifdefined\makefull\else
   % \includeonly{chapters/error_region,chapters/error_region_appendix}
-  \includeonly{chapters/tensors}
+  \includeonly{chapters/tensors,chapters/tensors_appendix}
   % \includeonly{chapters/phaselift,chapters/phaselift_appendix}
 \fi
 
@@ -82,17 +82,38 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
+
+\chapter{Introduction}
+\label{chap:introduction}
 \include{chapters/introduction}
+
+\chapter{Uncertainty Quantification for quantum state estimation}%
+\label{chap:error}
 \include{chapters/error_region}
+
+\chapter{Characterizing linear-optical networks via PhaseLift}%
+\label{chap:phaselift}
 \include{chapters/phaselift}
+
+\chapter{Tensors}%
+\label{chap:tensors}
 \include{chapters/tensors}
+
+\chapter{Conclusion}
+\label{chap:conclusion}
 \include{chapters/conclusion}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
-\chapter{Appendices}
+
+\chapter{Error regions}
 \include{chapters/error_region_appendix}
+
+\chapter{Phaselift}
 \include{chapters/phaselift_appendix}
+
+\chapter{Tensors}
+\include{chapters/tensors_appendix}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printbibliography[heading=bibintoc]
