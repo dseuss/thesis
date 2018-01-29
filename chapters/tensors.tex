@@ -874,7 +874,33 @@ Hence, all tensors to the left and right of the currently updated tensor are lef
 This process is repeated $H$ number of times.
 In practice, we make the algorithm slightly faster by skipping the right-canonicalization step in line~\ref{line:als.right_canonical} and perform a sweep left-right-left instead.
 
-Note that the analysis of the algorithm below requires that the samples at each update steps are independent.
+The crucial step in this algorithm is the local minimization in line~\ref{line:als.min}.
+It amounts to keeping all but the $n$-th local tensor of $Y$ fixes and minimizing the empirical error over $Y_n$.
+The minimizer $\hat Z$ can be computed efficiently from the linear least squares problem
+\[
+  \hat Z
+  = \argmin_Z \sum_l \left( y\ind{h,n;l} - B\ind{l}Z   \right)^2
+  = \norm{y\ind{h,n} - B Z}_{\ell_2}^2.
+  \label{eq:als.llsq}
+\]
+Here, the rows of the matrix\footnote{%
+  More precisely, we have $B \in \Reals^{m \times (rd)}$ for $n=1$ or $n=N$.
+}
+$B \in \Reals^{m \times (dr^2)}$ are defined in line~\ref{line:als.partial_contraction} in terms of partial contractions of $A\ind{h,n;l}$ and $Y$ leaving out the $n$-th local tensor of $Y$:
+\[
+  B\ind{l} =
+  \begin{tikzpicture}[baseline=-.5ex]
+    \mpa{{1,2,4,5,6}}{{S=1, y=.5, tensor_height=0.5, tensor_width=0.5, tensor_name='Y'}}
+    \mpa{6}{{N=1, virtual=0, y=-.5, tensor_height=0.5, tensor_width=0.5, tensor_name='A'}}
+
+    \draw[pointerline] (Y_6) -- +(1,.125) node[pointernode] {$Y$};
+    \draw[pointerline] (A_6) -- +(1,-.125) node[pointernode] {$A\ind{h,n;l}$};
+  \end{tikzpicture}
+  \label{eq:als.minimization_matrix}
+\]
+Therefore, the solution $\hat Z$ of \cref{eq:als.llsq} is a $d r^2$ dimensional vector, which can be reshaped to the correct form.
+
+Finally, note that the analysis of the algorithm below requires that the samples at each update steps are independent.
 Therefore, we use a fresh batch of measurement tensors and measurement values in each step, which results in a total number of $M = (HN + 1)m$ measurements.
 Provided that both $H$ and $m$ scale polynomially in the system's parameters, then so does $M$.
 However, numerical experiments below show that this resampling is unnecessary in practice.
