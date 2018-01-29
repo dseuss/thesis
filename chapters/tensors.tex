@@ -1,7 +1,4 @@
  % -*- root: ../thesis.tex -*-
-\chapter{Tensors}%
-\label{chap:tensors}
-
 \todo{The $A\ind{l}$ notation is used for two different things here.}
 
 
@@ -752,9 +749,9 @@ The question that motivated the work presented in this chapter is whether we can
 Recall that we already encountered a similar question in \cref{cha:phaselift} for the problem of \emph{low-rank matrix recovery}.
 The latter asks under which conditions we can recover a low-rank matrix $X \in \Complex^{d \times d}$ from $m$ linear measurements of the form
 \[
-  y_l = \braket{A\ind{l}, X}, \quad l=1, \ldots, m.
+  y\ind{l} = \braket{A\ind{l}, X}, \quad l=1, \ldots, m.
   \label{eq:als.matrix_measurements}
-
+\]
 Here, $A\ind{l} \in \Complex^{d \times d}$ denote the measurement matrices and
 \[
   \braket{A, X} = \tr \adj{A} X
@@ -778,7 +775,7 @@ $X \in \Reals^{d^N}$ of low MPS-rank.
 For this purpose, we study an \emph{Alternating Least Squares} (ALS) algorithm inspired by DMRG methods in quantum physics.
 The observable quantities are -- analogous to \cref{eq:als.marix_measurements} -- given by overlaps with measurement tensors $A\ind{l} \in \Reals$
 \[
-  y_l = \braket{A\ind{l}, X}
+  y\ind{l} = \braket{A\ind{l}, X}
   \label{eq:als.tensor_measurements}
 \]
 with the Frobenius inner product of tensors defined by \cref{eq:mps.inner}.
@@ -816,14 +813,82 @@ We take the measurement tensors to be of the form
   \label{eq:als.rank1_measurements}
 \]
 with local tensors randomly chosen from a standard multivariate normal distribution $a\ind{l}_k \sim \Normal(0, \1_d)$.
-In contrast to the fully Gaussian model from~\cite{}, the measurement tensors can be represented efficiently as MPS.
+In contrast to the fully Gaussian model from~\cite{}, the measurement tensors~\eqref{eq:als.rank1_measurements} can be represented efficiently as MPS of unit rank.
 And, unlike the tensor completion problem, history does not dictate that its solution requires at least one Fields medalist.
+
 
 
 \subsection{Theory}%
 
-% algorithm outline,
+In this section, we are going to report on work in progress for the problem of reconstructing low-rank tensors from few measurements.
+To recapitulate, the goal is to recover a tensor $X \in \Reals^{d^N}$ with MPS-rank\footnote{%
+  From now on, we simply say \quotes{rank} instead of \quotes{MPS-rank}.
+} $r$ from $M$ linear measurements of the form
+\[
+  y\ind{l} = \braket{A\ind{l}, X}, \ldots l=1,\ldots,M,
+\]
+where $A\ind{l}$ is a product of Gaussian vectors as defined in \cref{eq:als_rank1_measurements}.
+For this purpose, we want an efficient reconstruction algorithm and $m$ to scale polynomially in the parameters $d$, $N$, and $r$.
 
+The idea to recover $X$ is simply to find the tensor $Y$ of desired rank that minimizes the empirical $\ell_2$ error $\sqrt{\sum_l \left( y\ind{l} - \braket{A\ind{l}, Y} \right)^2}$.
+However, this problem is generally hard to solve directly since the space of MPS of given rank is non-convex.
+Instead, we iteratively optimize the empirical error over a single local tensor at a time Similarly to the simplest version of DMRG.
+The resulting algorithm is presented below:
+
+\begin{algorithm}[H]
+  \caption{\label{alg:als}Alternating Least Squares (ALS) for $\ell_2$ minimization}
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{Output}{Output}
+
+  \Input{%
+    Measurement tensors $A\ind{l}$, measurement outcomes $y\ind{l}$, target rank $r$, and number of epochs $H$ \newline
+    Divide $(A\ind{l}, y\ind{l})_l$ into $HN + 1$ subsets of size $m$, which are denoted by ${\left(A\ind{0;l}, y\ind{0;l}\right)}_l$ and ${\left(A\ind{h,n;l}, y\ind{h,n;l}\right)}_l$ ($h \in [H], n \in [N]$)
+  }
+  \BlankLine
+
+  \tcc{Initialize $Y$ as MPS with given rank}
+  $Y \gets \mathtt{compress}\left(\sum_{l=1}^m y\ind{0;l} A\ind{0;l}, r\right)$ \label{line:als.initialization}
+
+  \For{$h \gets 1$ \KwTo $H$}{
+    \tcc{right-normalize all local tensors}
+    $\mathtt{right\-canonicalize}(Y)$ \label{line:als.right_canonical}
+
+    \For{$n \gets 1$ \KwTo $N$}{
+      \For{$l \gets 1$ \KwTo $m$} {
+        \tcc{contract $A\ind{h,n;l}$ with all but n-th local tensors of $X$}
+        $B\ind{l} \gets \mathtt{contract}(A\ind{h,n;l}, X_{[N] \backslash n})$ \label{line:als.partial_contraction}
+      }
+      $\hat Z \gets \argmin_Z \sum_l \left( y\ind{h,n;l} - B\ind{l}Z   \right)^2$ \label{line:als.min}
+
+      \tcc{update the n-th local tensor inplace}
+      $Y_n \gets \mathtt{left\_normalize}(\hat Y)$
+    }
+  }
+
+  \Output{Y}
+\end{algorithm}
+
+In this version of the alternating least squares scheme, we start updating the left-most tensor and then move through the chain all the way to the right.
+When we reach the last tensor of the MPS, we start again on the left after bringing the MPS to right-canonical form.
+Hence, all tensors to the left and right of the currently updated tensor are left- and right-normalized, respectively.
+This process is repeated $H$ number of times.
+In practice, we make the algorithm slightly faster by skipping the right-canonicalization step in line~\ref{line:als.right_canonical} and perform a sweep left-right-left instead.
+
+Note that the analysis of the algorithm below requires that the samples at each update steps are independent.
+Therefore, we use a fresh batch of measurement tensors and measurement values in each step, which results in a total number of $M = (HN + 1)m$ measurements.
+Provided that both $H$ and $m$ scale polynomially in the system's parameters, then so does $M$.
+However, numerical experiments below show that this resampling is unnecessary in practice.
+
+
+
+
+
+
+
+
+% ALS
+%
+% compared to IHT: faster; no RIP required
 
 \subsection{Numerics}%
 % Implementation details; how to speed up initialization, why suitable for GPU%
