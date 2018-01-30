@@ -709,7 +709,7 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen_2017
 %
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{ALS for Tensors}%
+\section{Efficient low-rank tensor reconstruction}%
 \label{sec:tensors.als}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -818,7 +818,7 @@ And, unlike the tensor completion problem, history does not dictate that its sol
 
 
 
-\subsection{Theory}%
+\subsection{The alternating least squares algorithm}%
 
 In this section, we are going to report on work in progress for the problem of reconstructing low-rank tensors from few measurements.
 To recapitulate, the goal is to recover a tensor $X \in \Reals^{d^N}$ with MPS-rank\footnote{%
@@ -836,7 +836,10 @@ The idea to recover $X$ is simply to find the tensor $Y$ of desired rank that mi
   \label{eq:als.empirical_l2}
 \]
 However, this problem is generally hard to solve directly since the space of MPS of given rank is non-convex.
-Instead, we iteratively optimize the empirical error over a single local tensor at a time Similarly to the simplest version of DMRG.
+Nevertheless, in the case of $M=\Order(???)$ fully Gaussian measurements, a projected gradient descent on~\eqref{eq:als.empirical_l2} is able to recover $X$.
+However, the same proof techniques fail in the case of structured measurements such as the ones defined in \cref{eq:als.rank1_measurements} as we show in \cref{???}.
+
+Instead of updating each local tensor at the same time as in the gradient descent, we iteratively optimize the empirical error over a single local tensor at a time.
 The resulting algorithm is presented below:
 
 \begin{algorithm}[H]
@@ -911,19 +914,14 @@ Provided that both $H$ and $m$ scale polynomially in the system's parameters, th
 However, numerical experiments below show that this resampling is unnecessary in practice.\\
 
 
-% ALS
-% alternating algorithms very naaaatural for MPS: compression, DMRG, etc.
-% local convergence for gennnnnearl minimiization well studied in Rohwedder/Ushmajev
-% proposed for empirical error minimization e.g. in ... and especially for reconstruction of tensors from few measurements in ...
-% as discussed in intro: no global convergence proof for poly nr. of measurements
-%
-% why this instead of iht -> depends on tensor RIP -> show in appendix that thsi is not fulfilled
 
 Alternating algorithms such as ALS updating only a few local tensors at a time are a very common approximation technique for circumventing intractabilities when dealing with MPS.
 Well known examples include variational compression and DMRG~\cite{Schollwoeck} --  an iterative algorithm for approximating the smallest eigenvalue of a hermitian MPO.
-Local convergence of these alternating algorithms has been proved for a large class of problems~\cite{Rohwedder}.
+Local convergence of these alternating algorithms has been proved for a large class of problems in~\cite{Rohwedder}.
 However, these result only show that the ALS algorithm converges to a local minimum, which unless the initialization is chosen well differs from the target tensor $X$.
-Furthermore, the problem of proving that the minimizer of the empirical $\ell_2$ error~\eqref{eq:als.empirical_l2} with given rank is equal to $X$, i.e.\ that the given measurements suffice to identify $X$.
+Furthermore, it remains to be shown that the minimizer of the empirical $\ell_2$ error~\eqref{eq:als.empirical_l2} with given rank is equal to $X$, i.e.\ that the given measurements suffice to identify $X$.
+
+
 
 \subsection{Numerics}%
 % Implementation details; how to speed up initialization, why suitable for GPU%
