@@ -825,7 +825,7 @@ To recapitulate, the goal is to recover a tensor $X \in \Reals^{d^N}$ with MPS-r
   From now on, we simply say \quotes{rank} instead of \quotes{MPS-rank}.
 } $r$ from $M$ linear measurements of the form
 \[
-  y\ind{l} = \braket{A\ind{l}, X}, \ldots l=1,\ldots,M,
+  b\ind{l} = \braket{A\ind{l}, X}, \ldots l=1,\ldots,M,
 \]
 where $A\ind{l}$ is a product of Gaussian vectors as defined in \cref{eq:als_rank1_measurements}.
 For this purpose, we want an efficient reconstruction algorithm and $m$ to scale polynomially in the parameters $d$, $N$, and $r$.
@@ -868,7 +868,7 @@ The resulting algorithm is presented below:
       $\hat Z \gets \argmin_Z \sum_l \left( y\ind{h,n;l} - B\ind{l}Z   \right)^2$ \label{line:als.min}
 
       \tcc{update the n-th local tensor inplace}
-      $Y_n \gets \mathtt{left\_normalize}(\hat Y)$
+      $Y_n \gets \mathtt{left\_normalize}(\hat Z)$
     }
   }
 
@@ -920,6 +920,75 @@ Well known examples include variational compression and DMRG~\cite{Schollwoeck} 
 Local convergence of these alternating algorithms has been proved for a large class of problems in~\cite{Rohwedder}.
 However, these result only show that the ALS algorithm converges to a local minimum, which unless the initialization is chosen well differs from the target tensor $X$.
 Furthermore, it remains to be shown that the minimizer of the empirical $\ell_2$ error~\eqref{eq:als.empirical_l2} with given rank is equal to $X$, i.e.\ that the given measurements suffice to identify $X$.
+
+
+\subsection{Analysis of the ALS}%
+\label{sub:ana}
+
+We now turn to the problem of proving convergence of \cref{alg:als}.
+For this purpose, we generalize the methods from~\cite{Zhong} to the tensor case.
+To simplify notation, we are only going to treat the case of a product signal tensor, i.e.\ $X$ is assumed to have rank one.
+The ideas presented here can easily be generalized to higher-rank tenors.
+We also assume w.l.o.g.\ that $X$ is normalized in Frobenius norm, i.e.\ $\norm{X}_2 = 1$.
+Then, $X$ can be written as a tensor product of $N$ normalized vectors $x_i \in \Reals^d$ and we have
+\[
+  b\ind{l} = \braket{A\ind{l}, X} = \prod_{i=1}^N \braket{a\ind{l}_i, x_i}.
+  \label{eq:ana.b_as_product}
+\]
+
+The main theorem of this section provides necessary conditions on a general product measurement~\eqref{eq:als.rank1_measurements} for successfully recovering the rank-1 tensor $X$.
+\begin{theorem}%
+  \label{thm:ana.conditions}
+  Let $X \in \Reals^{d^N}$ be a normalized tensor of unit rank, $H$ be the number of epochs in the ALS \cref{alg:als}, and $M = (HN + 1)m$.
+  Denote one batch of size $m$ of random measurement tensors and their overlaps with $X$ by $A\ind{l}$ and $b\ind{l}$, respectively.
+  Finally, let $\AA = \sum_{l=1}^m \ket{l}\bra{A\ind{l}}$ denote the corresponding measurement matrix of that batch.
+  Assume $\AA$ satisfies the following properties with parameter $\delta$
+  \begin{enumerate}
+    \item\label{lbl:conditions.init}\textbf{Initialization}:
+      \todo{Which norm?}
+      \[
+        \Norm{X - \adj{\AA}\AA X} \le \delta.
+      \]
+    \item\label{lbl:conditions.B}\textbf{Concentration of the $B_j$ operators}:
+      Let $v_i \in \Reals^d$ with $\norm{v_i}_2 = 1$ be independent of all the $a\ind{l}_i$.
+      For $j \in [N]$, define
+      \[
+        B_j = \frac{1}{m} \sum_{l=1}^m \left( \prod_{i\neq j} \Braket{a\ind{l}_i, v_i} \right)^2 \Ketbra{a\ind{l}}.
+      \]
+      Then, with high probability the smallest eigenvalue of $B_j$ should satisfy
+      \[
+        \lambda_\mathrm{min} \ge 1 - \delta.
+      \]
+    \item\label{lbl:conditions.G}\textbf{Concentration of the $G_j$ operators}:
+      Let $v_i, v_i^\perp \in \Reals^d$ with $\norm{v_i}_2 = \norm{v_i^\perp}= 1$ be independent of all the $a\ind{l}_i$ and satisfy $\braket{v_i, v_i^\perp} = 0$
+      For $j \in [N]$, define
+      \[
+        G_j = \frac{1}{m} \sum_{l=1}^m \left( \prod_{i\neq j} \Braket{a\ind{l}_i, v_i} \Braket{a\ind{l}_i, v_i^\perp} \right) \Ketbra{a\ind{l}}.
+      \]
+      Then, with high probability the largest eigenvalue of $G_j$ should satisfy
+      \[
+        \lambda_\mathrm{max} \le \delta
+      \]
+  \end{enumerate}
+  Then, the output $Y$ of the ALS \cref{alg:als} after $H$ epochs satisfies
+  \[
+    \norm{X - Y} \le \epsilon
+  \]
+  provided $H \ge ?$.
+  \todo{Fill in condition on epochs}.
+\end{theorem}
+
+The idea of the proof of \cref{thm:ana.conditions} is summarized in the following:
+The initialization condition~\ref{lbl:conditions.init} guarantees that the initializer
+\[
+  S = \adj{A}A X = \sum_{l=1}^m b\ind{l} A\ind{l}
+\]
+is close to the target $X$.
+However, since the rank of $S$ is generically $m$, which is much larger than $1$, we need to compress it as indicated in line~\ref{line:als.initialization} of the algorithm.
+Using \cref{eq:mps.quasi_optimal}, we can then bound the error of the compressed version of $S$.
+Next, we need to show that every local update reduces the distance between the updated local tensor and its true value by at least a given multiplicative constant.
+Finally, combining these two fact shows that the distance of the estimated tensor and the true tensor reduces exponentially fast in $H$\\
+
 
 
 
