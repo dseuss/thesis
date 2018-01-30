@@ -830,7 +830,11 @@ To recapitulate, the goal is to recover a tensor $X \in \Reals^{d^N}$ with MPS-r
 where $A\ind{l}$ is a product of Gaussian vectors as defined in \cref{eq:als_rank1_measurements}.
 For this purpose, we want an efficient reconstruction algorithm and $m$ to scale polynomially in the parameters $d$, $N$, and $r$.
 
-The idea to recover $X$ is simply to find the tensor $Y$ of desired rank that minimizes the empirical $\ell_2$ error $\sqrt{\sum_l \left( y\ind{l} - \braket{A\ind{l}, Y} \right)^2}$.
+The idea to recover $X$ is simply to find the tensor $Y$ of desired rank that minimizes the empirical $\ell_2$ error
+\[
+  \sum_l \left( y\ind{l} - \braket{A\ind{l}, Y} \right)^2.
+  \label{eq:als.empirical_l2}
+\]
 However, this problem is generally hard to solve directly since the space of MPS of given rank is non-convex.
 Instead, we iteratively optimize the empirical error over a single local tensor at a time Similarly to the simplest version of DMRG.
 The resulting algorithm is presented below:
@@ -899,22 +903,27 @@ $B \in \Reals^{m \times (dr^2)}$ are defined in line~\ref{line:als.partial_contr
   \label{eq:als.minimization_matrix}
 \]
 Therefore, the solution $\hat Z$ of \cref{eq:als.llsq} is a $d r^2$ dimensional vector, which can be reshaped to the correct form.
+If we replace the exact local minimization in \cref{eq:als.llsq} by a finite gradient descent step, we obtain a standard nonlinear block Gauss–Seidel iteration~\cite{Schechter}.
 
-Finally, note that the analysis of the algorithm below requires that the samples at each update steps are independent.
+Finally, note that the sample splitting at the beginning is necessary for the analysis of the algorithm below as it requires independent updates at each step.
 Therefore, we use a fresh batch of measurement tensors and measurement values in each step, which results in a total number of $M = (HN + 1)m$ measurements.
 Provided that both $H$ and $m$ scale polynomially in the system's parameters, then so does $M$.
-However, numerical experiments below show that this resampling is unnecessary in practice.
-
-
-
-
-
-
+However, numerical experiments below show that this resampling is unnecessary in practice.\\
 
 
 % ALS
+% alternating algorithms very naaaatural for MPS: compression, DMRG, etc.
+% local convergence for gennnnnearl minimiization well studied in Rohwedder/Ushmajev
+% proposed for empirical error minimization e.g. in ... and especially for reconstruction of tensors from few measurements in ...
+% as discussed in intro: no global convergence proof for poly nr. of measurements
 %
-% compared to IHT: faster; no RIP required
+% why this instead of iht -> depends on tensor RIP -> show in appendix that thsi is not fulfilled
+
+Alternating algorithms such as ALS updating only a few local tensors at a time are a very common approximation technique for circumventing intractabilities when dealing with MPS.
+Well known examples include variational compression and DMRG~\cite{Schollwoeck} --  an iterative algorithm for approximating the smallest eigenvalue of a hermitian MPO.
+Local convergence of these alternating algorithms has been proved for a large class of problems~\cite{Rohwedder}.
+However, these result only show that the ALS algorithm converges to a local minimum, which unless the initialization is chosen well differs from the target tensor $X$.
+Furthermore, the problem of proving that the minimizer of the empirical $\ell_2$ error~\eqref{eq:als.empirical_l2} with given rank is equal to $X$, i.e.\ that the given measurements suffice to identify $X$.
 
 \subsection{Numerics}%
 % Implementation details; how to speed up initialization, why suitable for GPU%
