@@ -987,8 +987,36 @@ is close to the target $X$.
 However, since the rank of $S$ is generically $m$, which is much larger than $1$, we need to compress it as indicated in line~\ref{line:als.initialization} of the algorithm.
 Using \cref{eq:mps.quasi_optimal}, we can then bound the error of the compressed version of $S$.
 Next, we need to show that every local update reduces the distance between the updated local tensor and its true value by at least a given multiplicative constant.
-Finally, combining these two fact shows that the distance of the estimated tensor and the true tensor reduces exponentially fast in $H$\\
+Finally, combining these two fact shows that the distance of the estimated tensor and the true tensor reduces exponentially fast in $H$.\\
 
+
+
+We start the proof of \cref{thm:ana.conditions} by examining the update step for the leftmost local tensor with $n = 1$.
+Denote by $\tilde y^{h+1}_1$ the minimizer $\hat Z$ in line~\ref{line:als.min} and by $y^h_i$ the remaining local tensors of $Y$, which are kept fixed during this micro-iteration.
+The empirical error as a function of $\tilde y^{h+1}_n$ then reads
+\[
+  F\left(\tilde y^{h+1}_1\right)
+  = \sum_l {\left(  \prod_i \braket{a\ind{l}_i, x_i} - \braket{a\ind{l}_1, \tilde y^{h+1}_1} \, \prod_{i \neq 1} \braket{a\ind{l}, y^{h}_i} \right)}^2
+  \label{eq:ana.l2_error}
+\]
+Since in the following, we only consider the optimization over $\tilde y^{h+1}_1$ and keep the other $y^h_i$ fixed, we write $\tilde y_1$ and $y_i$ (for $i > 1$), respectively, if there is no risk of confusion.
+In contrast to the $(y_i)_{i > 1}$, the $\tilde y_1$ is not normalized.
+In \cref{lem:ana.gradient_of_error} on page~\pageref{lem:ana.gradient_of_error}, we show that the extremal condition $\frac{\partial F(\tilde y_1)}{\partial \tilde y_1} = 0$ has the following explicit solution
+\[
+  \label{eq:ana.explicit_minimizer}
+  \ket{\tilde y_1} = {\left( \prod_{i \neq 1} \braket{x_i, y_i} \right)} \ket{x_1} - B_1^{-1} G_1 \ket{x_1}.
+\]
+Here, the operators $B_1$ and $G_1$ are given by
+\begin{align}
+  \label{eq:ana.b_operator}
+  B_1 &= \frac{1}{m} \sum_l {\left( \prod_{i \neq 1} \Braket{a\ind{l}_i,y_i} \right)}^2 \Ketbra{a\ind{l}_1} \\
+  \label{eq:ana.g_operator}
+  G_1 &= \frac{1}{m} \sum_l {\left( \prod_{i \neq 1} \Braket{a\ind{l}_i, x_i^\perp} \Braket{a\ind{l}_i,y_i} \right)}\Ketbra{a\ind{l}_1} \\
+  x_i^\perp &= \left(\ketbra{y_i} - \1 \right) x_i.
+\end{align}
+Note that these are exactly the operators introduced in \cref{thm:ana.conditions}.
+
+From \cref{eq:ana.explicit_minimizer} we see that if the overlaps of the fixed local tensors $\braket{x_i, y_i}$ ($i=2,\ldots,N$) are all close to one and the error term $B_1^{-1} G_1 \ket{x_1}$ is small, then the new value $\tilde y_1$ is almost equal to its target $x_1$.
 
 
 
