@@ -1,11 +1,18 @@
-\todo{proof why RIP not working for our measurements}
+ % -*- root: ../thesis.tex -*-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{lemma}
+\chapter{Tensors}%
+\label{cha:tensors_appendix}
+
+
+\todo{proof why RIP not working for our measurements}
+\begin{lemma}%
   \label{lem:ana.gradient_of_error}
   Denote by $F$ the empirical $\ell_2$ error defined in \cref{eq:ana.l2_error}.
   Then, the extremal point $\tilde y_1$ with $\frac{\partial F(\tilde y_1)}{\partial \tilde y_1} = 0$ is given by
   \[
     \Ket{\tilde y_1} = {\left( \prod_{i \neq 1} \Braket{x_i, y_i} \right)} \Ket{x_1} - B_1^{-1} G_1 \Ket{x_1}
+    \label{eq:ana.gradient_of_error}
   \]
   with $B_1$ and $G_1$ given by \cref{eq:ana.b_operator,eq:ana.g_operator}.
 \end{lemma}
