@@ -1,4 +1,4 @@
- % -*- root: ../thesis.tex -*-
+% -*- root: ../thesis.tex -*-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Phaselift}
@@ -151,14 +151,14 @@ Set
 \end{equation}
 where $a_k \in \mathbb{C}$ and $\abs{a_k} \leq 1$.
 Then,
-\begin{align*}
+\begin{align}
 \mathrm{Pr} \left[ \| \tilde{ H} \|_\infty \geq t \right]
 \leq
 \begin{cases}
 2 \exp \left( 2 \ln (3) n  - \frac{mt^2}{8 C_{SG}} \right) & 0 \leq t \leq 2C_{SG}, \\
 2 \exp \left( 2 \ln (3) n - \frac{m}{2} (t- C_{SG} )  \right) & t \geq 2 C_{SG}.
 \end{cases}
-\end{align*}
+\end{align}
 \end{theorem}
 
 
@@ -230,31 +230,31 @@ I.) \quad& \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 \geq \frac{1}{2} \| ( Z-|
 II.) \quad & \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 < \frac{1}{2} \| ( Z-|{x} \rangle \! \langle {x}|)_c \|_1. \label{eq:nsp_case2}
 \end{align}
 Note that I.) implies
-\begin{align*}
+\begin{align}
 \|  Z-|{x} \rangle \! \langle {x}| \|_1 \leq &\| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 + \| ( Z-|{x} \rangle \! \langle {x}|)_c \|_1 \leq 3 \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 \\
  = & 3 \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_2 \leq 3 \|  Z- |{x} \rangle \! \langle {x}| \|_2 = 3
-\end{align*}
+\end{align}
 which in turn implies that $ Z-| {x} \rangle \! \langle {x}|$ is contained in $3 \mathcal{B}_1$.
 Thus, \eqref{eq:nsp} is applicable and yields
-\begin{equation*}
+\[
 \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq  \frac{\tau}{m} \| \mathcal{A}( Z-|{x} \rangle \! \langle {x}|) \|_{\ell_1}
-\end{equation*}
+\]
 which establishes \cref{eq:rec_guarantee} for case I in \eqref{eq:nsp_case1}.
 
 
 For the second case, we use a consequence of von Neumann's trace inequality, see e.g. \cite[Theorem~7.4.9.1]{horn_topics_1991}: Let $ A,  B$ be matrices with singular values $\sigma_k ( A),\sigma_k ( B)$ arranged in non-increasing order.
 Then
-\begin{equation*}
+\[
   \|  A -  B \|_1 \geq \sum_{k=1}^d | \sigma_k ( A) - \sigma_k ( B)|
-\end{equation*}
+\]
 This relation implies
-\begin{align*}
+\begin{align}
   \|  Z \|_1 =& \| |{x} \rangle \! \langle {x}| - (|{x} \rangle \! \langle {x}|- Z) \|_1
   \geq \sum_{k=1}^d \left| \sigma_k (| x \rangle \! \langle  x|) - \sigma_k (| x \rangle \! |\langle  x|-  Z ) \right| \\
   \geq & \sigma_1 (| x \rangle \langle  x|) - \sigma_1 \left( | x \rangle \! \langle  x| -  Z \right)+ \sum_{k=2}^d \sigma_k \left( | x \rangle \! \langle  x| -  Z\right) \\
   =&  \| | x \rangle \! \langle  x| \|_1  - \| (| x \rangle \! \langle  x| -  Z)_1 \|_1 + \|(| x \rangle \! \langle  x| - Z)_c \|_1 \\
   >& \| | x \rangle \! \langle  x| \|_1 + \frac{1}{2} \| (| x \rangle \! \langle  x|- Z)_c \|_1,
-\end{align*}
+\end{align}
 where the last inequality follows from \eqref{eq:nsp_case2}. Consequently,
 \begin{align}
   \| | x \rangle \! \langle  x| -  Z \|_1
@@ -263,17 +263,17 @@ where the last inequality follows from \eqref{eq:nsp_case2}. Consequently,
   < & 3 \left( \|  Z \|_1 - \| | x \rangle \! \langle  x| \|_1 \right). \label{eq:nsp_aux2}
 \end{align}
 Now, positive semidefiniteness of both $ Z$ and $\ket{ x}\bra{ x}$ together with assumption~\eqref{eq:approx_povm} implies
-\begin{align*}
+\begin{align}
   \|  Z \|_1 - \| |{x} \rangle \! \langle {x}| \|_1
   =& \tr ( Z-|{x} \rangle \! \langle {x}|) =  \tr \left( \mathbb{I} \left(  Z-| {x} \rangle \! \langle x|\right) \right) \\
   =&  \tr \left( \left( \mathbb{I} - \frac{1}{\nu m} \sum_{k=1}^m A_k \right)  Z-|{x} \rangle \! \langle {x}| \right) + \frac{1}{\nu m} \sum_{k=1}^m \tr \left( A_k ( Z-|{x} \rangle \! \langle {x}|) \right) \\
   \leq &  \left\|\mathbb{I}- \frac{1}{ \nu m} \sum_{k=1}^m A_k \right\|_\infty \|  Z-|{x} \rangle \! \langle {x}| \|_1 + \frac{1}{\nu m} \| \mathcal{A}(|{x} \rangle \! \langle {x}|- Z) \|_{\ell_1} \\
   \leq &  \frac{1}{6 } \|  Z-|{x} \rangle \! \langle {x}| \|_1 + \frac{1}{\nu m} \| \mathcal{A}(|{x} \rangle \! \langle {x}|- Z) \|_{\ell_1}.
-\end{align*}
+\end{align}
 Inserting this into \eqref{eq:nsp_aux2} yields
-\begin{align*}
+\begin{align}
 \| | x \rangle \! \langle  x| -  Z \|_1 < \frac{1}{2} \| |{x} \rangle \! \langle {x}|- Z \|_1 +  \frac{3}{\nu m} \| \mathcal{A}(|{x} \rangle \! \langle {x}|- Z) \|_{\ell_1}
-\end{align*}
+\end{align}
 which implies the claim for case II in \eqref{eq:nsp_case2}.
 \end{proof}
 
@@ -298,14 +298,14 @@ Conditioned on this event, we have
 \end{equation}
 where $C' = 2 \max \left\{\tau, 6/\nu \right\}$.
 Now, suppose that we want to reconstruct a particular ${x}$ from noisy measurements of the form ${y} = \mathcal{A} (|{x} \rangle \! \langle {x}|) + {\epsilon}$. Then Eq.~\eqref{eq:nsp_implication2} implies
-\begin{align*}
+\begin{align}
 \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m} \| \mathcal{A}( Z) - {y} + {\epsilon} \|_{\ell_1}
 \leq \frac{C'}{2m} \left( \| {\epsilon} \|_{\ell_1} + \| \mathcal{A}( Z) - {y} \|_{\ell_1} \right)\quad \forall  Z \geq 0.
-\end{align*}
+\end{align}
 PhaseLift -- the convex optimization problem \eqref{eq:PhaseLift} -- minimizes the right hand side of this bound over all $ Z \geq 0$. Since $ Z = |{x} \rangle \! \langle {x}|$ is a feasible point of this optimization, we can conclude that the minimizer $ Z^\sharp$ obeys
-\begin{equation*}
+\[
 \| \mathcal{A}( Z^\sharp) - {y} \|_{\ell_1} \leq \| \mathcal{A}(|{x} \rangle \! \langle {x}|)-{y} \|_{\ell_1} = \| {\epsilon} \|_{\ell_1}
-\end{equation*}
+\]
 which yields the bound presented in \eqref{eq:noisy_recovery_bound}.
 \end{proof}
 
@@ -319,20 +319,20 @@ which yields the bound presented in \eqref{eq:noisy_recovery_bound}.
 \begin{lemma}[Bound on the marginal tail function]
   Let $D$ be the set introduced in \eqref{eq:D} and let $ A =| a \rangle \! \langle  a| $, where $ a$ satisfies \eqref{eq:sub_isotropy} and \eqref{eq:subexponential}.
   Then, the marginal tail function \eqref{eq:marginal_tail_function} obeys
-  \begin{equation*}
+  \[
     Q_\xi (D,  A) \geq  C_Q \left( 1-  \frac{\xi^2}{C_{SI}}\right)^2  \quad \forall 0 \leq \xi \leq \sqrt{C_{SI}},
-  \end{equation*}
+  \]
   where $C_Q>0$ is a sufficiently small constant.
 \end{lemma}
 
 \begin{proof}
 Fix $ Z \in D$, then $\|  Z \|_2 =1$ by definition of $D$.
 Note that sub-isotropy \eqref{eq:sub_isotropy} and the Paley-Zygmund inequality imply for any $\xi \in [0,1]$
-\begin{align*}
+\begin{align}
   \mathrm{Pr} \left[ | \langle  a|  Z | a \rangle| \geq \xi \right]
   \geq & \mathrm{Pr} \left[ \langle  a|  Z | a \rangle^2 \geq \frac{\xi^2}{C_{SI}} \mathbb{E} \left[ \langle  a| Z| a \rangle^2 \right] \right]
   \geq \left(1-\frac{\xi^2}{C_{SI}}\right)^2 \frac{\mathbb{E} \left[ \langle  a | Z | a \rangle^2 \right]^2}{\mathbb{E} \left[ \langle  a|  Z | a \rangle^4 \right]}.
-\end{align*}
+\end{align}
 Sub-isotropy ensures that the numerator is lower bounded by $C_{SI}^2 \|  Z \|_2^4 = C_{SI}^2$.
 In order to derive an upper bound on the denominator, we use the constraint $\|  Z \|_1 \leq 3$ for any $ Z \in D$ together with the subgaussian tail behavior \eqref{eq:subexponential} of $ a$.
 Insert an eigenvalue decomposition $ Z = \sum_{i=1}^n \lambda_i | z^{(i)} \rangle \! \langle  z^{(i)}|$ (with $\lambda_i \in \mathbb{R}$ and $ z^{(i)} \in \Sphere^{n-1}$) and note
@@ -341,25 +341,25 @@ Insert an eigenvalue decomposition $ Z = \sum_{i=1}^n \lambda_i | z^{(i)} \rangl
   \leq & \sum_{i_1,i_2,i_3,i_4=1}^n | \lambda_{i_1} \lambda_{i_2} \lambda_{i_3} \lambda_{i_4} | \mathbb{E} \left[ \prod_{k=1}^4 | \langle  a,  z^{(i_k)} \rangle|^2 \right]. \label{eq:Q_aux1}
 \end{align}
 Now fix $ z^{(i_1)},\ldots, z^{(i_4)}$ and use a combination of the AM-GM inequality and the fundamental relation between $\ell_p$-norms ($\|  v \|_{\ell_1} \leq k^{1-\frac{1}{k}} \|  v \|_{\ell_k}$ for $v \in \mathbb{R}^k$) to conclude
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ \prod_{k=1}^4 | \langle  a, z^{(i_k)}\rangle |^2 \right]
   \leq \frac{1}{4} \sum_{k=1}^4 \mathbb{E} \left[ | \langle  a,  z^{(i_k)} \rangle|^8 \right]
   \leq C_{SG} 4!,
-\end{align*}
+\end{align}
 where the last inequality follows from condition \eqref{eq:subexponential}.
 Consequently,
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ \langle  a|  Z |  a\rangle^4 \right]
   \leq C_{SG} 4! \sum_{i_1,i_2,i_3,i_4} | \lambda_{i_1} \lambda_{i_2} \lambda_{i_3} \lambda_{i_4} |
   = 24 C_{SG} \|  Z \|_1^4 \leq 24*3^4 C_{SG},
-\end{align*}
+\end{align}
 because $ Z \in D$ implies $\|  Z \|_1 \leq 3$.
 In summary,
-\begin{align*}
+\begin{align}
   \mathrm{Pr} \left[ | \langle  a|  Z | a \rangle| \geq \xi \right]
   \geq \left(1-\frac{\xi^2}{C_{SI}}\right)^2 \frac{\mathbb{E} \left[ \langle  a|  Z | a \rangle^2 \right]^2}{\mathbb{E} \left[ \langle  a|  Z | a \rangle^4 \right]}
   \geq \left(1-\frac{\xi^2}{C_{SI}}\right)^2 \frac{C_{SI}^2}{1944C_{SG}}
-\end{align*}
+\end{align}
 and the bound on $Q_\xi (D, A)$ with $C_Q = \frac{C_{SI}^2}{1944 C_{SG}}$ follows from the fact that this lower bound holds for any $ Z \in D$.
 \end{proof}
 
@@ -368,9 +368,9 @@ and the bound on $Q_\xi (D, A)$ with $C_Q = \frac{C_{SI}^2}{1944 C_{SG}}$ follow
 \begin{lemma}[Bound on the mean empirical width]
 Let $D$ be the set introduced in \eqref{eq:D} and let $ H = \frac{1}{\sqrt{m}} \sum_{k=1}^m \eta_k | \alpha_k \rangle \! \langle \alpha_k|$, where each $\alpha_k$ is subexponential in the sense of \eqref{eq:subexponential} and $m \geq \frac{2 \ln (3)}{C_{SG}} n$.
 Then there exists a constant $C_W >0$ such that
-\begin{equation*}
+\[
 W_m (D, A) \leq C_W \sqrt{n},
-\end{equation*}
+\]
 \end{lemma}
 
 
@@ -401,60 +401,60 @@ and we can bound $\mathbb{E} \left[ \|  H \|_\infty \right]$ by using the absolu
 %$
 see e.g.\ \cite[Propostion~7.1]{Foucart_2013_Mathematical}, and bounding the effect of the tails via \eqref{eq:Wm_tails}.
 To this end, we split the real line into three intervals $[0, c \sqrt{n}], [c\sqrt{n}, 2 C_{SG} \sqrt{m}], [2 C_{SG} \sqrt{m},\infty[$, where $c$ is a constant that we fix later:
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ \| H\|_\infty \right] =& \int_0^\infty \mathrm{Pr} \left[ \| H\|_\infty \geq t \right] \mathrm{d}t \\
   \leq & \int_0^{c \sqrt{n}} 1 \mathrm{d}t + 2 \times 9^n \left( \int_{c \sqrt{n}}^{2 C_{SG} \sqrt{m}} 2 \exp \left( - \frac{t^2}{8 C_{SG}} \right) \mathrm{d}t
   +  \mathrm{e}^{\frac{m C_{SG}}{2}} \int_{2 C_{SG} \sqrt{m}}^\infty \exp\left( - \frac{\sqrt{m}t}{2}  \right) \mathrm{d} t \right)\\
   \leq & c \sqrt{n} + 2 \times 9^n \left( \int_{c \sqrt{n}}^{2 C_{SG} \sqrt{m}}  \exp \left( - \frac{t^2}{8 C_{SG}} \right) \mathrm{d}t
   + \frac{2}{\sqrt{m}} \mathrm{e}^{-\frac{C_{SG} m}{2}}\right).
-\end{align*}
+\end{align}
 For the remaining Gauss integral, we use $\frac{t}{c \sqrt{n}} \geq 1\; \forall t \geq c\sqrt{n}$ to conclude
-\begin{align*}
+\begin{align}
   \int_{c \sqrt{n}}^{2 C_{SG} \sqrt{m}}  \exp \left( - \frac{t^2}{8 C_{SG}} \right) \mathrm{d}t
   %\leq & \int_{C \sqrt{n}}^{4 \mathrm{e}^2 \sqrt{m}} \frac{t}{C \sqrt{n}}  \exp \left( - \frac{t^2}{32 \mathrm{e}^2} \right) \mathrm{d} t
   \leq  \int_{c \sqrt{n}}^\infty \frac{t}{c \sqrt{n}}  \exp \left( - \frac{t^2}{8 C_{SG}} \right) \mathrm{d} t
   %=& - \frac{32 \mathrm{e}^2}{C\sqrt{n}} \exp \left( - \frac{t^2}{32 \mathrm{e}^2}\right) |_{t=C \sqrt{n}}^{t=\infty}
   = \frac{8 C_{SG}}{c \sqrt{n}} \exp \left( - \frac{c^2 n}{8 C_{SG}} \right).
-\end{align*}
+\end{align}
 Now, fixing $c = 4 \sqrt{\ln (3)C_{SG}}$ assures $\exp \left( -\frac{c^2 n}{8 C_{SG}}\right) = 9^{-n}$ and consequently
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ \|  H \|_\infty \right]
   \leq & 4  \sqrt{ \ln (3) C_{SG} n} + \frac{4 \sqrt{C_{SG}}}{\sqrt{ \ln (3) n}} + \frac{4}{\sqrt{m}} \mathrm{e}^{2 \ln (3) n - C_{SG} m} \\
   %\leq &8 \mathrm{e} \sqrt{ \ln (3) n} + \frac{8 \mathrm{e}}{\sqrt{ \ln (3) n}} + \frac{8 \mathrm{e}}{\sqrt{4 \ln (3) n}} \\
   \leq & 4\sqrt{C_{SG}} \left( \sqrt{ \ln (3) n} + \frac{2}{\sqrt{ \ln (3) n}} \right) \leq 12 \sqrt{ \ln (3) C_{SG} n}.
-\end{align*}
+\end{align}
 where the second inequality follows from $m \geq \frac{2 \ln (3)}{C_{SG}} n$. Inserting this bound into \eqref{eq:Wm_hoelder} yields the claim with $C_W = 72 \sqrt{ \ln (3) C_{SG}}$.
 \end{proof}
 
 Now we are ready to apply Mendelson's small ball method \eqref{eq:mendelson}.
 For $D$ defined in \eqref{eq:D} and measurements $ A_k = |\alpha_k \rangle \! \langle \alpha_k|$ with $\alpha_k$ obeying \eqref{eq:sub_isotropy} and \eqref{eq:subexponential} the bounds from the previous Lemmas imply
-\begin{align*}
+\begin{align}
   \frac{1}{\sqrt{m}}\inf_{ Z \in D} \|\mathcal{A}( Z) \|_{\ell_1} \geq \xi \sqrt{m} C_Q \left( 1- \frac{4 \xi^2}{C_{SI}} \right)^2 - 2 C_W \sqrt{n} - \xi t \quad \forall \xi \in (0, 1/\sqrt{C_{SI}}), \forall t \geq 0
-\end{align*}
+\end{align}
 with probability at least $1- \mathrm{e}^{-2t^2}$. We choose $\xi = \sqrt{C_{SI}}/4$ and $t = \gamma_1 \sqrt{m}$, where $\gamma_1 = \frac{9 C_Q}{32}$ and obtain with probability at least $1-\exp \left( -2 \gamma_1 m \right)$:
-\begin{align*}
+\begin{align}
   \frac{1}{\sqrt{m}}\inf_{ Z \in D} \|\mathcal{A}( Z) \|_{\ell_1} \geq & \frac{9 C_Q\sqrt{C_{SI}}}{64} \sqrt{m} -  C_W\sqrt{n} - \frac{\sqrt{C_{SI}}}{4} \frac{9 C_Q}{32} \sqrt{m} \\
   = & C_W \left( \frac{9 C_Q \sqrt{C_{SI}}}{128 C_W} \sqrt{m} - \sqrt{n} \right).
-\end{align*}
+\end{align}
 Setting $m = C n$ with $C = \left( \frac{256 C_W}{9 C_Q \sqrt{C_l}} \right)^2$ implies
-\begin{equation*}
+\[
   \frac{1}{\sqrt{m}} \inf_{ Z \in D} \| \mathcal{A}( Z) \|_{\ell_1} \geq 2 C_W \sqrt{n} = \frac{2 C_W}{\sqrt{C}} \sqrt{m}
-\end{equation*}
+\]
 with probability at least $1- \mathrm{e}^{-2 \gamma_1 m}$.
 For $\tau = \frac{ 2 C_W}{\sqrt{C}}$, the first claim in \cref{prop:RECR_nsp} follows from rearranging this expression and using $\|  Z \|_2=1$ for all $ Z \in D$.
 
 Let us now move on to establishing the second statement \eqref{eq:approx_povm}:
 Isotropy \eqref{eq:tight_frame} implies
-\begin{align*}
+\begin{align}
   \frac{1}{ C_I m} \sum_{k=1}^m |\alpha_k \rangle \! \langle \alpha_k | - \mathbb{I}
   = \frac{1}{C_{SG} m} \sum_{k=1}^m \left( |\alpha_k \rangle \! \langle \alpha_k| - \mathbb{E} \left[ |\alpha_k \rangle \! \langle \alpha_k| \right] \right)
-\end{align*}
+\end{align}
 and each $\alpha_k$ has subgaussian tails by assumption \eqref{eq:subexponential}.
 Thus, \cref{thm:bernstein} is applicable and setting $t= \min \left\{\frac{1}{6},2 C_{SG} \right\}$ yields
-\begin{align*}
+\begin{align}
   \mathrm{Pr} \left[ \left\| \frac{1}{C_I m} \sum_{k=1}^m |\alpha_k \rangle \! \langle \alpha_k| -  \mathbb{I} \right\|_\infty \geq \frac{1}{6} \right]
   \leq 2 \exp \left( 2 \ln (3) n - \frac{C_I m \min\left\{ 1/6, 2 C_{SG} \right\}}{8 C_{SG}} \right) \leq 2 \exp \left( - \gamma_2 m \right),
-\end{align*}
+\end{align}
 where the second inequality follows from $m \geq C n$, provided that $C$ is sufficiently large. Finally, we use the union bound  for the overall probability of failure and set $\gamma := \min \left\{ 2 \gamma_1,\gamma_2 \right\}$.
 
 
@@ -477,7 +477,7 @@ From this, we can readily infer $C_{SG} = 1$, and the special case $N=1$  yields
 
 For the remaining expression, use an eigenvalue decomposition $ Z = \sum_{k=1}^d \zeta_k | z^{(k)} \rangle \langle  z^{(k)}|$ (with normalized eigenvectors $ z^{(k)}\in \mathbb{C}^n$) and note that the random variables $|\langle  a, z^{(1)} \rangle|,\ldots, | \langle  a, z^{(n)} \rangle|$ are independently distributed and obey \cref{eq:moments_gauss}.
 Consequently:
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ \tr \left(  A  Z \right)^2 \right]
   =& \mathbb{E} \left[ \left( \sum_{k=1}^d \zeta_k | \langle \alpha, z^{(k)} \rangle|^2 \right)^2 \right] \\
   =& \sum_{k \neq l} \zeta_k \zeta_l \mathbb{E} \left[ |\langle \alpha, z^{(k)} \rangle|^2 \right] \mathbb{E} \left[ | \langle  a, z^{(l)} \rangle|^2 \right]
@@ -486,7 +486,7 @@ Consequently:
   = \sum_{k,l=1}^d \zeta_k \zeta_l + 2\sum_{k=1}^d \zeta_k^2 \\
   =& \tr ( Z)^2 + \tr ( Z^2)
   \geq \|  Z \|_2^2,
-\end{align*}
+\end{align}
 which implies $C_{SI} = 1$.
 
 \subsection{The uniform sampling scheme}
@@ -504,7 +504,7 @@ see e.g.\ \cite[Lemma~1]{scott_tight_2006}.
 Here, $ P_{\vee^N}$, denotes the projector onto the totally symmetric subspace $\bigvee\!^N \subset \left( \mathbb{C}^n \right)^{\otimes N}$.
 Note that $\left(| z \rangle \! \langle  z| \right)^{\otimes N} \in \bigvee\!^N$ and, moreover $2 \mathrm{tr} \left(  P_{\vee^2}  Z^2 \right)= \|  Z \|_2^2 + \mathrm{tr} ( Z)^2$ for any matrix $ Z$, see e.g.\ \cite[Lemma~17]{kueng_low_2016}.
 Consequently,
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ | \langle\alpha, z \rangle|^2 \right]
   =& \mathrm{tr} \left( | z \rangle \! \langle  z| \, \mathbb{E} \left[ |\alpha \rangle \! \langle\alpha| \right] \right)
   = \mathrm{tr} \left( | z \rangle \! \langle  z| \mathbb{I} \right) = \|  z \|_{\ell_2}^2, \\
@@ -516,7 +516,7 @@ Consequently,
   =& \mathrm{tr} \left(\mathbb{E} \left[ (|\alpha \rangle \! \langle\alpha|)^{\otimes N} \right]  (| z\rangle \! \langle  z|)^{\otimes N}  \right)
   = n^N \binom{n+N-1}{N}^{-1} \|  z \|_{\ell_2}^{2N} \\
   =& N! \frac{n^N (n-1)!}{(n+N-1)!} \leq N!,
-\end{align*}
+\end{align}
 which implies $C_I=1$, $C_{SI} = \frac{n}{n+1}$ and $C_{SG}=1$.
 
 
@@ -524,33 +524,33 @@ which implies $C_I=1$, $C_{SI} = \frac{n}{n+1}$ and $C_{SG}=1$.
 
 \begin{lemma}[The RECR ensemble is isotropic on $\mathbb{C}^n$]
 Suppose that $\alpha$ is chosen from a RECR ensemble with erasure probability $1-p$. Then
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ | \langle  \alpha, z \rangle|^2 \right] = p \|  z \|_{\ell_2}^2
   \quad \forall  z \in \mathbb{C}^n.
-\end{align*}
+\end{align}
 \end{lemma}
 
 \begin{proof}
 Let $\alpha_k = \langle  e_k, \alpha\rangle$, where $ e_1,\ldots, e_n$ is the orthonormal basis with respect to which the RECR vector is defined.
 Theses components obey $\mathbb{E}\left[ \alpha_k \right] = \mathbb{E} \left[ \cc{\alpha}_k \right] = 0$, as well as $\mathbb{E} \left[ |\alpha_k|^2 \right] = p$.
 For any $ z \in \mathbb{C}^n$ we then have
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[| \langle  \alpha,  z\rangle |^2 \right]
   =& \sum_{i,j=1}^n \mathbb{E} \left[ \cc{\alpha}_i \alpha_j \right] \langle  e_i |  z \rangle \langle  z |  e_j \rangle = p \sum_{i=1}^n | \langle  e_i,  z \rangle|^2 = p \|  z \|_{\ell_2}^2.
-\end{align*}
+\end{align}
 \end{proof}
 
 \begin{lemma}[The RECR ensemble is sub-isotropic on $\Hermitian_n$]
   \label{lem:recr_subisotropic}
   Suppose that $\alpha$ is chosen from a RECR ensemble with erasure probability $1-p$. Then
-  \begin{equation*}
+  \[
   \mathbb{E} \left[ \langle  \alpha|  Z | \alpha \rangle^2 \right] \geq p \min \left\{ p, 1-p \right\} \|  Z \|_2^2 \quad \forall  Z \in \Hermitian_n
-  \end{equation*}
+  \]
 \end{lemma}
 
 \begin{proof}
 Fix $ Z \in \Hermitian_n$ and compute
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ \langle \alpha |  Z | \alpha \rangle^2 \right]
   =& \sum_{i,j,k,l} \mathbb{E} \left[ \bar{\alpha}_i \alpha_j \cc{\alpha^\prime_k} \alpha^\prime_l \right] \langle  e_i| Z|  e_j \rangle \langle  e_k | Z|  e_l \rangle \\
   =& \sum_{i} \mathbb{E} \left[ | \alpha_i |^4 \right] \langle  e_i| Z| e_i \rangle^2 + \sum_{i \neq k} \mathbb{E} \left[ | \alpha_i |^2 | \alpha_k|^2 \right] \left( \langle  e_i| Z| e_i \rangle \langle  e_k| Z| e_k \rangle + \langle  e_i| Z| e_k \rangle \langle  e_k|  Z| e_i \rangle \right) \\
@@ -558,26 +558,26 @@ Fix $ Z \in \Hermitian_n$ and compute
   =& p^2 \sum_{i,k=1}^n \left( \langle  e_i| Z| e_i \rangle \langle  e_k| Z| e_k \rangle + \langle  e_i| Z| e_k \rangle \langle  e_k | Z|  e_i\rangle \right) + p(1-2 p) \sum_{i=1}^n \langle  e_i| Z| e_i \rangle^2 \\
   =& p^2 \left( \tr ( Z)^2 + \| Z\|_2^2 \right) + p (1-2 p) \sum_{i=1}^n \langle  e_i|  Z |  e_i \rangle^2 \\
   \geq& p^2 \| Z\|_2^2 + p(1-p) \sum_{i=1}^n \langle  e_i | Z| e_i \rangle^2
-\end{align*}
+\end{align}
 Finally, we make a case distinction:
 \begin{itemize}
 \item[$p \leq 1/2$]: This implies $p(1-2p) \geq 0$ and consequently
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ \langle \alpha | Z| \alpha \rangle^2 \right] \geq p^2 \|  Z \|_2^2.
-\end{align*}
+\end{align}
 \item[$p \geq 1/2$]: Use $\sum_{i=1}^n \langle i| X|i \rangle^2 \leq \| X \|_2^2$ to conclude
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ \langle \alpha |  Z | \alpha \rangle^2 \right]
 \geq ( p^2 - p|1-2p|) \| Z\|_2^2 = p(1-p) \|  Z \|_2^2.
-\end{align*}
+\end{align}
 \end{itemize}
 \end{proof}
 
 \begin{lemma}[Subgaussian tails of the RECR distribution]
 Suppose that $\alpha$ is a vector from the RECR ensemble. Then
-\begin{align*}
+\begin{align}
 \mathbb{E} \left[ | \langle \alpha,  z \rangle|^{2N} \right] \leq \mathrm{e}^{\frac{3}{2}} N! \quad \forall  z \in \Sphere^{n-1}.
-\end{align*}
+\end{align}
 \end{lemma}
 
 \begin{proof}
@@ -590,33 +590,33 @@ Fix $ z \in \mathbb{C}^n$ with $\|  z \|_{\ell_2}=1$ and note that $|\alpha_k| \
 Now note that for $k \neq l$, $\cc{\alpha}_k \alpha_l$ is again a RECR random variable $\tilde{\alpha}_{k,l}$, but with erasure probability $1-p^2$.
 Moreover, every RECR random variable $\alpha$ can be decomposed into the product of two independent random variables: $ \alpha= \eta \omega$, where $\eta$ is a Rademacher random variable and $\omega \in \left\{0, 1,i \right\}$ obeys $| \omega | \leq 1$.
 Consequently
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ \exp \left( \bar{\alpha}_k \alpha_l \bar{z}_k z_l \right) \right]
   =& \mathbb{E} \left[ \exp \left( \tilde{\alpha}_{k,l} \bar{z}_k z_l \right) \right]
   = \mathbb{E}_{\omega} \left[ \mathbb{E}_\eta \left[ \eta \omega \bar{z}_k  z_l \right] \right]
   = \mathbb{E}_{\omega} \left[ \cosh \left( \omega \bar{z}_k z_l \right) \right] \\
   \leq & \mathbb{E}_\omega \left[ \exp \left( |\omega \bar{z}_k z_l|^2/2 \right) \right]
   \leq  \exp \left( \frac{|z_k|^2 |z_l|^2}{2} \right),
-\end{align*}
+\end{align}
 where we have used the standard estimate $\cosh (x) \leq \exp \left( |x|^2/2 \right)$ $\forall x \in \mathbb{C}$, as well as $| \omega| \leq 1$. Inserting this bound into \eqref{eq:moment_aux1} yields
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ \exp \left( | \langle  \alpha,  z \rangle|^2 \right) \right]
   \leq \exp \left( \|  z \|_2^2 \right) \prod_{k \neq l} \exp \left( \frac{|z_k|^2 |z_l|^2}{2} \right)
   \leq \exp \left( \|  z \|_2^2 + \frac{1}{2}\|  z \|_{\ell_2}^4 \right) = \mathrm{e}^{\frac{3}{2}},
-\end{align*}
+\end{align}
 because $\|  z \|_{\ell_2}=1$.
 Markov's inequality shows that this exponential bound implies a subexponential tail bound for the random variable $| \langle  \alpha, z \rangle|^2$:
-\begin{align*}
+\begin{align}
   \mathrm{Pr} \left[ | \langle \alpha, z \rangle|^2 \geq t \right]
   =& \mathrm{Pr} \left[ \exp \left( | \langle  \alpha, z \rangle|^2 \right) \geq \exp \left( t \right) \right]
   \leq \frac{ \mathbb{E} \left[ \exp \left( | \langle \alpha,  z \rangle|^2 \right) \right]}{\exp (t)} \leq \mathrm{e}^{\frac{3}{2}-t}.
-\end{align*}
+\end{align}
 This in turn implies the following bound on the moments:
-\begin{align*}
+\begin{align}
   \mathbb{E} \left[ | \langle  \alpha, z \rangle|^{2N} \right]
   =  N \int_0^\infty \mathrm{Pr}\left[ | \langle  \alpha, z \rangle|^2\geq t \right] t^{N-1} \mathrm{d}t \leq N \mathrm{e}^{\frac{3}{2}} \int_0^\infty \mathrm{e}^{-t} t^{N-1} \mathrm{d}t
   = \mathrm{e}^{\frac{3}{2}} N!,
-\end{align*}
+\end{align}
 where we have used a well-known integration formula for moments, see e.g.\ \cite[Prop.~7.1]{Foucart_2013_Mathematical}, as well as integration by parts.
 \end{proof}
 
@@ -628,37 +628,37 @@ where we have used a well-known integration formula for moments, see e.g.\ \cite
 
 Let $ A_1,\ldots, A_m \in \Hermitian_n$ denote unnormalized RECR measurements.
 Then, our result implies that w.h.p.\ any $ X = | x \rangle \!\langle  x|$ can be recovered from $m \geq  C n$ measurements of the form
-\begin{equation*}
+\[
   y_k = \tr \left(  A_k  X \right) + \epsilon_k
-\end{equation*}
+\]
 via solving
-\begin{equation}
+\[
   \underset{ Z\geq 0}{\textrm{minimize}} \quad \| \mathcal{A}( Z) -  y \|_{\ell_1}. \label{eq:phaselift2}
-\end{equation}
+\]
 The solution of this program is guaranteed to obey
-\begin{align*}
-\|  Z -  X \|_2 \leq \frac{C' \| \epsilon \|_{\ell_1}}{m}.
-\end{align*}
+\[
+  \|  Z -  X \|_2 \leq \frac{C' \| \epsilon \|_{\ell_1}}{m}.
+\]
 Now suppose that we have $m$ normalized RECR measurements instead: $\tilde{ A}_k = \frac{n}{\|  A_k \|_{2}}  A_k$. Then the associated measurements correspond to
-\begin{equation*}
+\[
   \tilde{y}_k = \tr \left( \tilde{ A}_k X \right) + \epsilon_k = \frac{ n}{\|  A_k \|_2} \tr \left(  A_k X \right) + \tilde{\epsilon}_k.
-\end{equation*}
+\]
 Multiplying this expression by $\frac{\|  A_k \|_2}{n}$ yields
-\begin{equation*}
+\[
 \underset{:= y_k}{\underbrace{ \frac{ \|  A_k \|_2}{n}\tilde{y}_k}}
 = \tr \left(  A_k X \right) + \underset{:= \epsilon_k}{\underbrace{ \frac{ \|  A_k \|_2}{n}\tilde{\epsilon}_k}}
-\end{equation*}
+\]
 and solving \eqref{eq:phaselift2} for re-scaled measurement outcomes $y_k = \frac{ \|  A_k \|_2}{n}\tilde{y}_k$ yields an estimator of $ X$ that is guaranteed to obey
-\begin{equation*}
+\[
   \|  Z -  X \|_2 \leq \frac{C' \|  \epsilon \|_{\ell_1}}{m}
   = \frac{C'}{m} \sum_{k=1}^m \frac{ \|  A_k \|_2}{n} | \tilde{\epsilon}_k |
   \leq \frac{C'}{m} \sum_{k=1}^m | \tilde{\epsilon}_k| = \frac{C' \| \tilde{\epsilon} \|_{\ell_1}}{m}.
-\end{equation*}
+\]
 Here, the last line is due to $\|  A_k \|_2 = \| \alpha_k \|_{\ell_2}^2 \leq n$.
 
 In summary: normalizing the RECR measurements changes the signal-to-noise ratio $\frac{ \|  A_k \|_2}{| \epsilon_k|}$ in an advantageous way: it makes it bigger. Thus the stability guarantee of the unnormalized RECR ensemble allows us to deduce one for the normalized case as well. However, this approach requires a re-scaling of the measurements for the algorithmic reconstruction:
-\begin{equation*}
+\[
   y_k = \frac{ \|  A_k \|_2}{n} \tilde{y}_k.
-\end{equation*}
+\]
 
 \end{document}

@@ -16,6 +16,10 @@
 \usepackage{color}
 \usetikzlibrary{calc,fadings,backgrounds,shapes.geometric,decorations.pathreplacing,positioning,fit,patterns,chains}
 
+\usepackage[nameinlink,capitalize]{cleveref}
+\crefname{algocf}{Alg.}{Algs.}
+\Crefname{algocf}{Algorithm}{Algorithms}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                             Text Macros                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,6 +83,12 @@
 \newcommand{\cc}[1]{\bar{#1}}
 \newcommand{\norm}[1]{{\Vert#1\Vert}}
 \newcommand{\Norm}[1]{{\left\Vert#1\right\Vert}}
+\newcommand{\opnorm}[1]{\norm{#1}_{2 \to 2}}
+\newcommand{\Opnorm}[1]{\Norm{#1}_{2 \to 2}}
+\newcommand{\ltwonorm}[1]{\norm{#1}_{\ell_2}}
+\newcommand{\Ltwonorm}[1]{\Norm{#1}_{\ell_2}}
+\newcommand{\fnorm}[1]{\norm{#1}_{2}}
+\newcommand{\Fnorm}[1]{\Norm{#1}_{2}}
 \newcommand{\estim}[1]{\hat{#1}}
 \renewcommand{\vec}[1]{{\boldsymbol{#1}}}
 \newcommand{\ind}[1]{^{(#1)}}
