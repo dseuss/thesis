@@ -4,16 +4,12 @@
 
 
 \todo{The physics part needs work}
-
+\todo{Norm of vector = intensity}
 
 Linear-optical networks composed of beamsplitting and phaseshifting operations are fundamental to the quantum and classical processing of information with light.
 Passive and reconfigurable linear optical circuits have been proposed and demonstrated for many applications including telecommunications~\cite{Miller_2015_Sorting}, machine learning~\cite{Shen_2017_Deep} and quantum computation~\cite{Carolan_2015_Universal} and simulation~\cite{Harris_2017_Quantum}.
 With the continuing development of large-scale integrated photonic platforms~\cite{Silverstone_2016_Silicon,Seok_2016_LargeScale}, practical and reliable techniques for characterising and validating the operation of these devices are crucial.
 In this work, we present new protocols for characterising linear optical devices with low experimental resources by exploiting a connection to the phase retrieval problem \cite{Walther_1963_Question}.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction}
-\subsection{Linear Optics}
 
 Theoretically, a linear optical device is fully characterized by its \emph{transfer matrix} ${M}$.
 We consider as input to the device classical light described by a multimode coherent state $\ket{{\alpha}} = \ket{\alpha_1, \ldots, \alpha_n}$.
@@ -44,9 +40,9 @@ The first requirement results in an interactive experiment, where the inputs nee
 \todo{Not quite correct.}
 Moreover, the second feature of the recovery protocol makes it a priori susceptible towards noise as any error in the determination of the first row propagates to the remaining rows.
 
-
-
-\subsection{Phase Retrieval}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Phase Retrieval}%
+\label{sec:phase_retrieval}
 
 The crucial observation of this work is that measurements~\eqref{eq:pl.intensities} closely resemble the model of the \textit{phase retrieval problem}, i.e.\ the problem of recovering a complex vector ${x} \in \Complex^n$ from $m$ intensity measurements of the form
 \[
@@ -57,7 +53,7 @@ The crucial observation of this work is that measurements~\eqref{eq:pl.intensiti
 Here, $\alpha^{(l)} \in \Complex^n$ denote measurement vectors and $\epsilon^{(l)}$ the additive measurement errors.
 The major difficulty in recovering $x$ from these intensity measurements is the loss of phase information.
 In order to infer the phase information, we need to exploit interference effects by carefully selecting different measurement vectors.
-However, $x$ can only be recovered up to a global phase since $x$ and $\exp^{\ii\phi} x$ are indistinguishable from the measurements~\eqref{eq:pl.phase_retrieval_measurements} for any argument $\phi$.
+However, $x$ can only be recovered up to a global phase since $x$ and $\ee^{\ii\phi} x$ are indistinguishable from the measurements~\eqref{eq:pl.phase_retrieval_measurements} for any argument $\phi$.
 
 One practical solution to the phase retrieval problem is based on its connection to the field of low-rank matrix recovery.
 The quadratic measurements of $x$ in \cref{eq:pl.phase_retrieval_measurements} can be rewritten as
@@ -98,6 +94,7 @@ with $\ltwonorm{z_i} = 1$ and $\lambda_1 \ge \lambda_2 \ge \ldots \lambda_n$.
 Then, we set
 \[
   x^\sharp = \sqrt{\lambda_1} y_1.
+  \label{eq:pl.vector_from_matrix}
 \]
 
 Several analytic proofs of convergence have been established for phase retrieval via PhaseLift.
@@ -113,131 +110,120 @@ The \emph{randomly erased complex Rademacher} (RECR) ensemble requires only four
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Theory for Characterization via PhaseLift}
+\section{Theory for Characterization via Phase Lift}%
+\label{sec:pl.theory}
 
+\subsection{The RECR ensemble}%
+\label{sub:theory.recr}
 
-\subsection{The RECR ensemble}
-
-The uniform ensemble mentioned above is well-suited for a theoretical analysis.
-This sampling scheme places high demands on the experimental implementation since it necessitates the ability to prepare any coherent input state $\ket{ \alpha}$ with $\alpha$ from the complex unit sphere.
-Therefore, we propose an alternative measurement ensemble that lends itself to implementations in linear optics:
+The uniform ensemble introduced in \cref{sub:intro.phase_retrieval} is well-suited for a theoretical analysis.
+However, this sampling scheme places high demands on the experimental implementation since it necessitates the ability to prepare any coherent input state $\ket{\alpha}$ with $\alpha$ from the complex unit sphere.
+Therefore, we propose an alternative measurement ensemble that lends itself better to implementations in linear optics:
 For $p \in [0,1]$, we define a \emph{randomly erased complex Rademacher} (RECR) random variable $a$ to be distributed according to
 \[
   a \sim
   \begin{cases}
-    \pm 1, \pm \ii & \textrm{each with prob. } p/4 \\
-    0 & \textrm{with prob. } 1 - p.
+    +1 & \textrm{with prob. } p/4 \\
+    +\ii & \textrm{with prob. } p/4 \\
+    0 & \textrm{with prob. } 1-p \\
+    -\ii & \textrm{with prob. } p/4 \\
+    -1 & \textrm{with prob. } p/4
   \end{cases}
   \label{eq:pl.recr_definition}
 \]
-For the RECR measurement model, we sample the components $\alpha_k$ of the input state $\ket{ \alpha}$ according to \cref{eq:pl.recr_definition}, but with constant total intensity $\norm{\alpha} = 1$.
-Since there are only four different values for the phases of the components~\eqref{eq:pl.recr_definition}, the RECR scheme is easier to implement experimentally as described below.
+For the RECR measurement model, we sample the components $\alpha\ind{l}_k$ of the input states $\ket{\alpha\ind{l}}$ according to \cref{eq:pl.recr_definition}.
+In practice, we use its normalized version with constant total intensity $\ltwonorm{\alpha} = 1$.
+Since there are only four different values for the phases of the components~\eqref{eq:pl.recr_definition}, the RECR scheme is easier to implement experimentally as described below.\\
+
+
+The rest of this section is devoted to proving recovery guarantees for the RECR ensemble for phase retrieval via PhaseLift~\eqref{eq:pl.PhaseLift}.
+In order to be more self-contained, we also include a similar proof for the uniform scheme, which later serves as a reference.
+More generally, we consider ensembles of measurement vectors $\alpha$ that satisfy the following conditions for constants $C_\mathrm{I}$, $C_\mathrm{SI}$, and $C_\mathrm{SG}$:
 
 \begin{itemize}
-\item \emph{Isotropy on $\mathbb{C}^n$:}
-\[
-  \mathbb{E} \left[ | \langle \alpha,  z \rangle |^2 \right] = C_I \|  z \|_{\ell_2}^2 \quad \forall  z \in \mathbb{C}^n.
-  \label{eq:tight_frame}
-\]
+  \item \emph{Isotropy on $\mathbb{C}^n$:}
+  \[
+    \mathbb{E} \left[ | \langle \alpha,  z \rangle |^2 \right] = C_\mathrm{I} \|  z \|_{\ell_2}^2 \quad \forall  z \in \mathbb{C}^n.
+    \label{eq:pl.tight_frame}
+  \]
 
-\item \emph{Sub-Isotropy on $\Hermitian_n$}:
-\begin{align}
-  \mathbb{E} \left[ \langle \alpha |  Z | \alpha \rangle^2 \right] \geq C_{SI} \|  Z \|_2^2 \quad \forall  Z \in \Hermitian_n \label{eq:sub_isotropy}
-\end{align}
+  \item \emph{Sub-Isotropy on $\Hermitian_n$}, the Hermitian $n \times n$ matrices:
+  \begin{align}
+    \mathbb{E} \left[ \langle \alpha,  Z \alpha \rangle^2 \right] \geq C_\mathrm{SI} \|  Z \|_2^2 \quad \forall  Z \in \Hermitian_n \label{eq:pl.sub_isotropy}
+  \end{align}
 
-\item \emph{Sub-Gaussian tail behaviour:} For every normalized $ z \in \mathbb{C}^n$ ($\|  z \|_{\ell_2}=1$), $| \langle \alpha,  z \rangle|$ is sub-Gaussian in the sense that its moments obey
-\[
-  \mathbb{E} \left[ | \langle \alpha,  z \rangle|^{2N} \right] \leq C_{SG} N! \quad N \in \mathbb{N}.
-\label{eq:subexponential}
-\]
+  \item \emph{Sub-Gaussian tail behaviour:} For every normalized $ z \in \mathbb{C}^n$ ($\|  z \|_{\ell_2}=1$), $| \langle \alpha,  z \rangle|$ is sub-Gaussian in the sense that its moments obey
+  \[
+    \mathbb{E} \left[ | \langle \alpha,  z \rangle|^{2N} \right] \leq C_\mathrm{SG} N! \quad N \in \mathbb{N}.
+  \label{eq:pl.subexponential}
+  \]
 \end{itemize}
-
 
 \begin{proposition}%
   \label{prop:gauss+recr_requirements}
   The following measurement ensembles fulfil the three properties above:
   \begin{enumerate}
+    \item \emph{Gaussian sampling scheme:} $\alpha \in \mathbb{C}^n$ chosen from the standard complex normal distribution $\mathcal{N}(0,\tfrac{1}{2}\mathbb{I})+ i \mathcal{N}(0,\tfrac{1}{2}\mathbb{I})$.
+    In this case
+    \[
+      C_\mathrm{I} = C_\mathrm{SI} = C_\mathrm{SG} = 1.
+    \]
 
-    \item \emph{Gaussian sampling scheme:} $\alpha \in \mathbb{C}^n$ is chosen from the standard complex normal distribution $\mathcal{N}(0,\tfrac{1}{2}\mathbb{I})+ i \mathcal{N}(0,\tfrac{1}{2}\mathbb{I})$. In this case
-  \[
-    C_I = C_{SI} = C_{SG} = 1.
-  \]
+    \item \emph{Uniform sampling scheme:} $\alpha \in \mathbb{C}^n$ chosen uniformly from the complex unit sphere with radius $\sqrt{n}$.
+    In this case
+    \[
+      C_\mathrm{I} = 1, \; C_\mathrm{SI} = \frac{n}{n+1}, \; C_\mathrm{SG} = \prod_{k=1}^{N-1} \frac{n}{n+k} \leq 1.
+    \]
 
-  \item \emph{Uniform sampling scheme:} $\alpha \in \mathbb{C}^n$ is a vector chosen uniformly from the complex unit sphere with radius $\sqrt{n}$. In this case
-  \[
-    C_I = 1, \; C_{SI} = \frac{n}{n+1}, \; C_{SG} = \prod_{k=1}^{N-1} \frac{n}{n+k} \leq 1.
-  \]
-
-  \item (unnormalised) \emph{Randomly Erased Complex Rademacher (RECR) sampling scheme:} with respect to a fixed (arbitrary) basis, the coefficients of $\alpha \in \mathbb{C}^n$ are chosen from the following distribution:
-  \[
-  \alpha_i \sim
-  \begin{cases}
-  +1 & \textrm{with prob. } p/4 \\
-  +\ii & \textrm{with prob. } p/4 \\
-  0 & \textrm{with prob. } 1-p \\
-  -\ii & \textrm{with prob. } p/4 \\
-  -1 & \textrm{with prob. } p/4 \\
-  \end{cases}
-  \label{eq:definition_recr}
-  \]
-  %Finally, $a$ is normalized to length $\sqrt{n}$ to assure constant intensity.
-  The constants depend on the erasure probability $1-p \in [0,1]$:
-  \[
-  C_I = p,\; C_{SI} = p \min \left\{p,1-p \right\}, \; C_{SG} = \mathrm{e}^{\frac{3}{2}}.
-  \]
+    \item \emph{(unnormalized) Randomly Erased Complex Rademacher (RECR) sampling scheme:} the components of $\alpha \in \mathbb{C}^n$ are chosen independently from the distribution~\eqref{eq:pl.recr_definition}.
+    The constants depend only on the erasure probability $1-p \in [0,1]$:
+    \[
+      C_\mathrm{I} = p,\; C_\mathrm{SI} = p \min \left\{p,1-p \right\}, \; C_\mathrm{SG} = \mathrm{e}^{\frac{3}{2}}.
+    \]
   \end{enumerate}
 \end{proposition}
+Unfortunately, the proof techniques developed here do not apply to the normalized RECR scheme used in the experimental work.
+We comment on potential extension to this case in \cref{sub:pl.normalized_recr}.
 
-
-The proof techniques developed here do not apply to the normalized RECR scheme presented in the main text.
-We comment on potential extension to this case in \cref{sec:pl.normalized_recr}.\\
-
-
-
-We now turn to the problem of proving recovery guarantees for PhaseLift with inputs sampled from distributions satisfying the conditions stated above.
 The following statement is a substantial generalization of existing results regarding phase retrieval from Gaussian and uniform measurements~\cite{candes_solving_2012,demanet_stable_2014}:
-
 \begin{theorem}[Theorem 1.3 in~\cite{candes_solving_2012}]%
   \label{thm:phaselift_noisy}
-  Suppose that $m = Cn$ vectors $\alpha_1,\ldots,\alpha_m \in \mathbb{C}^n$ have been chosen independently at random from an ensemble that obeys the three properties \eqref{eq:tight_frame}, \eqref{eq:sub_isotropy} and \eqref{eq:subexponential}.
-  Then, with probability at least $1 - 3\mathrm{e}^{-\gamma m}$,  $m$ noisy measurements of the form~\eqref{eq:guarantee.measurements} suffice to reconstruct any ${x} \in \Complex^n$ via PhaseLift -- the convex optimization problem~\eqref{eq:guarantee.phaselift}.
-  This reconstruction is stable in the sense that the minimizer ${X}^\sharp$ of \cref{eq:guarantee.phaselift} is guaranteed to obey
+  Suppose that $m = Cn$ vectors $\alpha\ind{1},\ldots,\alpha\ind{m} \in \mathbb{C}^n$ have been chosen independently at random from an ensemble that obeys the three properties~\eqref{eq:pl.tight_frame}, \eqref{eq:pl.sub_isotropy} and~\eqref{eq:pl.subexponential}.
+  Then, the optimizer $X^\sharp$ of the convex program~\eqref{eq:pl.PhaseLift} satisfies
   \[
-    \left\| {X}^\sharp - |{x} \rangle \! \langle {x}| \right\|_2 \leq \frac{C'  \| \epsilon \|_{\ell_1}}{m}. \label{eq:noisy_recovery_bound}
+    \fnorm{{X}^\sharp - \ketbra{x}} \leq \frac{C'  \norm{\epsilon}_{\ell_1}}{m}.
+    \label{eq:pl.noisy_recovery_bound}
   \]
-Here, $\| \cdot \|_2$ denotes the Hilbert-Schmitt norm $\| {Z} \|_2^2 = \tr \left( {Z} {Z}^\dagger \right)$, while $C,C'$ and $\gamma$ represent constants of sufficient size.
+  with probability at least $1 - 3\mathrm{e}^{-\gamma m}$,
+  Here, $\fnorm{\cdot}$ denotes the Hilbert-Schmitt norm $\fnorm{Z}^2 = \tr \left( {Z} {Z}^\dagger \right)$, while $C,C'$ and $\gamma$ represent constants of sufficient size.
+  Furthermore, $\norm{\epsilon}_{\ell_1}$ is a bound on the total noise of all measurements~\eqref{eq:pl.phase_retrieval_measurements}
+  \[
+    \norm{\epsilon}_{\ell_1} = \sum_{l=1}^m \abs{\epsilon\ind{l}}.
+  \]
 \end{theorem}
 
-The constants $C,C',\gamma$ implicitly depend on $C_I,C_{SI}, C_{SG}$ in \eqref{eq:tight_frame}, \eqref{eq:sub_isotropy}, \eqref{eq:subexponential} and can in principle be extracted from the proof.
-No attempt has been made to optimize them.
-Note that the demand on the number of measurements $m$ in \cref{thm:phaselift_noisy} scales linearly in the problem's dimension $n$.
+The constants $C$, $C'$, and $\gamma$ implicitly depend on ensemble constants $C_\mathrm{I}$, $C_\mathrm{SI}$, and $C_\mathrm{SG}$ and can in principle be extracted from the proof.
+Note that although we are recovering $\ketbra{x}$, which is embedded in the $n^2$ dimensional space of all $n \times n$ matrices, the demand on the number of measurements $m$ in \cref{thm:phaselift_noisy} scales linearly in the original problem's dimension $n$.
 This is optimal up to the constant multiplicative factor $C$.
 Analytical bounds on this constant $C$ are usually too pessimistic to be practical and it is widely believed that
 \(
   m = 4n - 4
 \)
 such measurements are actually sufficient, that is $C = 4 + o(n)$~\cite{heinosaari_quantum_2013}.
-We refer to~\cite{MixonBlog} for further information about this topic.
-
 
 We postpone the proof of this result to \cref{sec:pl.main_proof} in order to derive an error bound for the signal vector from \cref{thm:phaselift_noisy}.
-Recall that we obtain the recovered signal vector ${x}^\sharp$ from the minimizer ${X}^\sharp$ of \cref{eq:guarantee.phaselift} by a eigenvalue decomposition.
-Let
-\[
-  {X}^\sharp = \sum_i \lambda_i \ket{ x_i}\bra{ x_i}
-\]
-with $\lambda_1 \ge \lambda_2 \ldots \ge \lambda_n$.
-Then, we set
-\[
-  {x}^\sharp = \sqrt{\lambda_1}  x_1.
-\]
-In~\cite{candes_solving_2012} it was shown that \cref{eq:noisy_recovery_bound} implies
+Recall from \cref{eq:pl.vector_from_matrix} that we obtain the recovery of the signal vector ${x}^\sharp$ from the minimizer ${X}^\sharp$ of the PhaseLift program~\cref{eq:pl.PhaseLift} via an eigenvalue decomposition.
+In~\cite{candes_solving_2012} it was shown that \cref{eq:pl.noisy_recovery_bound} implies
 \[
   \min_{0 \leq \phi \leq 2 \pi} \, \| {x}^\sharp - \mathrm{e}^{\ii \phi} {x} \|_{\ell_2}
   \leq C'' \frac{\| \epsilon \|_{\ell_1} }{m \| {x} \|_{\ell_2}}
 , \label{eq:vectorial_noisy_bound}
 \]
-where $C''$ again denotes an absolute constant.
+where $C''$ again denotes another constant of sufficient size.
+In words, we are able to recover the original signal $x$ up to a global phase and up to an error that is determined by the signal-to-noise ratio.
+
+\todo{Interpret this? -> Constant error once you reach the threshold}
+
 
 
 
@@ -412,6 +398,8 @@ In particular, we do not require a universal type of noise for all detectors, bu
 \section{Results}
 \subsection{Numerical Results}
 
+\todo{Constant error once we reach threshold for m?}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[tbp]
   \begin{subfigure}{.475\columnwidth}
@@ -528,13 +516,13 @@ This is because the properties of the components and, therefore $ M$ are general
 Since it is the goal to characterise the device for quantum experiments, the most accurate characterisation for this purpose is achieved using the same mode of light used in the future quantum experiments. .
 When a single photon Fock state is input in the bottom waveguide, the prepared state prior to $ M$ is
 \[
-  \ket{\psi({\alpha})} = \sum_k \alpha_k a_k^{\dag} \ket{hfrak{0}}
+  \ket{\psi({\alpha})} = \sum_k \alpha_k a_k^{\dag} \ket{\mathfrak{0}}
 \]
 where $\ket{hfrak{0}}$ denotes the vacuum state.
 The transfer matrix $M$ performs the mapping $a_k^{\dag} \rightarrow \sum_j M_{j,k}a_j^{\dag}$.
 The probability of measuring the photon at detector $j$ is then given by
 \[
-  hbb{P}(j|{\alpha}) = \left| \sum_k M_{j,k} \alpha_k \right|^2.
+  \Prob(j|{\alpha}) = \left| \sum_k M_{j,k} \alpha_k \right|^2.
   \label{eq:pl.experiment.probabilities}
 \]
 Hence, finite-sample frequency estimates of the probabilities~\eqref{eq:pl.experiment.probabilities} are equivalent to the noisy intensity measurements~\eqref{eq:pl.intensities}.
