@@ -48,6 +48,28 @@ The first requirement results in an interactive experiment, where the inputs nee
 \todo{Not quite correct.}
 Moreover, the second feature of the recovery protocol makes it a priori susceptible towards noise as any error in the determination of the first row propagates to the remaining rows.
 
+Although, as we have described, the protocol can be performed using coherent states and photodiodes, for this experimental demonstration we instead use heralded single photons and single photon detectors.
+This is because the properties of the components and, therefore $ M$ are generally mode-dependent, that is dependent on the wavelength, polarization, etc.\ of the light.
+Since it is the goal to characterize the device for quantum experiments, the most accurate characterization for this purpose is achieved using the same mode of light used in the future quantum experiments. .
+When a single photon Fock state is input in the bottom waveguide, the prepared state prior to $ M$ is
+\[
+  \ket{\psi({\alpha})} = \sum_k \alpha_k a_k^{\dag} \ket{\mathfrak{0}}
+\]
+where $\ket{hfrak{0}}$ denotes the vacuum state.
+The transfer matrix $M$ performs the mapping $a_k^{\dag} \rightarrow \sum_j M_{j,k}a_j^{\dag}$.
+The probability of measuring the photon at detector $j$ is then given by
+\[
+  \Prob(j|{\alpha}) = \left| \sum_k M_{j,k} \alpha_k \right|^2.
+  \label{eq:pl.experiment.probabilities}
+\]
+Hence, finite-sample frequency estimates of the probabilities~\eqref{eq:pl.experiment.probabilities} are equivalent to the noisy intensity measurements~\eqref{eq:pl.intensities}.
+In the experiment, a spontaneous parametric down-conversion process is used to produce a heralded single photon via the detection of its correlated pair photon in the idler mode.
+
+The silica-on-silicon device performs a linear-optical circuit comprising 30 directional couplers and 30 tunable thermo-optic phase-shifters on six optical waveguides \cite{Carolan_2015_Universal}.
+As shown in \cref{fig:experimental.schematic}, inputting coherent light into the bottom waveguide of the device, an initial cascade of five Mach-Zehnder interferometers (MZIs) and accompanying phase-shifters can be used to prepare any five-mode input vector $\ket{{\alpha}}$.
+The remaining triangular array of components is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck_1994_Experimental}.
+Reconfiguring the target $M$ then enables us to experimentally test the protocol across a number of configurations including Identity, Swap, and Fourier matrices as well as Haar random unitaries.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[tbp]
   \centering
@@ -337,8 +359,8 @@ and the overall noise strength:
 Note that this formulation allows to treat the different output modes and their detector noise levels individually.
 In particular, we do not require a universal type of noise for all detectors, but allow for taking into account detector dependent noise of different quality (i.e.\ varying noise levels).
 
-\begin{corollary}[Performance guarantee for Protocol~\ref{prot:pl.detailed_reconstruction}]
-  \label{cor:noisy_performance_guarantee}
+\begin{corollary}[Performance guarantee for Protocol~\ref{prot:pl.detailed_reconstruction}]%
+  \label{cor:pl.performance_guarantee}
   The reconstruction ${M}^\sharp$ of any transfer matrix ${M}$ by means of Protocol~\ref{prot:pl.detailed_reconstruction} satisfies
     \[
       \min_{{\mu}: \abs{\mu_j} = 1} \left\|  {M}^\sharp -  \mathrm{diag}(\mu_1,\ldots,\mu_n) {M} \right\|_2
@@ -417,19 +439,21 @@ Here, we have used \eqref{eq:vectorial_noisy_bound} for each summand in the thir
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We demonstrate the practical applicability of the PhaseLift characterisation protocol using simulated experiments.
-The simulation depicted in \cref{fig:simplot} aims to visualize the performance guarantees from \cref{thm:performance_guarantee}:
+The simulation depicted in \cref{fig:simplot} aims to visualize the performance guarantees from \cref{cor:pl.performance_guarantee}:
 For each given dimension $n$, we choose 100 target unitaries.
 Each of these is reconstructed by means of \cref{prot:pl.detailed_reconstruction} with a varying number of measurements $m$.
-The input vectors are sampled from the uniform ensemble in \cref{sfig:simplot.gaussian} and from the RECR ensemble in \cref{sfig:simplot.recr}.
+The input vectors are sampled from the uniform ensemble in \cref{sfig:simplot.gaussian} and from the normalized RECR ensemble in \cref{sfig:simplot.recr}.
 For the measurement noise $\epsilon_j$ from \cref{eq:pl.intensities_as_overlap}, we assume independent, centered Gaussian noise with standard deviation $\sigma = 0.05$.
 The density plots show the fraction of successfully recovered unitaries.
-Here, the criterion for success is whether the distance of the reconstruction $M^\sharp$ measured in Frobenius norm is smaller than the threshold  $4 \sigma n$ in accordance with the error bound from \cref{cor:noisy_performance_guarantee} in the supplemental material.
+Here, the criterion for success is whether the distance of the reconstruction $M^\sharp$ measured in Frobenius norm is smaller than the threshold  $4 \sigma n$ in accordance with the error bound~\eqref{eq:pl.total_bound}.
 
-Figs.~\ref{sfig:simplot.gaussian} and \ref{sfig:simplot.recr} show a pronounced phase transition around $4n - 4$.
-This demonstrates the high efficiency of \cref{prot:pl.detailed_reconstruction} with respect to the number of measurements.
-Not only does the number of measurements scale linearly in the system size but the scaling coefficient is small as well.
+\Cref{sfig:simplot.gaussian,sfig:simplot.recr} show a pronounced phase transition around $4n - 4$.
+This demonstrates the high sample efficiency of the PhaseLift reconstruction.
+Not only does the number of measurements scale linearly in the system size but the scaling coefficient is small as well.\\
 
 
+\subsection{Experimental Results}%
+\label{sub:pl.results.experiment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -461,74 +485,42 @@ Not only does the number of measurements scale linearly in the system size but t
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{figure*}[tbp]
-%   \centering
-%   \includegraphics[width=0.95\columnwidth]{fig/ex_details}
-%   \caption{%
-%     \label{fig:experimental.details}
-%    Reconstruction errors for a random $5 \times 5$ matrix from experimental data.
-%    For each picture, we plot the mean (solid) as well as min- and max- errors over 25 samples.
-%    In the left picture, each sample consists of a recovery from $m$ preparation vectors and the corresponding photon counts measured over $t = 30\,hrm{s}$
-%    In the right picture, we fix a randomly selected set of $m=20$ preparation vectors and run the recovery with the photon counts from $t$ randomly selected time bins, each of which is one second long.
-%   }
-% \end{figure*}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}[tbp]
+  \centering
+  \includegraphics[width=0.95\columnwidth]{fig/phaselift_ex_details}
+  \caption{%
+    \label{fig:experimental.details}
+   Reconstruction errors for a random $5 \times 5$ matrix from experimental data.
+   For each picture, we plot the mean (solid) as well as min- and max- errors over 25 samples.
+   In the left picture, each sample consists of a recovery from $m$ preparation vectors and the corresponding photon counts measured over $t = 30\,hrm{s}$
+   In the right picture, we fix a randomly selected set of $m=20$ preparation vectors and run the recovery with the photon counts from $t$ randomly selected time bins, each of which is one second long.
+  }
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-To demonstrate its practical utility, we used our protocol to perform experimental characterisations of a reconfigurable integrated photonic circuit.
-The silica-on-silicon device performs a linear-optical circuit comprising 30 directional couplers and 30 tunable thermo-optic phase-shifters on six optical waveguides \cite{Carolan_2015_Universal}.
-As shown in \cref{fig:experimental.schematic}, inputting coherent light into the bottom waveguide of the device, an initial cascade of five Mach-Zehnder interferometers (MZIs) and accompanying phase-shifters can be used to prepare any five-mode input vector $\ket{{\alpha}}$.
-The remaining triangular array of components is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck_1994_Experimental}.
-Reconfiguring the target $M$ then enables us to experimentally test the protocol across a number of configurations including Identity, Swap, and Fourier matrices as well as Haar random unitaries.
-One advantage of the RECR scheme over the uniform scheme becomes clear from~\cref{fig:experimental.schematic}:
-Since the RECR scheme only requires four different phase values in each mode, these configurations can be calibrated more precisely.
-In contrast, for the uniform scheme the preparation stage needs to be able to prepare any phase shift in each mode, and therefore, it is much more demanding for the experiment.
-
-Although, as we have described, the protocol can be performed using coherent states and photodiodes, for this experimental demonstration we instead use heralded single photons and single photon detectors.
-This is because the properties of the components and, therefore $ M$ are generally mode-dependent, that is dependent on the wavelength, polarization, etc.\ of the light.
-Since it is the goal to characterize the device for quantum experiments, the most accurate characterization for this purpose is achieved using the same mode of light used in the future quantum experiments. .
-When a single photon Fock state is input in the bottom waveguide, the prepared state prior to $ M$ is
-\[
-  \ket{\psi({\alpha})} = \sum_k \alpha_k a_k^{\dag} \ket{\mathfrak{0}}
-\]
-where $\ket{hfrak{0}}$ denotes the vacuum state.
-The transfer matrix $M$ performs the mapping $a_k^{\dag} \rightarrow \sum_j M_{j,k}a_j^{\dag}$.
-The probability of measuring the photon at detector $j$ is then given by
-\[
-  \Prob(j|{\alpha}) = \left| \sum_k M_{j,k} \alpha_k \right|^2.
-  \label{eq:pl.experiment.probabilities}
-\]
-Hence, finite-sample frequency estimates of the probabilities~\eqref{eq:pl.experiment.probabilities} are equivalent to the noisy intensity measurements~\eqref{eq:pl.intensities}.
-In the experiment, a spontaneous parametric down-conversion process is used to produce a heralded single photon via the detection of its correlated pair photon in the idler mode.
-The photon is coupled into and out of the photonic chip via optical fiber and all output modes are simultaneously measured by an array of single photon avalanche photodiodes.
-For all $ M$ of the same size, data is collected for the same set of randomly chosen input vectors.
-For more details on the experimental setup and the data analysis, see the supplemental material.\\
-
-
-
-\subsection{Experimental Results}
-In \cref{fig:experimental.overview}, we show the discrepancy of the PhaseLift recoveries compared to another experimental reconstruction.
-The number of input vectors used in each reconstruction is $m = 5n$.
-This slight overhead compared to the numerically conjectured phase transition in \cref{fig:simplot} is used to counteract systematic errors in the generation of the random vectors, which we conjecture to be the main source of error in this experiment.
-Since our aim is to benchmark the performance of the PhaseLift characterisation, and not the performance of the chip itself, we compare to reconstructions obtained through established but more costly techniques: for the smaller transfer matrices of dimension two and three, we perform a complete HOM-dip-reconstruction based on two photon interference (see supplemental material).
+To demonstrate its practical utility, we used the PhaseLift protocol to perform experimental reconstruction on the reconfigurable integrated photonic circuit introduced in \cref{sec:pl.optics}
+In \cref{fig:experimental.overview}, we show the discrepancy of the PhaseLift recoveries compared to the experimental reconstruction via Hong-Ou-Mandel dips (HOM-dips), which is described in detail in \cref{sec:???}.
+Since our aim is to benchmark the performance of the PhaseLift characterization, and not the performance of the chip itself, we compare to reconstructions obtained through established but more costly techniques: for the smaller transfer matrices of dimension two and three, we perform a complete HOM-dip-reconstruction based on two photon interference.
 However, since this is infeasibly costly for the five-dimensional transfer matrices, we only compare these to single-photon reconstructions of the absolute values of the transfer matrix components.
-Therefore, for the larger transfer matrices, we neglect the phase information of the reconstruction.
+Therefore, for the larger transfer matrices, we neglect the phase information of the alternative reconstruction.
 
-We see that the PhaseLift reconstructions and the references agree well for most settings.
+The number of input vectors used in each PhaseLift reconstruction is $m = 5n$.
+This slight overhead compared to the numerically conjectured phase transition in \cref{fig:simplot} is used to counteract systematic errors in the generation of the random vectors, which we conjecture to be the main source of error in this experiment.
+We see that the PhaseLift reconstructions and the references agree well for most settings in \cref{fig:experimental.overview}
 Even without exploiting the possible advantages of the RECR ensemble due to a better calibration, it generally performs as well as the uniform ensemble.
 Both display a similar behavior: for a fixed number of modes, the deviations are generally larger for the random unitaries compared to the more structured identity and Fourier transfer matrices.
-Also, the errors for the two-dimensional transfer matrices are slightly smaller than for the corresponding three-dimensional transfer matrices.
-In general, we expect larger deviations with an increase in the size of the transfer matrix, since errors in the phases of the components accumulate in the reference reconstructions.
+Also, the errors for the two-dimensional transfer matrices are slightly smaller than for the corresponding three-dimensional transfer matrices as expected from \cref{eq:pl.total_bound}.
 Furthermore, the currently used sequential arrangement of the MZIs in the preparation stage of the experiment also leads to higher reconstruction errors with an increase in dimension -- possible solutions to this problem are discussed in the conclusions.
+For the reference reconstruction, we also expect larger deviations with an increase in the size of the transfer matrix, since errors in the phases of the components accumulate.
 Note that the errors for the five-dimensional transfer matrices are relatively small since they only take into account the absolute values of the components and neglect all phases.
 
-In \cref{fig:experimental.targetref} we compare the performance of the PhaseLift reconstruction to the HOM-dip reconstruction.
+In \cref{fig:experimental.targetref} we directly compare the performances of the reconstruction protocols, namely of the PhaseLift reconstruction and the HOM-dip reconstruction.
 In contrast to \cref{fig:experimental.overview}, here we use the theoretical target unitary as a reference.
 Generally, the errors of the PhaseLift reconstructions and the HOM-dip reconstructions are of the same order of magnitude.
 This is despite the fact that the HOM-dip reconstruction is not just insensitive to the row phases, but also to the column phases.
-Therefore, the reported errors for the HOM-dip reconstruction are minimized over $2n$ phases instead of just $n$ phases for the PhaseLift reconstruction.
+Therefore, the reported errors for the HOM-dip reconstruction are minimized over both row- and column phases instead of just the row phases for the PhaseLift reconstruction.
 The additional free parameters in the minimization may lead to overfitting, and hence, to an underestimation of the actual error of the HOM-dip reconstruction.
-For more details, please see the supplemental material.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
