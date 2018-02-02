@@ -16,7 +16,7 @@ First, we estimate the absolute value of each component from single photon data:
 From \cref{eq:pl.intensities}, we see that by inserting single photons into the $k$-th input of the device -- that is choosing the standard basis vectors as inputs $\alpha =  e_k$ as inputs --  we can estimate $\abs{M_{i,k}}$.
 For each input port, the counts of each detector are normalised to take into account the detector efficiencies and then divided by the total of the counts in all detectors.
 The square roots of these numbers are used as the estimated amplitudes of the matrix elements.
-Second, we estimate the phase of each component using HOM-dips~\cite{Hong_1987_Measurement}, following a similar approach to~\cite{laing_super-stable_2012, Dhand2016}.
+Second, we estimate the phase of each component using HOM-dips~\cite{Hong_1987_Measurement}, following a similar approach to~\cite{Laing_2012_SuperStable,Dhand_2016_Accurate}.
 However, this second step is time-consuming and only reliable for small devices.
 Therefore, for the larger devices, we only perform the first step and compare only the magnitudes of the matrix elements of the reconstructions.
 
@@ -99,8 +99,8 @@ The raw data as well as the analysis scripts are available at \url{https://githu
 In this section we present a proof for the phase retrieval recovery guarantees in \cref{thm:pl.phaselift_noisy}.
 Note that equally strong recovery guarantees are well-established for the Gaussian and uniform ensemble\cite{Candes_2012_Solving,Demanet_2014_Stable}.
 However, to keep this work self-contained we present a unified proof for all sampling schemes from \cref{prop:gauss+recr_requirements}.
-Our analysis is inspired by Ref.~\cite{dirksen_gap_2015} (who derived strong results for sparse vector recovery using similar assumptions) and Ref.~\cite{kabanava_stable_2016} in the non-commutative setting.
-Moreover, Krahmer and Liu considered a real-valued version of the problem addressed here~\cite{krahmer_phase_2017}.
+Our analysis is inspired by Ref.~\cite{Dirksen_2017_On} (who derived strong results for sparse vector recovery using similar assumptions) and Ref.~\cite{Kabanava_2015_Stable} in the non-commutative setting.
+Moreover, Krahmer and Liu considered a real-valued version of the problem addressed here~\cite{Krahmer_2018_Phase}.
 
 
 \subsection{Mathematical preliminaries}
@@ -129,8 +129,8 @@ First, the assumption of subgaussian tails~\eqref{eq:pl.subexponential} implies 
 \end{theorem}
 
 
-The second result is a generalization of \quotes{Gordon's escape through a mesh}-Theorem \cite{gordon_milman_1988} (a random subspace avoids a subset provided the subset is small in some sense).
-The version we use here is due to Mendelson~\cite{mendelson_learning_2015,koltchinskii_bounding_2015}, see also see also \cite{tropp_convex_2015}.
+The second result is a generalization of \quotes{Gordon's escape through a mesh}-Theorem \cite{Gordon_1988_On} (a random subspace avoids a subset provided the subset is small in some sense).
+The version we use here is due to Mendelson~\cite{Mendelson_2015_Learning,Koltchinskii_2015_Bounding}, see also see also \cite{Tropp_2014_Convex}.
 
 \begin{theorem}[Mendelson's small ball method]%
   \label{thm:mendelson}
@@ -161,7 +161,7 @@ Note that the measurement operator introduced in \cref{eq:pl.measurement_operato
 It maps the signal matrix $Z$ to the vector of (noiseless) measurement outcomes $\sum_l y_l \ket{e_l}$.\\
 
 
-The following two propositions summarize several results presented in \cite{kabanava_stable_2016} and adapt them to the problem of phase retrieval.
+The following two propositions summarize several results presented in \cite{Kabanava_2015_Stable} and adapt them to the problem of phase retrieval.
 
 \begin{proposition}%
   \label{prop:nsp_implication}
@@ -211,7 +211,7 @@ which establishes \cref{eq:pl.rec_guarantee} for case I in \eqref{eq:pl.nsp_case
 
 
 
-For the second case, we use a consequence of von Neumann's trace inequality, see e.g. \cite[Theorem~7.4.9.1]{horn_topics_1991}:
+For the second case, we use a consequence of von Neumann's trace inequality, see e.g. \cite[Theorem~7.4.9.1]{Horn_1994_Topics}:
 Let $ A,  B$ be matrices with singular values $\sigma_k ( A),\sigma_k ( B)$ arranged in non-increasing order.
 Then
 \[
@@ -467,9 +467,9 @@ Techniques from representation theory -- more precisely: Schur's Lemma -- then i
   %\mathbb{E} \left[ U^{\otimes N} (|a_0 \rangle \! \langle a_0|)^{\otimes N} (U^\dagger)^{\otimes N} \right] = \binom{n+N-1}{n}^{-1} \| a_0\|_{\ell_2}^N P_{\vee^N} =
   n^N \binom{n+N-1}{N}^{-1}  P_{\vee^N},
 \]
-see e.g.\ \cite[Lemma~1]{scott_tight_2006}.
+see e.g.\ \cite[Lemma~1]{Scott_2006_Tight}.
 Here, $ P_{\vee^N}$, denotes the projector onto the totally symmetric subspace $\bigvee\!^N \subset \left( \mathbb{C}^n \right)^{\otimes N}$.
-Note that $\left(| z \rangle \! \langle  z| \right)^{\otimes N} \in \bigvee\!^N$ and, moreover $2 \mathrm{tr} \left(  P_{\vee^2}  Z^2 \right)= \|  Z \|_2^2 + \mathrm{tr} ( Z)^2$ for any matrix $ Z$, see e.g.\ \cite[Lemma~17]{kueng_low_2016}.
+Note that $\left(| z \rangle \! \langle  z| \right)^{\otimes N} \in \bigvee\!^N$ and, moreover $2 \mathrm{tr} \left(  P_{\vee^2}  Z^2 \right)= \|  Z \|_2^2 + \mathrm{tr} ( Z)^2$ for any matrix $ Z$, see e.g.\ \cite[Lemma~17]{Kueng_2016_Low}.
 Consequently,
 \begin{align}
   \mathbb{E} \left[ | \langle\alpha, z \rangle|^2 \right]
