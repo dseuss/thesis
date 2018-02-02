@@ -102,7 +102,7 @@ Then, we can reconstruct $\ketbra{x}$ using the following rank-minimization prob
   \label{eq:pl.rank_minimization}
 \]
 provided $m$ is sufficiently large to single out $\ketbra{x}$.
-However, rank minimization is $\NP$-hard in general~\cite{Boyd}, and therefore, \cref{eq:pl.rank_minimization} cannot be solved efficiently.
+However, rank minimization is $\NP$-hard in general~\cite{Boyd_2004_Convex}, and therefore, \cref{eq:pl.rank_minimization} cannot be solved efficiently.
 Nevertheless, there are algorithms for recovering $\ketbra{x}$ that are computationally efficient with only a slight overhead in the number of measurements required.
 Here, we consider the following convex algorithm termed \emph{PhaseLift}~\cite{Candes_2013_Phaselift}
 \[
@@ -213,8 +213,8 @@ More generally, we consider ensembles of measurement vectors $\alpha$ that satis
 Unfortunately, the proof techniques developed here do not apply to the normalized RECR scheme used in the experimental work.
 We comment on potential extension to this case in \cref{sub:pl.normalized_recr}.
 
-The following statement is a substantial generalization of existing results regarding phase retrieval from Gaussian and uniform measurements~\cite{candes_solving_2012,demanet_stable_2014}:
-\begin{theorem}[Theorem 1.3 in~\cite{candes_solving_2012}]%
+The following statement is a substantial generalization of existing results regarding phase retrieval from Gaussian and uniform measurements~\cite{Candes_2012_Solving,Demanet_2014_Stable}:
+\begin{theorem}[Theorem 1.3 in~\cite{Candes_2012_Solving}]%
   \label{thm:pl.phaselift_noisy}
   Suppose that $m = Cn$ vectors $\alpha\ind{1},\ldots,\alpha\ind{m} \in \mathbb{C}^n$ have been chosen independently at random from an ensemble that obeys the three properties~\eqref{eq:pl.tight_frame}, \eqref{eq:pl.sub_isotropy} and~\eqref{eq:pl.subexponential}.
   Then, the optimizer $X^\sharp$ of the convex program~\eqref{eq:pl.PhaseLift} satisfies
@@ -237,11 +237,11 @@ Analytical bounds on this constant $C$ are usually too pessimistic to be practic
 \(
   m = 4n - 4
 \)
-such measurements are actually sufficient, that is $C = 4 + o(n)$~\cite{heinosaari_quantum_2013}.
+such measurements are actually sufficient, that is $C = 4 + o(n)$~\cite{Heinosaari_2013_Quantum}.
 
 We postpone the proof of this result to \cref{sec:pl.main_proof} in order to derive an error bound for the signal vector from \cref{thm:pl.phaselift_noisy}.
 Recall from \cref{eq:pl.vector_from_matrix} that we obtain the recovery of the signal vector ${x}^\sharp$ from the minimizer ${X}^\sharp$ of the PhaseLift program~\cref{eq:pl.PhaseLift} via an eigenvalue decomposition.
-In~\cite{candes_solving_2012} it was shown that \cref{eq:pl.noisy_recovery_bound} implies
+In~\cite{Candes_2012_Solving} it was shown that \cref{eq:pl.noisy_recovery_bound} implies
 \[
   \min_{0 \leq \phi \leq 2 \pi} \, \| {x}^\sharp - \mathrm{e}^{\ii \phi} {x} \|_{\ell_2}
   \leq C'' \frac{\| \epsilon \|_{\ell_1} }{m \| {x} \|_{\ell_2}}
