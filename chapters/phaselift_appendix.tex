@@ -7,46 +7,13 @@
 \section{Experimental Details}%
 \label{sec:pl.experimental_details}
 
-\subsection{Photon source}
-A pulsed, Titanium:Sapphire laser (Coherent Chameleon) is used to generate 140fs pulses at $\sim808$nm at a repetition rate of $80$MHz.
-A half-wave plate and polarising beamsplitter (PBS) are used to attenuate the power.
-Next, a $\beta$-barium borate (BBO) crystal is used to perform second harmonic generation.
-Dichroic mirrors remove the remaining 808nm light and a 0.5mm Bismuth Triborate BiB$_3$O$_6$ (BiBO) crystal is used to perform spontaneous parametric down-conversion (SPDC) from the up-converted 404nm pulse.
-Down-converted photons are emitted in a cone at opening angle $\theta = 6^{\circ}$ and pass through a 3nm interference filter at 808nm.
-Prisms are aligned to couple light from opposite points on the SPDC cone into polarisation maintaining fibres (PMF).
-
-When either pair is connected directly to the detectors, the ratio between the coincidence detection rate and the single detection rate is $\sim12\%$.
-Taking into account the detector efficiency, this translates to a heralding efficiency of around 24$\%$.
-
-\subsection{Integrated Circuit}
-The silica-on-silicon integrated photonic chip was fabricated at the Nippon Telegraph and Telephone company (NTT) in Japan.
-Flame hydrolysis deposition followed by photolithographic and reactive ion etching was used to fabricate germanium doped silica (SiO2-GeO2) waveguides with dimensions 3.5$\mu$m $\times$ 3.5$\mu$m with a silica cladding onto a silicon substrate.
-Thin-film Tantalum Nitride (Ta$_2$N) thermo-optic heaters were then fabricated on top of the circuit with dimensions 1.5mm $\times$ 50$\mu$m.
-The circuit is formed of a cascaded array of 30 directional couplers (each with a length of 500$\mu$m) and 30 phase shifters designed to perform a universally reconfigurable transfer matrix on six waveguide modes.
-
-The coupling losses have been estimated as $\sim 9\%$ per facet and the directional couplers at $<2.3\%$.
-The average loss fibre-to-fibre was measured to be $\sim 42\%$.
-The device is actively cooled via a Peltier cooling unit.
-
-Thermo-optic modulators are driven by electronic heater driver boards designed in-house which can deliver up to 20V with 4.9mV resolution and current up to 100mA.
-These are then interfaced with a computer to set all the heaters to implement a given transfer matrix.
-
-\subsection{Photon Detectors}
-The detection system uses 6 SPADs (Perkin Elmer SPCM-AQRH-14), each with efficiencies $50-60\%$, a dark count rate of $\sim 100$Hz, timing jitter of $\sim 350$ps and a dead time of 32ns.
-A coincidence counting card time-tagging all simultaneous channels in a time window usually set to be around 2ns is used to register detection events.
-For each channel it is possible to set a specific time delay that is used by the counting card to compensate for the discrepancy in the signals arrival time introduced in the experiment by optical fibres, detectors, electronics and coaxial cables.
-
-The detector efficiencies were estimated as follows.
-Light was injected into the top mode of the circuit and counts were collected for 100 Haar-random unitary configurations of the circuit.
-The set of relative efficiencies that minimised the sum of the total variation distances of the measured distributions to their targets was then used.
-Experimental counts are adjusted by these estimated relative efficiencies.
-
-\subsection{Reference Reconstructions}
+\subsection{Reference Reconstructions}%
+\label{sub:pl.hom_dip}
 
 Since our goal is to benchmark the PhaseLift characterisation technique, and not the performance of the optical chip, we compare the experimental reconstructions to reconstructions obtained with a different technique.
 These reference reconstructions are obtain in two steps.
 First, we estimate the absolute value of each component from single photon data:
-From \cref{eq:intensities}, we see that by inserting single photons into the $k$-th input of the device -- that is choosing the standard basis vectors as inputs $\alpha =  e_k$ as inputs --  we can estimate $\abs{M_{i,k}}$.
+From \cref{eq:pl.intensities}, we see that by inserting single photons into the $k$-th input of the device -- that is choosing the standard basis vectors as inputs $\alpha =  e_k$ as inputs --  we can estimate $\abs{M_{i,k}}$.
 For each input port, the counts of each detector are normalised to take into account the detector efficiencies and then divided by the total of the counts in all detectors.
 The square roots of these numbers are used as the estimated amplitudes of the matrix elements.
 Second, we estimate the phase of each component using HOM-dips~\cite{Hong_1987_Measurement}, following a similar approach to~\cite{laing_super-stable_2012, Dhand2016}.
@@ -56,9 +23,9 @@ Therefore, for the larger devices, we only perform the first step and compare on
 To perform the HOM experiments, the preparation-stage MZIs marked red in \cref{fig:experimental.schematic} were set to perform an identity transformation and both fibres carrying the photon pairs generated by the source were connected to input ports of the chip.
 For each pairwise combination of the input modes of our matrices, we recorded the twofold coincidences among our detectors while changing the time delay of a photon relative to the other via a motorised translation stage.
 The difference in coincidence counts as a function of delay were fit to the function:
-\begin{equation}
+\[
   f(\tau)=\left(1-c_1\exp[-((\tau - c_2)/c_3)^2]\mathrm{sinc}[(\tau - c_2)/c_6]\right)(c_4\tau + c_5 + c_7 \tau^2)
-\end{equation}
+\]
 where $\tau$ is the time delay of the photon and $\{c_i\}$ fit parameters.
 The first term approximates the temporal envelope of a Gaussian photon subject to a top-hat filter and the second term adjusts for the decoupling resulting from the movement of the translation stage.
 From the coefficient $c_1$ of this fit we retrieve a bare visibility of the two photon interference.
@@ -67,18 +34,20 @@ This was periodically assessed by implementing an effective 50:50 beam splitter 
 
 In order to retrieve the phase information of the matrix elements, the two photon interference fringes with the best estimates of the visibility were selected for each matrix to create a sequence that suffices to determine the phases of all the elements of the matrix.
 Assuming that all the elements of the first row and of the first column are real and positive, the complex argument of the first phase factor retrieved associated to the element $M_{ij}$ is given by the following equation.
-\begin{equation}
+\[
 \phi_{ij}=\pm  \arccos\left( - \frac{|M_{1,1}M_{i,j}|^2+|M_{1,j}M_{i,1}|^2}{2 |M_{1,1}M_{i,j}M_{1,j}M_{i,1}|} V_{1,j,1,i} \right)
-\end{equation}
+\]
 where $V_{1,j,1,i}$ is the visibility observed injecting photons into the ports 1 and j and detecting photons at the output ports 1 and i.
 The sign $\pm$ in the equation is chosen to maximise the similarity to the target matrix.
 Then, if we want to use a visibility $V_{\beta,j,\alpha,i}$ to deduce the phase $\phi_{ij}$ knowing $\phi_{\alpha \beta}$, $\phi_{\alpha j}$ and $\phi_{i \beta}$ we have
-\begin{equation}
+\[
 \phi_{ij}=\pm   \arccos\left( - \frac{|M_{\alpha \beta}M_{i,j}|^2+|M_{\alpha,j}M_{i,\beta}|^2}{2 |M_{\alpha,\beta}M_{i,j}M_{\alpha,j}M_{i,\beta}|} V_{\beta,j,\alpha,i} \right) +\phi_{\alpha j} +\phi_{i \beta} -\phi_{\alpha \beta}
-\end{equation}
+\]
+
+
 
 \subsection{Data Analysis}%
-\label{sub:experimental_details.data}
+\label{sub:pl.data_analysis}
 
 \begin{table}
   \begin{tabular}{l | r r r}
@@ -94,16 +63,16 @@ Then, if we want to use a visibility $V_{\beta,j,\alpha,i}$ to deduce the phase 
 
 As mentioned in the main text, we estimate the intensity measurements from single photon counting rates.
 After correcting for detector efficiency, all counting rates are scaled by a constant such that the resulting intensities obey $\max_l \sum_j I_j(\alpha^{(l)}) = 1$.
-This only amounts to scaling the transfer matrix by a constant, which does not influence the end result since we later rescale the obtained reconstruction appropriately (see \cref{eq:experimental_details.data.scaling}).
+This only amounts to scaling the transfer matrix by a constant, which does not influence the end result since we later rescale the obtained reconstruction appropriately (see \cref{eq:pl.experimental_details.data.scaling}).
 However, this simple rescaling helps with numerical stability in the SDP solver.
-We provide a ready for use implementation of the PhaseLift convex program~\eqref{eq:PhaseLift} as well as related algorithms in the open source library \textsc{pypllon}~\cite{Suess_2017_Pypllon},
+We provide a ready for use implementation of the PhaseLift convex program~\eqref{eq:pl.PhaseLift} as well as related algorithms in the open source library \textsc{pypllon}~\cite{Suess_2017_Pypllon},
 
 The post-processing of a reconstruction ${M}^\sharp$ consists of two steps:
 First, we rescale the reconstruction by a constant such that
-\begin{equation}
-  \label{eq:experimental_details.data.scaling}
+\[
+  \label{eq:pl.experimental_details.data.scaling}
   \max_i \norm{(M^\sharp)_i}_{\ell_2} = 1,
-\end{equation}
+\]
 where $(M^\sharp)_i$ denotes the $i$-th row of $M^\sharp$.
 In an ideal experiment, $M^\sharp$ would be unitary and, therefore, every row would have unit norm.
 However, due to loss in the characterised circuit as well as detector inefficiencies, the norm of each row is smaller than one.
@@ -113,347 +82,344 @@ Estimating the dark counts in future experiments would enable characterising the
 The second post-processing step consists of fixing phases of the reconstructions:
 Recall that we are only able to recover the transfer matrix up to its row phases since the global phases of the rows are lost in the intensity measurements.
 Therefore, we fix the row phases of the PhaseLift reconstructions in \cref{fig:experimental.targetref} by minimizing the Frobenius distance to the target unitary and compute the error as
-\begin{equation}
+\[
   \min_{{\mu}: \abs{\mu_i} = 1}\left\|  {M}_\mathrm{target} -  \mathrm{diag} ({\mu}) {M}^\sharp) \right\|_2
-\end{equation}
+\]
 However, since the HOM-dip reconstruction is insensitive to global phases of the columns as well, we have to minimize both row and column phases for the HOM-dip reconstructions in \cref{fig:experimental.targetref}.
 Furthermore, since in \cref{fig:experimental.overview} the HOM-dip reconstruction is taken as reference value, we have to minimize the row and column phases for all PhaseLift reconstructions in that picture as well.
 The raw data as well as the analysis scripts are available at \url{https://github.com/dseuss/phaselift-paper}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Recovery guarantee for \cref{prot:characterization}}%
-\label{sec:pl.guarantee}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Proof of \cref{thm:phaselift_noisy}}
+\section{Proof of \cref{thm:phaselift_noisy}}%
 \label{sec:pl.main_proof}
 
-Our analysis is inspired by Ref.~\cite{dirksen_gap_2015} (who derived strong results for sparse vector recovery using similar assumptions) and Ref.~\cite{kabanava_stable_2016} in the non-commutative setting. Moreover, Krahmer and Liu considered a real-valued version of the problem addressed here, see Ref.~\cite{krahmer_phase_2017}.
-
-
+In this section we present a proof for the phase retrieval recovery guarantees in \cref{thm:pl.phaselift_noisy}.
+Note that equally strong recovery guarantees are well-established for the Gaussian and uniform ensemble\cite{Candes_2012_Solving,Demanet_2014_Stable}.
+However, to keep this work self-contained we present a unified proof for all sampling schemes from \cref{prop:gauss+recr_requirements}.
+Our analysis is inspired by Ref.~\cite{dirksen_gap_2015} (who derived strong results for sparse vector recovery using similar assumptions) and Ref.~\cite{kabanava_stable_2016} in the non-commutative setting.
+Moreover, Krahmer and Liu considered a real-valued version of the problem addressed here~\cite{krahmer_phase_2017}.
 
 
 \subsection{Mathematical preliminaries}
 
-Our analysis is based on two strong results about random matrix theory. First, the assumption of subgaussian tails \eqref{eq:subexponential} implies strong bounds on the operator norm of matrices of the form $\sum_{k=1}^m \ket{{\alpha_k}}\bra{\alpha_k}$:
+Our analysis is based on two strong results about random matrix theory.
+First, the assumption of subgaussian tails~\eqref{eq:pl.subexponential} implies strong bounds on the operator norm of matrices of the form $\sum_{k=1}^m \ketbra{\alpha\ind{l}}$:
 
-\begin{theorem}[Variant of Theorem 5.35 in \cite{Vershynin_2010_Introduction}] \label{thm:bernstein}
-Suppose that $\alpha_1,\ldots,\alpha_m$ are independent instances of a subgaussian random vector obeying \eqref{eq:subexponential} with constant $C_{SG}$.
-Set
-\begin{equation}
-  \tilde{ H} = \frac{1}{m} \sum_{k=1}^m \left( a_k |\alpha_k \rangle \! \langle \alpha_k| - \mathbb{E} \left[ a_k |\alpha_k \rangle \! \langle \alpha_k| \right] \right),
-  \label{eq:Htilde}
-\end{equation}
-where $a_k \in \mathbb{C}$ and $\abs{a_k} \leq 1$.
-Then,
-\begin{align}
-\mathrm{Pr} \left[ \| \tilde{ H} \|_\infty \geq t \right]
-\leq
-\begin{cases}
-2 \exp \left( 2 \ln (3) n  - \frac{mt^2}{8 C_{SG}} \right) & 0 \leq t \leq 2C_{SG}, \\
-2 \exp \left( 2 \ln (3) n - \frac{m}{2} (t- C_{SG} )  \right) & t \geq 2 C_{SG}.
-\end{cases}
-\end{align}
+\begin{theorem}[Variant of Theorem 5.35 in~\cite{Vershynin_2010_Introduction}]%
+  \label{thm:bernstein}
+  Suppose that $\alpha\ind{1},\ldots,\alpha\ind{m}$ are independent copies of a subgaussian random vector obeying \cref{eq:pl.subexponential} with constant $C_\mathrm{SG}$.
+  Let
+  \[
+    \tilde{ H} = \frac{1}{m} \sum_{k=1}^m \left( a_k \ketbra{\alpha\ind{l}} - \mathbb{E} \left[ a_k \ketbra{\alpha\ind{l}} \right] \right),
+    \label{eq:pl.Htilde}
+  \]
+  where $a_k \in \mathbb{C}$ and $\abs{a_k} \leq 1$.
+  Then,
+  \begin{align}
+    \Prob \left[ \| \tilde{ H} \|_\infty \geq t \right]
+    \leq
+    \begin{cases}
+      2 \exp \left( 2 \ln (3) n  - \frac{mt^2}{8 C_\mathrm{SG}} \right) & 0 \leq t \leq 2C_\mathrm{SG}, \\
+      2 \exp \left( 2 \ln (3) n - \frac{m}{2} \left( t - C_\mathrm{SG} \right)  \right) & t \geq 2 C_\mathrm{SG}.
+    \end{cases}
+  \end{align}
 \end{theorem}
 
 
-The second result is a generalization of ``Gordon's escape through a mesh''-Theorem \cite{gordon_milman_1988} (a random subspace avoids a subset provided the subset is small in some sense) that is due to Mendelson \cite{mendelson_learning_2015,koltchinskii_bounding_2015}, see also see also \cite{tropp_convex_2015}.
+The second result is a generalization of \quotes{Gordon's escape through a mesh}-Theorem \cite{gordon_milman_1988} (a random subspace avoids a subset provided the subset is small in some sense).
+The version we use here is due to Mendelson~\cite{mendelson_learning_2015,koltchinskii_bounding_2015}, see also see also \cite{tropp_convex_2015}.
 
-\begin{theorem}[Mendelson's small ball method] \label{thm:mendelson}
-  Suppose that the measurement operator $\mathcal{A}:\Hermitian_n \to \mathbb{R}^m$ contains $m$ independent copies $ A_k$ of a random matrix $ A \in \Hermitian_n$, that is
-  \begin{equation}
-    \label{eq:measurement_operator_definition}
-    \mathcal{A}( Z) = \sum_{k=1}^m \tr ( A_k  Z) \,  e_k,
-  \end{equation}
-  and let $D \subset \Hermitian_n$.
+\begin{theorem}[Mendelson's small ball method]%
+  \label{thm:mendelson}
+  Suppose that the measurement operator $\mathcal{A}:\Hermitian^n \to \mathbb{R}^m$ contains $m$ independent copies $A\ind{l}$ of a random matrix $ A \in \Hermitian^n$, that is
+  \[
+    \label{eq:pl.measurement_operator_definition}
+    \mathcal{A}(Z) = \sum_{l=1}^m \tr (A\ind{l}  Z) \,  \ket{e_l},
+  \]
+  and let $D \subset \Hermitian^n$.
   For $\xi >0$ define
   \begin{align}
-    Q_\xi (D,  A) =& \inf_{ Z \in D}\mathrm{Pr} \left[ | \tr ( A_k  Z) | \geq \xi \right] \quad &\textrm{(marginal tail funtion)}, \label{eq:marginal_tail_function}\\
-    W_m (D,  A) =& 2 \mathbb{E} \left[ \sup_{ Z \in D} \tr \left(  Z  H \right) \right] \quad &\textrm{(mean empirical width)},
+    Q_\xi (D,  A) =& \inf_{ Z \in D}\Prob \left[ | \tr (A\ind{l}  Z) | \geq \xi \right] \quad &\textrm{(marginal tail funtion)}, \label{eq:pl.marginal_tail_function}\\
+    W_m (D,  A) =& 2 \, \mathbb{E} \left[ \sup_{ Z \in D} \tr \left(  Z  H \right) \right] \quad &\textrm{(mean empirical width)},
   \end{align}
   where
-  \begin{equation}
-     H= \frac{1}{\sqrt{m}} \sum_{k=1}^m \eta_k  A_k
-  \end{equation}
-  and the $\eta_1,\ldots,\eta_m$ are independent Rademacher random variables.
+  \[
+    H= \frac{1}{\sqrt{m}} \sum_{l=1}^m \eta_l A\ind{l}.
+  \]
+  Here, the $\eta_l$ are independent Rademacher random variables, i.e.\ $\Prob(\eta_l = 1) = \Prob(\eta_l=-1) = \frac{1}{2}$.
   Then for any $\xi >0$ and $t >0$
-  \begin{equation}
-    \frac{1}{\sqrt{m}}\inf_{ Z \in D} \| \mathcal{A}( Z) \|_{\ell_1} \geq \xi \sqrt{m} Q_{2\xi}(D,  A) -  W_m (D,  A)-\xi t \label{eq:mendelson}
-  \end{equation}
+  \[
+    \frac{1}{\sqrt{m}}\inf_{ Z \in D} \| \mathcal{A}( Z) \|_{\ell_1} \geq \xi \sqrt{m} Q_{2\xi}(D,  A) -  W_m (D,  A)-\xi t \label{eq:pl.mendelson}
+  \]
   with probability at least $1-\mathrm{e}^{-2t^2}$.
 \end{theorem}
 
-Note that the measurement operator introduced in \cref{eq:measurement_operator_definition} is a shorthand notation for the linear measurements $y_k = \tr  A_k  Z$ with $k=1,\ldots,m$.
-It maps the signal matrix $ Z$ to the vector of (noiseless) measurement outcomes $\sum_k y_k  e_k$.
+Note that the measurement operator introduced in \cref{eq:pl.measurement_operator_definition} is a shorthand notation for the linear measurements $y\ind{l} = \tr  \left( A\ind{l}  Z \right)$ with $l=1,\ldots,m$.
+It maps the signal matrix $Z$ to the vector of (noiseless) measurement outcomes $\sum_l y_l \ket{e_l}$.\\
 
 
-\subsection{Convex geometry}
+The following two propositions summarize several results presented in \cite{kabanava_stable_2016} and adapt them to the problem of phase retrieval.
 
-This section summarizes several results presented in Ref.~\cite{kabanava_stable_2016} and adapts them to the task at hand: phase retrieval.
-Compared to~\cite{kabanava_stable_2016} the analysis presented here is somewhat more direct and exploits the positive semidefinite constraint in a different way.
-
-\begin{proposition} \label{prop:nsp_implication}
-  Let $\Sphere^{n^2-1}=\left\{  Z \in \Hermitian_n: \|  Z \|_2=1 \right\}$ be the (Frobenius norm) unit sphere in $\Hermitian_n$ and $\mathcal{B}_1 = \mathrm{conv} \left\{ \pm | x \rangle \! \langle  x| \colon  x \in \Sphere^{n-1} \right\}$ denote the trace-norm ball.
+\begin{proposition}%
+  \label{prop:nsp_implication}
+  Let $\Sphere^{n^2-1}=\left\{  Z \in \Hermitian^n\colon \|  Z \|_2=1 \right\}$ be the (Frobenius norm) unit sphere and $\mathcal{B}_1 = \mathrm{conv} \left\{ \pm | x \rangle \! \langle  x| \colon  x \in \Sphere^{n-1} \right\}$ the trace-norm ball in $\Hermitian^n$.
   Define
-  \begin{equation}
-    D := \Sphere^{d^2-1} \cap 3 \mathcal{B}_1, \label{eq:D}
-  \end{equation}
-  and let $\mathcal{A}( Z) = \sum_{k=1}^m \tr ( A_k  Z ) \,  e_k$ be a measurement operator that obeys
+  \[
+    D := \Sphere^{d^2-1} \cap 3 \mathcal{B}_1.
+    \label{eq:pl.D}
+  \]
+  Also, let $\mathcal{A}( Z) = \sum_{l=1}^m \tr ( A\ind{l}  Z ) \,  \ket{e_l}$ be a measurement operator that obeys
   \begin{align}
-      \frac{ \tau}{m} \| \mathcal{A}( Z) \|_{\ell_1} \geq& \norm{ Z}_2 \quad \forall  Z \in D \label{eq:nsp}\\
-      \| \frac{1}{\nu m}\sum_{k=1}^m  A_k -  \mathbb{I} \|_\infty \leq& \frac{1}{6}\label{eq:approx_povm}
-    %
+      \frac{ \tau}{m} \| \mathcal{A}( Z) \|_{\ell_1} \geq& \norm{ Z}_2 \quad \forall  Z \in D \label{eq:pl.nsp}\\
+      \| \frac{1}{\nu m}\sum_{l=1}^m  A\ind{l} -  \mathbb{I} \|_\infty \leq& \frac{1}{6}\label{eq:pl.approx_povm}
   \end{align}
   for some $\tau,\nu >0$.
-  Then, the following relation holds for any $ Z \geq 0$ and any $|{x} \rangle \! \langle {x}|$:
-  \begin{equation}
-    \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{1}{m} \max \left\{ \tau, \frac{6}{\nu} \right\}  \| \mathcal{A}( Z-|{x} \rangle \! \langle {x}|) \|_{\ell_1}. \label{eq:rec_guarantee}
-  \end{equation}
+  Then, the following relation holds for any $ Z \geq 0$ and any $\ketbra x$:
+  \[
+    \label{eq:pl.rec_guarantee}
+    \Fnorm{Z - \ketbra{x}}
+    \leq \frac{1}{m} \max \left\{ \tau, \frac{6}{\nu} \right\}  \Norm{\mathcal{A}\left( Z - \ketbra{x} \right)}_{\ell_1}.
+  \]
 \end{proposition}
-
 
 
 \begin{proof}
 In the proof we will frequently use the decomposition $ Z =  Z_1+ Z_c$ for $ Z$ with eigenvalue decomposition $ Z = \sum_{k=1}^n \lambda_k | z^{(k)} \rangle \! \langle  z^{(k)}|$.
-Then, $ Z_1 = \lambda_1 | z^{(1)} \rangle \! \langle  z^{(1)}|$ is the leading rank-one component and $ Z_c =  Z- Z_1$ is the ``tail''.
+Assuming $\lambda_1 \ge \ldots \lambda_n$, $Z_1 = \lambda_1 | z^{(1)} \rangle \! \langle  z^{(1)}|$ is the leading rank-one component and $ Z_c =  Z- Z_1$ is the ``tail''.
 Note that, in particular, $ Z =  Z_1$ if and only if $ Z$ has unit rank.
 Fix $ Z \geq 0$ and $|{x} \rangle \! \langle {x}|$.
-\Cref{eq:rec_guarantee} is invariant under re-scaling, so we may w.l.o.g.\ assume $\|  Z-|{x} \rangle \! \langle {x}|\|_2=1$.
+\Cref{eq:pl.rec_guarantee} is invariant under re-scaling, so we may w.l.o.g.\ assume $\|  Z-|{x} \rangle \! \langle {x}|\|_2=1$.
 We treat the following two cases separately:
 \begin{align}
-I.) \quad& \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 \geq \frac{1}{2} \| ( Z-|{x} \rangle \! \langle {x}|)_c \|_1, \label{eq:nsp_case1} \\
-II.) \quad & \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 < \frac{1}{2} \| ( Z-|{x} \rangle \! \langle {x}|)_c \|_1. \label{eq:nsp_case2}
+  \mathrm{I.)} \quad& \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 \geq \frac{1}{2} \| ( Z-|{x} \rangle \! \langle {x}|)_c \|_1, \label{eq:pl.nsp_case1} \\
+  \mathrm{II.)} \quad & \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 < \frac{1}{2} \| ( Z-|{x} \rangle \! \langle {x}|)_c \|_1. \label{eq:pl.nsp_case2}
 \end{align}
 Note that I.) implies
 \begin{align}
-\|  Z-|{x} \rangle \! \langle {x}| \|_1 \leq &\| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 + \| ( Z-|{x} \rangle \! \langle {x}|)_c \|_1 \leq 3 \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 \\
- = & 3 \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_2 \leq 3 \|  Z- |{x} \rangle \! \langle {x}| \|_2 = 3
+  \|  Z-|{x} \rangle \! \langle {x}| \|_1 \leq &\| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 + \| ( Z-|{x} \rangle \! \langle {x}|)_c \|_1 \leq 3 \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_1 \\
+  = & 3 \| ( Z-|{x} \rangle \! \langle {x}|)_1 \|_2 \leq 3 \|  Z- |{x} \rangle \! \langle {x}| \|_2 = 3
 \end{align}
 which in turn implies that $ Z-| {x} \rangle \! \langle {x}|$ is contained in $3 \mathcal{B}_1$.
-Thus, \eqref{eq:nsp} is applicable and yields
+Thus, \eqref{eq:pl.nsp} is applicable and yields
 \[
 \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq  \frac{\tau}{m} \| \mathcal{A}( Z-|{x} \rangle \! \langle {x}|) \|_{\ell_1}
 \]
-which establishes \cref{eq:rec_guarantee} for case I in \eqref{eq:nsp_case1}.
+which establishes \cref{eq:pl.rec_guarantee} for case I in \eqref{eq:pl.nsp_case1}.\\
 
 
-For the second case, we use a consequence of von Neumann's trace inequality, see e.g. \cite[Theorem~7.4.9.1]{horn_topics_1991}: Let $ A,  B$ be matrices with singular values $\sigma_k ( A),\sigma_k ( B)$ arranged in non-increasing order.
+
+For the second case, we use a consequence of von Neumann's trace inequality, see e.g. \cite[Theorem~7.4.9.1]{horn_topics_1991}:
+Let $ A,  B$ be matrices with singular values $\sigma_k ( A),\sigma_k ( B)$ arranged in non-increasing order.
 Then
 \[
-  \|  A -  B \|_1 \geq \sum_{k=1}^d | \sigma_k ( A) - \sigma_k ( B)|
+  \|  A -  B \|_1 \geq \sum_{k=1}^n | \sigma_k ( A) - \sigma_k ( B)|
 \]
 This relation implies
 \begin{align}
   \|  Z \|_1 =& \| |{x} \rangle \! \langle {x}| - (|{x} \rangle \! \langle {x}|- Z) \|_1
-  \geq \sum_{k=1}^d \left| \sigma_k (| x \rangle \! \langle  x|) - \sigma_k (| x \rangle \! |\langle  x|-  Z ) \right| \\
-  \geq & \sigma_1 (| x \rangle \langle  x|) - \sigma_1 \left( | x \rangle \! \langle  x| -  Z \right)+ \sum_{k=2}^d \sigma_k \left( | x \rangle \! \langle  x| -  Z\right) \\
+  \geq \sum_{k=1}^n \left| \sigma_k (| x \rangle \! \langle  x|) - \sigma_k (| x \rangle \! |\langle  x|-  Z ) \right| \\
+  \geq & \sigma_1 (| x \rangle \langle  x|) - \sigma_1 \left( | x \rangle \! \langle  x| -  Z \right)+ \sum_{k=2}^n \sigma_k \left( | x \rangle \! \langle  x| -  Z\right) \\
   =&  \| | x \rangle \! \langle  x| \|_1  - \| (| x \rangle \! \langle  x| -  Z)_1 \|_1 + \|(| x \rangle \! \langle  x| - Z)_c \|_1 \\
   >& \| | x \rangle \! \langle  x| \|_1 + \frac{1}{2} \| (| x \rangle \! \langle  x|- Z)_c \|_1,
 \end{align}
-where the last inequality follows from \eqref{eq:nsp_case2}. Consequently,
+where the last inequality follows from \eqref{eq:pl.nsp_case2}. Consequently,
 \begin{align}
   \| | x \rangle \! \langle  x| -  Z \|_1
   =& \| (| x \rangle \! \langle  x| -  Z)_1 \|_1 + \| (| x \rangle \! \langle  x|- Z)_c \|_1
   \leq \frac{3}{2} \| (| x \rangle \! \langle  x|-  Z )_c \|_1 \nonumber \\
-  < & 3 \left( \|  Z \|_1 - \| | x \rangle \! \langle  x| \|_1 \right). \label{eq:nsp_aux2}
+  < & 3 \left( \|  Z \|_1 - \| | x \rangle \! \langle  x| \|_1 \right). \label{eq:pl.nsp_aux2}
 \end{align}
-Now, positive semidefiniteness of both $ Z$ and $\ket{ x}\bra{ x}$ together with assumption~\eqref{eq:approx_povm} implies
+Now, positive semidefiniteness of both $ Z$ and $\ket{ x}\bra{ x}$ together with assumption~\eqref{eq:pl.approx_povm} implies
 \begin{align}
   \|  Z \|_1 - \| |{x} \rangle \! \langle {x}| \|_1
   =& \tr ( Z-|{x} \rangle \! \langle {x}|) =  \tr \left( \mathbb{I} \left(  Z-| {x} \rangle \! \langle x|\right) \right) \\
-  =&  \tr \left( \left( \mathbb{I} - \frac{1}{\nu m} \sum_{k=1}^m A_k \right)  Z-|{x} \rangle \! \langle {x}| \right) + \frac{1}{\nu m} \sum_{k=1}^m \tr \left( A_k ( Z-|{x} \rangle \! \langle {x}|) \right) \\
+  =&  \tr \left( \left( \mathbb{I} - \frac{1}{\nu m} \sum_{k=1}^m A\ind{l} \right)  Z-|{x} \rangle \! \langle {x}| \right) + \frac{1}{\nu m} \sum_{k=1}^m \tr \left( A_k ( Z-|{x} \rangle \! \langle {x}|) \right) \\
   \leq &  \left\|\mathbb{I}- \frac{1}{ \nu m} \sum_{k=1}^m A_k \right\|_\infty \|  Z-|{x} \rangle \! \langle {x}| \|_1 + \frac{1}{\nu m} \| \mathcal{A}(|{x} \rangle \! \langle {x}|- Z) \|_{\ell_1} \\
   \leq &  \frac{1}{6 } \|  Z-|{x} \rangle \! \langle {x}| \|_1 + \frac{1}{\nu m} \| \mathcal{A}(|{x} \rangle \! \langle {x}|- Z) \|_{\ell_1}.
 \end{align}
-Inserting this into \eqref{eq:nsp_aux2} yields
+Inserting this into \eqref{eq:pl.nsp_aux2} yields
 \begin{align}
 \| | x \rangle \! \langle  x| -  Z \|_1 < \frac{1}{2} \| |{x} \rangle \! \langle {x}|- Z \|_1 +  \frac{3}{\nu m} \| \mathcal{A}(|{x} \rangle \! \langle {x}|- Z) \|_{\ell_1}
 \end{align}
-which implies the claim for case II in \eqref{eq:nsp_case2}.
+which implies the claim for case II in \eqref{eq:pl.nsp_case2}.
 \end{proof}
 
 
-\begin{proposition} \label{prop:RECR_nsp}
-  Under the assumptions of \cref{thm:phaselift_noisy}, the measurement operator
-  \begin{equation}
-    \label{eq:measurement_operator_rank1}
-    \mathcal{A}( Z) = \sum_k \tr \left(\ket{ a_k}\bra{ a_k}  Z\right)  e_k
-  \end{equation}
-  obeys both condition~\eqref{eq:nsp} and \eqref{eq:approx_povm} with probability at least $1- 3\mathrm{e}^{-\gamma m}$, provided that $C >1$ is sufficiently large.
+\begin{proposition} \label{prop:pl.nsp}
+  Under the assumptions of \cref{thm:pl.phaselift_noisy}, the measurement operator
+  \[
+    \label{eq:pl.measurement_operator_rank1}
+    \mathcal{A}(Z) = \sum_l \tr \left(\ketbra{\alpha\ind{l}}  Z\right) \, \ket{e_l}
+  \]
+  obeys both condition~\eqref{eq:pl.nsp} and~\eqref{eq:pl.approx_povm} with probability at least $1- 3\mathrm{e}^{-\gamma m}$, provided that $C >1$ is sufficiently large.
 \end{proposition}
 
-We postpone the proof of this statement to \cref{sec:pl.proof_measurement_operator_is_good} and directly derive \cref{thm:phaselift_noisy} -- which constitutes the main theoretical achievement of this work -- from this statement.
+We postpone the proof of this statement to \cref{sec:pl.proof_measurement_operator_is_good} and directly derive \cref{thm:pl.phaselift_noisy} -- the main theoretical achievement of this work -- from this statement.
 
-\begin{proof}[Proof of \cref{thm:phaselift_noisy}]
-\Cref{prop:RECR_nsp} implies that a measurement operator~\eqref{eq:measurement_operator_rank1} containing $m \geq C n$ measurements sampled from a distribution satisfying \eqref{eq:tight_frame}, \eqref{eq:sub_isotropy} and \eqref{eq:subexponential} meets the requirements of \cref{prop:nsp_implication} with probability at least $1-3 \mathrm{e}^{-\gamma m}$.
-Conditioned on this event, we have
-\begin{equation}
-\|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m}  \| \mathcal{A}( Z - |{x} \rangle \! \langle {x}|) \|_{\ell_1} \quad \forall  Z \geq 0,\; \forall {x} \in \mathbb{C}^n,
-\label{eq:nsp_implication2}
-\end{equation}
-where $C' = 2 \max \left\{\tau, 6/\nu \right\}$.
-Now, suppose that we want to reconstruct a particular ${x}$ from noisy measurements of the form ${y} = \mathcal{A} (|{x} \rangle \! \langle {x}|) + {\epsilon}$. Then Eq.~\eqref{eq:nsp_implication2} implies
-\begin{align}
-\|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m} \| \mathcal{A}( Z) - {y} + {\epsilon} \|_{\ell_1}
-\leq \frac{C'}{2m} \left( \| {\epsilon} \|_{\ell_1} + \| \mathcal{A}( Z) - {y} \|_{\ell_1} \right)\quad \forall  Z \geq 0.
-\end{align}
-PhaseLift -- the convex optimization problem \eqref{eq:PhaseLift} -- minimizes the right hand side of this bound over all $ Z \geq 0$. Since $ Z = |{x} \rangle \! \langle {x}|$ is a feasible point of this optimization, we can conclude that the minimizer $ Z^\sharp$ obeys
-\[
-\| \mathcal{A}( Z^\sharp) - {y} \|_{\ell_1} \leq \| \mathcal{A}(|{x} \rangle \! \langle {x}|)-{y} \|_{\ell_1} = \| {\epsilon} \|_{\ell_1}
-\]
-which yields the bound presented in \eqref{eq:noisy_recovery_bound}.
+\begin{proof}[Proof of \cref{thm:pl.phaselift_noisy}]
+  \Cref{prop:pl.nsp} implies that a measurement operator~\eqref{eq:pl.measurement_operator_rank1} containing $m \geq C n$ measurements sampled from a distribution satisfying \eqref{eq:pl.tight_frame}, \eqref{eq:pl.sub_isotropy} and \eqref{eq:pl.subexponential} meets the requirements of \cref{prop:nsp_implication} with probability at least $1-3 \mathrm{e}^{-\gamma m}$.
+  Conditioned on this event, we have
+  \[
+  \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m}  \| \mathcal{A}( Z - |{x} \rangle \! \langle {x}|) \|_{\ell_1} \quad \forall  Z \geq 0,\; \forall {x} \in \mathbb{C}^n,
+  \label{eq:pl.nsp_implication2}
+  \]
+  where $C' = 2 \max \left\{\tau, 6/\nu \right\}$.
+  Now, suppose that we want to reconstruct a particular ${x}$ from noisy measurements of the form ${y} = \mathcal{A} (|{x} \rangle \! \langle {x}|) + \ket{\epsilon}$, where $\ket{\epsilon} = \sum_l \epsilon\ind{l} \ket{e_l}$.
+  Then \cref{eq:pl.nsp_implication2} implies
+  \begin{align}
+    \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m} \| \mathcal{A}( Z) - {y} + {\epsilon} \|_{\ell_1}
+    \leq \frac{C'}{2m} \left( \| {\epsilon} \|_{\ell_1} + \| \mathcal{A}( Z) - {y} \|_{\ell_1} \right)\quad \forall  Z \geq 0.
+  \end{align}
+  PhaseLift -- the convex optimization problem \eqref{eq:pl.PhaseLift} -- minimizes the right hand side of this bound over all $ Z \geq 0$. Since $ Z = |{x} \rangle \! \langle {x}|$ is a feasible point of this optimization, we can conclude that the minimizer $ Z^\sharp$ obeys
+  \[
+  \| \mathcal{A}( Z^\sharp) - {y} \|_{\ell_1} \leq \| \mathcal{A}(|{x} \rangle \! \langle {x}|)-{y} \|_{\ell_1} = \| {\epsilon} \|_{\ell_1}
+  \]
+  which yields the bound presented in \eqref{eq:pl.noisy_recovery_bound}.
 \end{proof}
 
 
-\section{Proof of \cref{prop:RECR_nsp}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Proof of \cref{prop:pl.nsp}}
 \label{sec:pl.proof_measurement_operator_is_good}
 
-
-
-
 \begin{lemma}[Bound on the marginal tail function]
-  Let $D$ be the set introduced in \eqref{eq:D} and let $ A =| a \rangle \! \langle  a| $, where $ a$ satisfies \eqref{eq:sub_isotropy} and \eqref{eq:subexponential}.
-  Then, the marginal tail function \eqref{eq:marginal_tail_function} obeys
+  Let $D$ be the set introduced in \cref{eq:pl.D} and let $ A = \ketbra\alpha$, where $\alpha$ satisfies \cref{eq:pl.sub_isotropy,eq:pl.subexponential}.
+  Then, the marginal tail function~\eqref{eq:pl.marginal_tail_function} obeys
   \[
-    Q_\xi (D,  A) \geq  C_Q \left( 1-  \frac{\xi^2}{C_{SI}}\right)^2  \quad \forall 0 \leq \xi \leq \sqrt{C_{SI}},
+    Q_\xi (D,  A) \geq  C_Q \left( 1-  \frac{\xi^2}{C_\mathrm{SI}}\right)^2  \quad \forall 0 \leq \xi \leq \sqrt{C_\mathrm{SI}},
   \]
   where $C_Q>0$ is a sufficiently small constant.
 \end{lemma}
 
 \begin{proof}
 Fix $ Z \in D$, then $\|  Z \|_2 =1$ by definition of $D$.
-Note that sub-isotropy \eqref{eq:sub_isotropy} and the Paley-Zygmund inequality imply for any $\xi \in [0,1]$
+Note that sub-isotropy \eqref{eq:pl.sub_isotropy} and the Paley-Zygmund inequality imply for any $\xi \in [0,1]$
 \begin{align}
-  \mathrm{Pr} \left[ | \langle  a|  Z | a \rangle| \geq \xi \right]
-  \geq & \mathrm{Pr} \left[ \langle  a|  Z | a \rangle^2 \geq \frac{\xi^2}{C_{SI}} \mathbb{E} \left[ \langle  a| Z| a \rangle^2 \right] \right]
-  \geq \left(1-\frac{\xi^2}{C_{SI}}\right)^2 \frac{\mathbb{E} \left[ \langle  a | Z | a \rangle^2 \right]^2}{\mathbb{E} \left[ \langle  a|  Z | a \rangle^4 \right]}.
+  \Prob \left[ | \langle  a|  Z | a \rangle| \geq \xi \right]
+  \geq & \Prob \left[ \langle  \alpha|  Z | \alpha \rangle^2 \geq \frac{\xi^2}{C_\mathrm{SI}} \mathbb{E} \left[ \langle  \alpha| Z| \alpha \rangle^2 \right] \right] \\
+  \geq & \left(1-\frac{\xi^2}{C_\mathrm{SI}}\right)^2 \frac{\mathbb{E} \left[ \langle  \alpha | Z | \alpha \rangle^2 \right]^2}{\mathbb{E} \left[ \langle  \alpha|  Z | \alpha \rangle^4 \right]}.
 \end{align}
-Sub-isotropy ensures that the numerator is lower bounded by $C_{SI}^2 \|  Z \|_2^4 = C_{SI}^2$.
-In order to derive an upper bound on the denominator, we use the constraint $\|  Z \|_1 \leq 3$ for any $ Z \in D$ together with the subgaussian tail behavior \eqref{eq:subexponential} of $ a$.
+Sub-isotropy ensures that the numerator is lower bounded by $C_\mathrm{SI}^2 \|  Z \|_2^4 = C_\mathrm{SI}^2$.
+In order to derive an upper bound on the denominator, we use the constraint $\|  Z \|_1 \leq 3$ for any $ Z \in D$ together with the subgaussian tail behavior \eqref{eq:pl.subexponential} of $\alpha$.
 Insert an eigenvalue decomposition $ Z = \sum_{i=1}^n \lambda_i | z^{(i)} \rangle \! \langle  z^{(i)}|$ (with $\lambda_i \in \mathbb{R}$ and $ z^{(i)} \in \Sphere^{n-1}$) and note
 \begin{align}
-  \mathbb{E} \left[ \langle  a|  Z | a \rangle^4 \right]
-  \leq & \sum_{i_1,i_2,i_3,i_4=1}^n | \lambda_{i_1} \lambda_{i_2} \lambda_{i_3} \lambda_{i_4} | \mathbb{E} \left[ \prod_{k=1}^4 | \langle  a,  z^{(i_k)} \rangle|^2 \right]. \label{eq:Q_aux1}
+  \mathbb{E} \left[ \langle  \alpha|  Z | \alpha \rangle^4 \right]
+  \leq & \sum_{i_1,i_2,i_3,i_4=1}^n | \lambda_{i_1} \lambda_{i_2} \lambda_{i_3} \lambda_{i_4} | \mathbb{E} \left[ \prod_{k=1}^4 | \langle  \alpha,  z^{(i_k)} \rangle|^2 \right]. \label{eq:pl.Q_aux1}
 \end{align}
-Now fix $ z^{(i_1)},\ldots, z^{(i_4)}$ and use a combination of the AM-GM inequality and the fundamental relation between $\ell_p$-norms ($\|  v \|_{\ell_1} \leq k^{1-\frac{1}{k}} \|  v \|_{\ell_k}$ for $v \in \mathbb{R}^k$) to conclude
+Now fix $ z^{(i_1)},\ldots, z^{(i_4)}$ and use the inequality of arthimetic and geometric means as well as the fundamental relation between $\ell_p$-norms ($\|  v \|_{\ell_1} \leq k^{1-\frac{1}{k}} \|  v \|_{\ell_k}$ for $v \in \mathbb{R}^k$) to conclude
 \begin{align}
-  \mathbb{E} \left[ \prod_{k=1}^4 | \langle  a, z^{(i_k)}\rangle |^2 \right]
-  \leq \frac{1}{4} \sum_{k=1}^4 \mathbb{E} \left[ | \langle  a,  z^{(i_k)} \rangle|^8 \right]
-  \leq C_{SG} 4!,
+  \mathbb{E} \left[ \prod_{k=1}^4 | \langle  \alpha, z^{(i_k)}\rangle |^2 \right]
+  \leq \frac{1}{4} \sum_{k=1}^4 \mathbb{E} \left[ | \langle  \alpha,  z^{(i_k)} \rangle|^8 \right]
+  \leq C_\mathrm{SG} 4!,
 \end{align}
-where the last inequality follows from condition \eqref{eq:subexponential}.
+where the last inequality follows from condition \eqref{eq:pl.subexponential}.
 Consequently,
 \begin{align}
-  \mathbb{E} \left[ \langle  a|  Z |  a\rangle^4 \right]
-  \leq C_{SG} 4! \sum_{i_1,i_2,i_3,i_4} | \lambda_{i_1} \lambda_{i_2} \lambda_{i_3} \lambda_{i_4} |
-  = 24 C_{SG} \|  Z \|_1^4 \leq 24*3^4 C_{SG},
+  \mathbb{E} \left[ \langle  \alpha|  Z |  \alpha\rangle^4 \right]
+  \leq C_\mathrm{SG} 4! \sum_{i_1,i_2,i_3,i_4} | \lambda_{i_1} \lambda_{i_2} \lambda_{i_3} \lambda_{i_4} |
+  = 24 C_\mathrm{SG} \|  Z \|_1^4 \leq 24*3^4 C_\mathrm{SG},
 \end{align}
 because $ Z \in D$ implies $\|  Z \|_1 \leq 3$.
 In summary,
 \begin{align}
-  \mathrm{Pr} \left[ | \langle  a|  Z | a \rangle| \geq \xi \right]
-  \geq \left(1-\frac{\xi^2}{C_{SI}}\right)^2 \frac{\mathbb{E} \left[ \langle  a|  Z | a \rangle^2 \right]^2}{\mathbb{E} \left[ \langle  a|  Z | a \rangle^4 \right]}
-  \geq \left(1-\frac{\xi^2}{C_{SI}}\right)^2 \frac{C_{SI}^2}{1944C_{SG}}
+  \Prob \left[ | \langle  \alpha|  Z | \alpha \rangle| \geq \xi \right]
+  \geq \left(1-\frac{\xi^2}{C_\mathrm{SI}}\right)^2 \frac{\mathbb{E} \left[ \langle  \alpha|  Z | a \rangle^2 \right]^2}{\mathbb{E} \left[ \langle  \alpha|  Z | \alpha \rangle^4 \right]}
+  \geq \left(1-\frac{\xi^2}{C_\mathrm{SI}}\right)^2 \frac{C_\mathrm{SI}^2}{1944C_\mathrm{SG}}
 \end{align}
-and the bound on $Q_\xi (D, A)$ with $C_Q = \frac{C_{SI}^2}{1944 C_{SG}}$ follows from the fact that this lower bound holds for any $ Z \in D$.
+and the bound on $Q_\xi (D, A)$ with $C_Q = \frac{C_\mathrm{SI}^2}{1944 C_\mathrm{SG}}$ follows from the fact that this lower bound holds for any $ Z \in D$.
 \end{proof}
 
 
 
 \begin{lemma}[Bound on the mean empirical width]
-Let $D$ be the set introduced in \eqref{eq:D} and let $ H = \frac{1}{\sqrt{m}} \sum_{k=1}^m \eta_k | \alpha_k \rangle \! \langle \alpha_k|$, where each $\alpha_k$ is subexponential in the sense of \eqref{eq:subexponential} and $m \geq \frac{2 \ln (3)}{C_{SG}} n$.
-Then there exists a constant $C_W >0$ such that
-\[
-W_m (D, A) \leq C_W \sqrt{n},
-\]
+  Let $D$ be the set introduced in \cref{eq:pl.D} and let $ H = \frac{1}{\sqrt{m}} \sum_{l=1}^m \eta_l \ketbra{\alpha\ind{l}}$, where each $\alpha\ind{l}$ is subexponential in the sense of \eqref{eq:pl.subexponential} and $m \geq \frac{2 \ln (3)}{C_\mathrm{SG}} n$.
+  Then there exists a constant $C_\mathrm{W} >0$ such that
+  \[
+    W_m (D, A) \leq C_\mathrm{W} \sqrt{n}.
+  \]
 \end{lemma}
 
-
-
 \begin{proof}
-%\textcolor{myblue}{Proof idea: the Bernstein typ inequality \cref{thm:bernstein} applied to $H$ and gives strong tail bounds. We use this result to bound the tail in $\mathbb{E} \left[ \| H \|_\infty \right] = \int_0^\infty \mathrm{Pr} \left[ \| H \|_\infty \geq t \right] \mathrm{d}t$
-%}
-
-Note that by construction $D \subset 3 \mathcal{B}_1$ and consequently
-\begin{align}
-  W_m (D,  A) = 2 \mathbb{E} \left[ \sup_{ Z \in D} \tr ( Z  H) \right] \leq 6 \mathbb{E} \left[ \sup_{ Z \in \mathcal{B}_1} \tr ( Z  H) \right] = 6 \mathbb{E} \left[ \|  H \|_\infty  \right], \label{eq:Wm_hoelder}
-\end{align}
-where the last equality follows from the duality of trace and operator norm. Now note that $\tilde{ H} = \sqrt{m}  H$ is of the form \eqref{eq:Htilde}, where each $a_k$ is an independent Rademacher random variable.
-\cref{thm:bernstein} thus implies
-\begin{align}
-  \mathrm{Pr} \left[\|  H \|_\infty \geq t \right]
-  %= \mathrm{Pr} \left[ \| \tilde{H} \|_\infty \geq \frac{t}{\sqrt{m}} \right]
-  \leq
-  \begin{cases}
-   2 \times 9^n \exp \left( - \frac{t^2}{8 C_{SG}} \right) & t \leq 2C_{SG} \sqrt{m}, \\
-  2 \times 9^n \exp \left( - \frac{\sqrt{m}}{2} \left( t - C_{SG} \sqrt{m} \right) \right) & t \geq 2 C_{SG} \sqrt{m}
-  \end{cases}
-  \label{eq:Wm_tails}
-\end{align}
-and we can bound $\mathbb{E} \left[ \|  H \|_\infty \right]$ by using the absolute moment formula,
-%$
-%\mathbb{E} \left[ \| H \|_\infty \right] = \int_0^\infty \mathrm{Pr} \left[ \| H \|_\infty \geq t \right] \mathrm{d}t,
-%$
-see e.g.\ \cite[Propostion~7.1]{Foucart_2013_Mathematical}, and bounding the effect of the tails via \eqref{eq:Wm_tails}.
-To this end, we split the real line into three intervals $[0, c \sqrt{n}], [c\sqrt{n}, 2 C_{SG} \sqrt{m}], [2 C_{SG} \sqrt{m},\infty[$, where $c$ is a constant that we fix later:
-\begin{align}
-  \mathbb{E} \left[ \| H\|_\infty \right] =& \int_0^\infty \mathrm{Pr} \left[ \| H\|_\infty \geq t \right] \mathrm{d}t \\
-  \leq & \int_0^{c \sqrt{n}} 1 \mathrm{d}t + 2 \times 9^n \left( \int_{c \sqrt{n}}^{2 C_{SG} \sqrt{m}} 2 \exp \left( - \frac{t^2}{8 C_{SG}} \right) \mathrm{d}t
-  +  \mathrm{e}^{\frac{m C_{SG}}{2}} \int_{2 C_{SG} \sqrt{m}}^\infty \exp\left( - \frac{\sqrt{m}t}{2}  \right) \mathrm{d} t \right)\\
-  \leq & c \sqrt{n} + 2 \times 9^n \left( \int_{c \sqrt{n}}^{2 C_{SG} \sqrt{m}}  \exp \left( - \frac{t^2}{8 C_{SG}} \right) \mathrm{d}t
-  + \frac{2}{\sqrt{m}} \mathrm{e}^{-\frac{C_{SG} m}{2}}\right).
-\end{align}
-For the remaining Gauss integral, we use $\frac{t}{c \sqrt{n}} \geq 1\; \forall t \geq c\sqrt{n}$ to conclude
-\begin{align}
-  \int_{c \sqrt{n}}^{2 C_{SG} \sqrt{m}}  \exp \left( - \frac{t^2}{8 C_{SG}} \right) \mathrm{d}t
-  %\leq & \int_{C \sqrt{n}}^{4 \mathrm{e}^2 \sqrt{m}} \frac{t}{C \sqrt{n}}  \exp \left( - \frac{t^2}{32 \mathrm{e}^2} \right) \mathrm{d} t
-  \leq  \int_{c \sqrt{n}}^\infty \frac{t}{c \sqrt{n}}  \exp \left( - \frac{t^2}{8 C_{SG}} \right) \mathrm{d} t
-  %=& - \frac{32 \mathrm{e}^2}{C\sqrt{n}} \exp \left( - \frac{t^2}{32 \mathrm{e}^2}\right) |_{t=C \sqrt{n}}^{t=\infty}
-  = \frac{8 C_{SG}}{c \sqrt{n}} \exp \left( - \frac{c^2 n}{8 C_{SG}} \right).
-\end{align}
-Now, fixing $c = 4 \sqrt{\ln (3)C_{SG}}$ assures $\exp \left( -\frac{c^2 n}{8 C_{SG}}\right) = 9^{-n}$ and consequently
-\begin{align}
-  \mathbb{E} \left[ \|  H \|_\infty \right]
-  \leq & 4  \sqrt{ \ln (3) C_{SG} n} + \frac{4 \sqrt{C_{SG}}}{\sqrt{ \ln (3) n}} + \frac{4}{\sqrt{m}} \mathrm{e}^{2 \ln (3) n - C_{SG} m} \\
-  %\leq &8 \mathrm{e} \sqrt{ \ln (3) n} + \frac{8 \mathrm{e}}{\sqrt{ \ln (3) n}} + \frac{8 \mathrm{e}}{\sqrt{4 \ln (3) n}} \\
-  \leq & 4\sqrt{C_{SG}} \left( \sqrt{ \ln (3) n} + \frac{2}{\sqrt{ \ln (3) n}} \right) \leq 12 \sqrt{ \ln (3) C_{SG} n}.
-\end{align}
-where the second inequality follows from $m \geq \frac{2 \ln (3)}{C_{SG}} n$. Inserting this bound into \eqref{eq:Wm_hoelder} yields the claim with $C_W = 72 \sqrt{ \ln (3) C_{SG}}$.
+  Note that by construction $D \subset 3 \mathcal{B}_1$, and consequently,
+  \begin{align}
+    W_m (D,  A) = 2 \mathbb{E} \left[ \sup_{ Z \in D} \tr ( Z  H) \right] \leq 6 \mathbb{E} \left[ \sup_{ Z \in \mathcal{B}_1} \tr ( Z  H) \right] = 6 \mathbb{E} \left[ \|  H \|_\infty  \right], \label{eq:pl.Wm_hoelder}
+  \end{align}
+  where the last equality follows from the duality of trace and operator norm.
+  Now note that $\tilde{ H} = \sqrt{m}  H$ is of the form~\eqref{eq:pl.Htilde}, where each $\alpha\ind{l}$ is an independent Rademacher random variable.
+  \Cref{thm:bernstein} thus implies
+  \begin{align}
+    \Prob \left[\|  H \|_\infty \geq t \right]
+    \leq
+    \begin{cases}
+     2 \times 9^n \exp \left( - \frac{t^2}{8 C_\mathrm{SG}} \right) & t \leq 2C_\mathrm{SG} \sqrt{m}, \\
+    2 \times 9^n \exp \left( - \frac{\sqrt{m}}{2} \left( t - C_\mathrm{SG} \sqrt{m} \right) \right) & t \geq 2 C_\mathrm{SG} \sqrt{m}
+    \end{cases}
+    \label{eq:pl.Wm_tails}
+  \end{align}
+  and we can bound $\mathbb{E} \left[ \|  H \|_\infty \right]$ by using the absolute moment formula,
+  %$
+  %\mathbb{E} \left[ \| H \|_\infty \right] = \int_0^\infty \Prob \left[ \| H \|_\infty \geq t \right] \mathrm{d}t,
+  %$
+  see e.g.\ \cite[Propostion~7.1]{Foucart_2013_Mathematical}, and bounding the effect of the tails via \eqref{eq:pl.Wm_tails}.
+  To this end, we split the real line into three intervals $[0, c \sqrt{n}], [c\sqrt{n}, 2 C_\mathrm{SG} \sqrt{m}], [2 C_\mathrm{SG} \sqrt{m},\infty[$, where $c$ is a constant that we fix later:
+  \begin{align}
+    \mathbb{E} \left[ \| H\|_\infty \right]
+    &=& \int_0^\infty \Prob \left[ \| H\|_\infty \geq t \right] \mathrm{d}t \\
+    &\leq& \int_0^{c \sqrt{n}} 1 \mathrm{d}t + 2 \times 9^n \left( \int_{c \sqrt{n}}^{2 C_\mathrm{SG} \sqrt{m}} 2 \exp \left( - \frac{t^2}{8 C_\mathrm{SG}} \right) \mathrm{d}t
+     +  \mathrm{e}^{\frac{m C_\mathrm{SG}}{2}} \int_{2 C_\mathrm{SG} \sqrt{m}}^\infty \exp\left( - \frac{\sqrt{m}t}{2}  \right) \mathrm{d} t \right)\\
+    &\leq & c \sqrt{n} + 2 \times 9^n \left( \int_{c \sqrt{n}}^{2 C_\mathrm{SG} \sqrt{m}}  \exp \left( - \frac{t^2}{8 C_\mathrm{SG}} \right) \mathrm{d}t + \frac{2}{\sqrt{m}} \mathrm{e}^{-\frac{C_\mathrm{SG} m}{2}}\right).
+  \end{align}
+  For the remaining Gauss integral, we use $\frac{t}{c \sqrt{n}} \geq 1\; \forall t \geq c\sqrt{n}$ to conclude
+  \begin{align}
+    \int_{c \sqrt{n}}^{2 C_\mathrm{SG} \sqrt{m}}  \exp \left( - \frac{t^2}{8 C_\mathrm{SG}} \right) \mathrm{d}t
+    %\leq & \int_{C \sqrt{n}}^{4 \mathrm{e}^2 \sqrt{m}} \frac{t}{C \sqrt{n}}  \exp \left( - \frac{t^2}{32 \mathrm{e}^2} \right) \mathrm{d} t
+    \leq  \int_{c \sqrt{n}}^\infty \frac{t}{c \sqrt{n}}  \exp \left( - \frac{t^2}{8 C_\mathrm{SG}} \right) \mathrm{d} t
+    %=& - \frac{32 \mathrm{e}^2}{C\sqrt{n}} \exp \left( - \frac{t^2}{32 \mathrm{e}^2}\right) |_{t=C \sqrt{n}}^{t=\infty}
+    = \frac{8 C_\mathrm{SG}}{c \sqrt{n}} \exp \left( - \frac{c^2 n}{8 C_\mathrm{SG}} \right).
+  \end{align}
+  Now, fixing $c = 4 \sqrt{\ln (3)C_\mathrm{SG}}$ assures $\exp \left( -\frac{c^2 n}{8 C_\mathrm{SG}}\right) = 9^{-n}$ and consequently
+  \begin{align}
+    \mathbb{E} \left[ \|  H \|_\infty \right]
+    \leq & 4  \sqrt{ \ln (3) C_\mathrm{SG} n} + \frac{4 \sqrt{C_\mathrm{SG}}}{\sqrt{ \ln (3) n}} + \frac{4}{\sqrt{m}} \mathrm{e}^{2 \ln (3) n - C_\mathrm{SG} m} \\
+    %\leq &8 \mathrm{e} \sqrt{ \ln (3) n} + \frac{8 \mathrm{e}}{\sqrt{ \ln (3) n}} + \frac{8 \mathrm{e}}{\sqrt{4 \ln (3) n}} \\
+    \leq & 4\sqrt{C_\mathrm{SG}} \left( \sqrt{ \ln (3) n} + \frac{2}{\sqrt{ \ln (3) n}} \right) \leq 12 \sqrt{ \ln (3) C_\mathrm{SG} n}.
+  \end{align}
+  where the second inequality follows from $m \geq \frac{2 \ln (3)}{C_\mathrm{SG}} n$. Inserting this bound into \eqref{eq:pl.Wm_hoelder} yields the claim with $C_\mathrm{W} = 72 \sqrt{ \ln (3) C_\mathrm{SG}}$.
 \end{proof}
 
-Now we are ready to apply Mendelson's small ball method \eqref{eq:mendelson}.
-For $D$ defined in \eqref{eq:D} and measurements $ A_k = |\alpha_k \rangle \! \langle \alpha_k|$ with $\alpha_k$ obeying \eqref{eq:sub_isotropy} and \eqref{eq:subexponential} the bounds from the previous Lemmas imply
+Now we are ready to apply Mendelson's small ball method \eqref{eq:pl.mendelson}.
+For $D$ defined in \eqref{eq:pl.D} and measurements $ A_l = \ketbra{\alpha\ind{l}}$ with $\alpha_l$ obeying \cref{eq:pl.sub_isotropy,eq:pl.subexponential}, the bounds from the previous Lemmas imply
 \begin{align}
-  \frac{1}{\sqrt{m}}\inf_{ Z \in D} \|\mathcal{A}( Z) \|_{\ell_1} \geq \xi \sqrt{m} C_Q \left( 1- \frac{4 \xi^2}{C_{SI}} \right)^2 - 2 C_W \sqrt{n} - \xi t \quad \forall \xi \in (0, 1/\sqrt{C_{SI}}), \forall t \geq 0
+  \frac{1}{\sqrt{m}}\inf_{ Z \in D} \|\mathcal{A}( Z) \|_{\ell_1} \geq \xi \sqrt{m} C_Q \left( 1- \frac{4 \xi^2}{C_\mathrm{SI}} \right)^2 - 2 C_\mathrm{W} \sqrt{n} - \xi t \quad \forall \xi \in (0, 1/\sqrt{C_\mathrm{SI}}), \forall t \geq 0
 \end{align}
-with probability at least $1- \mathrm{e}^{-2t^2}$. We choose $\xi = \sqrt{C_{SI}}/4$ and $t = \gamma_1 \sqrt{m}$, where $\gamma_1 = \frac{9 C_Q}{32}$ and obtain with probability at least $1-\exp \left( -2 \gamma_1 m \right)$:
+with probability at least $1- \mathrm{e}^{-2t^2}$. We choose $\xi = \sqrt{C_\mathrm{SI}}/4$ and $t = \gamma_1 \sqrt{m}$, where $\gamma_1 = \frac{9 C_Q}{32}$ and obtain with probability at least $1-\exp \left( -2 \gamma_1 m \right)$:
 \begin{align}
-  \frac{1}{\sqrt{m}}\inf_{ Z \in D} \|\mathcal{A}( Z) \|_{\ell_1} \geq & \frac{9 C_Q\sqrt{C_{SI}}}{64} \sqrt{m} -  C_W\sqrt{n} - \frac{\sqrt{C_{SI}}}{4} \frac{9 C_Q}{32} \sqrt{m} \\
-  = & C_W \left( \frac{9 C_Q \sqrt{C_{SI}}}{128 C_W} \sqrt{m} - \sqrt{n} \right).
+  \frac{1}{\sqrt{m}}\inf_{ Z \in D} \|\mathcal{A}( Z) \|_{\ell_1} \geq & \frac{9 C_Q\sqrt{C_\mathrm{SI}}}{64} \sqrt{m} -  C_\mathrm{W}\sqrt{n} - \frac{\sqrt{C_\mathrm{SI}}}{4} \frac{9 C_Q}{32} \sqrt{m} \\
+  = & C_\mathrm{W} \left( \frac{9 C_Q \sqrt{C_\mathrm{SI}}}{128 C_\mathrm{W}} \sqrt{m} - \sqrt{n} \right).
 \end{align}
-Setting $m = C n$ with $C = \left( \frac{256 C_W}{9 C_Q \sqrt{C_l}} \right)^2$ implies
+Setting $m = C n$ with $C = \left( \frac{256 C_\mathrm{W}}{9 C_Q \sqrt{C_l}} \right)^2$ implies
 \[
-  \frac{1}{\sqrt{m}} \inf_{ Z \in D} \| \mathcal{A}( Z) \|_{\ell_1} \geq 2 C_W \sqrt{n} = \frac{2 C_W}{\sqrt{C}} \sqrt{m}
+  \frac{1}{\sqrt{m}} \inf_{ Z \in D} \| \mathcal{A}( Z) \|_{\ell_1} \geq 2 C_\mathrm{W} \sqrt{n} = \frac{2 C_\mathrm{W}}{\sqrt{C}} \sqrt{m}
 \]
 with probability at least $1- \mathrm{e}^{-2 \gamma_1 m}$.
-For $\tau = \frac{ 2 C_W}{\sqrt{C}}$, the first claim in \cref{prop:RECR_nsp} follows from rearranging this expression and using $\|  Z \|_2=1$ for all $ Z \in D$.
+For $\tau = \frac{ 2 C_\mathrm{W}}{\sqrt{C}}$, the first claim in \cref{prop:pl.nsp} follows from rearranging this expression and using $\|  Z \|_2=1$ for all $ Z \in D$.\\
 
-Let us now move on to establishing the second statement \eqref{eq:approx_povm}:
-Isotropy \eqref{eq:tight_frame} implies
+
+Let us now move on to establishing the second statement \eqref{eq:pl.approx_povm}:
+Isotropy \eqref{eq:pl.tight_frame} implies
 \begin{align}
-  \frac{1}{ C_I m} \sum_{k=1}^m |\alpha_k \rangle \! \langle \alpha_k | - \mathbb{I}
-  = \frac{1}{C_{SG} m} \sum_{k=1}^m \left( |\alpha_k \rangle \! \langle \alpha_k| - \mathbb{E} \left[ |\alpha_k \rangle \! \langle \alpha_k| \right] \right)
+  \frac{1}{ C_\mathrm{I} m} \sum_{l=1}^m \ketbra{\alpha\ind{l}} - \mathbb{I}
+  = \frac{1}{C_\mathrm{SG} m} \sum_{l=1}^m \left( \ketbra{\alpha\ind{l}} - \mathbb{E} \left[ \ketbra{\alpha\ind{l}} \right] \right)
 \end{align}
-and each $\alpha_k$ has subgaussian tails by assumption \eqref{eq:subexponential}.
-Thus, \cref{thm:bernstein} is applicable and setting $t= \min \left\{\frac{1}{6},2 C_{SG} \right\}$ yields
+and each $\alpha\ind{l}$ has subgaussian tails by assumption \eqref{eq:pl.subexponential}.
+Thus, \cref{thm:bernstein} is applicable and setting $t= \min \left\{\frac{1}{6},2 C_\mathrm{SG} \right\}$ yields
 \begin{align}
-  \mathrm{Pr} \left[ \left\| \frac{1}{C_I m} \sum_{k=1}^m |\alpha_k \rangle \! \langle \alpha_k| -  \mathbb{I} \right\|_\infty \geq \frac{1}{6} \right]
-  \leq 2 \exp \left( 2 \ln (3) n - \frac{C_I m \min\left\{ 1/6, 2 C_{SG} \right\}}{8 C_{SG}} \right) \leq 2 \exp \left( - \gamma_2 m \right),
+  \Prob \left[ \left\| \frac{1}{C_\mathrm{I} m} \sum_{l=1}^m \ketbra{\alpha\ind{l}} -  \mathbb{I} \right\|_\infty \geq \frac{1}{6} \right]
+  & \leq 2 \exp \left( 2 \ln (3) n - \frac{C_\mathrm{I} m \min\left\{ 1/6, 2 C_\mathrm{SG} \right\}}{8 C_\mathrm{SG}} \right) \\
+  & \leq 2 \exp \left( - \gamma_2 m \right),
 \end{align}
 where the second inequality follows from $m \geq C n$, provided that $C$ is sufficiently large. Finally, we use the union bound  for the overall probability of failure and set $\gamma := \min \left\{ 2 \gamma_1,\gamma_2 \right\}$.
 
@@ -462,20 +428,21 @@ where the second inequality follows from $m \geq C n$, provided that $C$ is suff
 \section{Proof of \cref{prop:gauss+recr_requirements}}
 \label{sec:pl.gauss+recr_requirements}
 
-We now proof the crucial properties \eqref{eq:tight_frame}--\eqref{eq:subexponential} for the different measurement ensembles from \cref{prop:gauss+recr_requirements}.
+We now proof the crucial properties \eqref{eq:pl.tight_frame}--\eqref{eq:pl.subexponential} for the different measurement ensembles from \cref{prop:gauss+recr_requirements}.
 
 \subsection{The Gaussian sampling scheme}
 
 
 Let $\alpha \in \mathbb{C}^n$ be a standard (complex) Gaussian vector and fix any $ z \in \mathbb{C}^n$.
 Then, the random variable $\langle \alpha, z \rangle$ is an instance of a standard (complex normal) random variable $a = \tfrac{\|  z \|_{\ell_2}}{\sqrt{2}} \left(a_R + i a_I\right)$ with $a_R, a_I \sim \mathcal{N}(0,1)$.
-In turn, $|a|^2 = \frac{\|  z \|_{\ell_2}^2}{2} (a_R^2 + a_I^2)$ is a re-scaled version of a $\chi^2$-distributed random variable with two degrees of freeom. The moments of such a random variable are well-known and we obtain
-\begin{equation}
-  \mathbb{E} (| \langle \alpha, z \rangle|^{2N})= \left( \frac{ \|  z \|_{\ell_2}}{\sqrt{2}}\right)^N \times 2^N N! = \|  z \|_{\ell_2}^N N! \; .\label{eq:moments_gauss}
-\end{equation}
-From this, we can readily infer $C_{SG} = 1$, and the special case $N=1$  yields $C_I=1$.
+In turn, $|a|^2 = \frac{\|  z \|_{\ell_2}^2}{2} (a_R^2 + a_I^2)$ is a rescaled version of a $\chi^2$-distributed random variable with two degrees of freedom.
+The moments of such a random variable are well-known and we obtain
+\[
+  \mathbb{E} (| \langle \alpha, z \rangle|^{2N})= \left( \frac{ \|  z \|_{\ell_2}}{\sqrt{2}}\right)^N \times 2^N N! = \|  z \|_{\ell_2}^N N! \; .\label{eq:pl.moments_gauss}
+\]
+From this, we can readily infer $C_\mathrm{SG} = 1$, and the special case $N=1$  yields $C_\mathrm{I}=1$.
 
-For the remaining expression, use an eigenvalue decomposition $ Z = \sum_{k=1}^d \zeta_k | z^{(k)} \rangle \langle  z^{(k)}|$ (with normalized eigenvectors $ z^{(k)}\in \mathbb{C}^n$) and note that the random variables $|\langle  a, z^{(1)} \rangle|,\ldots, | \langle  a, z^{(n)} \rangle|$ are independently distributed and obey \cref{eq:moments_gauss}.
+For the remaining expression, use an eigenvalue decomposition $ Z = \sum_{k=1}^d \zeta_k | z^{(k)} \rangle \langle  z^{(k)}|$ (with normalized eigenvectors $ z^{(k)}\in \mathbb{C}^n$) and note that the random variables $|\langle  a, z^{(1)} \rangle|,\ldots, | \langle  a, z^{(n)} \rangle|$ are independently distributed and obey \cref{eq:pl.moments_gauss}.
 Consequently:
 \begin{align}
   \mathbb{E} \left[ \tr \left(  A  Z \right)^2 \right]
@@ -487,19 +454,19 @@ Consequently:
   =& \tr ( Z)^2 + \tr ( Z^2)
   \geq \|  Z \|_2^2,
 \end{align}
-which implies $C_{SI} = 1$.
+which implies $C_\mathrm{SI} = 1$.
 
 \subsection{The uniform sampling scheme}
 
 Here, $\alpha$ is chosen uniformly from the complex sphere with radius $\sqrt{n}$.
 This in turn implies that the distribution of $\alpha \in \mathbb{C}^n$ is invariant under arbitrary unitary transformations.
 Techniques from representation theory -- more precisely: Schur's Lemma -- then imply
-\begin{equation}
-  \label{eq:from_schur}
+\[
+  \label{eq:pl.from_schur}
   \mathbb{E} \left[ (|\alpha \rangle \! \langle \alpha| )^{\otimes N} \right] =
   %\mathbb{E} \left[ U^{\otimes N} (|a_0 \rangle \! \langle a_0|)^{\otimes N} (U^\dagger)^{\otimes N} \right] = \binom{n+N-1}{n}^{-1} \| a_0\|_{\ell_2}^N P_{\vee^N} =
   n^N \binom{n+N-1}{N}^{-1}  P_{\vee^N},
-\end{equation}
+\]
 see e.g.\ \cite[Lemma~1]{scott_tight_2006}.
 Here, $ P_{\vee^N}$, denotes the projector onto the totally symmetric subspace $\bigvee\!^N \subset \left( \mathbb{C}^n \right)^{\otimes N}$.
 Note that $\left(| z \rangle \! \langle  z| \right)^{\otimes N} \in \bigvee\!^N$ and, moreover $2 \mathrm{tr} \left(  P_{\vee^2}  Z^2 \right)= \|  Z \|_2^2 + \mathrm{tr} ( Z)^2$ for any matrix $ Z$, see e.g.\ \cite[Lemma~17]{kueng_low_2016}.
@@ -517,7 +484,7 @@ Consequently,
   = n^N \binom{n+N-1}{N}^{-1} \|  z \|_{\ell_2}^{2N} \\
   =& N! \frac{n^N (n-1)!}{(n+N-1)!} \leq N!,
 \end{align}
-which implies $C_I=1$, $C_{SI} = \frac{n}{n+1}$ and $C_{SG}=1$.
+which implies $C_\mathrm{I}=1$, $C_\mathrm{SI} = \frac{n}{n+1}$ and $C_\mathrm{SG}=1$.
 
 
 \subsection{The RECR sampling scheme}
@@ -540,16 +507,16 @@ For any $ z \in \mathbb{C}^n$ we then have
 \end{align}
 \end{proof}
 
-\begin{lemma}[The RECR ensemble is sub-isotropic on $\Hermitian_n$]
+\begin{lemma}[The RECR ensemble is sub-isotropic on $\Hermitian^n$]
   \label{lem:recr_subisotropic}
   Suppose that $\alpha$ is chosen from a RECR ensemble with erasure probability $1-p$. Then
   \[
-  \mathbb{E} \left[ \langle  \alpha|  Z | \alpha \rangle^2 \right] \geq p \min \left\{ p, 1-p \right\} \|  Z \|_2^2 \quad \forall  Z \in \Hermitian_n
+  \mathbb{E} \left[ \langle  \alpha|  Z | \alpha \rangle^2 \right] \geq p \min \left\{ p, 1-p \right\} \|  Z \|_2^2 \quad \forall  Z \in \Hermitian^n
   \]
 \end{lemma}
 
 \begin{proof}
-Fix $ Z \in \Hermitian_n$ and compute
+Fix $ Z \in \Hermitian^n$ and compute
 \begin{align}
   \mathbb{E} \left[ \langle \alpha |  Z | \alpha \rangle^2 \right]
   =& \sum_{i,j,k,l} \mathbb{E} \left[ \bar{\alpha}_i \alpha_j \cc{\alpha^\prime_k} \alpha^\prime_l \right] \langle  e_i| Z|  e_j \rangle \langle  e_k | Z|  e_l \rangle \\
@@ -585,7 +552,7 @@ Fix $ z \in \mathbb{C}^n$ with $\|  z \|_{\ell_2}=1$ and note that $|\alpha_k| \
 \begin{align}
   \mathbb{E} \left[ \exp \left( | \langle \alpha,  z \rangle|^2 \right) \right]
   =& \mathbb{E} \left[ \prod_{k=1}^n \exp \left( | \alpha_k|^2 |z_k|^2 \right) \prod_{k \neq l} \exp \left( \cc{\alpha}_k \alpha_l \cc{z}_k z_l \right) \right] \nonumber \\
-  \leq& \exp \left( \|  z \|_{\ell_2}^2 \right) \prod_{k \neq l} \mathbb{E} \left[  \exp \left( \cc{\alpha}_k \alpha_l \cc{z}_k z_l \right)  \right]. \label{eq:moment_aux1}
+  \leq& \exp \left( \|  z \|_{\ell_2}^2 \right) \prod_{k \neq l} \mathbb{E} \left[  \exp \left( \cc{\alpha}_k \alpha_l \cc{z}_k z_l \right)  \right]. \label{eq:pl.moment_aux1}
 \end{align}
 Now note that for $k \neq l$, $\cc{\alpha}_k \alpha_l$ is again a RECR random variable $\tilde{\alpha}_{k,l}$, but with erasure probability $1-p^2$.
 Moreover, every RECR random variable $\alpha$ can be decomposed into the product of two independent random variables: $ \alpha= \eta \omega$, where $\eta$ is a Rademacher random variable and $\omega \in \left\{0, 1,i \right\}$ obeys $| \omega | \leq 1$.
@@ -598,7 +565,7 @@ Consequently
   \leq & \mathbb{E}_\omega \left[ \exp \left( |\omega \bar{z}_k z_l|^2/2 \right) \right]
   \leq  \exp \left( \frac{|z_k|^2 |z_l|^2}{2} \right),
 \end{align}
-where we have used the standard estimate $\cosh (x) \leq \exp \left( |x|^2/2 \right)$ $\forall x \in \mathbb{C}$, as well as $| \omega| \leq 1$. Inserting this bound into \eqref{eq:moment_aux1} yields
+where we have used the standard estimate $\cosh (x) \leq \exp \left( |x|^2/2 \right)$ $\forall x \in \mathbb{C}$, as well as $| \omega| \leq 1$. Inserting this bound into \eqref{eq:pl.moment_aux1} yields
 \begin{align}
   \mathbb{E} \left[ \exp \left( | \langle  \alpha,  z \rangle|^2 \right) \right]
   \leq \exp \left( \|  z \|_2^2 \right) \prod_{k \neq l} \exp \left( \frac{|z_k|^2 |z_l|^2}{2} \right)
@@ -607,14 +574,14 @@ where we have used the standard estimate $\cosh (x) \leq \exp \left( |x|^2/2 \ri
 because $\|  z \|_{\ell_2}=1$.
 Markov's inequality shows that this exponential bound implies a subexponential tail bound for the random variable $| \langle  \alpha, z \rangle|^2$:
 \begin{align}
-  \mathrm{Pr} \left[ | \langle \alpha, z \rangle|^2 \geq t \right]
-  =& \mathrm{Pr} \left[ \exp \left( | \langle  \alpha, z \rangle|^2 \right) \geq \exp \left( t \right) \right]
+  \Prob \left[ | \langle \alpha, z \rangle|^2 \geq t \right]
+  =& \Prob \left[ \exp \left( | \langle  \alpha, z \rangle|^2 \right) \geq \exp \left( t \right) \right]
   \leq \frac{ \mathbb{E} \left[ \exp \left( | \langle \alpha,  z \rangle|^2 \right) \right]}{\exp (t)} \leq \mathrm{e}^{\frac{3}{2}-t}.
 \end{align}
 This in turn implies the following bound on the moments:
 \begin{align}
   \mathbb{E} \left[ | \langle  \alpha, z \rangle|^{2N} \right]
-  =  N \int_0^\infty \mathrm{Pr}\left[ | \langle  \alpha, z \rangle|^2\geq t \right] t^{N-1} \mathrm{d}t \leq N \mathrm{e}^{\frac{3}{2}} \int_0^\infty \mathrm{e}^{-t} t^{N-1} \mathrm{d}t
+  =  N \int_0^\infty \Prob\left[ | \langle  \alpha, z \rangle|^2\geq t \right] t^{N-1} \mathrm{d}t \leq N \mathrm{e}^{\frac{3}{2}} \int_0^\infty \mathrm{e}^{-t} t^{N-1} \mathrm{d}t
   = \mathrm{e}^{\frac{3}{2}} N!,
 \end{align}
 where we have used a well-known integration formula for moments, see e.g.\ \cite[Prop.~7.1]{Foucart_2013_Mathematical}, as well as integration by parts.
@@ -626,14 +593,14 @@ where we have used a well-known integration formula for moments, see e.g.\ \cite
 
 \todo[noline]{DS/RiK: Expand on this idea -- or any other}
 
-Let $ A_1,\ldots, A_m \in \Hermitian_n$ denote unnormalized RECR measurements.
+Denote by $\alpha\ind{1}, \ldots, \alpha\ind{m}$ unnormalized RECR measurements and set $A_l := \ketbra{\alpha\ind{l}}$.
 Then, our result implies that w.h.p.\ any $ X = | x \rangle \!\langle  x|$ can be recovered from $m \geq  C n$ measurements of the form
 \[
   y_k = \tr \left(  A_k  X \right) + \epsilon_k
 \]
 via solving
 \[
-  \underset{ Z\geq 0}{\textrm{minimize}} \quad \| \mathcal{A}( Z) -  y \|_{\ell_1}. \label{eq:phaselift2}
+  \underset{ Z\geq 0}{\textrm{minimize}} \quad \| \mathcal{A}( Z) -  y \|_{\ell_1}. \label{eq:pl.phaselift2}
 \]
 The solution of this program is guaranteed to obey
 \[
@@ -648,7 +615,7 @@ Multiplying this expression by $\frac{\|  A_k \|_2}{n}$ yields
 \underset{:= y_k}{\underbrace{ \frac{ \|  A_k \|_2}{n}\tilde{y}_k}}
 = \tr \left(  A_k X \right) + \underset{:= \epsilon_k}{\underbrace{ \frac{ \|  A_k \|_2}{n}\tilde{\epsilon}_k}}
 \]
-and solving \eqref{eq:phaselift2} for re-scaled measurement outcomes $y_k = \frac{ \|  A_k \|_2}{n}\tilde{y}_k$ yields an estimator of $ X$ that is guaranteed to obey
+and solving \eqref{eq:pl.phaselift2} for rescaled measurement outcomes $y_k = \frac{ \|  A_k \|_2}{n}\tilde{y}_k$ yields an estimator of $ X$ that is guaranteed to obey
 \[
   \|  Z -  X \|_2 \leq \frac{C' \|  \epsilon \|_{\ell_1}}{m}
   = \frac{C'}{m} \sum_{k=1}^m \frac{ \|  A_k \|_2}{n} | \tilde{\epsilon}_k |

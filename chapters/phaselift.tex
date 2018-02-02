@@ -197,9 +197,9 @@ More generally, we consider ensembles of measurement vectors $\alpha$ that satis
     \label{eq:pl.tight_frame}
   \]
 
-  \item \emph{Sub-Isotropy on $\Hermitian_n$}, the Hermitian $n \times n$ matrices:
+  \item \emph{Sub-Isotropy on $\Hermitian^n$}, the Hermitian $n \times n$ matrices:
   \begin{align}
-    \mathbb{E} \left[ \langle \alpha,  Z \alpha \rangle^2 \right] \geq C_\mathrm{SI} \|  Z \|_2^2 \quad \forall  Z \in \Hermitian_n \label{eq:pl.sub_isotropy}
+    \mathbb{E} \left[ \langle \alpha,  Z \alpha \rangle^2 \right] \geq C_\mathrm{SI} \|  Z \|_2^2 \quad \forall  Z \in \Hermitian^n \label{eq:pl.sub_isotropy}
   \end{align}
 
   \item \emph{Sub-Gaussian tail behavior:} For every normalized $ z \in \mathbb{C}^n$ ($\|  z \|_{\ell_2}=1$), $| \langle \alpha,  z \rangle|$ is sub-Gaussian in the sense that its moments obey
@@ -328,7 +328,7 @@ Since this would complicate the following discussion, we are only going to consi
   where $\epsilon_j^{(l)}$ denotes the additive noise at detector site $j$ when measuring the intensity resulting from input state  $\ket{{\alpha}^{(l)}}$.
   For each $1 \leq j \leq n$, solve the semi-definite program
   \begin{align}
-    {Z}^\sharp_{j} = \underset{{Z} \in \Hermitian_n}{\argmin}& \quad \sum_{l=1}^m \left| \tr \left( (|{\alpha}^{l} \rangle \langle {\alpha}^{(l)} | )  Z \right) - y_j^{(l)} \right| \label{eq:tmat_recovery_program}\\
+    {Z}^\sharp_{j} = \underset{{Z} \in \Hermitian^n}{\argmin}& \quad \sum_{l=1}^m \left| \tr \left( (|{\alpha}^{l} \rangle \langle {\alpha}^{(l)} | )  Z \right) - y_j^{(l)} \right| \label{eq:tmat_recovery_program}\\
     \mathrm{subject to} & \quad {Z} \geq 0 \nonumber
   \end{align}
   and let ${M}_j^\sharp$ be the eigenvector of ${Z}^\sharp_{j}$ corresponding to its largest eigenvalue and rescaled to have length $\norm{{M}_j^\sharp}_{\ell_2} = \sqrt{ \| {Z}^\sharp_{j} \|_\infty}$.
@@ -526,6 +526,7 @@ The additional free parameters in the minimization may lead to overfitting, and 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion and Outlook}
 
+\todo{Fix this}
 In this work, we introduce a solution to the problem of characterizing linear optical devices based on recent advances in phase retrieval and low-rank matrix recovery.
 The PhaseLift reconstruction outlined in \cref{prot:pl.detailed_reconstruction} can be used to reconstruct any transfer matrix using only intensity measurements and classical states of light as inputs, which are chosen at random from an appropriate ensemble.
 Not only do the number of measurements required for this approach scale linearly in the number of modes of the device, the theory behind it also provides stringent error bars for the reconstruction.
