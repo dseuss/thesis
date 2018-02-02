@@ -9,8 +9,8 @@
 
 Linear-optical networks composed of beamsplitting and phaseshifting operations are fundamental to the quantum and classical processing of information with light.
 Passive and reconfigurable linear optical circuits have been proposed and demonstrated for many applications including telecommunications~\cite{Miller_2015_Sorting}, machine learning~\cite{Shen_2017_Deep} and quantum computation~\cite{Carolan_2015_Universal} and simulation~\cite{Harris_2017_Quantum}.
-With the continuing development of large-scale integrated photonic platforms~\cite{Silverstone_2016_Silicon,Seok_2016_LargeScale}, practical and reliable techniques for characterising and validating the operation of these devices are crucial.
-In this work, we present new protocols for characterising linear optical devices with low experimental resources by exploiting a connection to the phase retrieval problem \cite{Walther_1963_Question}.
+With the continuing development of large-scale integrated photonic platforms~\cite{Silverstone_2016_Silicon,Seok_2016_LargeScale}, practical and reliable techniques for characterizing and validating the operation of these devices are crucial.
+In this work, we present new protocols for characterizing linear optical devices with low experimental resources by exploiting a connection to the phase retrieval problem \cite{Walther_1963_Question}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -39,7 +39,7 @@ Here, $\epsilon_j$ describes noise due to statistical fluctuations or systematic
 Although the output coherent states~\eqref{eq:pl.coherent_transfer_matrix} are linear in ${M}$, the resulting intensity measurements~\eqref{eq:pl.intensities} are quadratic in ${M}$ and oblivious to the phases of $\beta$.
 Therefore, the problem of reconstructing ${M}$ from such measurements is ill-posed and requires deliberate utilization of inference between the modes to recover the phases of $M$.
 
-Well-known techniques for fully characterising photonic circuits include quantum process tomography with non-classical~\cite{Brien_2004_Quantum} or coherent~\cite{Keshari_2011_Quantum} states, though these approaches scale exponentially with the number of modes.
+Well-known techniques for fully characterizing photonic circuits include quantum process tomography with non-classical~\cite{Brien_2004_Quantum} or coherent~\cite{Keshari_2011_Quantum} states, though these approaches scale exponentially with the number of modes.
 Simpler protocols tailored to linear optics have been proposed that use either single and two-photon probe states~\cite{Laing_2012_SuperStable,Dhand_2016_Accurate,Spagnolo_2017_Learning} or multimode coherent states~\cite{Keshari_2013_Direct,Tillmann_2016_On}.
 The most similar scheme to the one presented here is~\cite{Keshari_2013_Direct}, where coherent light is input into single modes and split over pairs of modes with the intensity at each output measured.
 While their recovery method is strikingly simple and relies only on $2n-1$ input configurations, for each configuration it requires varying over a phase shift between the two modes until maximal constructive interference is observed.
@@ -60,7 +60,7 @@ Moreover, the second feature of the recovery protocol makes it a priori suscepti
      b) Experimental schematic.
      Heralded single photons are input into the bottom waveguide of a six-mode integrated photonic device.
      A cascade of Mach-Zehnder interferometers is used to prepare single-photon states $\singleket{\psi( \alpha)}$ over the bottom five modes of the device.
-     The remainder of the device is used to implement arbitrary 2, 3 and 5 dimensional unitary transformations which are to be characterised.
+     The remainder of the device is used to implement arbitrary 2, 3 and 5 dimensional unitary transformations which are to be characterized.
      Each output port is coupled to a single photon detector.
    }
   \label{fig:experimental.schematic}
@@ -180,7 +180,7 @@ More generally, we consider ensembles of measurement vectors $\alpha$ that satis
     \mathbb{E} \left[ \langle \alpha,  Z \alpha \rangle^2 \right] \geq C_\mathrm{SI} \|  Z \|_2^2 \quad \forall  Z \in \Hermitian_n \label{eq:pl.sub_isotropy}
   \end{align}
 
-  \item \emph{Sub-Gaussian tail behaviour:} For every normalized $ z \in \mathbb{C}^n$ ($\|  z \|_{\ell_2}=1$), $| \langle \alpha,  z \rangle|$ is sub-Gaussian in the sense that its moments obey
+  \item \emph{Sub-Gaussian tail behavior:} For every normalized $ z \in \mathbb{C}^n$ ($\|  z \|_{\ell_2}=1$), $| \langle \alpha,  z \rangle|$ is sub-Gaussian in the sense that its moments obey
   \[
     \mathbb{E} \left[ | \langle \alpha,  z \rangle|^{2N} \right] \leq C_\mathrm{SG} N! \quad N \in \mathbb{N}.
   \label{eq:pl.subexponential}
@@ -189,7 +189,7 @@ More generally, we consider ensembles of measurement vectors $\alpha$ that satis
 
 \begin{proposition}%
   \label{prop:gauss+recr_requirements}
-  The following measurement ensembles fulfil the three properties above:
+  The following measurement ensembles fulfill the three properties above:
   \begin{enumerate}
     \item \emph{Gaussian sampling scheme:} $\alpha \in \mathbb{C}^n$ chosen from the standard complex normal distribution $\mathcal{N}(0,\tfrac{1}{2}\mathbb{I})+ i \mathcal{N}(0,\tfrac{1}{2}\mathbb{I})$.
     In this case
@@ -386,8 +386,11 @@ Here, we have used \eqref{eq:vectorial_noisy_bound} for each summand in the thir
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Results}
+\section{Results}%
+\label{sec:pl.results}
+
 \subsection{Numerical Results}
+\label{sub:pl.results.numerics}
 
 \todo{Constant error once we reach threshold for m?}
 
@@ -418,7 +421,7 @@ The simulation depicted in \cref{fig:simplot} aims to visualize the performance 
 For each given dimension $n$, we choose 100 target unitaries.
 Each of these is reconstructed by means of \cref{prot:pl.detailed_reconstruction} with a varying number of measurements $m$.
 The input vectors are sampled from the uniform ensemble in \cref{sfig:simplot.gaussian} and from the RECR ensemble in \cref{sfig:simplot.recr}.
-For the measurement noise $\epsilon_j$ from \cref{eq:pl.intensities_as_overlap}, we assume independent, centred Gaussian noise with standard deviation $\sigma = 0.05$.
+For the measurement noise $\epsilon_j$ from \cref{eq:pl.intensities_as_overlap}, we assume independent, centered Gaussian noise with standard deviation $\sigma = 0.05$.
 The density plots show the fraction of successfully recovered unitaries.
 Here, the criterion for success is whether the distance of the reconstruction $M^\sharp$ measured in Frobenius norm is smaller than the threshold  $4 \sigma n$ in accordance with the error bound from \cref{cor:noisy_performance_guarantee} in the supplemental material.
 
@@ -437,7 +440,7 @@ Not only does the number of measurements scale linearly in the system size but t
      \label{fig:experimental.overview}
      Comparing reconstructions from experimental data for different target transfer matrices and sampling schemes.
      For each matrix and sampling scheme, we subsample $m = 5n$ preparation vectors and the corresponding measured intensities from the experimental data 100 times.
-     The coloured diamonds indicate the median and the coloured area sketches the distribution of the discrepancy between the PhaseLift reconstruction and an alternative method.
+     The colored diamonds indicate the median and the colored area sketches the distribution of the discrepancy between the PhaseLift reconstruction and an alternative method.
      Since for $n=2$ there are only six distinct RECR vectors up to a global phase, there is only one reconstruction.
      In the left picture, the reference is obtained through a HOM-dip reconstruction as discussed in the appendix.
      However, since this technique is too costly for larger dimensions, the five dimensional reconstructions on the right are only compared in magnitude to a reference from single photon data neglecting all phase information.
@@ -482,8 +485,8 @@ Since the RECR scheme only requires four different phase values in each mode, th
 In contrast, for the uniform scheme the preparation stage needs to be able to prepare any phase shift in each mode, and therefore, it is much more demanding for the experiment.
 
 Although, as we have described, the protocol can be performed using coherent states and photodiodes, for this experimental demonstration we instead use heralded single photons and single photon detectors.
-This is because the properties of the components and, therefore $ M$ are generally mode-dependent, that is dependent on the wavelength, polarisation, etc.\ of the light.
-Since it is the goal to characterise the device for quantum experiments, the most accurate characterisation for this purpose is achieved using the same mode of light used in the future quantum experiments. .
+This is because the properties of the components and, therefore $ M$ are generally mode-dependent, that is dependent on the wavelength, polarization, etc.\ of the light.
+Since it is the goal to characterize the device for quantum experiments, the most accurate characterization for this purpose is achieved using the same mode of light used in the future quantum experiments. .
 When a single photon Fock state is input in the bottom waveguide, the prepared state prior to $ M$ is
 \[
   \ket{\psi({\alpha})} = \sum_k \alpha_k a_k^{\dag} \ket{\mathfrak{0}}
@@ -497,7 +500,7 @@ The probability of measuring the photon at detector $j$ is then given by
 \]
 Hence, finite-sample frequency estimates of the probabilities~\eqref{eq:pl.experiment.probabilities} are equivalent to the noisy intensity measurements~\eqref{eq:pl.intensities}.
 In the experiment, a spontaneous parametric down-conversion process is used to produce a heralded single photon via the detection of its correlated pair photon in the idler mode.
-The photon is coupled into and out of the photonic chip via optical fibre and all output modes are simultaneously measured by an array of single photon avalanche photodiodes.
+The photon is coupled into and out of the photonic chip via optical fiber and all output modes are simultaneously measured by an array of single photon avalanche photodiodes.
 For all $ M$ of the same size, data is collected for the same set of randomly chosen input vectors.
 For more details on the experimental setup and the data analysis, see the supplemental material.\\
 
@@ -512,8 +515,8 @@ However, since this is infeasibly costly for the five-dimensional transfer matri
 Therefore, for the larger transfer matrices, we neglect the phase information of the reconstruction.
 
 We see that the PhaseLift reconstructions and the references agree well for most settings.
-Even without exploiting the possible advantages of the RECR scheme due to a better calibration, it generally performs as well as the uniform sampling scheme.
-Both display a similar behaviour: for a fixed number of modes, the deviations are generally larger for the random unitaries compared to the more structured identity and Fourier transfer matrices.
+Even without exploiting the possible advantages of the RECR ensemble due to a better calibration, it generally performs as well as the uniform ensemble.
+Both display a similar behavior: for a fixed number of modes, the deviations are generally larger for the random unitaries compared to the more structured identity and Fourier transfer matrices.
 Also, the errors for the two-dimensional transfer matrices are slightly smaller than for the corresponding three-dimensional transfer matrices.
 In general, we expect larger deviations with an increase in the size of the transfer matrix, since errors in the phases of the components accumulate in the reference reconstructions.
 Furthermore, the currently used sequential arrangement of the MZIs in the preparation stage of the experiment also leads to higher reconstruction errors with an increase in dimension -- possible solutions to this problem are discussed in the conclusions.
@@ -523,15 +526,15 @@ In \cref{fig:experimental.targetref} we compare the performance of the PhaseLift
 In contrast to \cref{fig:experimental.overview}, here we use the theoretical target unitary as a reference.
 Generally, the errors of the PhaseLift reconstructions and the HOM-dip reconstructions are of the same order of magnitude.
 This is despite the fact that the HOM-dip reconstruction is not just insensitive to the row phases, but also to the column phases.
-Therefore, the reported errors for the HOM-dip reconstruction are minimised over $2n$ phases instead of just $n$ phases for the PhaseLift reconstruction.
-The additional free parameters in the minimisation may lead to overfitting, and hence, to an underestimation of the actual error of the HOM-dip reconstruction.
+Therefore, the reported errors for the HOM-dip reconstruction are minimized over $2n$ phases instead of just $n$ phases for the PhaseLift reconstruction.
+The additional free parameters in the minimization may lead to overfitting, and hence, to an underestimation of the actual error of the HOM-dip reconstruction.
 For more details, please see the supplemental material.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion and Outlook}
 
-In this work, we introduce a solution to the problem of characterising linear optical devices based on recent advances in phase retrieval and low-rank matrix recovery.
+In this work, we introduce a solution to the problem of characterizing linear optical devices based on recent advances in phase retrieval and low-rank matrix recovery.
 The PhaseLift reconstruction outlined in \cref{prot:pl.detailed_reconstruction} can be used to reconstruct any transfer matrix using only intensity measurements and classical states of light as inputs, which are chosen at random from an appropriate ensemble.
 Not only do the number of measurements required for this approach scale linearly in the number of modes of the device, the theory behind it also provides stringent error bars for the reconstruction.
 As the major contribution of this work, we proof recovery guarantees for the RECR ensemble, which is especially suited for the application in linear optical devices.
