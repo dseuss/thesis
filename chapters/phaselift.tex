@@ -54,7 +54,7 @@ Moreover, the second feature of the recovery protocol makes it a priori suscepti
   \includegraphics[width=0.95\columnwidth]{fig/phaselift_schematic}%
   \caption{%
     Schematic of phaselift characterisation protocol and experiment.
-     a) Protocol summary (see \cref{prot:characterization}).
+     a) Protocol summary (see \cref{prot:pl.detailed_reconstruction}).
      A calibrated and trusted network is used to prepare multimode coherent states $\singleket{\boldsymbol{\alpha}}$, sampled from the uniform or RECR ensembles.
      This state is then input to an unknown linear optical device described by the transfer matrix $ M$, and the intensities at each output port are measured.
      b) Experimental schematic.
@@ -215,7 +215,7 @@ We comment on potential extension to this case in \cref{sub:pl.normalized_recr}.
 
 The following statement is a substantial generalization of existing results regarding phase retrieval from Gaussian and uniform measurements~\cite{candes_solving_2012,demanet_stable_2014}:
 \begin{theorem}[Theorem 1.3 in~\cite{candes_solving_2012}]%
-  \label{thm:phaselift_noisy}
+  \label{thm:pl.phaselift_noisy}
   Suppose that $m = Cn$ vectors $\alpha\ind{1},\ldots,\alpha\ind{m} \in \mathbb{C}^n$ have been chosen independently at random from an ensemble that obeys the three properties~\eqref{eq:pl.tight_frame}, \eqref{eq:pl.sub_isotropy} and~\eqref{eq:pl.subexponential}.
   Then, the optimizer $X^\sharp$ of the convex program~\eqref{eq:pl.PhaseLift} satisfies
   \[
@@ -231,7 +231,7 @@ The following statement is a substantial generalization of existing results rega
 \end{theorem}
 
 The constants $C$, $C'$, and $\gamma$ implicitly depend on ensemble constants $C_\mathrm{I}$, $C_\mathrm{SI}$, and $C_\mathrm{SG}$ and can in principle be extracted from the proof.
-Note that although we are recovering $\ketbra{x}$, which is embedded in the $n^2$ dimensional space of all $n \times n$ matrices, the demand on the number of measurements $m$ in \cref{thm:phaselift_noisy} scales linearly in the original problem's dimension $n$.
+Note that although we are recovering $\ketbra{x}$, which is embedded in the $n^2$ dimensional space of all $n \times n$ matrices, the demand on the number of measurements $m$ in \cref{thm:pl.phaselift_noisy} scales linearly in the original problem's dimension $n$.
 This is optimal up to the constant multiplicative factor $C$.
 Analytical bounds on this constant $C$ are usually too pessimistic to be practical and it is widely believed that
 \(
@@ -239,7 +239,7 @@ Analytical bounds on this constant $C$ are usually too pessimistic to be practic
 \)
 such measurements are actually sufficient, that is $C = 4 + o(n)$~\cite{heinosaari_quantum_2013}.
 
-We postpone the proof of this result to \cref{sec:pl.main_proof} in order to derive an error bound for the signal vector from \cref{thm:phaselift_noisy}.
+We postpone the proof of this result to \cref{sec:pl.main_proof} in order to derive an error bound for the signal vector from \cref{thm:pl.phaselift_noisy}.
 Recall from \cref{eq:pl.vector_from_matrix} that we obtain the recovery of the signal vector ${x}^\sharp$ from the minimizer ${X}^\sharp$ of the PhaseLift program~\cref{eq:pl.PhaseLift} via an eigenvalue decomposition.
 In~\cite{candes_solving_2012} it was shown that \cref{eq:pl.noisy_recovery_bound} implies
 \[
@@ -268,16 +268,12 @@ The measured intensity at detector $j$ as given by \cref{eq:pl.intensities} excl
 \]
 Here, we have defined ${M}_j$ as the (complex conjugated) row vectors of ${M}$.
 Since the measured intensities in \cref{eq:pl.intensities_as_overlap} exactly resemble the measurement model of the phase retrieval problem in \cref{eq:pl.phase_retrieval_measurements}, we can use the ideas introduced in \cref{sec:pl.phase_retrieval}.
-For this we propose the following protocol:
-\begin{protocol}%
-  \label{prot:characterization}
-  In order to recover a transfer matrix $M$ experimentally from measured intensities~\eqref{eq:pl.intensities_as_overlap},
-  \begin{enumerate}
-    \item sample $m$ random coherent input states $\ket{ \alpha^{(l)}}$ from an appropriate ensemble,
-    \item measure the $m \times n$ intensities $I_1(\alpha^{(l)}), \ldots, I_n ( \alpha^{(l)})$ with $l=1,\ldots,m$, and
-    \item use PhaseLift~\eqref{eq:pl.PhaseLift} to recover each ${M}_j$ individually.
-  \end{enumerate}
-\end{protocol}
+For this purpose, we propose the following protocol:
+\begin{enumerate}
+  \item sample $m$ random coherent input states $\ket{ \alpha^{(l)}}$ from an appropriate ensemble,
+  \item measure the $m \times n$ intensities $I_1(\alpha^{(l)}), \ldots, I_n ( \alpha^{(l)})$ with $l=1,\ldots,m$, and
+  \item use PhaseLift~\eqref{eq:pl.PhaseLift} to recover each ${M}_j$ individually.
+\end{enumerate}
 
 In \cref{sub:pl.recr}, we introduced different viable ensembles to sample from.
 However, not all of these are equally well suited for the problem at hand.
@@ -295,24 +291,14 @@ Using a tree-like structure in the preparation stage could further improve the p
 
 
 
-The rest of this section is devoted to adapting the results from \cref{sub:pl.recr} to derive rigorous performance guarantees for \cref{prot:characterization}.
-In \cref{eq:intensities_as_overlap}, we have already underlined the similarity between the intensity measurements in our setup on one hand and the assumed measurements~\eqref{eq:guarantee.measurements} for the phase retrieval on the other hand.
-The input vector ${\alpha}$ acts as a measurement vector and each row of the transfer matrix ${M}_j$ plays the role of a complex signal vector $ x$ to be determined.
-\Cref{thm:phaselift_noisy} now allows for recovering these row vectors individually by means of the PhaseLift algorithm~\eqref{eq:guarantee.phaselift}.
-In order to meet the requirements for recovering the first row of ${M}$ using \cref{thm:phaselift_noisy}, we have to measure the intensities in the first output mode $I_1(\alpha^{(l)})$ for $m = Cn$ random coherent input states $\ket{{\alpha}^{(1)}}, \ldots \ket{{\alpha}^{(m)}}$ sampled from a distribution fulfilling the conditions \eqref{eq:tight_frame}, \eqref{eq:sub_isotropy} and \eqref{eq:subexponential}.
-Said theorem then guarantees recovery of ${M}_1 \in \Complex^n$ -- the complex conjugate of the first row of $ M$ with high probability by means of PhaseLift \eqref{eq:guarantee.phaselift}.
-Before we can move on to determine the remaining row vectors ${M}_{j}$ ($2 \leq j \leq n$) of ${M}$, it is important to point out that the recovery guarantee of \cref{thm:phaselift_noisy} is \emph{universal}: one instance of randomly chosen measurement vectors suffices to recover \emph{any} vector ${x} \in \Complex^n$.
-In our particular setting, this universality assures that a single choice of random coherent states $\ket{{\alpha}^{(1)}},\ldots,\ket{{\alpha}^{(m)}}$ suffices to recover all row vectors ${M}_j$ simultaneously.
-
-In this section we are going to proof the performance guarantee for reconstructing transfer matrices for the uniform sampling scheme.
-Although \cref{thm:phaselift_noisy} also applies to the RECR scheme, we are only going to consider the uniform scheme in this section.
-The reason for this is that our application requires scaling the input vectors to constant norm $\norm{\alpha} = 1$.
-However, we currently have no proof of \cref{prop:gauss+recr_requirements} for a normalised RECR version.
-Instead, we will show in \cref{sec:pl.normalized_recr} how to deal with normalised RECR vectors.
+The rest of this section is devoted to adapting the results from \cref{sub:pl.recr} to derive rigorous performance guarantees for \cref{prot:pl.detailed_reconstruction}.
+Unfortunately, we currently have no proof of \cref{prop:gauss+recr_requirements} -- and hence for the recovery guarantee in \cref{thm:pl.phaselift_noisy} -- for the normalized RECR ensemble used in the experiments
+Instead, we show in \cref{sec:pl.normalized_recr} how to bootstrap said theorem proven for the unnormalized version.
+Since this would complicate the following discussion, we are only going to consider the uniform scheme in the remainder of this section, which provides performance guarantees for the rigorous version of the protocol suggested above
 
 \begin{protocol}[\emph{Reconstruction of the transfer matrix ${M}$}]%
-  \label{prot:detailed_reconstruction}
-  Let ${M}$ be an arbitrary $n \times n$ transfer matrix as defined in~\eqref{eq:coherent_transfer_matrix}.
+  \label{prot:pl.detailed_reconstruction}
+  Let ${M}$ be an arbitrary $n \times n$ transfer matrix as defined in~\eqref{eq:pl.coherent_transfer_matrix}.
   In order to approximately recover it, sample $m = Cn$ random coherent input states $\ket{{\alpha}^{(1)}},\ldots,\ket{{\alpha}^{(m)}}$ uniformly from the unit complex sphere and measure the $mn$ intensities
   \[
     y_j^{(l)} = \left| \sum_i M_{j,i} \, \alpha_i^{(l)} \right|^2 + \epsilon_j^{(l)} \quad \forall 1 \leq j \leq n, \quad 1 \leq l \leq m,
@@ -321,7 +307,7 @@ Instead, we will show in \cref{sec:pl.normalized_recr} how to deal with normalis
   For each $1 \leq j \leq n$, solve the semi-definite program
   \begin{align}
     {Z}^\sharp_{j} = \underset{{Z} \in \Hermitian_n}{\argmin}& \quad \sum_{l=1}^m \left| \tr \left( (|{\alpha}^{l} \rangle \langle {\alpha}^{(l)} | )  Z \right) - y_j^{(l)} \right| \label{eq:tmat_recovery_program}\\
-    \mathrm{s.t.} & \quad {Z} \geq 0 \nonumber
+    \mathrm{subject to} & \quad {Z} \geq 0 \nonumber
   \end{align}
   and let ${M}_j^\sharp$ be the eigenvector of ${Z}^\sharp_{j}$ corresponding to its largest eigenvalue and rescaled to have length $\norm{{M}_j^\sharp}_{\ell_2} = \sqrt{ \| {Z}^\sharp_{j} \|_\infty}$.
   Then, the we estimate ${M}$ by
@@ -330,14 +316,16 @@ Instead, we will show in \cref{sec:pl.normalized_recr} how to deal with normalis
     \begin{pmatrix}
       \adj{{M^\sharp}_1} \\ \vdots \\  \adj{{M^\sharp}_n}
     \end{pmatrix}.
-    \label{eq:transfermat_estimator}
+    \label{eq:pl.transfermat_estimator}
   \]
 \end{protocol}
-Note that \cref{eq:transfermat_estimator} simply amounts to stacking the separately recovered row vectors $ M_j^\sharp$.
-The additional complex conjugation by taking the adjoint is due to the definition of $ M_j$ below \cref{eq:intensities_as_overlap}.
 
-Now, a simple extension of \cref{thm:phaselift_noisy} yields a similar performance guarantee for \cref{prot:detailed_reconstruction}.
-In order to succinctly state this result, we introduce some additional notation.
+Note that \cref{eq:pl.transfermat_estimator} simply amounts to stacking the separately recovered row vectors $ M_j^\sharp$.
+The additional complex conjugation by taking the adjoint is due to the definition of $ M_j$ below \cref{eq:pl.intensities_as_overlap}.
+
+Now, a simple extension of \cref{thm:pl.phaselift_noisy} yields a similar performance guarantee for \cref{prot:pl.detailed_reconstruction}:
+Due to the similarity of the intensity measurements~\eqref{eq:pl.intensities_as_overlap} for a single row $M_j$ of the transfer matrix and the measurements assumed in \cref{thm:pl.phaselift_noisy}, the latter guarantees recovery of said row with high probability by means of PhaseLift~\eqref{eq:pl.PhaseLift}.
+In order to succinctly state the final result, we introduce some additional notation.
 Define the total noise at detector site $j$ (measured in $\ell_1$-norm) to be
 \[
   \epsilon_j^{\mathrm{tot}}= \sum_{l=1}^m \abs{\epsilon_j^{(l)}}
@@ -346,35 +334,26 @@ and the overall noise strength:
 \[
   \epsilon^{\mathrm{tot}} = \sqrt{ \sum_{j=1}^n {\epsilon_j^{\mathrm{tot}}}^2}.
 \]
+Note that this formulation allows to treat the different output modes and their detector noise levels individually.
+In particular, we do not require a universal type of noise for all detectors, but allow for taking into account detector dependent noise of different quality (i.e.\ varying noise levels).
 
-
-\begin{corollary}[Performance guarantee for \cref{prot:detailed_reconstruction}]
+\begin{corollary}[Performance guarantee for Protocol~\ref{prot:pl.detailed_reconstruction}]
   \label{cor:noisy_performance_guarantee}
-  The reconstruction ${M}^\sharp$ of any transfer matrix ${M}$ by means of \cref{prot:detailed_reconstruction} satisfies
-    % Moreover, the error in reconstruction each row ${M}_j$ of the transfer matrix is -- up to a global phase -- bounded by
-    % \[
-    %   \min_{0 \leq \phi \leq 2 \pi}\left\| {M}_j^\sharp - \mathrm{e}^{i \phi} {M}_j \right\|_{\ell_2} \leq C' n \min
-    %   \left\{
-    %   \| {M}_j \|_{\ell_2}, \frac{ \epsilon_j^{\mathrm{tot}}}{m \| {M}_j \|_{\ell_2}}
-    %   \right\}.
-    %   \label{eq:noisy_reconstruction_vectorial_bound}
-    % \]
-  % This in turn implies the overall reconstruction bound
+  The reconstruction ${M}^\sharp$ of any transfer matrix ${M}$ by means of Protocol~\ref{prot:pl.detailed_reconstruction} satisfies
     \[
-      \min_{{\mu}: \abs{\mu_j} = 1} \left\|  {M}^\sharp -  {D} ({\mu}) {M} \right\|_2
-      \leq C' \frac{n \epsilon^\mathrm{tot}}{m \nu}.
-      \label{eq:noisy_reconstruction_total_bound}
+      \min_{{\mu}: \abs{\mu_j} = 1} \left\|  {M}^\sharp -  \mathrm{diag}(\mu_1,\ldots,\mu_n) {M} \right\|_2
+      \leq C \frac{n \epsilon^\mathrm{tot}}{m \nu}.
+      \label{eq:pl.total_bound}
     \]
-  with high probability (i.e.\ with probability at least $1 - \Order \left( \mathrm{e}^{-\gamma m}\right)$).
-  %  on the error in reconstructing the physically relevant part of $M$ by means of~\eqref{eq:transfermat_estimator}.
-  Here, $C'$ is a constant of sufficient size and
+  with probability at least $1 - \Order \left( \mathrm{e}^{-\gamma m}\right)$.
+  Here, $C$ is a constant of sufficient size and
   \[
     \nu = \min_{1 \leq j \leq n} \| {M}_j \|_{\ell_2}.
-    \label{eq:definition_normconst}
+    \label{eq:pl.definition_normconst}
   \]
 \end{corollary}
-Recall that ${D}(\mu) = \mathrm{diag}(\mu_1, \ldots, \mu_n)$ with $\abs{\mu_j} = 1$ are the row-phases of ${M}$ unrecoverable from the measurements~\eqref{eq:intensities}.
-Note that $\nu = 1$ for unitary transfer matrices and $\nu < 1$ if there is loss.
+Recall that $\mathrm{diag}(\mu_1, \ldots, \mu_n)$ are the row-phases of ${M}$ unrecoverable from the measurements~\eqref{eq:pl.intensities}.
+We include the additional correction~\eqref{eq:pl.definition_normconst} to deal with possible loss, since for unitary transfer matrices we have $\nu = 1$.
 
 \begin{proof}
 For any fixed row vector ${M}_j$,
@@ -385,30 +364,25 @@ For any fixed row vector ${M}_j$,
   \right\}.
   \label{eq:noisy_reconstruction_vectorial_bound}
 \]
-follows directly from \cref{thm:phaselift_noisy}.
-Note that the additional $n$ factor compared to \cref{eq:vectorial_noisy_bound} is due to the normalisation of the input vectors.
-As shown in \cref{prop:gauss+recr_requirements}, the input vectors sampled uniformly from the complex unit sphere need to be scaled by $\sqrt{n}$ in order to satisfy Eqs.~\eqref{eq:tight_frame}--\eqref{eq:subexponential}.
-Universality (one choice of phaseless measurements allows for reconstructing any vector) moreover allows for applying this reconstruction guarantee to all $n$ row vectors ${M}_j$ simultaneously.
+follows directly from \cref{thm:pl.phaselift_noisy}.
+Note that the additional $n$ factor compared to \cref{eq:vectorial_noisy_bound} is due to the normalization of the input vectors.
+As shown in \cref{prop:gauss+recr_requirements}, the input vectors sampled uniformly from the complex unit sphere need to be scaled by $\sqrt{n}$ in order to satisfy \cref{eq:pl.tight_frame,eq:pl.sub_isotropy,eq:pl.subexponential}.
 
-The total noise bound~\eqref{eq:noisy_reconstruction_total_bound} follows from the entry-wise definition of the Frobenius norm:
-  \begin{align}
-    \min_{{\mu}}\left\|  {M}^\sharp -  {D} ({\mu}) {M} \right\|_2 ^2
-    % &= \min_{0 \leq \phi_1,\ldots,\phi_n \leq 2 \pi}
-    % \left\| \sum_{j=1}^n |{b}_j \rangle \left( |{M}_j^\sharp \rangle - \mathrm{e}^{i \phi_j} | {M}_j \rangle \right) \right\|_2^2  \\
-    &= \min_{0 \leq \phi_1,\ldots,\phi_n \leq 2 \pi}
-    \sum_{j=1}^n \left\| {M}_j^\sharp - \mathrm{e}^{i \phi_j} {M}_j \right\|_{\ell_2}^2 \\
-    &= \sum_{j=1}^n \min_{0 \leq \phi_j \leq 2 \pi} \left\| {M}_j^\sharp - \mathrm{e}^{i \phi_j} {M}_j \right\|_{\ell_2}^2 \\
-    & \leq (C')^2 n^2 \sum_{j=1}^n  \min \left\{ \| {M}_j \|_{\ell_2}^2, \frac{ \eta_{(j)}^2}{m^2 \|{M}_j \|_{\ell_2}^2} \right\} \\
-    &\leq \left(C' n\right)^2 \sum_{j=1}^n \frac{\eta_{j}^2}{m^2 \|{M}_j \|_{\ell_2}^2} \\
-    & \leq \frac{\left(C'n \right)^2}{m^2 \nu} \sum_{j=1}^n \eta_{j}^2 \\
-    &= \left( C' n \frac{\eta^{\mathrm{tot}}}{m \nu} \right)^2,
-  \end{align}
- Here, we have used \eqref{eq:vectorial_noisy_bound} for each summand in the third line.
-  Taking the square root then yields the desired expression. % because the square root is a monotonous function and, thus, does not affect the inequalities above.
+Before we can move on to determine the remaining row vectors ${M}_{i}$ ($i \neq j$) of ${M}$, it is important to point out that the recovery guarantee of \cref{thm:pl.phaselift_noisy} is \emph{universal}: one instance of randomly chosen measurement vectors suffices to recover \emph{any} vector ${x} \in \Complex^n$.
+This allows for applying this reconstruction guarantee to all $n$ row vectors ${M}_j$ simultaneously.
+The total noise bound~\eqref{eq:pl.total_bound} now follows from the entry-wise definition of the Frobenius norm:
+\begin{align}
+  \min_{{\mu}}\left\|  {M}^\sharp -  {D} ({\mu}) {M} \right\|_2 ^2
+  &= \min_{0 \leq \phi_1,\ldots,\phi_n \leq 2 \pi}
+  \sum_{j=1}^n \left\| {M}_j^\sharp - \mathrm{e}^{i \phi_j} {M}_j \right\|_{\ell_2}^2 \\
+  &= \sum_{j=1}^n \min_{0 \leq \phi_j \leq 2 \pi} \left\| {M}_j^\sharp - \mathrm{e}^{i \phi_j} {M}_j \right\|_{\ell_2}^2 \\
+  & \leq C^2 n^2 \sum_{j=1}^n  \min \left\{ \| {M}_j \|_{\ell_2}^2, \frac{ \eta_{(j)}^2}{m^2 \|{M}_j \|_{\ell_2}^2} \right\} \\
+  &\leq \left(C n\right)^2 \sum_{j=1}^n \frac{\eta_{j}^2}{m^2 \|{M}_j \|_{\ell_2}^2} \\
+  & \leq \frac{\left(Cn \right)^2}{m^2 \nu} \sum_{j=1}^n \eta_{j}^2 \\
+  &= \left( C n \frac{\eta^{\mathrm{tot}}}{m \nu} \right)^2,
+\end{align}
+Here, we have used \eqref{eq:vectorial_noisy_bound} for each summand in the third line.
 \end{proof}
-Note that this formulation allows to treat the different output modes and their detector noise levels individually.
-In particular, we do not require a universal type of noise for all detectors, but allow for taking into account detector dependent noise of different quality (i.e.\ varying noise levels).
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -442,14 +416,14 @@ In particular, we do not require a universal type of noise for all detectors, bu
 We demonstrate the practical applicability of the PhaseLift characterisation protocol using simulated experiments.
 The simulation depicted in \cref{fig:simplot} aims to visualize the performance guarantees from \cref{thm:performance_guarantee}:
 For each given dimension $n$, we choose 100 target unitaries.
-Each of these is reconstructed by means of \cref{prot:characterization} with a varying number of measurements $m$.
+Each of these is reconstructed by means of \cref{prot:pl.detailed_reconstruction} with a varying number of measurements $m$.
 The input vectors are sampled from the uniform ensemble in \cref{sfig:simplot.gaussian} and from the RECR ensemble in \cref{sfig:simplot.recr}.
 For the measurement noise $\epsilon_j$ from \cref{eq:pl.intensities_as_overlap}, we assume independent, centred Gaussian noise with standard deviation $\sigma = 0.05$.
 The density plots show the fraction of successfully recovered unitaries.
 Here, the criterion for success is whether the distance of the reconstruction $M^\sharp$ measured in Frobenius norm is smaller than the threshold  $4 \sigma n$ in accordance with the error bound from \cref{cor:noisy_performance_guarantee} in the supplemental material.
 
 Figs.~\ref{sfig:simplot.gaussian} and \ref{sfig:simplot.recr} show a pronounced phase transition around $4n - 4$.
-This demonstrates the high efficiency of \cref{prot:detailed_reconstruction} with respect to the number of measurements.
+This demonstrates the high efficiency of \cref{prot:pl.detailed_reconstruction} with respect to the number of measurements.
 Not only does the number of measurements scale linearly in the system size but the scaling coefficient is small as well.
 
 
@@ -558,7 +532,7 @@ For more details, please see the supplemental material.
 \section{Conclusion and Outlook}
 
 In this work, we introduce a solution to the problem of characterising linear optical devices based on recent advances in phase retrieval and low-rank matrix recovery.
-The PhaseLift reconstruction outlined in \cref{prot:characterization} can be used to reconstruct any transfer matrix using only intensity measurements and classical states of light as inputs, which are chosen at random from an appropriate ensemble.
+The PhaseLift reconstruction outlined in \cref{prot:pl.detailed_reconstruction} can be used to reconstruct any transfer matrix using only intensity measurements and classical states of light as inputs, which are chosen at random from an appropriate ensemble.
 Not only do the number of measurements required for this approach scale linearly in the number of modes of the device, the theory behind it also provides stringent error bars for the reconstruction.
 As the major contribution of this work, we proof recovery guarantees for the RECR ensemble, which is especially suited for the application in linear optical devices.
 We also report on a successful experimental implementation of the PhaseLift characterisation protocol based on a universally reconfigurable six waveguide device.
