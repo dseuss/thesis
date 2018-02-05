@@ -175,7 +175,7 @@ def error_scaling(name, dim):
     ax.set_ylabel(r'$\frac{1}{n} \, \left\Vert M - M^\sharp \right\Vert_2$')
 
     fig.tight_layout()
-    fig.savefig('sim_errorscaling_{}_{}.pdf'.format(name, dim))
+    fig.savefig('phaselift_sim_errorscaling_{}_{}.pdf'.format(name, dim))
 
 
 ###############################################################################
