@@ -272,10 +272,6 @@ In~\cite{Candes_2012_Solving} it was shown that \cref{eq:pl.noisy_recovery_bound
 where $C''$ again denotes another constant of sufficient size.
 In words, we are able to recover the original signal $x$ up to a global phase and up to an error that is determined by the signal-to-noise ratio.
 
-\todo{Interpret this? -> Constant error once you reach the threshold}
-
-
-
 
 \subsection{Characterization via PhaseLift}
 \label{sub:pl.characterization}
@@ -351,6 +347,7 @@ In order to succinctly state the final result, we introduce some additional nota
 Define the total noise at detector site $j$ (measured in $\ell_1$-norm) to be
 \[
   \epsilon_j^{\mathrm{tot}}= \sum_{l=1}^m \abs{\epsilon_j^{(l)}}
+  \label{eq:pl.error_term_summand}
 \]
 and the overall noise strength:
 \[
@@ -405,6 +402,30 @@ The total noise bound~\eqref{eq:pl.total_bound} now follows from the entry-wise 
 \end{align}
 Here, we have used \eqref{eq:vectorial_noisy_bound} for each summand in the third line.
 \end{proof}
+
+
+The performance guarantee above has an interesting consequence for experimental design:
+The right hand side of \cref{eq:pl.total_bound} is mainly determined by the signal-to-noise ratio $\frac{\nu}{\epsilon^\mathrm{tot} / m}$.
+Remarkably, the noise term does not become smaller when $m$ is increased.
+To be more precise, let us assume that each detection error  is independent and normally distributed with standard deviation $\sigma$, i.e.\ $\epsilon\ind{l}_j \sim \Normal(0, \sigma^2)$.
+Then,
+\[
+  \Exp \epsilon^\mathrm{tot}_j = \frac{1}{m} \sum_j \Exp \epsilon\ind{l}_j = \Exp \epsilon\ind{1}_j = \sqrt{\frac{2}{\pi}} \sigma,
+\]
+and hence, the expected error $\Exp \epsilon^\mathrm{tot}$ is independent of $m$.
+Of course, the standard deviation of $\epsilon^\mathrm{tot}_j$ scales as $\frac{1}{\sqrt{m}}$.
+Therefore, an increase of $m$ past the threshold $Cn$ in \cref{cor:pl.performance_guarantee} mainly influences the (exponentially small) failure probability.
+In other words, said corollary implies that once the sampling threshold is reached, there is not much use to further increase the number of measurements as the error bound~\eqref{eq:pl.total_bound} is then primarily determined by the uncertainty of a single measurement.
+Hence, any additional experimental time should be invested to reduce the uncertainty of the single measurements, e.g.\ by increasing the number of single photon events used to estimate $I_j(\alpha)$.
+
+By studying the assumptions and the proof of the underlying \cref{thm:pl.phaselift_noisy}, we also note that this behavior is to be expected.
+Since said theorem does not assume any statistical properties of the noise, but only assumes that the noise $\epsilon\ind{l}$ is bounded, we cannot expect a statistical improvement by increasing the number of measurements.
+For example, if we assume a constant, purely systematic error $\epsilon\ind{l} = c$ for all measurements, then no improvement can be expected even for $m\to\infty$.
+\todo{true?}
+
+However, it should be kept in mind that \cref{cor:pl.performance_guarantee} only provides necessary conditions for recovery, which are not optimal in the large $m$ regime.
+Therefore, we perform numerical simulations in the next chapter to further investigate how experimental time should be spent.
+Note that this behavior has already been explored in the context of quantum state tomography via compressed sensing in~\cite{Flammia_2012_Quantum}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
