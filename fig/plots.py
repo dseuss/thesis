@@ -6,6 +6,7 @@ import os
 from glob import glob
 from warnings import warn
 import seaborn as sns
+import re
 
 import click
 
@@ -135,6 +136,46 @@ def simplot(key, infile, errconst, noline):
     fig.tight_layout()
 
     fig.savefig('sim_{}.pdf'.format(key))
+
+
+@main.command(name='error-scaling')
+@click.option('--name', default='dft')
+@click.option('--dim', default=5)
+def error_scaling(name, dim):
+    fig = pl.figure(0, figsize=(5, 4))
+    ax = fig.gca()
+    fname_query = re.compile(r'dft_dim=(\d*)_ts=(\d*).npz')
+    mpl_query = re.compile(r'\$t=(\d*)\$')
+    for fname in glob(f'../data/{name}_dim={dim}_*.npz'):
+        match = fname_query.search(os.path.basename(fname))
+        ts = int(match.group(2))
+
+        data = np.load(fname)
+        ms, errors = data['arr_0'], data['arr_1'] / dim
+        mus = np.mean(errors, axis=1)
+        l, = ax.semilogy(ms, mus, label=r'$t=' + str(ts) + '$')
+
+        std = np.std(errors, axis=1)
+        #  ax.fill_between(ms, mus - std, mus + std, alpha=0.2, color=l.get_color())
+        # np.min(errors, axis=1), np.max(errors, axis=1),
+        y1 = np.percentile(errors, 2.5, axis=1)
+        y2 = np.percentile(errors, 97.5, axis=1)
+        ax.fill_between(ms, y1, y2, alpha=0.2, color=l.get_color())
+
+    handles, labels = ax.get_legend_handles_labels()
+    # sort both labels and handles by labels
+    sortf = lambda t: int(mpl_query.search(t[0]).group(1))
+    labels, handles = zip(*sorted(zip(labels, handles), key=sortf))
+    ax.legend(handles, labels)
+    xlim, ylim = ax.get_xlim(), ax.get_ylim()
+    ax.set_xlim(10, ms[-1])
+    ax.set_ylim(5e-3, ylim[1])
+
+    ax.set_xlabel(r'Number of preparation vectors $m$')
+    ax.set_ylabel(r'$\frac{1}{n} \, \left\Vert M - M^\sharp \right\Vert_2$')
+
+    fig.tight_layout()
+    fig.savefig('sim_errorscaling_{}_{}.pdf'.format(name, dim))
 
 
 ###############################################################################
@@ -412,6 +453,8 @@ def t_dependence_plot(data, ax=None, m_sel=slice(None), timesteps=None,
     ax.fill_between(x, np.min(errors, axis=1), np.max(errors, axis=1),
                     color=l.get_color(), alpha=.5)
     return ax
+
+
 
 
 @main.command()
