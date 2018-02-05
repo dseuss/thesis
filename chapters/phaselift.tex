@@ -55,7 +55,7 @@ When a single photon Fock state is input in the bottom waveguide, the prepared s
 \[
   \ket{\psi({\alpha})} = \sum_k \alpha_k a_k^{\dag} \ket{\mathfrak{0}}
 \]
-where $\ket{hfrak{0}}$ denotes the vacuum state.
+where $\ket{\mathfrak{0}}$ denotes the vacuum state.
 The transfer matrix $M$ performs the mapping $a_k^{\dag} \rightarrow \sum_j M_{j,k}a_j^{\dag}$.
 The probability of measuring the photon at detector $j$ is then given by
 \[
@@ -425,6 +425,7 @@ For example, if we assume a constant, purely systematic error $\epsilon\ind{l} =
 
 However, it should be kept in mind that \cref{cor:pl.performance_guarantee} only provides necessary conditions for recovery, which are not optimal in the large $m$ regime.
 Therefore, we perform numerical simulations in the next chapter to further investigate how experimental time should be spent.
+In other words, we study the question how the reconstruction performs as a function of $m$ when the total experimental time budget is fixed.
 Note that this behavior has already been explored in the context of quantum state tomography via compressed sensing in~\cite{Flammia_2012_Quantum}.
 
 
@@ -432,26 +433,24 @@ Note that this behavior has already been explored in the context of quantum stat
 \section{Results}%
 \label{sec:pl.results}
 
-\subsection{Numerical Results}
+\subsection{Numerical Results}%
 \label{sub:pl.results.numerics}
-
-\todo{Constant error once we reach threshold for m?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[tbp]
   \begin{subfigure}{.475\columnwidth}
     \includegraphics[width=\linewidth]{fig/phaselift_sim_gaussian}
-    \caption{\label{sfig:simplot.gaussian}%
+    \caption{\label{sfig:pl.simplot.gaussian}%
       Uniform sampling
     }
    \end{subfigure}
   \begin{subfigure}{.475\columnwidth}
     \includegraphics[width=\linewidth]{fig/phaselift_sim_recr}
-    \caption{\label{sfig:simplot.recr}%
+    \caption{\label{sfig:pl.simplot.recr}%
       RECR sampling
     }
    \end{subfigure}
-  \caption{\label{fig:simplot}%
+  \caption{\label{fig:pl.simplot}%
     Simulated recovery-probability using the two different sampling schemes under noisy measurements with $\sigma = 0.05$.
     For each given dimension, the transfer matrices to be recovered consist of 97 Haar random unitaries as well as the identity, the swap-matrix, and the discrete Fourier transform.
     The red line indicates the conjectured phase transition at $4 n - 4$.
@@ -460,17 +459,74 @@ Note that this behavior has already been explored in the context of quantum stat
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 We demonstrate the practical applicability of the PhaseLift characterisation protocol using simulated experiments.
-The simulation depicted in \cref{fig:simplot} aims to visualize the performance guarantees from \cref{cor:pl.performance_guarantee}:
+The simulation depicted in \cref{fig:pl.simplot} aims to visualize the performance guarantees from \cref{cor:pl.performance_guarantee}:
 For each given dimension $n$, we choose 100 target unitaries.
 Each of these is reconstructed by means of \cref{prot:pl.detailed_reconstruction} with a varying number of measurements $m$.
-The input vectors are sampled from the uniform ensemble in \cref{sfig:simplot.gaussian} and from the normalized RECR ensemble in \cref{sfig:simplot.recr}.
+The input vectors are sampled from the uniform ensemble in \cref{sfig:pl.simplot.gaussian} and from the normalized RECR ensemble in \cref{sfig:pl.simplot.recr}.
 For the measurement noise $\epsilon_j$ from \cref{eq:pl.intensities_as_overlap}, we assume independent, centered Gaussian noise with standard deviation $\sigma = 0.05$.
 The density plots show the fraction of successfully recovered unitaries.
 Here, the criterion for success is whether the distance of the reconstruction $M^\sharp$ measured in Frobenius norm is smaller than the threshold  $4 \sigma n$ in accordance with the error bound~\eqref{eq:pl.total_bound}.
 
-\Cref{sfig:simplot.gaussian,sfig:simplot.recr} show a pronounced phase transition around $4n - 4$.
+\Cref{sfig:pl.simplot.gaussian,sfig:pl.simplot.recr} show a pronounced phase transition around $4n - 4$.
 This demonstrates the high sample efficiency of the PhaseLift reconstruction.
 Not only does the number of measurements scale linearly in the system size but the scaling coefficient is small as well.\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}[tbp]
+  \begin{subfigure}{.475\columnwidth}
+    \includegraphics[width=\linewidth]{fig/phaselift_sim_errorscaling_dft_5}
+    \caption{\label{sfig:pl.simerror.five}%
+      $n = 5$
+    }
+   \end{subfigure}
+  \begin{subfigure}{.475\columnwidth}
+    \includegraphics[width=\linewidth]{fig/phaselift_sim_errorscaling_dft_5}
+    \caption{\label{sfig:pl.simerror.ten}%
+      $n = 10$
+    }
+   \end{subfigure}
+  \caption{\label{fig:pl.simerror}%
+    Simulated reconstruction error for the with fixed time budget as a function of the number of measurements for two different circuit sizes.
+    The total photon number in for each reconstruction is $N = 4600 \times t$.
+    Then, the output for each input vector $\alpha$ is a multinomial distribution with the number of trials given by $\frac{M}{m}$.
+    Intensities for the PhaseLift reconstruction is estimated for 100 samples of each distribution.
+    The solid line indicates the mean and the colored areas the $0.025$ and $0.975$ quantiles.
+  }
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+In the simulations depicted in \cref{fig:pl.simplot}, we assumed a constant noise level for each $m$.
+Therefore, the lab-time required for taking the data increases linear in $m$.
+We now investigate the question posed at the end of \cref{sub:pl.characterization}, namely how the reconstruction performs as a function of $m$ when the total experimental time budget is fixed.
+\todo{Fill in}
+Recall from \cref{eq:pl.photon_stats} that the single photon counting statistics is given by a multinomial equation with number of trials $N$ given by the total photon number and the probabilities $p_j$ given by the expectation values in \cref{eq:pl.experiment.probabilities}.
+Denote by $N\ind{l}$ the number of photons used to estimate the output intensities for a single photon input state $\ket{\psi(\alpha\ind{l})}$ with $l=1,\ldots,m$.
+In \cref{fig:pl.simerror}, we depict the reconstruction error with the total number of photons used for reconstruction $N = \sum_l N\ind{l}$ kept fixed.
+To be more precise, we choose the total number of photons $N$ as a multiple of the counting rate from the experiment $\Gamma = 4600\,s^{-1}$, i.e.
+\[
+  N = t \times \Gamma,
+  \label{eq:pl.counts_from_time}
+\]
+where $t$ is the time spent on the whole experiment.
+Therefore, we have $N\ind{l} = \frac{N}{m}$, where $m$ is the number of preparation vectors.
+The reconstructions in \cref{fig:pl.simerror} are then performed by randomly sampling 100 outcomes from the output counting statistics of each input state.
+For larger $m$, the $N\ind{l}$ becomes smaller, and therefore, the statistical error in each estimated intensity grows.
+
+In \cref{fig:pl.simerror}, we see that as expected, taking more data by increasing $t$ improves the reconstruction quality.
+Also note that the reconstruction error is approximately independent of $m$ above a certain threshold.
+This clearly shows that the recovery guarantee in \cref{cor:pl.performance_guarantee} is not tight for larger values of $m$, as the right hand side of \cref{eq:pl.total_bound} grows with the individual statistical error of each measurement.
+
+From \cref{fig:pl.simerror}, one could conclude that there is no advantage of taking a small value of $m$ in the experiments.
+This conclusion rests on the assumption that the total number of photons is the figure of merit that best describes an experimentalist's budget.
+However, in the concrete experimental architecture introduced in \cref{sec:pl.optics}, this is not the case:
+In reality, the number of distinct settings for the reconfigurable chip is more critical for the time required to perform a given experiment.
+This is due to the fact that switching the reconfigurable phase shifters and couplers takes more time that the actual data taking process.
+
+\todo{finish}
+
+
+
 
 
 \subsection{Experimental Results}%
@@ -527,7 +583,7 @@ However, since this is infeasibly costly for the five-dimensional transfer matri
 Therefore, for the larger transfer matrices, we neglect the phase information of the alternative reconstruction.
 
 The number of input vectors used in each PhaseLift reconstruction is $m = 5n$.
-This slight overhead compared to the numerically conjectured phase transition in \cref{fig:simplot} is used to counteract systematic errors in the generation of the random vectors, which we conjecture to be the main source of error in this experiment.
+This slight overhead compared to the numerically conjectured phase transition in \cref{fig:pl.simplot} is used to counteract systematic errors in the generation of the random vectors, which we conjecture to be the main source of error in this experiment.
 We see that the PhaseLift reconstructions and the references agree well for most settings in \cref{fig:experimental.overview}
 Even without exploiting the possible advantages of the RECR ensemble due to a better calibration, it generally performs as well as the uniform ensemble.
 Both display a similar behavior: for a fixed number of modes, the deviations are generally larger for the random unitaries compared to the more structured identity and Fourier transfer matrices.
