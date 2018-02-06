@@ -7,6 +7,8 @@
 \section{Experimental Details}%
 \label{sec:pl.experimental_details}
 
+\todo{Keep this section?}
+
 \subsection{Reference Reconstructions}%
 \label{sub:pl.hom_dip}
 
@@ -93,7 +95,7 @@ The raw data as well as the analysis scripts are available at \url{https://githu
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Proof of \cref{thm:phaselift_noisy}}%
+\section{Proof of \cref{thm:pl.phaselift_noisy}}%
 \label{sec:pl.main_proof}
 
 In this section we present a proof for the phase retrieval recovery guarantees in \cref{thm:pl.phaselift_noisy}.
@@ -105,7 +107,7 @@ Moreover, Krahmer and Liu considered a real-valued version of the problem addres
 
 \subsection{Mathematical preliminaries}
 
-Our analysis is based on two strong results about random matrix theory.
+Our analysis is based on two fundamental results in random matrix theory.
 First, the assumption of subgaussian tails~\eqref{eq:pl.subexponential} implies strong bounds on the operator norm of matrices of the form $\sum_{k=1}^m \ketbra{\alpha\ind{l}}$:
 
 \begin{theorem}[Variant of Theorem 5.35 in~\cite{Vershynin_2010_Introduction}]%
@@ -119,13 +121,14 @@ First, the assumption of subgaussian tails~\eqref{eq:pl.subexponential} implies 
   where $a_k \in \mathbb{C}$ and $\abs{a_k} \leq 1$.
   Then,
   \begin{align}
-    \Prob \left[ \| \tilde{ H} \|_\infty \geq t \right]
+    \Prob \left[ \opnorm{\tilde{ H}} \geq t \right]
     \leq
     \begin{cases}
       2 \exp \left( 2 \ln (3) n  - \frac{mt^2}{8 C_\mathrm{SG}} \right) & 0 \leq t \leq 2C_\mathrm{SG}, \\
-      2 \exp \left( 2 \ln (3) n - \frac{m}{2} \left( t - C_\mathrm{SG} \right)  \right) & t \geq 2 C_\mathrm{SG}.
+      2 \exp \left( 2 \ln (3) n - \frac{m}{2} \left( t - C_\mathrm{SG} \right)  \right) & t \geq 2 C_\mathrm{SG},
     \end{cases}
   \end{align}
+  where $\opnorm{\cdot}$ denotes the operator norm.
 \end{theorem}
 
 
@@ -137,10 +140,10 @@ The version we use here is due to Mendelson~\cite{Mendelson_2015_Learning,Koltch
   Suppose that the measurement operator $\mathcal{A}:\Hermitian^n \to \mathbb{R}^m$ contains $m$ independent copies $A\ind{l}$ of a random matrix $ A \in \Hermitian^n$, that is
   \[
     \label{eq:pl.measurement_operator_definition}
-    \mathcal{A}(Z) = \sum_{l=1}^m \tr (A\ind{l}  Z) \,  \ket{e_l},
+    \mathcal{A}(Z) = \sum_{l=1}^m \tr (A\ind{l}  Z) \,  {e_l}
   \]
-  and let $D \subset \Hermitian^n$.
-  For $\xi >0$ define
+  with $e_l$ denoting the $l$-th canonical basis vector.
+  For $D \subset \Hermitian^n$ and $\xi >0$ define
   \begin{align}
     Q_\xi (D,  A) =& \inf_{ Z \in D}\Prob \left[ | \tr (A\ind{l}  Z) | \geq \xi \right] \quad &\textrm{(marginal tail funtion)}, \label{eq:pl.marginal_tail_function}\\
     W_m (D,  A) =& 2 \, \mathbb{E} \left[ \sup_{ Z \in D} \tr \left(  Z  H \right) \right] \quad &\textrm{(mean empirical width)},
@@ -158,7 +161,7 @@ The version we use here is due to Mendelson~\cite{Mendelson_2015_Learning,Koltch
 \end{theorem}
 
 Note that the measurement operator introduced in \cref{eq:pl.measurement_operator_definition} is a shorthand notation for the linear measurements $y\ind{l} = \tr  \left( A\ind{l}  Z \right)$ with $l=1,\ldots,m$.
-It maps the signal matrix $Z$ to the vector of (noiseless) measurement outcomes $\sum_l y_l \ket{e_l}$.\\
+It maps the signal matrix $Z$ to the vector of (noiseless) measurement outcomes $\sum_l y_l \, {e_l}$.\\
 
 
 The following two propositions summarize several results presented in \cite{Kabanava_2015_Stable} and adapt them to the problem of phase retrieval.
@@ -171,7 +174,7 @@ The following two propositions summarize several results presented in \cite{Kaba
     D := \Sphere^{d^2-1} \cap 3 \mathcal{B}_1.
     \label{eq:pl.D}
   \]
-  Also, let $\mathcal{A}( Z) = \sum_{l=1}^m \tr ( A\ind{l}  Z ) \,  \ket{e_l}$ be a measurement operator that obeys
+  Also, let $\mathcal{A}(Z) = \sum_{l=1}^m \tr ( A\ind{l}  Z ) \,  {e_l}$ be a measurement operator that obeys
   \begin{align}
       \frac{ \tau}{m} \| \mathcal{A}( Z) \|_{\ell_1} \geq& \norm{ Z}_2 \quad \forall  Z \in D \label{eq:pl.nsp}\\
       \| \frac{1}{\nu m}\sum_{l=1}^m  A\ind{l} -  \mathbb{I} \|_\infty \leq& \frac{1}{6}\label{eq:pl.approx_povm}
@@ -188,9 +191,8 @@ The following two propositions summarize several results presented in \cite{Kaba
 
 \begin{proof}
 In the proof we will frequently use the decomposition $ Z =  Z_1+ Z_c$ for $ Z$ with eigenvalue decomposition $ Z = \sum_{k=1}^n \lambda_k | z^{(k)} \rangle \! \langle  z^{(k)}|$.
-Assuming $\lambda_1 \ge \ldots \lambda_n$, $Z_1 = \lambda_1 | z^{(1)} \rangle \! \langle  z^{(1)}|$ is the leading rank-one component and $ Z_c =  Z- Z_1$ is the ``tail''.
+Assuming $\lambda_1 \ge \ldots \ge \lambda_n$, $Z_1 = \lambda_1 | z^{(1)} \rangle \! \langle  z^{(1)}|$ is the leading rank-one component and $ Z_c =  Z- Z_1$ is the ``tail''.
 Note that, in particular, $ Z =  Z_1$ if and only if $ Z$ has unit rank.
-Fix $ Z \geq 0$ and $|{x} \rangle \! \langle {x}|$.
 \Cref{eq:pl.rec_guarantee} is invariant under re-scaling, so we may w.l.o.g.\ assume $\|  Z-|{x} \rangle \! \langle {x}|\|_2=1$.
 We treat the following two cases separately:
 \begin{align}
@@ -207,7 +209,7 @@ Thus, \eqref{eq:pl.nsp} is applicable and yields
 \[
 \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq  \frac{\tau}{m} \| \mathcal{A}( Z-|{x} \rangle \! \langle {x}|) \|_{\ell_1}
 \]
-which establishes \cref{eq:pl.rec_guarantee} for case I in \eqref{eq:pl.nsp_case1}.\\
+which establishes \cref{eq:pl.rec_guarantee} for the case~\eqref{eq:pl.nsp_case1}.\\
 
 
 
@@ -252,7 +254,7 @@ which implies the claim for case II in \eqref{eq:pl.nsp_case2}.
   Under the assumptions of \cref{thm:pl.phaselift_noisy}, the measurement operator
   \[
     \label{eq:pl.measurement_operator_rank1}
-    \mathcal{A}(Z) = \sum_l \tr \left(\ketbra{\alpha\ind{l}}  Z\right) \, \ket{e_l}
+    \mathcal{A}(Z) = \sum_l \tr \left(\ketbra{\alpha\ind{l}}  Z\right) \, {e_l}
   \]
   obeys both condition~\eqref{eq:pl.nsp} and~\eqref{eq:pl.approx_povm} with probability at least $1- 3\mathrm{e}^{-\gamma m}$, provided that $C >1$ is sufficiently large.
 \end{proposition}
@@ -267,7 +269,7 @@ We postpone the proof of this statement to \cref{sec:pl.proof_measurement_operat
   \label{eq:pl.nsp_implication2}
   \]
   where $C' = 2 \max \left\{\tau, 6/\nu \right\}$.
-  Now, suppose that we want to reconstruct a particular ${x}$ from noisy measurements of the form ${y} = \mathcal{A} (|{x} \rangle \! \langle {x}|) + \ket{\epsilon}$, where $\ket{\epsilon} = \sum_l \epsilon\ind{l} \ket{e_l}$.
+  Now, suppose that we want to reconstruct a particular ${x}$ from noisy measurements of the form ${y} = \mathcal{A} (|{x} \rangle \! \langle {x}|) + \ket{\epsilon}$, where ${\epsilon} = \sum_l \epsilon\ind{l} \, {e_l}$.
   Then \cref{eq:pl.nsp_implication2} implies
   \begin{align}
     \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m} \| \mathcal{A}( Z) - {y} + {\epsilon} \|_{\ell_1}
@@ -320,7 +322,7 @@ Consequently,
 \begin{align}
   \mathbb{E} \left[ \langle  \alpha|  Z |  \alpha\rangle^4 \right]
   \leq C_\mathrm{SG} 4! \sum_{i_1,i_2,i_3,i_4} | \lambda_{i_1} \lambda_{i_2} \lambda_{i_3} \lambda_{i_4} |
-  = 24 C_\mathrm{SG} \|  Z \|_1^4 \leq 24*3^4 C_\mathrm{SG},
+  = 24 C_\mathrm{SG} \|  Z \|_1^4 \leq 24 \times 3^4 C_\mathrm{SG},
 \end{align}
 because $ Z \in D$ implies $\|  Z \|_1 \leq 3$.
 In summary,
@@ -588,7 +590,7 @@ where we have used a well-known integration formula for moments, see e.g.\ \cite
 \end{proof}
 
 
-\subsection{The normalised RECR scheme}
+\subsection{The normalized RECR scheme}
 \label{sub:pl.normalized_recr}
 
 \todo[noline]{DS/RiK: Expand on this idea -- or any other}
