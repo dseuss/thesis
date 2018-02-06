@@ -4,30 +4,42 @@
 
 
 \todo{The physics part needs work}
-\todo{Norm of vector = intensity}
-\todo{Why RECR better?}
+
 
 Linear-optical networks composed of beamsplitting and phaseshifting operations are fundamental to the quantum and classical processing of information with light.
 Passive and reconfigurable linear optical circuits have been proposed and demonstrated for many applications including telecommunications~\cite{Miller_2015_Sorting}, machine learning~\cite{Shen_2017_Deep} and quantum computation~\cite{Carolan_2015_Universal} and simulation~\cite{Harris_2017_Quantum}.
 With the continuing development of large-scale integrated photonic platforms~\cite{Silverstone_2016_Silicon,Seok_2016_LargeScale}, practical and reliable techniques for characterizing and validating the operation of these devices are crucial.
 In this work, we present new protocols for characterizing linear optical devices with low experimental resources by exploiting a connection to the phase retrieval problem \cite{Walther_1963_Question}.
 
+Well-known techniques for characterizing linear optical circuits include quantum process tomography with non-classical~\cite{Brien_2004_Quantum} or coherent~\cite{Keshari_2011_Quantum} states, though these approaches scale exponentially with the number of modes.
+Simpler protocols tailored to linear optics have been proposed that use either single and two-photon probe states~\cite{Laing_2012_SuperStable,Dhand_2016_Accurate,Spagnolo_2017_Learning} or multimode coherent states~\cite{Keshari_2013_Direct,Tillmann_2016_On}.
+The most similar scheme to the one presented here is~\cite{Keshari_2013_Direct}, where coherent light is input into single modes and split over pairs of modes with the intensity at each output measured.
+While their recovery method is strikingly simple and relies only on $2n-1$ input configurations, for each configuration it requires varying over a phase shift between the two modes until maximal constructive interference is observed.
+Hence, the experiment needs to be performed interactively, where the phase shift is adjusted gradually throughout an individual measurement, or a large number of phase shifter settings need to be probed.
+Both alternatives require a large number of measurements to be performed in order to recover $M$ successfully.
+Furthermore, by construction, the protocol from~\cite{Keshari_2013_Direct} utilizes the obtained reconstruction of the first row to recover the remaining rows of $M$.
+This makes it a priori susceptible towards noise as any error in the determination of the first row propagates to the remaining rows.
+
+In this chapter, we propose an efficient, robust, and conceptually simple technique for characterizing linear optical circuit based on recent advances in low-rank matrix recovery.
+Not only is the \emph{PhaseLift} reconstruction algorithm robust to noise and efficient with respect to the number of measurements, it also comes with stringent recovery guarantees.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Devices Characterization}%
+\section{Device Characterization}%
 \label{sec:pl.optics}
 
-\todo{Fix}
-
-Theoretically, a linear optical device is fully characterized by its \emph{transfer matrix} ${M}$.
-We consider as input to the device classical light described by a multimode coherent state $\ket{{\alpha}} = \ket{\alpha_1, \ldots, \alpha_n}$.
-Due to the linearity of the device, this input is mapped to a coherent state $\ket{{\beta}}$ in the output via
+Mathematically, a linear optical device is fully characterized by its \emph{transfer matrix} ${M}$, which relates the output to the input of the device.
+In the case where the input is described by classical multimode coherent states $\ket{{\alpha}} = \ket{\alpha_1, \ldots, \alpha_n}$, the output is a coherent state $\ket{\beta}$ as well due to linearity and
 \[
-  \beta_j = \sum_k M_{j,k} \,\alpha_k.
+  \beta_j = \sum_k M_{j,k} \,\alpha_k
   \label{eq:pl.coherent_transfer_matrix}
 \]
+holds.
+Note that throughout this chapter, we have to distinguish between the coherent state $\ket{\alpha}$ and the corresponding coherent state vector $\alpha$.
+On the one hand, due to describing a pure quantum state, the former is always normalized such that $\Norm{\ket\alpha}^2 = \Braket{\alpha, \alpha} = 1$.
+On the other hand, the normalization of a coherent state vector $\alpha$ describes the intensity of the classical light.
+
 Determining ${M}$ experimentally is the crucial step to validate and verify an existing linear optical circuit.
-The standard measurable quantities in an optical experiment are the \emph{intensities} of the output modes
+The standard measurable quantities in an optical experiment with coherent states are the \emph{intensities} of the output modes
 \[
   I_j({\alpha})
   = \left| \beta_j \right|^2 + \epsilon_j
@@ -36,18 +48,21 @@ The standard measurable quantities in an optical experiment are the \emph{intens
 \]
 for certain coherent inputs $\ket{{\alpha}}$.
 Here, $\epsilon_j$ describes noise due to statistical fluctuations or systematic errors.
+A schematic of such an experiment is depicted in \cref{fig:pl.experimental.schematic} a).
 Although the output coherent states~\eqref{eq:pl.coherent_transfer_matrix} are linear in ${M}$, the resulting intensity measurements~\eqref{eq:pl.intensities} are quadratic in ${M}$ and oblivious to the phases of $\beta$.
 Therefore, the problem of reconstructing ${M}$ from such measurements is ill-posed and requires deliberate utilization of inference between the modes to recover the phases of $M$.
 
-Well-known techniques for fully characterizing photonic circuits include quantum process tomography with non-classical~\cite{Brien_2004_Quantum} or coherent~\cite{Keshari_2011_Quantum} states, though these approaches scale exponentially with the number of modes.
-Simpler protocols tailored to linear optics have been proposed that use either single and two-photon probe states~\cite{Laing_2012_SuperStable,Dhand_2016_Accurate,Spagnolo_2017_Learning} or multimode coherent states~\cite{Keshari_2013_Direct,Tillmann_2016_On}.
-The most similar scheme to the one presented here is~\cite{Keshari_2013_Direct}, where coherent light is input into single modes and split over pairs of modes with the intensity at each output measured.
-While their recovery method is strikingly simple and relies only on $2n-1$ input configurations, for each configuration it requires varying over a phase shift between the two modes until maximal constructive interference is observed.
-Furthermore, by construction, it propagates information about ${M}$'s first row to the remaining ones.
-The first requirement results in an interactive experiment, where the inputs need to be adjusted gradually throughout an individual measurement.
-\todo{Not quite correct.}
-Moreover, the second feature of the recovery protocol makes it a priori susceptible towards noise as any error in the determination of the first row propagates to the remaining rows.
+In this chapter, we propose an approach for recovering $M$ using random input coherent states $\alpha$ sampled from appropriate distributions.
+Preparing theses states reliably is the major challenge of implementing the proposed protocol experimentally.
+A first experimental demonstration is performed using the universal linear optics device from~\cite{Carolan_2015_Universal}:
+The silica-on-silicon device performs a linear-optical circuit comprising 30 directional couplers and 30 tunable thermo-optic phase-shifters on six optical waveguides.
+As shown in \cref{fig:experimental.schematic}, we are able to prepare any input state from a single laser input in the bottom mode using the left-most cascade of couplers and phase-shifters.
+Since varying the norm of the prepared input vector $\alpha$ requires to change the intensity of the input or \quotes{dumping} parts of the input in the topmost mode, it is beneficial to consider ensembles with fixed intensity in the following.
+The remaining triangular array of components colored blue in \cref{fig:experimental.schematic} is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck_1994_Experimental}.
+Reconfiguring the target $M$ then enables us to experimentally test the protocol across a number of configurations including Identity, Swap, and Fourier matrices as well as Haar random unitaries.\\
 
+
+Although performing recovery of $M$ using classical states of light
 Although, as we have described, the protocol can be performed using coherent states and photodiodes, for this experimental demonstration we instead use heralded single photons and single photon detectors.
 This is because the properties of the components and, therefore $ M$ are generally mode-dependent, that is dependent on the wavelength, polarization, etc.\ of the light.
 Since it is the goal to characterize the device for quantum experiments, the most accurate characterization for this purpose is achieved using the same mode of light used in the future quantum experiments. .
@@ -65,17 +80,13 @@ The probability of measuring the photon at detector $j$ is then given by
 Hence, finite-sample frequency estimates of the probabilities~\eqref{eq:pl.experiment.probabilities} are equivalent to the noisy intensity measurements~\eqref{eq:pl.intensities}.
 In the experiment, a spontaneous parametric down-conversion process is used to produce a heralded single photon via the detection of its correlated pair photon in the idler mode.
 
-The silica-on-silicon device performs a linear-optical circuit comprising 30 directional couplers and 30 tunable thermo-optic phase-shifters on six optical waveguides \cite{Carolan_2015_Universal}.
-As shown in \cref{fig:experimental.schematic}, inputting coherent light into the bottom waveguide of the device, an initial cascade of five Mach-Zehnder interferometers (MZIs) and accompanying phase-shifters can be used to prepare any five-mode input vector $\ket{{\alpha}}$.
-The remaining triangular array of components is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck_1994_Experimental}.
-Reconfiguring the target $M$ then enables us to experimentally test the protocol across a number of configurations including Identity, Swap, and Fourier matrices as well as Haar random unitaries.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}[tbp]
   \centering
   \includegraphics[width=0.95\columnwidth]{fig/phaselift_schematic}%
   \caption{%
-    Schematic of phaselift characterisation protocol and experiment.
+    Schematic of PhaseLift characterisation protocol and experiment.
      a) Protocol summary (see \cref{prot:pl.detailed_reconstruction}).
      A calibrated and trusted network is used to prepare multimode coherent states $\singleket{\boldsymbol{\alpha}}$, sampled from the uniform or RECR ensembles.
      This state is then input to an unknown linear optical device described by the transfer matrix $ M$, and the intensities at each output port are measured.
@@ -85,7 +96,7 @@ Reconfiguring the target $M$ then enables us to experimentally test the protocol
      The remainder of the device is used to implement arbitrary 2, 3 and 5 dimensional unitary transformations which are to be characterized.
      Each output port is coupled to a single photon detector.
    }
-  \label{fig:experimental.schematic}
+  \label{fig:pl.experimental.schematic}
 \end{figure*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
