@@ -168,8 +168,8 @@ def error_scaling(name, dim):
     labels, handles = zip(*sorted(zip(labels, handles), key=sortf))
     ax.legend(handles, labels)
     xlim, ylim = ax.get_xlim(), ax.get_ylim()
-    ax.set_xlim(10, ms[-1])
-    ax.set_ylim(5e-3, ylim[1])
+    ax.set_xlim(10 if dim == 5 else 20, ms[-1])
+    ax.set_ylim(5e-3 if dim == 5 else 1e-2, ylim[1])
 
     ax.set_xlabel(r'Number of preparation vectors $m$')
     ax.set_ylabel(r'$\frac{1}{n} \, \left\Vert M - M^\sharp \right\Vert_2$')
