@@ -85,6 +85,7 @@ For $p_j$ to be well-normalized, we need to choose $\ltwonorm{\alpha} = 1$
 To be more specific, if we subsequentially feed $N$ single photon Fock states into the device such that they do not interfer, the photon counting statistics is governed by a multinomial distribution, i.e.
 \[
   \Prob(N_1, \ldots, N_n | \alpha) = \frac{N!}{N_1! \ldots N_n!} \left( p_1^{N_1} \times \cdots \times p_n^{N_n} \right) \, \delta_{N_1 + \cdots N_n, N}.
+  \label{eq:pl.photon_stats}
 \]
 Here the right hand side denotes the probability of simultaneously measuring $N_j$ photons in the $j$-th mode for $j=1,\ldots,n$.
 Hence, finite-sample frequency estimates of the probabilities~\eqref{eq:pl.experiment.probabilities} are equivalent to the noisy intensity measurements~\eqref{eq:pl.intensities}.
@@ -95,6 +96,7 @@ Hence, finite-sample frequency estimates of the probabilities~\eqref{eq:pl.exper
   \centering
   \includegraphics[width=0.95\columnwidth]{fig/phaselift_schematic}%
   \caption{%
+    \label{fig:pl.experimental.schematic}
     Schematic of PhaseLift characterisation protocol and experiment.
      a) Protocol summary (see \cref{prot:pl.detailed_reconstruction}).
      A calibrated and trusted network is used to prepare multimode coherent states $\singleket{\boldsymbol{\alpha}}$, sampled from the uniform or RECR ensembles.
@@ -105,9 +107,8 @@ Hence, finite-sample frequency estimates of the probabilities~\eqref{eq:pl.exper
      The remainder of the device is used to implement arbitrary 2, 3 and 5 dimensional unitary transformations which are to be characterized.
      Each output port is coupled to a single photon detector.
    }
-  \label{fig:pl.experimental.schematic}
 \end{figure*}
-
+\todo{Replace by new version}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Phase Retrieval}%
@@ -519,7 +520,6 @@ Not only does the number of measurements scale linearly in the system size but t
 In the simulations depicted in \cref{fig:pl.simplot}, we assumed a constant noise level for each $m$.
 Therefore, the lab-time required for taking the data increases linear in $m$.
 We now investigate the question posed at the end of \cref{sub:pl.characterization}, namely how the reconstruction performs as a function of $m$ when the total experimental time budget is fixed.
-\todo{Fill in}
 Recall from \cref{eq:pl.photon_stats} that the single photon counting statistics is given by a multinomial equation with number of trials $N$ given by the total photon number and the probabilities $p_j$ given by the expectation values in \cref{eq:pl.experiment.probabilities}.
 Denote by $N\ind{l}$ the number of photons used to estimate the output intensities for a single photon input state $\ket{\psi(\alpha\ind{l})}$ with $l=1,\ldots,m$.
 In \cref{fig:pl.simerror}, we depict the reconstruction error with the total number of photons used for reconstruction $N = \sum_l N\ind{l}$ kept fixed.
@@ -542,10 +542,7 @@ This conclusion rests on the assumption that the total number of photons is the 
 However, in the concrete experimental architecture introduced in \cref{sec:pl.optics}, this is not the case:
 In reality, the number of distinct settings for the reconfigurable chip is more critical for the time required to perform a given experiment.
 This is due to the fact that switching the reconfigurable phase shifters and couplers takes more time that the actual data taking process.
-
-\todo{finish}
-
-
+Therefore, if we take into account this additional cost for reconfiguring the preparation, reconstructions with a smaller number of more precise measurements perform better when the \quotes{time budget} is kept fixed.
 
 
 
@@ -631,7 +628,6 @@ As the major contribution of this work, we proof recovery guarantees for the REC
 We also report on a successful experimental implementation of the PhaseLift characterisation protocol based on a universally reconfigurable six waveguide device.
 The results from this experiment show that although the experimental effort of our approach is much lower, it provides a similar performance compared to other characterisation techniques.
 
-\todo[inline]{@Bristol: Your future work?}
 Another possible extension of the experimental work is the development of a dedicated state-preparation circuit.
 In the current architecture, possible errors in the preparation state for the coherent state inputs $\ket{\alpha}$ add up linearly due to the serial wiring in the preparation stage.
 With a tree-like arrangement of the directional couplers, we might be able to also benefit from the fact that the RECR scheme allows only for two possible values for the intensity of each input mode $\abs{\alpha_i}$.
