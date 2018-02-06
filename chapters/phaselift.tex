@@ -58,27 +58,36 @@ A first experimental demonstration is performed using the universal linear optic
 The silica-on-silicon device performs a linear-optical circuit comprising 30 directional couplers and 30 tunable thermo-optic phase-shifters on six optical waveguides.
 As shown in \cref{fig:experimental.schematic}, we are able to prepare any input state from a single laser input in the bottom mode using the left-most cascade of couplers and phase-shifters.
 Since varying the norm of the prepared input vector $\alpha$ requires to change the intensity of the input or \quotes{dumping} parts of the input in the topmost mode, it is beneficial to consider ensembles with fixed intensity in the following.
-The remaining triangular array of components colored blue in \cref{fig:experimental.schematic} is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck_1994_Experimental}.
+The remaining triangular array of components colored blue in \cref{fig:pl.experimental.schematic} is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck_1994_Experimental}.
 Reconfiguring the target $M$ then enables us to experimentally test the protocol across a number of configurations including Identity, Swap, and Fourier matrices as well as Haar random unitaries.\\
 
 
-Although performing recovery of $M$ using classical states of light
-Although, as we have described, the protocol can be performed using coherent states and photodiodes, for this experimental demonstration we instead use heralded single photons and single photon detectors.
-This is because the properties of the components and, therefore $ M$ are generally mode-dependent, that is dependent on the wavelength, polarization, etc.\ of the light.
-Since it is the goal to characterize the device for quantum experiments, the most accurate characterization for this purpose is achieved using the same mode of light used in the future quantum experiments. .
-When a single photon Fock state is input in the bottom waveguide, the prepared state prior to $ M$ is
+
+Although performing recovery of $M$ using only classical sources of light and photodiodes simplifies the experiment, it also has a large drawback in practice:
+Our main motivation for studying linear optical devices is their application in quantum computing, which requires the use of single-photon sources.
+However, the properties of the components, and therefore, also the transfer matrix are generally dependent on the wavelength, polarization, etc.\ of the light.
+Therefore, a characterization using coherent light is unsuitable in general for predicting the performance of the device when used with single photon sources.
+Instead, the device should be evaluated under the same experimental conditions where it will be used.
+For this purpose, we estimate the outcomes of the intensity measurements~\eqref{eq:pl.intensities} using single photon states.
+
+When a single photon Fock state is input in the bottom waveguide, the prepared state prior to $M$ is
 \[
-  \ket{\psi({\alpha})} = \sum_k \alpha_k a_k^{\dag} \ket{\mathfrak{0}}
+  \ket{\psi({\alpha})} = \sum_j \alpha_j a_j^{\dag} \ket{\mathfrak{0}},
 \]
-where $\ket{\mathfrak{0}}$ denotes the vacuum state.
-The transfer matrix $M$ performs the mapping $a_k^{\dag} \rightarrow \sum_j M_{j,k}a_j^{\dag}$.
+where $\ket{\mathfrak{0}}$ denotes the vacuum state and $a_j^\dagger$ the creation operator of a photon in the $j$-th mode.
+In the Heisenberg picture, the transfer matrix $M$ performs the mapping $a_j^{\dag} \rightarrow \sum_i M_{i,j}a_i^{\dag}$.
 The probability of measuring the photon at detector $j$ is then given by
 \[
-  \Prob(j|{\alpha}) = \left| \sum_k M_{j,k} \alpha_k \right|^2.
+  p_j = \Prob(j|{\alpha}) = \left| \sum_k M_{j,k} \alpha_k \right|^2.
   \label{eq:pl.experiment.probabilities}
 \]
+For $p_j$ to be well-normalized, we need to choose $\ltwonorm{\alpha} = 1$
+To be more specific, if we subsequentially feed $N$ single photon Fock states into the device such that they do not interfer, the photon counting statistics is governed by a multinomial distribution, i.e.
+\[
+  \Prob(N_1, \ldots, N_n | \alpha) = \frac{N!}{N_1! \ldots N_n!} \left( p_1^{N_1} \times \cdots \times p_n^{N_n} \right) \, \delta_{N_1 + \cdots N_n, N}.
+\]
+Here the right hand side denotes the probability of simultaneously measuring $N_j$ photons in the $j$-th mode for $j=1,\ldots,n$.
 Hence, finite-sample frequency estimates of the probabilities~\eqref{eq:pl.experiment.probabilities} are equivalent to the noisy intensity measurements~\eqref{eq:pl.intensities}.
-In the experiment, a spontaneous parametric down-conversion process is used to produce a heralded single photon via the detection of its correlated pair photon in the idler mode.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
