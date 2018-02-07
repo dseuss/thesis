@@ -259,6 +259,7 @@ More generally, in the following we consider ensembles of measurement vectors $\
     \]
   \end{enumerate}
 \end{proposition}
+
 Unfortunately, the proof techniques developed here do not apply to the normalized RECR scheme used in the experimental work.
 We comment on potential extension to this case in \cref{sub:pl.normalized_recr}.
 The following fundamental theorem provides rigorous recovery guarantees for phase retrieval via PhaseLift.
@@ -276,8 +277,32 @@ The version presented here is a substantial generalization of existing results r
   Furthermore, $\norm{\epsilon}_{\ell_1}$ is a bound on the total noise of all measurements~\eqref{eq:pl.phase_retrieval_measurements}
   \[
     \norm{\epsilon}_{\ell_1} = \sum_{l=1}^m \abs{\epsilon\ind{l}}.
+    \label{eq:pl.phaselift_noisy.noise_bound}
   \]
 \end{theorem}
+
+\begin{proof}[Proof of \cref{thm:pl.phaselift_noisy}]
+  \Cref{prop:pl.nsp} implies that a measurement operator~\eqref{eq:pl.measurement_operator_rank1} containing $m \geq C n$ measurements sampled from a distribution satisfying~\eqref{eq:pl.tight_frame},~\eqref{eq:pl.sub_isotropy} and~\eqref{eq:pl.subexponential} meets the requirements of \cref{prop:nsp_implication} with probability at least $1-3 \mathrm{e}^{-\gamma m}$.
+  Conditioned on this event, we have
+  \[
+  \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m}  \| \mathcal{A}( Z - |{x} \rangle \! \langle {x}|) \|_{\ell_1} \quad \forall  Z \geq 0,\; \forall {x} \in \mathbb{C}^n,
+  \label{eq:pl.nsp_implication2}
+  \]
+  where $C' = 2 \max \left\{\tau, 6/\nu \right\}$.
+  Now, suppose that we want to reconstruct a particular ${x}$ from noisy measurements of the form ${y} = \mathcal{A} (|{x} \rangle \! \langle {x}|) + \ket{\epsilon}$, where ${\epsilon} = \sum_l \epsilon\ind{l} \, {e_l}$.
+  Then \cref{eq:pl.nsp_implication2} implies
+  \begin{align}
+    \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m} \| \mathcal{A}( Z) - {y} + {\epsilon} \|_{\ell_1}
+    \leq \frac{C'}{2m} \left( \| {\epsilon} \|_{\ell_1} + \| \mathcal{A}( Z) - {y} \|_{\ell_1} \right)\quad \forall  Z \geq 0.
+    \label{eq:pl.phaselift_noisy.final_bound}
+  \end{align}
+  PhaseLift -- the convex optimization problem \eqref{eq:pl.PhaseLift} -- minimizes the right hand side of this bound over all $ Z \geq 0$.
+  Since $ Z = |{x} \rangle \! \langle {x}|$ is a feasible point of this optimization, we can conclude that the minimizer $ Z^\sharp$ obeys
+  \[
+    \| \mathcal{A}( Z^\sharp) - {y} \|_{\ell_1} \leq \| \mathcal{A}(|{x} \rangle \! \langle {x}|)-{y} \|_{\ell_1} = \| {\epsilon} \|_{\ell_1}
+  \]
+  which yields the bound presented in \cref{eq:pl.noisy_recovery_bound}.
+\end{proof}
 
 The constants $C$, $C'$, and $\gamma$ implicitly depend on the ensemble constants $C_\mathrm{I}$, $C_\mathrm{SI}$, and $C_\mathrm{SG}$ and can in principle be extracted from the proof.
 Note that although we are recovering $\ketbra{x}$, which is embedded in the $n^2$ dimensional space of all $n \times n$ matrices, the demand on the number of measurements $m$ in \cref{thm:pl.phaselift_noisy} scales linearly in the original problem's dimension $n$.
@@ -287,6 +312,62 @@ Analytical bounds on this constant $C$ are usually too pessimistic to be practic
   m = 4n - 4
 \)
 such measurements are actually sufficient, that is $C = 4 + o(n)$~\cite{Heinosaari_2013_Quantum}.
+We now turn to the recovery guarantee for the normalized RECR ensemble.
+
+\begin{theorem}%
+  \label{thm:pl.phaselift_noisy_recr}
+  Suppose that $m = Cn$ vectors $\alpha\ind{1},\ldots,\alpha\ind{m} \in \mathbb{C}^n$ have been chosen independently from the RECR ensemble with normalization $\sqrt n$, that is
+  \[
+    \alpha\ind{l} := \frac{\sqrt n}{\ltwonorm{\tilde\alpha\ind{l}}} \, \tilde\alpha\ind{l}.
+  \]
+  for unnormalized RECR vectors $\tilde\alpha\ind{l}$.
+  Then, the reconstruction $X^\sharp$ via PhaseLift from measurements
+  \[
+    \label{eq:pl.phaselift_noisy_recr.measurements}
+    y\ind{l} = \Abs{\braket{\alpha\ind{l}, x}}^2 + \epsilon\ind{l}
+  \]
+  satisfies the noise bound~\eqref{eq:pl.noisy_recovery_bound} with probability at least $1 - 3\mathrm{e}^{-\gamma m}$.
+\end{theorem}
+\begin{proof}
+  The proof of the recovery guarantee for the normalized RECR ensemble leverages \cref{thm:pl.phaselift_noisy} for the unnormalized version.
+  Note, that the measurements~\eqref{eq:pl.phaselift_noisy_recr.measurements} can be mapped to the unnormalized case by
+  \[
+    \label{eq:pl.phaselift_noisy_recr.unnormalized_measurements}
+    \tilde y\ind{l}
+    := \frac{\ltwonorm{\tilde\alpha\ind{l}}^2}{n} \, y\ind{l}
+    = \Abs{\braket{\tilde\alpha\ind{l}, x}}^2 + \tilde \epsilon\ind{l}.
+  \]
+  Here, we have introduced the scaled errors
+  \[
+    \tilde \epsilon\ind{l} = \frac{\ltwonorm{\tilde\alpha\ind{l}}^2}{n} \, \epsilon\ind{l}.
+  \]
+  Now recall \cref{eq:pl.phaselift_noisy.final_bound} from the proof of \cref{thm:pl.phaselift_noisy}.
+  Since the unnormalized scheme satisfies the conditions of \cref{prop:nsp_implication} with probability at least $1-3 \mathrm{e}^{-\gamma m}$, we have condition on this event for any $Z > 0$ and $x \in \Sphere^{n-1}$
+  \[
+    \Fnorm{Z - \ketbra{x}}
+    \le \frac{C'}{2m} \Norm{\tilde{\mathcal{A}}(Z) - \tilde y + \tilde \epsilon}_{\ell_1}
+    \le \frac{C'}{2m} \left( \norm{\tilde \epsilon}_{\ell_1} + \norm{\tilde{\mathcal{A}(Z)} - \tilde y} \right).
+    \label{eq:phaselift_noisy_recr.findal_bound}
+  \]
+  For the first summand, we have
+  \[
+    \norm{\tilde\epsilon}_{\ell_1}  = \sum_l \Abs{  \frac{\ltwonorm{\tilde\alpha\ind{l}}}{n} \, \epsilon\ind{l}  } \le \norm{\epsilon}_{\ell_1}.
+  \]
+  For the second summand on the right hand side of \Cref{eq:phaselift_noisy_recr.findal_bound}, the same argument gives
+  \begin{align}
+    \norm{\tilde{\mathcal{A}}(Z) - \tilde y}_{\ell_1}
+    &= \sum_l \Abs{  \braket{\tilde\alpha\ind{l}, Z \tilde\alpha\ind{l}} - \tilde y\ind{l}  } \\
+    &= \sum_l \frac{\ltwonorm{\tilde\alpha\ind{l}}^2}{n}  \Abs{ \braket{\alpha\ind{l}, Z \alpha\ind{l}} - y\ind{l}  } \\
+    &\le \norm{\mathcal{A}(Z) - y}_{\ell_1}
+  \end{align}
+  PhaseLift -- the convex optimization problem \eqref{eq:pl.PhaseLift} -- minimizes the right hand side of this bound over all $ Z \geq 0$.
+  Since $Z = \braket{x}$ is a feasible point of this optimization, we can conclude that the minimizer $Z^\sharp$ obeys
+  \[
+    \| \mathcal{A}( Z^\sharp) - {y} \|_{\ell_1} \leq \| \mathcal{A}(|{x} \rangle \! \langle {x}|)-{y} \|_{\ell_1} = \| {\epsilon} \|_{\ell_1}
+  \]
+  which concludes the proof.
+\end{proof}
+
 
 We postpone the proof of this result to \cref{sec:pl.main_proof} in order to derive an error bound for the recovered signal vector $x^\sharp$ from \cref{thm:pl.phaselift_noisy}.
 Recall from \cref{eq:pl.vector_from_matrix} that we obtain the recovery of the signal vector ${x}^\sharp$ from the minimizer ${X}^\sharp$ of the PhaseLift program~\cref{eq:pl.PhaseLift} via an eigenvalue decomposition.
@@ -298,7 +379,6 @@ In~\cite{Candes_2012_Solving} it was shown that \cref{eq:pl.noisy_recovery_bound
 \]
 where $C''$ denotes another constant of sufficient size.
 In words, we are able to recover the original signal $x$ up to a global phase and up to an error that is determined by the signal-to-noise ratio.
-
 
 
 

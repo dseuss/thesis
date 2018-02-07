@@ -261,26 +261,7 @@ which implies the claim for case II in \eqref{eq:pl.nsp_case2}.
 
 We postpone the proof of this statement to \cref{sec:pl.proof_measurement_operator_is_good} and directly derive \cref{thm:pl.phaselift_noisy} -- the main theoretical achievement of this work -- from this statement.
 
-\begin{proof}[Proof of \cref{thm:pl.phaselift_noisy}]
-  \Cref{prop:pl.nsp} implies that a measurement operator~\eqref{eq:pl.measurement_operator_rank1} containing $m \geq C n$ measurements sampled from a distribution satisfying \eqref{eq:pl.tight_frame}, \eqref{eq:pl.sub_isotropy} and \eqref{eq:pl.subexponential} meets the requirements of \cref{prop:nsp_implication} with probability at least $1-3 \mathrm{e}^{-\gamma m}$.
-  Conditioned on this event, we have
-  \[
-  \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m}  \| \mathcal{A}( Z - |{x} \rangle \! \langle {x}|) \|_{\ell_1} \quad \forall  Z \geq 0,\; \forall {x} \in \mathbb{C}^n,
-  \label{eq:pl.nsp_implication2}
-  \]
-  where $C' = 2 \max \left\{\tau, 6/\nu \right\}$.
-  Now, suppose that we want to reconstruct a particular ${x}$ from noisy measurements of the form ${y} = \mathcal{A} (|{x} \rangle \! \langle {x}|) + \ket{\epsilon}$, where ${\epsilon} = \sum_l \epsilon\ind{l} \, {e_l}$.
-  Then \cref{eq:pl.nsp_implication2} implies
-  \begin{align}
-    \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m} \| \mathcal{A}( Z) - {y} + {\epsilon} \|_{\ell_1}
-    \leq \frac{C'}{2m} \left( \| {\epsilon} \|_{\ell_1} + \| \mathcal{A}( Z) - {y} \|_{\ell_1} \right)\quad \forall  Z \geq 0.
-  \end{align}
-  PhaseLift -- the convex optimization problem \eqref{eq:pl.PhaseLift} -- minimizes the right hand side of this bound over all $ Z \geq 0$. Since $ Z = |{x} \rangle \! \langle {x}|$ is a feasible point of this optimization, we can conclude that the minimizer $ Z^\sharp$ obeys
-  \[
-  \| \mathcal{A}( Z^\sharp) - {y} \|_{\ell_1} \leq \| \mathcal{A}(|{x} \rangle \! \langle {x}|)-{y} \|_{\ell_1} = \| {\epsilon} \|_{\ell_1}
-  \]
-  which yields the bound presented in \eqref{eq:pl.noisy_recovery_bound}.
-\end{proof}
+\todo{It's gone!}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -593,39 +574,3 @@ where we have used a well-known integration formula for moments, see e.g.\ \cite
 \subsection{The normalized RECR scheme}
 \label{sub:pl.normalized_recr}
 
-\todo[noline]{DS/RiK: Expand on this idea -- or any other}
-
-Denote by $\alpha\ind{1}, \ldots, \alpha\ind{m}$ unnormalized RECR measurements and set $A_l := \ketbra{\alpha\ind{l}}$.
-Then, our result implies that w.h.p.\ any $ X = | x \rangle \!\langle  x|$ can be recovered from $m \geq  C n$ measurements of the form
-\[
-  y_k = \tr \left(  A_k  X \right) + \epsilon_k
-\]
-via solving
-\[
-  \underset{ Z\geq 0}{\textrm{minimize}} \quad \| \mathcal{A}( Z) -  y \|_{\ell_1}. \label{eq:pl.phaselift2}
-\]
-The solution of this program is guaranteed to obey
-\[
-  \|  Z -  X \|_2 \leq \frac{C' \| \epsilon \|_{\ell_1}}{m}.
-\]
-Now suppose that we have $m$ normalized RECR measurements instead: $\tilde{ A}_k = \frac{n}{\|  A_k \|_{2}}  A_k$. Then the associated measurements correspond to
-\[
-  \tilde{y}_k = \tr \left( \tilde{ A}_k X \right) + \epsilon_k = \frac{ n}{\|  A_k \|_2} \tr \left(  A_k X \right) + \tilde{\epsilon}_k.
-\]
-Multiplying this expression by $\frac{\|  A_k \|_2}{n}$ yields
-\[
-\underset{:= y_k}{\underbrace{ \frac{ \|  A_k \|_2}{n}\tilde{y}_k}}
-= \tr \left(  A_k X \right) + \underset{:= \epsilon_k}{\underbrace{ \frac{ \|  A_k \|_2}{n}\tilde{\epsilon}_k}}
-\]
-and solving \eqref{eq:pl.phaselift2} for rescaled measurement outcomes $y_k = \frac{ \|  A_k \|_2}{n}\tilde{y}_k$ yields an estimator of $ X$ that is guaranteed to obey
-\[
-  \|  Z -  X \|_2 \leq \frac{C' \|  \epsilon \|_{\ell_1}}{m}
-  = \frac{C'}{m} \sum_{k=1}^m \frac{ \|  A_k \|_2}{n} | \tilde{\epsilon}_k |
-  \leq \frac{C'}{m} \sum_{k=1}^m | \tilde{\epsilon}_k| = \frac{C' \| \tilde{\epsilon} \|_{\ell_1}}{m}.
-\]
-Here, the last line is due to $\|  A_k \|_2 = \| \alpha_k \|_{\ell_2}^2 \leq n$.
-
-In summary: normalizing the RECR measurements changes the signal-to-noise ratio $\frac{ \|  A_k \|_2}{| \epsilon_k|}$ in an advantageous way: it makes it bigger. Thus the stability guarantee of the unnormalized RECR ensemble allows us to deduce one for the normalized case as well. However, this approach requires a re-scaling of the measurements for the algorithmic reconstruction:
-\[
-  y_k = \frac{ \|  A_k \|_2}{n} \tilde{y}_k.
-\]
