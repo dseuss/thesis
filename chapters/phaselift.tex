@@ -868,15 +868,16 @@ We discuss this idea further in the conclusion and outlook section.\\
 
 
 The rest of this section is devoted to adapting the results from \cref{sub:pl.recr} to derive rigorous performance guarantees for \cref{prot:pl.detailed_reconstruction}.
-Unfortunately, we currently have no proof of \cref{prop:gauss+recr_requirements} -- and hence for the recovery guarantee in \cref{thm:pl.phaselift_noisy} -- for the normalized RECR ensemble used in the experiments
-Instead, we show in \cref{sub:pl.normalized_recr} how to bootstrap said theorem, which was proven for the unnormalized version only.
-In order to simplify the discussion, we are only going to consider the uniform scheme in the remainder of this section.
+% Unfortunately, we currently have no proof of \cref{prop:gauss+recr_requirements} -- and hence for the recovery guarantee in \cref{thm:pl.phaselift_noisy} -- for the normalized RECR ensemble used in the experiments
+% Instead, we show in \cref{sub:pl.normalized_recr} how to bootstrap said theorem, which was proven for the unnormalized version only.
+% In order to simplify the discussion, we are only going to consider the uniform scheme in the remainder of this section.
 We start by stating the rigorous version of the reconstruction protocol outlined above.
 
 \begin{protocol}[\emph{Reconstruction of the transfer matrix ${M}$}]%
   \label{prot:pl.detailed_reconstruction}
   Let ${M}$ be an arbitrary $n \times n$ transfer matrix as defined in~\eqref{eq:pl.coherent_transfer_matrix}.
-  In order to approximately recover it, sample $m = Cn$ random coherent input states $\ket{{\alpha}^{(1)}},\ldots,\ket{{\alpha}^{(m)}}$, with $\alpha\ind{l}$ chosen uniformly from the unit complex sphere, and measure the $mn$ intensities
+  In order to approximately recover it, sample $m = Cn$ random coherent input states $\ket{{\alpha}^{(1)}},\ldots,\ket{{\alpha}^{(m)}}$, with $\alpha\ind{l}$ chosen from the uniform or RECR scheme normalized such that $\ltwonorm{\alpha\ind{l}} = 1$.
+  Measure the $mn$ intensities
   \[
     y_j^{(l)} = \left| \sum_i M_{j,i} \, \alpha_i^{(l)} \right|^2 + \epsilon_j^{(l)} \quad \forall 1 \leq j \leq n, \quad 1 \leq l \leq m,
   \]
@@ -900,7 +901,7 @@ We start by stating the rigorous version of the reconstruction protocol outlined
 Note that \cref{eq:pl.transfermat_estimator} simply amounts to stacking the separately recovered row vectors $ M_j^\sharp$.
 The additional complex conjugation due to taking the adjoint in \cref{eq:pl.transfermat_estimator} is due to the definition of $M_j$ below \cref{eq:pl.intensities_as_overlap} as the complex conjugated rows of $M$.
 
-Now, a simple extension of \cref{thm:pl.phaselift_noisy} yields a similar performance guarantee for \cref{prot:pl.detailed_reconstruction}:
+Now, a simple extension of \cref{thm:pl.phaselift_noisy,thm:pl.phaselift_noisy_recr} yield a similar performance guarantee for \cref{prot:pl.detailed_reconstruction}:
 Due to the similarity of the intensity measurements~\eqref{eq:pl.intensities_as_overlap} for a single row $M_j$ of the transfer matrix and the measurements assumed in \cref{thm:pl.phaselift_noisy}, the latter guarantees recovery of said row with high probability by means of PhaseLift~\eqref{eq:pl.PhaseLift}.
 In order to succinctly state the final result, we introduce some additional notation.
 Define the total noise at detector site $j$ (measured in $\ell_1$-norm) to be
@@ -943,11 +944,11 @@ Unitary transfer matrices satisfy $\nu = 1$.
     \right\}.
     \label{eq:noisy_reconstruction_vectorial_bound}
   \]
-  follows directly from \cref{thm:pl.phaselift_noisy}.
+  follows directly from \cref{thm:pl.phaselift_noisy,thm:pl.phaselift_noisy_recr} for the uniform and RECR scheme, respectively.
   Note that the additional $n$ factor compared to \cref{eq:vectorial_noisy_bound} is due to the normalization of the input vectors.
-  As shown in \cref{prop:gauss+recr_requirements}, the input vectors sampled uniformly from the complex unit sphere need to be scaled by $\sqrt{n}$ in order to satisfy \cref{eq:pl.tight_frame,eq:pl.sub_isotropy,eq:pl.subexponential}.
+  The input vectors need to be scaled by $\sqrt{n}$ in order to be able to apply \cref{thm:pl.phaselift_noisy,thm:pl.phaselift_noisy_recr}.
 
-  Before we can move on to determine the remaining row vectors ${M}_{i}$ ($i \neq j$) of ${M}$, it is important to point out that the recovery guarantee of \cref{thm:pl.phaselift_noisy} is \emph{universal}: one instance of randomly chosen measurement vectors suffices to recover \emph{any} vector ${x} \in \Complex^n$.
+  Before we can move on to determine the remaining row vectors ${M}_{i}$ ($i \neq j$) of ${M}$, it is important to point out that the recovery guarantees of \cref{thm:pl.phaselift_noisy,thm:pl.phaselift_noisy_recr} are \emph{universal}: one instance of randomly chosen measurement vectors suffices to recover \emph{any} vector ${x} \in \Complex^n$.
   This allows for applying this reconstruction guarantee to all $n$ row vectors ${M}_j$ simultaneously.
   The total noise bound~\eqref{eq:pl.total_bound} now follows from the entry-wise definition of the Frobenius norm:
   \begin{align}
@@ -1120,18 +1121,18 @@ Therefore, if we take into account this additional cost for reconfiguring the pr
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{figure*}[tbp]
-%   \centering
-%   \includegraphics[width=0.95\columnwidth]{fig/phaselift_ex_details}
-%   \caption{%
-%    \label{fig:experimental.details}%
-%    Reconstruction errors for a random $5 \times 5$ matrix from experimental data.
-%    For each picture, we plot the mean (solid) as well as min- and max- errors over 25 samples.
-%    In the left picture, each sample consists of a recovery from $m$ preparation vectors and the corresponding photon counts measured over $t = 30\,hrm{s}$
-%    In the right picture, we fix a randomly selected set of $m=20$ preparation vectors and run the recovery with the photon counts from $t$ randomly selected time bins, each of which is one second long.
-%   \todo[inline]{Explain this picture in the text}
-%   }
-% \end{figure*}
+\begin{figure*}[tbp]
+  \centering
+  \includegraphics[width=0.95\columnwidth]{fig/phaselift_ex_details}
+  \caption{%
+   \label{fig:experimental.details}%
+   Reconstruction errors for a random $5 \times 5$ matrix from experimental data.
+   For each picture, we plot the mean (solid) as well as min- and max- errors over 25 samples.
+   In the left picture, each sample consists of a recovery from $m$ preparation vectors and the corresponding photon counts measured over $t = 30\,hrm{s}$
+   In the right picture, we fix a randomly selected set of $m=20$ preparation vectors and run the recovery with the photon counts from $t$ randomly selected time bins, each of which is one second long.
+  \todo[inline]{Explain this picture in the text}
+  }
+\end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 To demonstrate its practical utility, we use the PhaseLift protocol to perform experimental reconstruction on the reconfigurable integrated photonic circuit introduced in \cref{sec:pl.optics}
