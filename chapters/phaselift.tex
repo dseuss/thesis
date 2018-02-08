@@ -27,21 +27,22 @@ Not only is the \emph{PhaseLift} reconstruction algorithm robust to noise and ef
 \section{Device Characterization}%
 \label{sec:pl.optics}
 
+
 Mathematically, a linear optical device is fully characterized by its \emph{transfer matrix} ${M}$, which relates the output to the input of the device.
-In the case where the input is described by a classical multi-mode coherent state $\ket{{\alpha}} = \ket{\alpha_1, \ldots, \alpha_n}$, due to linearity, the output is a coherent state $\ket{\beta}$ as well.
-Its components are given by
+Determining ${M}$ experimentally is the crucial step to validate and verify a linear optical circuit.
+For this purpose, we propose a protocol that can be implemented easily in an experiment using either classical laser light or single photon sources.
+We start by introducing the former since the single-photon case can be treated as an extension of it.
+
+For now, we assume that the input is described by a classical multi-mode coherent state $\ket{{\alpha}} = \ket{\alpha_1, \ldots, \alpha_n}$ with
+\[
+  \ket{\alpha} = \mathrm{e}^{-\frac{\ltwonorm{\alpha}}{2}} \, \sum_{k_1,\ldots,k_n}  \frac{\alpha_1^{k_1} \ldots \alpha_n^{k_n}}{\sqrt{k_1! \ldots k_n!}} \, \ket{k_1} \ldots \ket{k_n}.
+\]
+Then, due to linearity, the output is a coherent state $\ket{\beta}$ as well and its components are given by
 \[
   \beta_j = \sum_k M_{j,k} \,\alpha_k.
   \label{eq:pl.coherent_transfer_matrix}
 \]
-Note that throughout this chapter, we have to distinguish between coherent state vector $\alpha \in \Complex^n$ and the corresponding coherent state $\ket{\alpha}$ defined in terms of Fock basis vectors $\ket{k}$
-\[
-  \ket{\alpha} = \mathrm{e}^{-\frac{\ltwonorm{\alpha}}{2}} \, \sum_{k_1,\ldots,k_n}  \frac{\alpha_1^{k_1} \ldots \alpha_n^{k_n}}{\sqrt{k_1! \ldots k_n!}} \, \ket{k_1} \ldots \ket{k_n}.
-\]
-On the one hand, due to describing a pure quantum state, the coherent state is always normalized such that $\Norm{\ket\alpha}^2 = \Braket{\alpha | \alpha} = 1$.
-On the other hand, the normalization of a coherent state vector $\alpha$ describes the intensity of the classical light.
-
-Determining ${M}$ experimentally is the crucial step to validate and verify an existing linear optical circuit.
+Note that for an ideal, unitary transfer matrix, $\ltwonorm{\alpha} = \ltwonorm{\beta}$ as the norm of a coherent state vector describes its intensity.
 The standard measurable quantities in an optical experiment with coherent states are the \emph{intensities} of the output modes
 \[
   I_j({\alpha})
@@ -60,6 +61,7 @@ Preparing theses states reliably is the major challenge of implementing the prop
 A first experimental demonstration is performed using the universal linear optics device from~\cite{Carolan_2015_Universal}:
 The silica-on-silicon device performs a linear-optical circuit comprising 30 directional couplers and 30 tunable thermo-optic phase-shifters on six optical waveguides.
 As shown in \cref{fig:pl.experimental.schematic}, we are able to prepare any coherent input state from a single laser input in the bottom mode using the left-most cascade of couplers and phase-shifters.
+\todo{There was a clarify here?}
 Since varying the norm of the prepared input vector $\alpha$ requires to change the intensity of the input or \quotes{dumping} parts of the input in the topmost mode, it is beneficial to consider ensembles with fixed intensity in the following.
 The remaining triangular array of components colored blue in \cref{fig:pl.experimental.schematic} is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck_1994_Experimental}.
 Reconfiguring the target $M$ then enables us to experimentally test the protocol across a number of configurations including Identity, Swap, and Fourier matrices as well as Haar random unitaries.\\
@@ -71,9 +73,10 @@ Our main motivation for studying linear optical devices is their application in 
 However, the properties of the components, and therefore, also the transfer matrix are generally dependent on the light's wavelength, polarization, etc.
 Therefore, a characterization using coherent light is generally unsuitable for predicting the performance of the device when used with single photon sources.
 Instead, the device should be evaluated under the same experimental conditions where it will be used.
-For this purpose, we estimate the outcomes of the intensity measurements~\eqref{eq:pl.intensities} using single photon states.
+For this purpose, we now turn to an experimental implementation of the idea introduced above based on single-photon sources and detectors.
 
-When a single photon Fock state is input in the bottom waveguide, the prepared state prior to $M$ is
+The idea is to estimate the outcomes of the intensity measurements~\eqref{eq:pl.intensities} using single photon states.
+In other words, when the preparation stage is set to prepare a coherent state $\ket{{\alpha}}$, but a single photon Fock state is input in the bottom waveguide, the prepared state prior to $M$ is
 \[
   \ket{\psi({\alpha})} = \sum_j \alpha_j \adj{a_j} \ket{\mathfrak{0}},
 \]
@@ -90,7 +93,7 @@ For $p_j$ to be well-normalized, we need to choose $\ltwonorm{\alpha} = 1$
 To estimate the probabilities~\eqref{eq:pl.experiment.probabilities}, we subsequentially feed $N$ single photon Fock states into the device such that they do not interfer with each other.
 Then, the photon counting statistics is governed by a multinomial distribution, i.e.
 \[
-  \Prob(N_1, \ldots, N_n | \alpha) = \frac{N!}{N_1! \ldots N_n!} \left( p_1^{N_1} \times \cdots \times p_n^{N_n} \right) \, \delta_{N_1 + \cdots N_n, N}.
+\Prob(N_1, \ldots, N_n | \alpha) = \frac{N!}{N_1! \ldots N_n!} \left( p_1^{N_1} \times \cdots \times p_n^{N_n} \right) \, \delta_{N_1 + \cdots + N_n, N}.
   \label{eq:pl.photon_stats}
 \]
 Here the right hand side denotes the probability of simultaneously measuring $N_j$ photons in the $j$-th mode for $j=1,\ldots,n$.
@@ -103,10 +106,10 @@ Here the right hand side denotes the probability of simultaneously measuring $N_
   \caption{%
     \label{fig:pl.experimental.schematic}%
      Schematic of PhaseLift characterization protocol and experiment.
-     a) Protocol summary (see \cref{prot:pl.detailed_reconstruction}).
+     a) Protocol summary using coherent states:
      A calibrated and trusted optical network is used to prepare multimode coherent states $\singleket{\alpha}$, sampled from an appropriate ensemble.
      These states are then input to the unknown linear optical device described by the transfer matrix $M$, and the intensities at each output mode are measured.
-     b) Experimental schematic.
+     b) Experimental implementation using single photon sources:
      Heralded single photons are input into the bottom waveguide of a six-mode integrated photonic device.
      A cascade of Mach-Zehnder interferometers is used to prepare single-photon states $\singleket{\psi( \alpha)}$ over the bottom five modes of the device.
      The remainder of the device is used to implement arbitrary 2, 3 and 5 dimensional unitary transformations which are to be characterized.
@@ -120,14 +123,14 @@ Here the right hand side denotes the probability of simultaneously measuring $N_
 
 The crucial observation of this work is that measurements~\eqref{eq:pl.intensities} closely resemble the model of the \textit{phase retrieval problem}, i.e.\ the problem of recovering a complex vector ${x} \in \Complex^n$ from $m$ intensity measurements of the form
 \[
-  y\ind{l}= \Abs{\braket{\alpha\ind{l}, x}} + \epsilon\ind{l}
+  y\ind{l}= \Abs{\braket{\alpha\ind{l}, x}}^2 + \epsilon\ind{l}
   \quad l=1,\ldots,m.
   \label{eq:pl.phase_retrieval_measurements}
 \]
 Here, $\alpha^{(l)} \in \Complex^n$ denote measurement vectors and $\epsilon^{(l)}$ the additive measurement errors.
 The major difficulty in recovering $x$ from these intensity measurements is the loss of phase information.
 In order to infer the phase information, we need to exploit interference effects by carefully selecting different measurement vectors.
-However, $x$ can only be recovered up to a global phase since $x$ and $\ee^{\ii\phi} x$ are indistinguishable from the measurements~\eqref{eq:pl.phase_retrieval_measurements} for any phase angle $\phi$.
+Note, $x$ can only be recovered up to a global phase since $x$ and $\ee^{\ii\phi} x$ are indistinguishable from the measurements~\eqref{eq:pl.phase_retrieval_measurements} for any phase angle $\phi$.
 
 One practical solution to the phase retrieval problem is based on its connection to the field of low-rank matrix recovery.
 The quadratic measurements of $x$ in \cref{eq:pl.phase_retrieval_measurements} can be rewritten as
@@ -173,10 +176,11 @@ Then, we set
 
 Several analytic proofs of convergence have been established for phase retrieval via PhaseLift.
 With few notable exceptions~\cite{Kech_2016_Explicit}, these are probabilistic in nature and assume that each measurement vector is chosen from an appropriate distribution.
+Probabilistic in this context means that we allow for a small probability w.r.t.\ the random sampled measurement vectors of failing to reconstruct $x$.
 Paradigmatic examples are the Gaussian and the uniform (spherical) measurement ensemble~\cite{Candes_2013_Phaselift}:
-In case of the Gaussian ensemble, the components $\alpha\ind{l}_i$ of the measurement vectors are i.i.d.\ standard complex Gaussian random variable.
+In case of the Gaussian ensemble, the components $\alpha\ind{l}_i$ of the measurement vectors are i.i.d.\ standard complex Gaussian random variables.
 In the uniform scheme, the $\alpha^{(l)}$ are chosen uniformly from the complex unit sphere.
-The two are highly related, as the latter arises by normalizing all Gaussian vectors to a fixed value.
+The two are highly related, as the latter arises by normalizing all Gaussian vectors to a fixed length.
 However, these two measurement examples are often unsuitable and too demanding for practical applications, which led to a large body of work proving similar recovery guarantees  for measurement ensembles that feature less randomness~\cite{Gross_2014_Partial,Kueng_2014_Low,Kueng_2014_Low,Kueng_2016_Low} or additional structure tailored to specific applications~\cite{Candes_2013_Phaselift,Gross_2017_Improved,Voroninski_2013_Quantum,Kueng_2015_Low}.
 
 
@@ -215,6 +219,8 @@ Since there are only four different values for the phases of the components~\eqr
 
 The rest of this section is devoted to proving recovery guarantees for the RECR ensemble for phase retrieval via PhaseLift~\eqref{eq:pl.PhaseLift}.
 In order to be more self-contained, we also provide recovery guarantees for the Gaussian and uniform ensembles, which are well known~\cite{Candes_2012_Solving,Demanet_2014_Stable}.
+For this purpose, we develop a unified proof strategy, which is inspired by Ref.~\cite{Dirksen_2017_On}, who derived strong result for sparse vector recovery using similar assumptions, and Ref.~\cite{Kabanava_2015_Stable} in the non-commutative setting.
+\todo{Mention Richards contribution}
 In the numerical and optical experiments, we also implement the uniform sampling scheme for comparison.
 More generally, in the following we consider ensembles of measurement vectors $\alpha$ that satisfy the following conditions for constants $C_\mathrm{I}$, $C_\mathrm{SI}$, and $C_\mathrm{SG}$:
 
@@ -237,11 +243,15 @@ More generally, in the following we consider ensembles of measurement vectors $\
   \]
 \end{itemize}
 
+The following proposition shows that these conditions are satisfied by the unnormalized Gaussian and RECR ensembles as well as the normalized uniform ensemble.
+However, we do not have a proof that the practically relevant normalized RECR ensemble fulfils these conditions.
+Therefore, we are going to treat it separately below.
+
 \begin{proposition}%
   \label{prop:gauss+recr_requirements}
   The following measurement ensembles fulfill the three properties above:
   \begin{enumerate}
-    \item\label{item:gauss+recr_requirements.gaussian} \emph{Gaussian sampling scheme:} $\alpha \in \mathbb{C}^n$ chosen from the standard complex normal distribution $\mathcal{N}(0,\tfrac{1}{2}\mathbb{\1_n})+ i \mathcal{N}(0,\tfrac{1}{2}\mathbb{\1_n})$.
+    \item\label{item:gauss+recr_requirements.gaussian} \emph{Gaussian sampling scheme:} $\alpha \in \mathbb{C}^n$ chosen from the standard complex normal distribution $\mathcal{N}(0,\tfrac{1}{2}\1_n)+ i \mathcal{N}(0,\tfrac{1}{2}\1_n)$.
     In this case
     \[
       C_\mathrm{I} = C_\mathrm{SI} = C_\mathrm{SG} = 1.
@@ -390,8 +400,8 @@ More generally, in the following we consider ensembles of measurement vectors $\
 \end{proof}
 
 
-\todo{Holprig!}
-We now turn to the fundamental technical theorem, which is used to provide rigorous recovery guarantees for phase retrieval via PhaseLift.
+We now turn to the fundamental technical part of this work, which is used to provide rigorous recovery guarantees for phase retrieval via PhaseLift.
+
 \begin{proposition}%
   \label{prop:pl.nsp}
   Suppose that $m = Cn$ vectors $\alpha\ind{1},\ldots,\alpha\ind{m} \in \mathbb{C}^n$ have been chosen independently at random from an ensemble that obeys the three properties~\eqref{eq:pl.tight_frame}, \eqref{eq:pl.sub_isotropy} and~\eqref{eq:pl.subexponential}.
@@ -410,6 +420,10 @@ We now turn to the fundamental technical theorem, which is used to provide rigor
   with probability at least $1- 3\mathrm{e}^{-\gamma m}$, provided that $C >1$ is sufficiently large.
 \end{proposition}
 
+Note that the measurement operator notation~\eqref{eq:pl.measurement_operator_rank1} is simply a shorthand for
+\[
+  y\ind{l} = \braket{\alpha\ind{l}, Z\alpha\ind{l}} \quad\quad (l=1,\ldots,m).
+\]
 We postpone the proof of this proposition to \cref{sub.nsp_proof} in order to state the main results of this section, namely the recovery guarantees for phase retrieval using the measurement ensembles from~\cref{prop:gauss+recr_requirements}.
 The version presented here is a substantial generalization of existing results regarding Gaussian and uniform measurement ensembles~\cite{Candes_2012_Solving,Demanet_2014_Stable}.
 
@@ -502,6 +516,7 @@ We now turn to the recovery guarantee for the normalized RECR ensemble.
   \[
     \norm{\tilde\epsilon}_{\ell_1}  = \sum_l \Abs{  \frac{\ltwonorm{\tilde\alpha\ind{l}}}{n} \, \epsilon\ind{l}  } \le \norm{\epsilon}_{\ell_1}.
   \]
+  since $\ltwonorm{\tilde\alpha\ind{l}}^2 \le n$.
   For the second summand on the right hand side of \Cref{eq:phaselift_noisy_recr.findal_bound}, the same argument gives
   \begin{align}
     \norm{\tilde{\mathcal{A}}(Z) - \tilde y}_{\ell_1}
@@ -1105,18 +1120,18 @@ Therefore, if we take into account this additional cost for reconfiguring the pr
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}[tbp]
-  \centering
-  \includegraphics[width=0.95\columnwidth]{fig/phaselift_ex_details}
-  \caption{%
-   \label{fig:experimental.details}%
-   Reconstruction errors for a random $5 \times 5$ matrix from experimental data.
-   For each picture, we plot the mean (solid) as well as min- and max- errors over 25 samples.
-   In the left picture, each sample consists of a recovery from $m$ preparation vectors and the corresponding photon counts measured over $t = 30\,hrm{s}$
-   In the right picture, we fix a randomly selected set of $m=20$ preparation vectors and run the recovery with the photon counts from $t$ randomly selected time bins, each of which is one second long.
-  \todo[inline]{Explain this picture in the text}
-  }
-\end{figure*}
+% \begin{figure*}[tbp]
+%   \centering
+%   \includegraphics[width=0.95\columnwidth]{fig/phaselift_ex_details}
+%   \caption{%
+%    \label{fig:experimental.details}%
+%    Reconstruction errors for a random $5 \times 5$ matrix from experimental data.
+%    For each picture, we plot the mean (solid) as well as min- and max- errors over 25 samples.
+%    In the left picture, each sample consists of a recovery from $m$ preparation vectors and the corresponding photon counts measured over $t = 30\,hrm{s}$
+%    In the right picture, we fix a randomly selected set of $m=20$ preparation vectors and run the recovery with the photon counts from $t$ randomly selected time bins, each of which is one second long.
+%   \todo[inline]{Explain this picture in the text}
+%   }
+% \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 To demonstrate its practical utility, we use the PhaseLift protocol to perform experimental reconstruction on the reconfigurable integrated photonic circuit introduced in \cref{sec:pl.optics}
