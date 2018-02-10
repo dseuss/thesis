@@ -61,7 +61,6 @@ Preparing theses states reliably is the major challenge of implementing the prop
 A first experimental demonstration is performed using the universal linear optics device from~\cite{Carolan_2015_Universal}:
 The silica-on-silicon device performs a linear-optical circuit comprising 30 directional couplers and 30 tunable thermo-optic phase-shifters on six optical waveguides.
 As shown in \cref{fig:pl.experimental.schematic}, we are able to prepare any coherent input state from a single laser input in the bottom mode using the left-most cascade of couplers and phase-shifters.
-\todo{There was a clarify here?}
 Since varying the norm of the prepared input vector $\alpha$ requires to change the intensity of the input or \quotes{dumping} parts of the input in the topmost mode, it is beneficial to consider ensembles with fixed intensity in the following.
 The remaining triangular array of components colored blue in \cref{fig:pl.experimental.schematic} is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck_1994_Experimental}.
 Reconfiguring the target $M$ then enables us to experimentally test the protocol across a number of configurations including Identity, Swap, and Fourier matrices as well as Haar random unitaries.\\
@@ -219,37 +218,41 @@ Since there are only four different values for the phases of the components~\eqr
 
 The rest of this section is devoted to proving recovery guarantees for the RECR ensemble for phase retrieval via PhaseLift~\eqref{eq:pl.PhaseLift}.
 In order to be more self-contained, we also provide recovery guarantees for the Gaussian and uniform ensembles, which are well known~\cite{Candes_2012_Solving,Demanet_2014_Stable}.
-For this purpose, we develop a unified proof strategy, which is inspired by Ref.~\cite{Dirksen_2017_On}, who derived strong result for sparse vector recovery using similar assumptions, and Ref.~\cite{Kabanava_2015_Stable} in the non-commutative setting.
+For this purpose, we develop a unified proof strategy inspired by Ref.~\cite{Dirksen_2017_On}, who derived strong result for sparse vector recovery using similar assumptions, and Ref.~\cite{Kabanava_2015_Stable} in the non-commutative setting.
 \todo{Mention Richards contribution}
-In the numerical and optical experiments, we also implement the uniform sampling scheme for comparison.
-More generally, in the following we consider ensembles of measurement vectors $\alpha$ that satisfy the following conditions for constants $C_\mathrm{I}$, $C_\mathrm{SI}$, and $C_\mathrm{SG}$:
+In the following we consider ensembles of measurement vectors $\alpha$ that satisfy the following moment conditions.
 
-\begin{itemize}
-  \item \emph{Isotropy on $\mathbb{C}^n$:}
-  \[
-    \mathbb{E} \left[ | \langle \alpha,  z \rangle |^2 \right] = C_\mathrm{I} \|  z \|_{\ell_2}^2 \quad \forall  z \in \mathbb{C}^n.
-    \label{eq:pl.tight_frame}
-  \]
+\begin{definition}%
+  \label{def:pl.attentive}
+  A random vector $\alpha \in \Complex^n$ is said to be \emph{attentive} if there are positive constants $C_\mathrm{I}$, $C_\mathrm{SI}$, and $C_\mathrm{SG}$ such that the following conditions are satisfied.
+  \begin{itemize}
+    \item \emph{Isotropy on $\mathbb{C}^n$:} for every $z \in \Complex^n$
+    \[
+      \mathbb{E} \left[ | \langle \alpha,  z \rangle |^2 \right] = C_\mathrm{I} \|  z \|_{\ell_2}^2
+      \label{eq:pl.tight_frame}
+    \]
 
-  \item \emph{Sub-Isotropy on $\Hermitian^n$}, the Hermitian $n \times n$ matrices:
-  \begin{align}
-    \mathbb{E} \left[ \langle \alpha,  Z \alpha \rangle^2 \right] \geq C_\mathrm{SI} \|  Z \|_2^2 \quad \forall  Z \in \Hermitian^n \label{eq:pl.sub_isotropy}
-  \end{align}
+    \item \emph{Sub-Isotropy on $\Hermitian^n$:} denote by $\Hermitian^n$ the set of all Hermitian $n \times n$ matrices.
+      Then, we the following condition should hold for every $Z \in \Hermitian^n$
+    \begin{align}
+      \mathbb{E} \left[ \langle \alpha,  Z \alpha \rangle^2 \right] \geq C_\mathrm{SI} \|  Z \|_2^2 \label{eq:pl.sub_isotropy}
+    \end{align}
 
-  \item \emph{Sub-Gaussian tail behavior:} For every normalized $ z \in \mathbb{C}^n$ ($\|  z \|_{\ell_2}=1$), $| \langle \alpha,  z \rangle|$ is sub-Gaussian in the sense that its moments obey
-  \[
-    \mathbb{E} \left[ | \langle \alpha,  z \rangle|^{2N} \right] \leq C_\mathrm{SG} N! \quad N \in \mathbb{N}.
-  \label{eq:pl.subexponential}
-  \]
-\end{itemize}
+    \item \emph{Sub-Gaussian tail behavior:} For every normalized $ z \in \mathbb{C}^n$ ($\|  z \|_{\ell_2}=1$), $| \langle \alpha,  z \rangle|$ is sub-Gaussian in the sense that its moments obey
+    \[
+      \mathbb{E} \left[ | \langle \alpha,  z \rangle|^{2N} \right] \leq C_\mathrm{SG} N! \quad N \in \mathbb{N}.
+    \label{eq:pl.subexponential}
+    \]
+  \end{itemize}
+\end{definition}
 
 The following proposition shows that these conditions are satisfied by the unnormalized Gaussian and RECR ensembles as well as the normalized uniform ensemble.
-However, we do not have a proof that the practically relevant normalized RECR ensemble fulfils these conditions.
+However, we do not have a proof that the practically relevant normalized RECR ensemble is attentive.
 Therefore, we are going to treat it separately below.
 
 \begin{proposition}%
   \label{prop:gauss+recr_requirements}
-  The following measurement ensembles fulfill the three properties above:
+  The following measurement ensembles are attentive according to \cref{def:pl.attentive}:
   \begin{enumerate}
     \item\label{item:gauss+recr_requirements.gaussian} \emph{Gaussian sampling scheme:} $\alpha \in \mathbb{C}^n$ chosen from the standard complex normal distribution $\mathcal{N}(0,\tfrac{1}{2}\1_n)+ i \mathcal{N}(0,\tfrac{1}{2}\1_n)$.
     In this case
@@ -399,12 +402,26 @@ Therefore, we are going to treat it separately below.
   where we have used a well-known integration formula for moments, see e.g.\ \cite[Prop.~7.1]{Foucart_2013_Mathematical}, as well as integration by parts.
 \end{proof}
 
+In this work, we consider a slight generalization of \cref{def:pl.attentive}, which we state now.
+\begin{definition}%
+  \label{def:pl.super_attentitive}
+  We say that a random vector $\alpha \in \Complex^n$ is \emph{super-attentive}, if there is an attentive random vector $\tilde\alpha$ and a function $f \Complex^n \to \Reals$ with $f(\tilde\alpha) \ge 1$ almost surely such that $\alpha = f(\tilde\alpha) \tilde \alpha$.
+\end{definition}
+The main example of a super-attentive distribution in this work is a normalized RECR vector with length $\sqrt{n}$.
+Denote by $\tilde\alpha$ an unnormalized RECR vector and set $f(\tilde\alpha) = \sqrt{n} / \ltwonorm{\tilde\alpha}$, then
+\[
+  \alpha = f(\tilde\alpha) \alpha
+  \label{eq:pl.normalized_recr}
+\]
+is a normalized RECR vector.
+Note that every super-attentive random vector is attentive trivially.
 
-We now turn to the fundamental technical part of this work, which is used to provide rigorous recovery guarantees for phase retrieval via PhaseLift.
+The conditions in \cref{def:pl.attentive} naturally appear in the proof of the following theorem, which is the fundamental technical part of this work.
+It is used to provide rigorous recovery guarantees for phase retrieval via PhaseLift.
 
 \begin{proposition}%
   \label{prop:pl.nsp}
-  Suppose that $m = Cn$ vectors $\alpha\ind{1},\ldots,\alpha\ind{m} \in \mathbb{C}^n$ have been chosen independently at random from an ensemble that obeys the three properties~\eqref{eq:pl.tight_frame}, \eqref{eq:pl.sub_isotropy} and~\eqref{eq:pl.subexponential}.
+  Suppose that $m = Cn$ vectors $\alpha\ind{1},\ldots,\alpha\ind{m} \in \mathbb{C}^n$ have been chosen independently at random from an attentive ensemble.
   Let $Z\geq 0$ and $x \in \Complex^n$.
   Then, the measurement operator
   \[
@@ -413,7 +430,7 @@ We now turn to the fundamental technical part of this work, which is used to pro
   \]
   satisfies
   \[
-    \label{eq:pl.rec_guarantee}
+    \label{eq:pl.rec_guarantee_nsp}
     \Fnorm{Z - \ketbra{x}}
     \leq \frac{1}{m} \max \left\{ \tau, \frac{6}{\nu} \right\}  \Norm{\mathcal{A}\left( Z - \ketbra{x} \right)}_{\ell_1}.
   \]
@@ -425,11 +442,12 @@ Note that the measurement operator notation~\eqref{eq:pl.measurement_operator_ra
   y\ind{l} = \braket{\alpha\ind{l}, Z\alpha\ind{l}} \quad\quad (l=1,\ldots,m).
 \]
 We postpone the proof of this proposition to \cref{sub.nsp_proof} in order to state the main results of this section, namely the recovery guarantees for phase retrieval using the measurement ensembles from~\cref{prop:gauss+recr_requirements}.
+
 The version presented here is a substantial generalization of existing results regarding Gaussian and uniform measurement ensembles~\cite{Candes_2012_Solving,Demanet_2014_Stable}.
 
 \begin{theorem}%
   \label{thm:pl.phaselift_noisy}
-  Suppose that $m = Cn$ vectors $\alpha\ind{1},\ldots,\alpha\ind{m} \in \mathbb{C}^n$ have been chosen independently at random from an ensemble that obeys the three properties~\eqref{eq:pl.tight_frame}, \eqref{eq:pl.sub_isotropy} and~\eqref{eq:pl.subexponential}.
+  Suppose that $m = Cn$ vectors $\alpha\ind{1},\ldots,\alpha\ind{m} \in \mathbb{C}^n$ have been chosen independently at random from a super-attentive ensemble.
   Then, the optimizer $X^\sharp$ of the convex program~\eqref{eq:pl.PhaseLift} satisfies
   \[
     \Fnorm{{X}^\sharp - \ketbra{x}} \leq \frac{C'  \norm{\epsilon}_{\ell_1}}{m}.
@@ -445,26 +463,45 @@ The version presented here is a substantial generalization of existing results r
 \end{theorem}
 
 \begin{proof}[Proof of \cref{thm:pl.phaselift_noisy}]
-  \Cref{prop:pl.nsp} implies that a measurement operator~\eqref{eq:pl.measurement_operator_rank1} containing $m \geq C n$ measurements sampled from a distribution satisfying~\eqref{eq:pl.tight_frame},~\eqref{eq:pl.sub_isotropy} and~\eqref{eq:pl.subexponential} meets the requirements of \cref{prop:nsp_implication} with probability at least $1-3 \mathrm{e}^{-\gamma m}$.
-  Conditioned on this event, we have
+  Denote by $\tilde\alpha\ind{l}$ the vectors corresponding to $\alpha\ind{l}$ and by $f$ the scaling function from \cref{def:pl.super_attentitive}.
+  Then, the measurements outcomes $y\ind{l}$ can be mapped to measurement outcomes of $\tilde\alpha\ind{l}$ by
   \[
-  \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m}  \| \mathcal{A}( Z - |{x} \rangle \! \langle {x}|) \|_{\ell_1} \quad \forall  Z \geq 0,\; \forall {x} \in \mathbb{C}^n,
-  \label{eq:pl.nsp_implication2}
+    \label{eq:pl.phaselift_noisy_recr.unnormalized_measurements}
+    \tilde y\ind{l}
+    := \frac{1}{f(\tilde\alpha)^{2}} \, y\ind{l}
+    = \Abs{\braket{\tilde\alpha\ind{l}, x}}^2 + \tilde\epsilon\ind{l}.
   \]
-  where $C' = 2 \max \left\{\tau, 6/\nu \right\}$.
-  Now, suppose that we want to reconstruct a particular ${x}$ from noisy measurements of the form ${y} = \mathcal{A} (|{x} \rangle \! \langle {x}|) + \ket{\epsilon}$, where ${\epsilon} = \sum_l \epsilon\ind{l} \, {e_l}$.
-  Then \cref{eq:pl.nsp_implication2} implies
+  with the rescaled error vectors given by
+  \[
+    \tilde\epsilon\ind{l} = \frac{1}{f(\tilde\alpha)^{2}} \, \epsilon\ind{l}.
+  \]
+  Now, \cref{prop:pl.nsp} implies that a measurement operator $\tilde{\mathcal{A}}$ containing $m \geq C n$ measurements sampled from an attentive distribution satisfies \cref{eq:pl.rec_guarantee_nsp} with probability at least $1-3 \mathrm{e}^{-\gamma m}$.
+  Conditioned on this event, we have for any $Z \ge 0$ and $x \in \Complex^n$
+  \[
+    \Fnorm{Z - \ketbra{x}}
+    \le \frac{C'}{2m} \Norm{\tilde{\mathcal{A}}(Z) - \tilde y + \tilde \epsilon}_{\ell_1}
+    \le \frac{C'}{2m} \left( \norm{\tilde \epsilon}_{\ell_1} + \norm{\tilde{\mathcal{A}}(Z) - \tilde y} \right),
+    \label{eq:phaselift_noisy_recr.findal_bound}
+  \]
+  with $C' = 2 \max \left\{\tau, 6/\nu \right\}$.
+  For the first summand, we have.
+  \[
+    \norm{\tilde\epsilon}_{\ell_1}  = \sum_l \Abs{  \frac{1}{{f(\tilde\alpha\ind{l})}^2} \, \epsilon\ind{l}} \le \norm{\epsilon}_{\ell_1}
+  \]
+  since $f(\tilde\alpha\ind{l} \ge 1$.
+  For the second summand on the right hand side of \Cref{eq:phaselift_noisy_recr.findal_bound}, the same argument gives
   \begin{align}
-    \|  Z - |{x} \rangle \! \langle {x}| \|_2 \leq \frac{C'}{2m} \| \mathcal{A}( Z) - {y} + {\epsilon} \|_{\ell_1}
-    \leq \frac{C'}{2m} \left( \| {\epsilon} \|_{\ell_1} + \| \mathcal{A}( Z) - {y} \|_{\ell_1} \right)\quad \forall  Z \geq 0.
-    \label{eq:pl.phaselift_noisy.final_bound}
+    \norm{\tilde{\mathcal{A}}(Z) - \tilde y}_{\ell_1}
+    &= \sum_l \Abs{  \braket{\tilde\alpha\ind{l}, Z \tilde\alpha\ind{l}} - \tilde y\ind{l}  } \\
+    &= \sum_l \frac{1}{{f(\tilde\alpha\ind{l})}^2}  \Abs{ \braket{\alpha\ind{l}, Z \alpha\ind{l}} - y\ind{l}  } \\
+    &\le \norm{\mathcal{A}(Z) - y}_{\ell_1}
   \end{align}
-  PhaseLift -- the convex optimization problem \eqref{eq:pl.PhaseLift} -- minimizes the right hand side of this bound over all $ Z \geq 0$.
-  Since $ Z = |{x} \rangle \! \langle {x}|$ is a feasible point of this optimization, we can conclude that the minimizer $ Z^\sharp$ obeys
+  PhaseLift -- the convex optimization problem~\eqref{eq:pl.PhaseLift} -- minimizes the right hand side of this bound over all $Z \geq 0$.
+  Since $Z = \ketbra{x}$ is a feasible point of this optimization, we can conclude that the minimizer $Z^\sharp$ obeys
   \[
     \| \mathcal{A}( Z^\sharp) - {y} \|_{\ell_1} \leq \| \mathcal{A}(|{x} \rangle \! \langle {x}|)-{y} \|_{\ell_1} = \| {\epsilon} \|_{\ell_1}
   \]
-  which yields the bound presented in \cref{eq:pl.noisy_recovery_bound}.
+  which concludes the proof.
 \end{proof}
 
 The constants $C$, $C'$, and $\gamma$ implicitly depend on the ensemble constants $C_\mathrm{I}$, $C_\mathrm{SI}$, and $C_\mathrm{SG}$ and can in principle be extracted from the proof.
@@ -474,66 +511,9 @@ Analytical bounds on this constant $C$ are usually too pessimistic to be practic
 \(
   m = 4n - 4
 \)
-such measurements are actually sufficient, that is $C = 4 + o(n)$~\cite{Heinosaari_2013_Quantum}.
-We now turn to the recovery guarantee for the normalized RECR ensemble.
-
-\begin{theorem}%
-  \label{thm:pl.phaselift_noisy_recr}
-  Suppose that $m = Cn$ vectors $\alpha\ind{1},\ldots,\alpha\ind{m} \in \mathbb{C}^n$ have been chosen independently from the RECR ensemble with normalization $\sqrt n$, that is
-  \[
-    \alpha\ind{l} := \frac{\sqrt n}{\ltwonorm{\tilde\alpha\ind{l}}} \, \tilde\alpha\ind{l}.
-  \]
-  for unnormalized RECR vectors $\tilde\alpha\ind{l}$.
-  Then, the reconstruction $X^\sharp$ via PhaseLift from measurements
-  \[
-    \label{eq:pl.phaselift_noisy_recr.measurements}
-    y\ind{l} = \Abs{\braket{\alpha\ind{l}, x}}^2 + \epsilon\ind{l}
-  \]
-  satisfies the noise bound~\eqref{eq:pl.noisy_recovery_bound} with probability at least $1 - 3\mathrm{e}^{-\gamma m}$.
-\end{theorem}
-\begin{proof}
-  The proof of the recovery guarantee for the normalized RECR ensemble leverages \cref{thm:pl.phaselift_noisy} for the unnormalized version.
-  Note, that the measurements~\eqref{eq:pl.phaselift_noisy_recr.measurements} can be mapped to the unnormalized case by
-  \[
-    \label{eq:pl.phaselift_noisy_recr.unnormalized_measurements}
-    \tilde y\ind{l}
-    := \frac{\ltwonorm{\tilde\alpha\ind{l}}^2}{n} \, y\ind{l}
-    = \Abs{\braket{\tilde\alpha\ind{l}, x}}^2 + \tilde \epsilon\ind{l}.
-  \]
-  Here, we have introduced the scaled errors
-  \[
-    \tilde \epsilon\ind{l} = \frac{\ltwonorm{\tilde\alpha\ind{l}}^2}{n} \, \epsilon\ind{l}.
-  \]
-  Now recall \cref{eq:pl.phaselift_noisy.final_bound} from the proof of \cref{thm:pl.phaselift_noisy}.
-  Since the unnormalized scheme satisfies the conditions of \cref{prop:nsp_implication} with probability at least $1-3 \mathrm{e}^{-\gamma m}$, we have condition on this event for any $Z > 0$ and $x \in \Sphere^{n-1}$
-  \[
-    \Fnorm{Z - \ketbra{x}}
-    \le \frac{C'}{2m} \Norm{\tilde{\mathcal{A}}(Z) - \tilde y + \tilde \epsilon}_{\ell_1}
-    \le \frac{C'}{2m} \left( \norm{\tilde \epsilon}_{\ell_1} + \norm{\tilde{\mathcal{A}(Z)} - \tilde y} \right).
-    \label{eq:phaselift_noisy_recr.findal_bound}
-  \]
-  For the first summand, we have
-  \[
-    \norm{\tilde\epsilon}_{\ell_1}  = \sum_l \Abs{  \frac{\ltwonorm{\tilde\alpha\ind{l}}}{n} \, \epsilon\ind{l}  } \le \norm{\epsilon}_{\ell_1}.
-  \]
-  since $\ltwonorm{\tilde\alpha\ind{l}}^2 \le n$.
-  For the second summand on the right hand side of \Cref{eq:phaselift_noisy_recr.findal_bound}, the same argument gives
-  \begin{align}
-    \norm{\tilde{\mathcal{A}}(Z) - \tilde y}_{\ell_1}
-    &= \sum_l \Abs{  \braket{\tilde\alpha\ind{l}, Z \tilde\alpha\ind{l}} - \tilde y\ind{l}  } \\
-    &= \sum_l \frac{\ltwonorm{\tilde\alpha\ind{l}}^2}{n}  \Abs{ \braket{\alpha\ind{l}, Z \alpha\ind{l}} - y\ind{l}  } \\
-    &\le \norm{\mathcal{A}(Z) - y}_{\ell_1}
-  \end{align}
-  PhaseLift -- the convex optimization problem \eqref{eq:pl.PhaseLift} -- minimizes the right hand side of this bound over all $ Z \geq 0$.
-  Since $Z = \braket{x}$ is a feasible point of this optimization, we can conclude that the minimizer $Z^\sharp$ obeys
-  \[
-    \| \mathcal{A}( Z^\sharp) - {y} \|_{\ell_1} \leq \| \mathcal{A}(|{x} \rangle \! \langle {x}|)-{y} \|_{\ell_1} = \| {\epsilon} \|_{\ell_1}
-  \]
-  which concludes the proof.
-\end{proof}
+such measurements are actually sufficient, that is $C = 4 + o(n)$~\cite{Heinosaari_2013_Quantum}.\\
 
 
-% We postpone the proof of this result to \cref{sec:pl.main_proof} in order to derive an error bound for the recovered signal vector $x^\sharp$ from \cref{thm:pl.phaselift_noisy}.
 Recall from \cref{eq:pl.vector_from_matrix} that we obtain the recovery of the signal vector ${x}^\sharp$ from the minimizer ${X}^\sharp$ of the PhaseLift program~\cref{eq:pl.PhaseLift} via an eigenvalue decomposition.
 In~\cite{Candes_2012_Solving} it was shown that \cref{eq:pl.noisy_recovery_bound} implies
 \[
@@ -543,8 +523,6 @@ In~\cite{Candes_2012_Solving} it was shown that \cref{eq:pl.noisy_recovery_bound
 \]
 where $C''$ denotes another constant of sufficient size.
 In words, we are able to recover the original signal $x$ up to a global phase and up to an error that is determined by the signal-to-noise ratio.
-
-
 
 
 \subsection{Proof of \cref{prop:pl.nsp}}%
