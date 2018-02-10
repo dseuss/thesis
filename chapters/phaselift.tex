@@ -138,7 +138,8 @@ The quadratic measurements of $x$ in \cref{eq:pl.phase_retrieval_measurements} c
   = \tr \left( (\ket{\alpha^{(l)}}\bra{\alpha^{(l)}}) (\ket{{x}}\bra{{x}}) \right).
 \]
 This \quotes{lifts} the phase retrieval problem to the problem of recovering the positive semi-definite (psd) rank-1 matrix $\ketbra{x}$ from linear measurements.
-The latter -- and its generalization to arbitrary low-rank matrices -- have been studied extensively in the field of \emph{low-rank matrix recovery}, see e.g.~\cite{Ahmed_2014_Blind,Candes_2009_Exact,Candes_2011_Tight,Recht_2010_Guaranteed,Gross_2011_Recovering,Chen_2015_IncoherenceOptimal} for a highly incomplete list of references.
+Note that an efficient solution to this problem needs to exploit the low-rank constraint, as we have embedded the low-complexity signal $\ketbra{x}$ into a $n^2$ dimensional ambient space.
+This problem -- and its generalization to arbitrary low-rank matrices -- have been studied extensively in the field of \emph{low-rank matrix recovery}, see e.g.~\cite{Ahmed_2014_Blind,Candes_2009_Exact,Candes_2011_Tight,Recht_2010_Guaranteed,Gross_2011_Recovering,Chen_2015_IncoherenceOptimal} for a highly incomplete list of references.
 
 The fundamental idea is to find the matrix $Z$ with the smallest rank that is compatible with the observations.
 As an example, consider the idealized noiseless case of \cref{eq:pl.phase_retrieval_measurements}, i.e.\ $\epsilon\ind{l} = 0$.
