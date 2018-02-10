@@ -584,8 +584,6 @@ The version we use here is due to Mendelson~\cite{Mendelson_2015_Learning,Koltch
   with probability at least $1-\mathrm{e}^{-2t^2}$.
 \end{theorem}
 
-Note that the measurement operator introduced in \cref{eq:pl.measurement_operator_definition} is a shorthand notation for the linear measurements $y\ind{l} = \tr  \left( A\ind{l}  Z \right)$ with $l=1,\ldots,m$.
-It maps the signal matrix $Z$ to the vector of (noiseless) measurement outcomes $\sum_l y_l \, {e_l}$.
 The following two propositions summarize several results presented in \cite{Kabanava_2015_Stable} and adapt them to the problem of phase retrieval.
 
 \begin{proposition}%
@@ -772,7 +770,7 @@ The following two propositions summarize several results presented in \cite{Kaba
   where the second inequality follows from $m \geq \frac{2 \ln (3)}{C_\mathrm{SG}} n$. Inserting this bound into \eqref{eq:pl.Wm_hoelder} yields the claim with $C_\mathrm{W} = 72 \sqrt{ \ln (3) C_\mathrm{SG}}$.
 \end{proof}
 
-\begin{proof}[of \cref{prop:pl.nsp}]
+\begin{proof}[Proof of \cref{prop:pl.nsp}]
   Now we are ready to apply Mendelson's small ball method \eqref{eq:pl.mendelson}.
   For $D$ defined in \eqref{eq:pl.D} and measurements $ A_l = \ketbra{\alpha\ind{l}}$ with $\alpha_l$ obeying \cref{eq:pl.sub_isotropy,eq:pl.subexponential}, the bounds from the previous Lemmas imply
   \begin{align}
