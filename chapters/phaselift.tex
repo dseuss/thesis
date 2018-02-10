@@ -816,10 +816,10 @@ The measured intensity at detector $j$ as given by \cref{eq:pl.intensities} excl
 \[
   I_j({\alpha})
   = \left| \sum_{k=1}^n M_{j,k} \alpha_k \right|^2 + \epsilon_j
-  = \left\vert  \langle {M}_j, \alpha \rangle  \right\vert^2 + \epsilon_j. \quad 1 \leq j \leq n
+  = \left\vert  \langle \cc{{M}_j}, \alpha \rangle  \right\vert^2 + \epsilon_j. \quad 1 \leq j \leq n
   \label{eq:pl.intensities_as_overlap}
 \]
-Here, we have defined ${M}_j$ as the \emph{complex conjugated} row vectors of ${M}$.
+Here, we have defined ${M}_j$ as the row vectors of ${M}$.
 Since the measured intensities in \cref{eq:pl.intensities_as_overlap} exactly resemble the measurement model of the phase retrieval problem in \cref{eq:pl.phase_retrieval_measurements}, we can use the ideas introduced in \cref{sec:pl.phase_retrieval} to recover $M$:
 For this purpose, we propose the following protocol:
 \begin{enumerate}
@@ -828,7 +828,7 @@ For this purpose, we propose the following protocol:
   \item use PhaseLift~\eqref{eq:pl.PhaseLift} to recover each ${M}_j$ individually.
 \end{enumerate}
 
-In \cref{sub:pl.recr}, we introduced different multiple ensembles to choose the $\alpha\ind{l}$ from.
+In \cref{sub:pl.recr}, we introduced multiple ensembles to choose the $\alpha\ind{l}$ from.
 However, not all of these are equally well suited for the problem at hand.
 First and foremost, we recall from \cref{sec:pl.optics} that input vectors with constant norm $\ltwonorm{\alpha\ind{l}} = 1$ are better suited for the setup depicted in \cref{fig:pl.experimental.schematic}.
 % Otherwise, one would need to introduce an additional mode to redirect \quotes{extraneous} intensity or vary the output power of the laser.
@@ -836,7 +836,7 @@ First and foremost, we recall from \cref{sec:pl.optics} that input vectors with 
 Also, recall that the RECR sampling scheme was conceived with our application in linear optics in mind:
 One major drawback of the uniform scheme is that each component may take any possible value for its complex phase.
 In contrast, the RECR scheme has only four possible value for the phase shift, namely $\frac{k \pi}{2}$ for $k=1,\ldots,4$.
-Therefore, the reconfigurable phase shifters in the implementation outlined in \cref{fig:pl.experimental.schematic} could in principle be calibrated to these values.
+Therefore, the reconfigurable phase shifters in the implementation outlined in \cref{fig:pl.experimental.schematic} can be calibrated to these values.
 A similar argument applies to the magnitudes of the RECR components, which can only assume $n$ possible values due to the additional normalization constraint $\ltwonorm{\alpha\ind{l}} = 1$.
 However, the current linear architecture does not benefit from this additional constraints.
 Using a tree-like structure in the preparation stage could further improve the practical performance of the PhaseLift reconstruction using RECR vectors.
@@ -864,24 +864,22 @@ We start by stating the rigorous version of the reconstruction protocol outlined
     {Z}^\sharp_{j} = \underset{{Z} \in \Hermitian^n}{\argmin}& \quad \sum_{l=1}^m \left| \tr \left( (|{\alpha}^{l} \rangle \langle {\alpha}^{(l)} | )  Z \right) - y_j^{(l)} \right| \label{eq:tmat_recovery_program}\\
     \mathrm{subject to} & \quad {Z} \geq 0 \nonumber
   \end{align}
-  and let ${M}_j^\sharp$ be the eigenvector of ${Z}^\sharp_{j}$ corresponding to its largest eigenvalue rescaled to have length $\norm{{M}_j^\sharp}_{\ell_2} = \sqrt{ \| {Z}^\sharp_{j} \|_\infty}$.
+  and let $\cc{M}_j^\sharp$ be the complex conjugate of the eigenvector of ${Z}^\sharp_{j}$ corresponding to its largest eigenvalue rescaled to have length $\Norm{\cc{M}_j^\sharp}_{\ell_2} = \sqrt{ \| {Z}^\sharp_{j} \|_\infty}$.
   Then, we estimate ${M}$ by
   \[
     {M}^\sharp =
     \begin{pmatrix}
-      \adj{{M^\sharp}_1} \\ \vdots \\  \adj{{M^\sharp}_n}
+      \transpose{{M^\sharp}_1} \\ \vdots \\  \transpose{{M^\sharp}_n}
     \end{pmatrix}.
     \label{eq:pl.transfermat_estimator}
   \]
 \end{protocol}
 
 Note that \cref{eq:pl.transfermat_estimator} simply amounts to stacking the separately recovered row vectors $ M_j^\sharp$.
-The additional complex conjugation due to taking the adjoint in \cref{eq:pl.transfermat_estimator} is due to the definition of $M_j$ below \cref{eq:pl.intensities_as_overlap} as the complex conjugated rows of $M$.
-
 Now, a simple extension of \cref{thm:pl.phaselift_noisy,thm:pl.phaselift_noisy_recr} yield a similar performance guarantee for \cref{prot:pl.detailed_reconstruction}:
 Due to the similarity of the intensity measurements~\eqref{eq:pl.intensities_as_overlap} for a single row $M_j$ of the transfer matrix and the measurements assumed in \cref{thm:pl.phaselift_noisy}, the latter guarantees recovery of said row with high probability by means of PhaseLift~\eqref{eq:pl.PhaseLift}.
 In order to succinctly state the final result, we introduce some additional notation.
-Define the total noise at detector site $j$ (measured in $\ell_1$-norm) to be
+Define the total noise at detector $j$ (measured in $\ell_1$-norm) to be
 \[
   \epsilon_j^{\mathrm{tot}}= \sum_{l=1}^m \abs{\epsilon_j^{(l)}}
   \label{eq:pl.error_term_summand}
@@ -908,7 +906,7 @@ In particular, we do not require a universal type of noise for all detectors, bu
     \label{eq:pl.definition_normconst}
   \]
 \end{corollary}
-Recall that $\mathrm{diag}(\mu_1, \ldots, \mu_n)$ are the row-phases of ${M}$ unrecoverable from the intensity measurements~\eqref{eq:pl.intensities}.
+Recall that $\mathrm{diag}(\mu_1, \ldots, \mu_n)$ are the row-phases of ${M}$, which are unrecoverable from the intensity measurements~\eqref{eq:pl.intensities}.
 We include the additional correction~\eqref{eq:pl.definition_normconst} to deal with possible loss.
 Unitary transfer matrices satisfy $\nu = 1$.
 
@@ -921,9 +919,9 @@ Unitary transfer matrices satisfy $\nu = 1$.
     \right\}.
     \label{eq:noisy_reconstruction_vectorial_bound}
   \]
-  follows directly from \cref{thm:pl.phaselift_noisy,thm:pl.phaselift_noisy_recr} for the uniform and RECR scheme, respectively.
+  follows directly from \cref{thm:pl.phaselift_noisy}.
   Note that the additional $n$ factor compared to \cref{eq:vectorial_noisy_bound} is due to the normalization of the input vectors.
-  The input vectors need to be scaled by $\sqrt{n}$ in order to be able to apply \cref{thm:pl.phaselift_noisy,thm:pl.phaselift_noisy_recr}.
+  The input vectors need to be scaled by $\sqrt{n}$ in order to be able to apply \cref{thm:pl.phaselift_noisy}.
 
   Before we can move on to determine the remaining row vectors ${M}_{i}$ ($i \neq j$) of ${M}$, it is important to point out that the recovery guarantees of \cref{thm:pl.phaselift_noisy,thm:pl.phaselift_noisy_recr} are \emph{universal}: one instance of randomly chosen measurement vectors suffices to recover \emph{any} vector ${x} \in \Complex^n$.
   This allows for applying this reconstruction guarantee to all $n$ row vectors ${M}_j$ simultaneously.
@@ -958,9 +956,8 @@ In other words, said corollary implies that once the sampling threshold is reach
 Hence, any additional experimental time should be invested to reduce the uncertainty of the single measurements, e.g.\ by increasing the number of single photon events used to estimate $I_j(\alpha)$.
 
 By studying the assumptions and the proof of the underlying \cref{thm:pl.phaselift_noisy}, we also note that this behavior is to be expected.
-Since said theorem does not assume any statistical properties of the noise, but only assumes that the noise $\epsilon\ind{l}$ is bounded, we cannot expect a statistical improvement by increasing the number of measurements.
+Since this theorem does not assume any statistical properties of the noise, but only assumes that the noise $\epsilon\ind{l}$ is bounded, we cannot expect a statistical improvement by increasing the number of measurements.
 For example, if we assume a constant, purely systematic error $\epsilon\ind{l} = c$ for all measurements, then no improvement can be expected even for $m\to\infty$.
-\todo{true?}
 
 However, it should be kept in mind that \cref{cor:pl.performance_guarantee} only provides necessary conditions for recovery, which are not optimal in the large $m$ regime.
 Therefore, we perform numerical simulations in the next chapter to further investigate how experimental time should be spent.
@@ -1006,7 +1003,7 @@ For the measurement noise $\epsilon_j$ from \cref{eq:pl.intensities_as_overlap},
 The density plots show the fraction of successfully recovered unitaries.
 Here, the criterion for success is whether the distance of the reconstruction $M^\sharp$ measured in Frobenius norm is smaller than the threshold  $4 \sigma n$ in accordance with the error bound~\eqref{eq:pl.total_bound}.
 
-\Cref{sfig:pl.simplot.gaussian,sfig:pl.simplot.recr} show a pronounced phase transition around $4n - 4$.
+\Cref{sfig:pl.simplot.gaussian,sfig:pl.simplot.recr} show a pronounced phase transition around $m = 4n$.
 This demonstrates the high sample efficiency of the PhaseLift reconstruction.
 Not only does the number of measurements scale linearly in the system size -- as rigorously proven in \cref{cor:pl.performance_guarantee} -- but the scaling coefficient is small as well.\\
 
@@ -1041,7 +1038,7 @@ We now investigate the question posed at the end of \cref{sub:pl.characterizatio
 Recall from \cref{eq:pl.photon_stats} that the single photon counting statistics is given by a multinomial distribution with number of trials $N$ given by the total photon number and the probabilities $p_j$ given by the expectation values in \cref{eq:pl.experiment.probabilities}.
 Denote by $N\ind{l}$ the number of photons used to estimate the output intensities for a single photon input state $\ket{\psi(\alpha\ind{l})}$ with $l=1,\ldots,m$.
 In \cref{fig:pl.simerror}, we depict the reconstruction error with the total number of photons used for reconstruction $N = \sum_l N\ind{l}$ kept fixed.
-To be more precise, we choose the total number of photons $N$ as a multiple of the counting rate from the experiment $\Gamma = 4600\,s^{-1}$, i.e.
+To be more precise, we choose the total number of photons $N$ as a multiple of the counting rate from the experiment $\Gamma = 4600\,s^{-1}$ introduced in \cref{sec:pl.optics}, i.e.
 \[
   N = t \times \Gamma,
   \label{eq:pl.counts_from_time}
@@ -1079,7 +1076,7 @@ Therefore, if we take into account this additional cost for reconfiguring the pr
      The colored diamonds indicate the median and the colored area sketches the distribution of the discrepancy between the PhaseLift reconstruction and an alternative method.
      Since for $n=2$ there are only six distinct RECR vectors up to a global phase, there is only one reconstruction.
      In the left picture, the reference is obtained through a HOM-dip reconstruction as discussed in the appendix.
-     However, since this technique is too costly for larger dimensions, the five dimensional reconstructions on the right are only compared in magnitude to a reference from single photon data neglecting all phase information.
+     However, since this technique is too costly for larger dimensions, the five dimensional reconstructions on the right are only compared in magnitude to a reference from single photon data, which is observation to all phase information.
      For more details on the data analysis see the supplemental material.
   }
 \end{figure*}
@@ -1117,12 +1114,11 @@ In \cref{fig:experimental.overview}, we show the reconstruction error of the Pha
 Since our aim is to benchmark the performance of the characterization technique, and not the performance of the chip itself, we compare to  other reconstructions obtained through established but more costly techniques:
 For the smaller transfer matrices of dimension two and three, we perform a complete HOM-dip-reconstruction based on two photon interference.
 However, since this is infeasibly costly for the five-dimensional transfer matrices, we only compare these to single-photon reconstructions of the absolute values of the transfer matrix components.
-Therefore, for the larger transfer matrices, we neglect the phase information of the alternative reconstruction.
 For more details, see \cref{sec:pl.experimental_details}.
 
 The number of input vectors used in each PhaseLift reconstruction is $m = 5n$.
-This slight overhead compared to the numerically conjectured phase transition in \cref{fig:pl.simplot} is used to counteract systematic errors in the preparation of the input vectors.
-To be more precise, we conjecture that the main source of error in this experiment is due large errors in preparation of certain input states.
+This slight overhead compared to the conjectured and numerically observed phase transition in \cref{fig:pl.simplot} is used to counteract systematic errors in the preparation of the input vectors.
+To be more precise, we conjecture that the main source of error in this experiment is due comparatively large errors in preparation of certain input states.
 By increasing $m$ slightly, these effects average out and provide in total a smaller reconstruction error.
 
 \todo{Some more interpretation of these results would be nice}
