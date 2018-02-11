@@ -525,7 +525,7 @@ def exdetails(datafile, dipsref, samples, compute, cache_path):
             with open(Path(cache_path) / 'mplot.pkl', 'rb') as buf:
                 plot_data = pickle.load(buf)
 
-        devplot(*plot_data['GAUSS'], label='Gauss', ax=ax1)
+        devplot(*plot_data['GAUSS'], label='Uniform', ax=ax1)
         devplot(*plot_data['RECR'], label='RECR', ax=ax1)
         ax1.set_xlabel(r'# of measurements $m$')
         ax1.set_ylabel(r'$\frac{1}{n} \, \left\Vert \vert M_\mathrm{dips} \vert - \vert M^\sharp \vert \right\Vert_2$')
@@ -548,7 +548,7 @@ def exdetails(datafile, dipsref, samples, compute, cache_path):
         n = 5
         x, y = plot_data['GAUSS']
         y_0 = np.mean(y[-1])
-        devplot(x, (y - y_0) / n, label='Gauss', ax=ax2)
+        devplot(x, (y - y_0) / n, label='Uniform', ax=ax2)
         x, y = plot_data['RECR']
         y_0 = np.mean(y[-1])
         devplot(x, (y - y_0) / n, label='RECR', ax=ax2)

@@ -1008,7 +1008,7 @@ This demonstrates the high sample efficiency of the PhaseLift reconstruction.
 Not only does the number of measurements scale linearly in the system size -- as rigorously proven in \cref{cor:pl.performance_guarantee} -- but the scaling coefficient is small as well.\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}[tbp]
+\begin{figure*}[t]
   \begin{subfigure}{.475\columnwidth}
     \includegraphics[width=\linewidth]{fig/phaselift_sim_errorscaling_dft_5}
     \caption{\label{sfig:pl.simerror.five}%
@@ -1022,7 +1022,7 @@ Not only does the number of measurements scale linearly in the system size -- as
     }
    \end{subfigure}
   \caption{\label{fig:pl.simerror}%
-    Simulated reconstruction error for the with fixed time budget as a function of the number of measurements for two different circuit sizes.
+    Simulated reconstruction error from RECR measurements for the with fixed time budget as a function of the number of measurements for two different circuit sizes.
     The total photon number in for each reconstruction is $N = 4600 \times t$.
     Then, the output for each input vector $\alpha$ is a multinomial distribution with the number of trials given by $\frac{M}{m}$.
     Intensities for the PhaseLift reconstruction is estimated for 100 samples of each distribution.
@@ -1066,11 +1066,11 @@ Therefore, if we take into account this additional cost for reconfiguring the pr
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{figure*}[tbp]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=0.95\textwidth]{fig/phaselift_ex_dipsref}
+  \includegraphics[width=0.95\textwidth]{fig/phaselift_ex_overview}
   \caption{%
-     \label{fig:experimental.overview}
+     \label{fig:experimental.overview}%
      Comparing reconstructions from experimental data for different target transfer matrices and sampling schemes.
      For each matrix and sampling scheme, we subsample $m = 5n$ preparation vectors and the corresponding measured intensities from the experimental data 100 times.
      The colored diamonds indicate the median and the colored area sketches the distribution of the discrepancy between the PhaseLift reconstruction and an alternative method.
@@ -1083,7 +1083,7 @@ Therefore, if we take into account this additional cost for reconfiguring the pr
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}[tbp]
+\begin{figure*}[t]
   \centering
   \includegraphics[width=\columnwidth]{fig/phaselift_ex_targetref}
   \caption{%
@@ -1095,7 +1095,7 @@ Therefore, if we take into account this additional cost for reconfiguring the pr
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure*}[tbp]
+\begin{figure*}[t]
   \centering
   \includegraphics[width=0.95\columnwidth]{fig/phaselift_ex_details}
   \caption{%
@@ -1120,8 +1120,6 @@ The number of input vectors used in each PhaseLift reconstruction is $m = 5n$.
 This slight overhead compared to the conjectured and numerically observed phase transition in \cref{fig:pl.simplot} is used to counteract systematic errors in the preparation of the input vectors.
 To be more precise, we conjecture that the main source of error in this experiment is due comparatively large errors in preparation of certain input states.
 By increasing $m$ slightly, these effects average out and provide in total a smaller reconstruction error.
-
-\todo{Some more interpretation of these results would be nice}
 
 We see that the PhaseLift reconstructions and the references agree well for most settings in \cref{fig:experimental.overview}
 Even without exploiting the possible advantages of the RECR ensemble due to a better calibration, it generally performs as well as the uniform ensemble.
