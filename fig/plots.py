@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-import warnings
 import os
-from glob import glob
-from warnings import warn
-import seaborn as sns
+import pickle
 import re
+import warnings
+from glob import glob
+from pathlib import Path
+from warnings import warn
 
 import click
 
@@ -15,6 +16,7 @@ import matplotlib.pyplot as pl
 import numpy as np
 import pandas as pd
 import pypllon as plon
+import seaborn as sns
 from matplotlib.gridspec import GridSpec
 from pypllon.parsers import load_simdata
 from tqdm import tqdm
@@ -37,6 +39,20 @@ def main():
 ###############################################################################
 #                              Simulation Plots                               #
 ###############################################################################
+
+
+def devplot(x, y, label, ax, semilog=False):
+    mus = np.mean(y, axis=1)
+    if semilog:
+        l, = ax.semilogy(x, mus, label=label)
+    else:
+        l, = ax.plot(x, mus, label=label)
+
+    y1 = np.percentile(y, 2.5, axis=1)
+    y1 = np.percentile(y, 2.5, axis=1)
+    y2 = np.percentile(y, 97.5, axis=1)
+    ax.fill_between(x, y1, y2, alpha=0.2, color=l.get_color())
+
 
 @main.command()
 @click.argument('h5file')
@@ -152,15 +168,7 @@ def error_scaling(name, dim):
 
         data = np.load(fname)
         ms, errors = data['arr_0'], data['arr_1'] / dim
-        mus = np.mean(errors, axis=1)
-        l, = ax.semilogy(ms, mus, label=r'$t=' + str(ts) + '$')
-
-        std = np.std(errors, axis=1)
-        #  ax.fill_between(ms, mus - std, mus + std, alpha=0.2, color=l.get_color())
-        # np.min(errors, axis=1), np.max(errors, axis=1),
-        y1 = np.percentile(errors, 2.5, axis=1)
-        y2 = np.percentile(errors, 97.5, axis=1)
-        ax.fill_between(ms, y1, y2, alpha=0.2, color=l.get_color())
+        devplot(ms, errors, label=r'$t=' + str(ts) + '$', ax=ax, semilog=True)
 
     handles, labels = ax.get_legend_handles_labels()
     # sort both labels and handles by labels
@@ -312,7 +320,7 @@ def expandarize(datadir, samples, outfile):
             target = h5file['GAUSS']['TARGET'].value
             ref, _ = plon.best_tmat_phases(target, ref, cols=True, rows=True)
 
-            idx = id_to_label(os.path.splitext(datafile)[0])
+            idx = id_to_label(os.path.splitext(os.path.basename(datafile)[0])[0])
             references.loc[idx] = [target, ref, with_phases]
             append_reconstructions(recons, h5file['GAUSS'], 'Gaussian', idx, samples)
             append_reconstructions(recons, h5file['RECR'], 'RECR', idx, samples)
@@ -357,7 +365,7 @@ def set_grid(ax):
     ax.xaxis.set_tick_params(which='minor', width=0)
 
 
-@main.command(name='ex_overview.pdf')
+@main.command(name='phaselift_ex_overview.pdf')
 @click.option('--infile', help='File used for expandarize', default='data/exdata.h5')
 @click.option('--mode', help='Which plot mode to use', default='violin')
 def explot_overview(infile, mode):
@@ -397,7 +405,7 @@ def explot_overview(infile, mode):
     pl.savefig('ex_overview.pdf')
 
 
-@main.command(name='ex_targetref.pdf')
+@main.command(name='phaselift_ex_targetref.pdf')
 @click.option('--infile', help='File used for expandarize', default='data/exdata.h5')
 @click.option('--mode', help='Which plot mode to use', default='violin')
 def explot_target(infile, mode):
@@ -423,86 +431,132 @@ def explot_target(infile, mode):
     pl.savefig('ex_targetref.pdf')
 
 
-def m_dependence_plot(data, ax=None, measurements=None, t_sel=slice(None),
-                      ref_func=get_reference, samples=20, label=None):
+def get_intensities(df, sel=slice(None)):
+    # NOT NORMALIZED!
+    deteff = df['RAWCOUNTS'].attrs['DETEFF']
+
+    intensities = {}
+    for key, counts_group in df['RAWCOUNTS'].items():
+        counts = counts_group.value * deteff
+        time_avg = 1.0 * np.mean(counts[sel], axis=0)  # take time-average
+        intensities[key] = time_avg
+    # we normalize them globally for now, otherwise the solver might have trouble
+    normalization = max(sum(x) for x in intensities.values())
+    return {key: x / normalization for key, x in intensities.items()}
+
+
+def recover_old(df, optim_func=plon.lr_recover_l2, m_sel=slice(None),
+                t_sel=slice(None)):
+    pvec_keys = np.array(list(df['PREPVECS'].keys()))[m_sel]
+    # note that intensities are not normalized!
+    intesity_dict = get_intensities(df, sel=t_sel)
+    valid_keys = set(pvec_keys).intersection(set(intesity_dict.keys()))
+
+    pvecs = np.asarray([df['PREPVECS'][pkey].value for pkey in valid_keys])
+    intensities = np.asarray([intesity_dict[pkey] for pkey in valid_keys])
+    recov, errs = plon.recover(pvecs, intensities, optim_func=optim_func, reterr=True)
+    # but also force our normalization on the reconstruction
+    recov /= np.sqrt(np.max(np.sum(np.abs(recov)**2, axis=1)))
+    return recov, errs
+
+
+def recons_errors(data, t_sel=slice(None), m_sel=slice(None),
+                  ref_func=get_reference, power_corrected=False):
+    recov, vec_errs = recover_old(data, m_sel=m_sel, t_sel=t_sel)
+    ref, with_phases = ref_func(data)
+
+    if with_phases:
+        recov, _ = plon.best_tmat_phases(ref, recov)
+        errors = np.ravel(np.abs(recov - ref))
+    else:
+        errors = np.ravel(np.abs(np.abs(recov) - np.abs(ref)))
+
+    return errors, vec_errs
+
+
+def m_dependence_plot(data, measurements=None, t_sel=slice(None),
+                      ref_func=get_reference, samples=20):
     m_max = len(data['PREPVECS'])
     x = measurements if measurements is not None \
         else list(range(1, len(data['PREPVECS']), 3))
     errors = np.array([[np.linalg.norm(recons_errors(data, t_sel=t_sel, ref_func=ref_func,
                                                      m_sel=np.random.choice(m_max, size=m, replace=False))[0])
-                       for _ in range(samples)] for m in tqdm(x)])
-
-    ax = ax if ax is not None else pl.gca()
-    l, *_ = ax.plot(x, np.mean(errors, axis=1), label=label)
-    ax.fill_between(x, np.min(errors, axis=1), np.max(errors, axis=1),
-                    color=l.get_color(), alpha=.5)
-    return ax
+                       for _ in tqdm(range(samples))] for m in tqdm(x)])
+    return x, errors
 
 
-def t_dependence_plot(data, ax=None, m_sel=slice(None), timesteps=None,
-                      ref_func=get_reference, samples=20, label=None):
+def t_dependence_plot(data, m_sel=slice(None), timesteps=None,
+                      ref_func=get_reference, samples=20):
     max_timesteps, _ = list(data['RAWCOUNTS'].values())[0].shape
     x = timesteps if timesteps is not None \
-        else list(range(1, max_timesteps, 3))
+        else list(range(1, max_timesteps, 2))
     errors = np.array([[np.linalg.norm(recons_errors(data, m_sel=m_sel, ref_func=ref_func,
                                                      t_sel=np.random.choice(max_timesteps, size=t, replace=False))[0])
-                       for _ in range(samples)] for t in tqdm(x)])
-
-    ax = ax if ax is not None else pl.gca()
-    l, *_ = ax.plot(x, np.mean(errors, axis=1), label=label)
-    ax.fill_between(x, np.min(errors, axis=1), np.max(errors, axis=1),
-                    color=l.get_color(), alpha=.5)
-    return ax
+                       for _ in tqdm(range(samples))] for t in tqdm(x)])
+    return x, errors
 
 
 
 
-@main.command()
-@click.argument('datafile', default='data/M5_03.h5')
+@main.command(name='phaselift_ex_details.pdf')
+@click.argument('datafile', default='../data/M5_03.h5')
 @click.option('--dipsref/--targetref', help='Use dips as reference, otherwise use target',
-              default=True)
-@click.option('--powercorrected/--nopowercorrected', help='Use power corrected measurements',
               default=False)
 @click.option('--samples', help='Nr of samples to use', default=20)
-def exdetails(datafile, dipsref, powercorrected, samples):
+@click.option('--compute/--plot-only', help='Nr of samples to use', default=False)
+@click.option('--cache-path', help='Path to cache directory', default='../data/')
+def exdetails(datafile, dipsref, samples, compute, cache_path):
     fig = pl.figure(0, figsize=(9, 3.5))
 
-    references = empty_dataframe(target=object, reference=object, with_phases=bool)
-    recons = empty_dataframe(idx=object, recons=object, m_sel=object,
-                             Scheme=object, sample=int)
-
+    ref_func = get_reference if dipsref else lambda d: (d['TARGET'], True)
     with h5py.File(datafile) as h5file:
-        # since GAUSS/RECR have the same target/dips reconstruction
-        ref, with_phases = get_reference(h5file['GAUSS'])
-        target = h5file['GAUSS']['TARGET'].value
-        ref, _ = plon.best_tmat_phases(target, ref, cols=True, rows=True)
-
-        idx = id_to_label(os.path.splitext(datafile)[0])
-        references.loc[idx] = [target, ref, with_phases]
-        append_reconstructions(recons, h5file['GAUSS'], 'Gaussian', idx, samples)
-        append_reconstructions(recons, h5file['RECR'], 'RECR', idx, samples)
-        # append dipsref
-        recons.loc[len(recons)] = [idx, ref, None, 'HOM-dip', 0]
-
-    with h5py.File(h5file, 'r') as datafile:
         ax1 = fig.add_subplot(1, 2, 1)
-        m_dependence_plot(datafile['GAUSS'], ax=ax1, label='GAUSS', samples=samples)
-        m_dependence_plot(datafile['RECR'], ax=ax1, label='RECR', samples=samples)
+        plot_data = {}
+        if compute:
+            for key in ['GAUSS', 'RECR']:
+                plot_data[key] = m_dependence_plot(h5file[key], samples=samples,
+                                                   ref_func=ref_func)
 
+            with open(Path(cache_path) / 'mplot.pkl', 'wb') as buf:
+                pickle.dump(plot_data, buf)
+        else:
+            with open(Path(cache_path) / 'mplot.pkl', 'rb') as buf:
+                plot_data = pickle.load(buf)
+
+        devplot(*plot_data['GAUSS'], label='Gauss', ax=ax1)
+        devplot(*plot_data['RECR'], label='RECR', ax=ax1)
         ax1.set_xlabel(r'# of measurements $m$')
-        ax1.set_ylabel(r'$\left\Vert \vert M_\mathrm{dips} \vert - \vert M^\sharp \vert \right\Vert_2$')
+        ax1.set_ylabel(r'$\frac{1}{n} \, \left\Vert \vert M_\mathrm{dips} \vert - \vert M^\sharp \vert \right\Vert_2$')
 
         ax2 = fig.add_subplot(1, 2, 2)
-        m_sel = np.random.choice(30, size=20, replace=False)
-        t_dependence_plot(datafile['GAUSS'], ax=ax2, label='GAUSS', samples=samples,
-                          m_sel=m_sel)
-        t_dependence_plot(datafile['RECR'], ax=ax2, label='RECR', samples=samples,
-                          m_sel=m_sel)
+        plot_data = {}
+        if compute:
+            m_sel = np.random.choice(30, size=20, replace=False)
+            for key in ['GAUSS', 'RECR']:
+                plot_data[key] = t_dependence_plot(h5file[key], samples=samples,
+                                                   ref_func=ref_func)
+
+
+            with open(Path(cache_path) / 'tplot.pkl', 'wb') as buf:
+                pickle.dump(plot_data, buf)
+        else:
+            with open(Path(cache_path) / 'tplot.pkl', 'rb') as buf:
+                plot_data = pickle.load(buf)
+
+        n = 5
+        x, y = plot_data['GAUSS']
+        y_0 = np.mean(y[-1])
+        devplot(x, (y - y_0) / n, label='Gauss', ax=ax2)
+        x, y = plot_data['RECR']
+        y_0 = np.mean(y[-1])
+        devplot(x, (y - y_0) / n, label='RECR', ax=ax2)
         ax2.set_xlabel(r'# of time bins $t$')
+        ax2.set_ylabel(r'$\frac{1}{n} \, \left\Vert \vert M_\mathrm{dips} \vert - \vert M^\sharp \vert \right\Vert_2 - E_\infty$')
         ax2.legend()
 
+    pl.tight_layout()
     fig.subplots_adjust(top=0.95, bottom=0.15)
-    pl.savefig('ex_details.pdf')
+    pl.savefig('phaselift_ex_details.pdf')
 
 
 if __name__ == '__main__':
