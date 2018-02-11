@@ -322,7 +322,7 @@ def expandarize(datadir, samples, outfile):
 
             idx = id_to_label(os.path.splitext(os.path.basename(datafile)[0])[0])
             references.loc[idx] = [target, ref, with_phases]
-            append_reconstructions(recons, h5file['GAUSS'], 'Gaussian', idx, samples)
+            append_reconstructions(recons, h5file['GAUSS'], 'Uniform', idx, samples)
             append_reconstructions(recons, h5file['RECR'], 'RECR', idx, samples)
             # append dipsref
             recons.loc[len(recons)] = [idx, ref, None, 'HOM-dip', 0]
@@ -366,7 +366,7 @@ def set_grid(ax):
 
 
 @main.command(name='phaselift_ex_overview.pdf')
-@click.option('--infile', help='File used for expandarize', default='data/exdata.h5')
+@click.option('--infile', help='File used for expandarize', default='../data/exdata.h5')
 @click.option('--mode', help='Which plot mode to use', default='violin')
 def explot_overview(infile, mode):
     with pd.HDFStore(infile, 'r') as store:
@@ -399,20 +399,21 @@ def explot_overview(infile, mode):
         ax.legend_.remove()
     axes[1].set_yticklabels([])
 
+    pl.tight_layout()
     fig.subplots_adjust(top=0.95, bottom=0.30)
     handles, labels = plot.get_legend_handles_labels()
-    fig.legend(handles[:2], labels[:2], loc='upper left', bbox_to_anchor=(.14, .94))
-    pl.savefig('ex_overview.pdf')
+    axes[0].legend(handles[:2], ['Uniform', 'RECR'], loc='upper left')
+    pl.savefig('phaselift_ex_overview.pdf')
 
 
 @main.command(name='phaselift_ex_targetref.pdf')
-@click.option('--infile', help='File used for expandarize', default='data/exdata.h5')
+@click.option('--infile', help='File used for expandarize', default='../data/exdata.h5')
 @click.option('--mode', help='Which plot mode to use', default='violin')
 def explot_target(infile, mode):
     with pd.HDFStore(infile, 'r') as store:
         recons = store['reconstructions']
 
-    fig = pl.figure(0, figsize=(5.0, 3.5))
+    fig = pl.figure(0, figsize=(7.0, 4.))
     ax = pl.gca()
     df = recons[~(recons.idx.str.startswith('5x5'))]
     order = df.idx.unique()
@@ -424,11 +425,12 @@ def explot_target(infile, mode):
     ax.set_xlabel('')
     ax.set_xticklabels(ax.get_xticklabels(), rotation=70, ha='right')
     ax.legend_.remove()
+    pl.tight_layout()
     fig.subplots_adjust(top=0.95, bottom=0.30)
     handles, labels = plot.get_legend_handles_labels()
-    fig.legend(handles[:3], labels[:3], loc='upper left', bbox_to_anchor=(.14, .94))
+    ax.legend(handles[:3], ['Uniform', 'RECR', 'HOM-dip'], loc='upper left')
     ax.set_ylim(0, ax.get_ylim()[1])
-    pl.savefig('ex_targetref.pdf')
+    pl.savefig('phaselift_ex_targetref.pdf')
 
 
 def get_intensities(df, sel=slice(None)):
