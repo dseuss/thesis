@@ -1099,12 +1099,12 @@ Therefore, if we take into account this additional cost for reconfiguring the pr
   \centering
   \includegraphics[width=0.95\columnwidth]{fig/phaselift_ex_details}
   \caption{%
-   \label{fig:experimental.details}%
+   \label{fig:pl.experimental.details}%
    Reconstruction errors for a random $5 \times 5$ matrix from experimental data.
-   For each picture, we plot the mean (solid) as well as min- and max- errors over 25 samples.
-   In the left picture, each sample consists of a recovery from $m$ preparation vectors and the corresponding photon counts measured over $t = 30\,hrm{s}$
-   In the right picture, we fix a randomly selected set of $m=20$ preparation vectors and run the recovery with the photon counts from $t$ randomly selected time bins, each of which is one second long.
-  \todo[inline]{Explain this picture in the text}
+   For each picture, we plot the mean (solid) as well as the $0.025$ and $0.975$ quartiles over 100 samples.
+   In the left picture, each sample consists of a recovery from $m$ preparation vectors and the corresponding photon counts measured over $t = 30\,\mathrm{s}$
+   In the right picture we fix a randomly selected set of $m=20$ preparation vectors and run the recovery with the photon counts from $t$ randomly selected time bins, each of which is one second long.
+   The constant shift $E_0$ in the right picture is equal to the mean error for $t=29$ and it serves the purpose to equalize any differences between the Gaussian and the RECR reconstructions due to the choice of preparation vectors.
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1126,17 +1126,38 @@ By increasing $m$ slightly, these effects average out and provide in total a sma
 We see that the PhaseLift reconstructions and the references agree well for most settings in \cref{fig:experimental.overview}
 Even without exploiting the possible advantages of the RECR ensemble due to a better calibration, it generally performs as well as the uniform ensemble.
 Both display a similar behavior: for a fixed number of modes, the deviations are generally larger for the random unitaries compared to the more structured identity and Fourier transfer matrices.
-Also, the errors for the two-dimensional transfer matrices are slightly smaller than for the corresponding three-dimensional transfer matrices as expected from \cref{eq:pl.total_bound}.
-Furthermore, the currently used sequential arrangement of the MZIs in the preparation stage of the experiment also leads to higher reconstruction errors with an increase in dimension -- possible solutions to this problem are discussed in the conclusions.
-For the reference reconstruction, we also expect larger deviations with an increase in the size of the transfer matrix, since errors in the phases of the components accumulate.
-Note that the errors for the five-dimensional transfer matrices are relatively small since they only take into account the absolute values of the components and neglect all phases.
+The errors for the two-dimensional transfer matrices are slightly smaller than for the corresponding three-dimensional transfer matrices as expected from \cref{eq:pl.total_bound}.
+Furthermore, the currently used sequential arrangement of the MZIs in the preparation stage of the experiment leads to higher deviations of the actual prepared compared to the intended measurement vectors with an increase in $n$.
+Of course, this leads to larger reconstruction errors as well -- possible solutions to this problem are discussed in the conclusions.
+For the reference reconstruction, we also expect larger deviations with an increase in the size of the transfer matrix, since errors from reconstructing one row accumulate in the error for other rows as well.
+Note that the errors for the five-dimensional transfer matrices are relatively small since they only take into account the absolute values of the components and neglect all phases.\\
+
+
 
 In \cref{fig:experimental.targetref}, we directly compare the performances of the reconstruction protocols, namely of the PhaseLift reconstruction and the HOM-dip reconstruction.
 In contrast to \cref{fig:experimental.overview}, we use the theoretical target unitary as a reference.
 Generally, the errors of the PhaseLift reconstructions and the HOM-dip reconstructions are of the same order of magnitude.
 This is despite the fact that the HOM-dip reconstruction is not just insensitive to the row phases, but also to the column phases.
 Therefore, the reported errors for the HOM-dip reconstruction are minimized over both row- and column phases instead of just the row phases for the PhaseLift reconstruction.
-The additional free parameters in the minimization may lead to overfitting, and hence, to an underestimation of the actual error of the HOM-dip reconstruction.
+The additional free parameters in the minimization may lead to overfitting, and hence, to an underestimation of the actual error of the HOM-dip reconstruction.\\
+
+
+Finally, we study the influence of varying the number of measurements and the statistical error on each measurement in \cref{fig:pl.experimental.details}.
+In the left picture, we randomly select $m$ measurements from the existing data for 100 times and plot the mean as well as the spread of the error.
+Except for a larger error for very few measurements, the RECR ensemble performs equally well as the Gaussian ensemble.
+We see that the error saturates at a non-zero value, which might be due to systematic or statistical errors.
+Also, note that the reconstruction error already saturates around $m = 4n = 20$ measurements.
+
+To further investigate the source of the reconstruction error, we vary the statistical error of the measurements $\epsilon\ind{l}$ in the right picture by changing the number of photons used to estimate $I_j(\alpha\ind{l})$ in terms of \cref{eq:pl.experiment.probabilities}.
+Since the experimental data consists of photon counts per one second time bin, we can vary the number of total photons by randomly selecting $t$ time bins per reconstruction.
+In the right hand picture of \cref{fig:pl.experimental.details}, we fixed a random subset of 20 measurements and observe the reconstruction error as a function of $t$.
+Furthermore, we normalized the reconstruction error with a constant offset $E_\infty$ for each measurement scheme to cancel out reconstruction errors due to the different choice of measurement vectors.
+As we can see in the left image, the spread of the reconstruction error for $m=20$ is still on the order of $\pm 0.1$, and therefore, dominating the smaller error due to statistical fluctuations.
+We chose $E_\infty$ such that the mean error for the largest value of $t$ is 0.
+First, we see that the reconstruction error due to statistical uncertainty is small compared to the total error even for very small values of $t$.
+This is due to the large counting rates of modern single photon experiments, which is $\Gamma \approx 4600\,\mathrm{s}^{-1}$ in this case.
+Therefore, the main source of error in this experiment is due to systematic errors such as an relatively inaccurate preparation of the vectors $\alpha\ind{l}$.
+We already mentioned that this can be rectified by better calibrating the preparation stage, which is much easier to perform for the RECR ensemble than for the uniform ensemble.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
