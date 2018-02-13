@@ -1,4 +1,4 @@
- % -*- root: ../thesis.tex -*-
+% -*- root: ../thesis.tex -*-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Tensors}%
@@ -6,52 +6,3 @@
 
 
 \todo{proof why RIP not working for our measurements}
-\begin{lemma}%
-  \label{lem:ana.gradient_of_error}
-  Denote by $F$ the empirical $\ell_2$ error defined in \cref{eq:ana.l2_error}.
-  Then, the extremal point $\tilde y_1$ with $\frac{\partial F(\tilde y_1)}{\partial \tilde y_1} = 0$ is given by
-  \[
-    \Ket{\tilde y_1} = {\left( \prod_{i \neq 1} \Braket{x_i, y_i} \right)} \Ket{x_1} - B_1^{-1} G_1 \Ket{x_1}
-    \label{eq:ana.gradient_of_error}
-  \]
-  with $B_1$ and $G_1$ given by \cref{eq:ana.b_operator,eq:ana.g_operator}.
-\end{lemma}
-\begin{proof}
-  We begin by computing the derivative of $F$
-  \[
-    \frac{\partial F(\tilde y_1)}{\partial \tilde y_1}
-    = -2 \sum_l \left( \prod_i \Braket{a\ind{l}_i, x_i} - \Braket{a\ind{l}_1, \tilde y_1} \, \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, \Ket{a\ind{l}_1},
-  \]
-  which is equal to zero if and only if
-  \[
-  \sum_l \left( \Braket{a\ind{l}_1, \tilde y_1} \, \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, \Ket{a\ind{l}_1}
-  =
-  \sum_l \left( \prod_i \Braket{a\ind{l}_i, x_i} \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, \Ket{a\ind{l}_1}.
-  \]
-  Reordering terms and factoring out the terms with $i = 1$ gives
-  \[
-  \sum_l {\left(\prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right)}^2 \, \Ket{a\ind{l}_1} \Braket{a\ind{l}_1, \tilde y_1}
-  =
-  \sum_l \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, x_i} \Braket{a\ind{l}_i, y_i} \right) \, \Ket{a\ind{l}_1} \Braket{a\ind{l}_i, x_i},
-  \]
-  and therefore,
-  \[
-    B_1 \Ket{\tilde y_1} =
-    \underbrace{ \frac{1}{m} \left[ \sum_l \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, x_i} \Braket{a\ind{l}_i, y_i} \right) \, \Ketbra{a\ind{l}_1} \right]}_{=: \tilde G_1} \Ket{x_i}.
-  \]
-  Since we assume by \cref{thm:ana.conditions} that the smallest eigenvalue of $B_1$ is larger than zero, we can multiply the last equation by its inverse and obtain
-  \[
-    \Ket{\tilde y_1} = \left( \prod_{i \neq 1} \Braket{x_i, y_i} \right) \Ket{x_i} - B_1^{-1} \left( \left(\prod_{i \neq 1} \Braket{x_i, y_i} \right) B_1 - \tilde G_1 \right) \Ket{x_i}.
-  \]
-  Note that the first and second summand cancel each other.
-  Finally, we simplify the expression in parentheses, which completes the proof
-  \todo{Fix alignment}
-  \begin{flalign}
-    \left(\prod_{i \neq 1} \Braket{x_i, y_i} \right) B_1 - \tilde G_1 \\
-    &= \frac{1}{m} \sum_l \left( \prod_{i \neq 1} \braket{x_i, y_i}\braket{a\ind{l}_i, y_i}^2 - \prod_{i \neq 1} \braket{a\ind{l}_i, y_i}\braket{a\ind{l}_i, x_i} \right) \Ketbra{a\ind{l}_1} \\
-    &= \frac{1}{m} \sum_l \left( \prod_{i \neq 1} \braket{a\ind{l}_i, y_i} \left(\braket{x_i, y_i}\braket{a\ind{l}_i, y_i} - \braket{a\ind{l}_i, x_i} \right) \right) \Ketbra{a\ind{l}_1} \\
-    &= \frac{1}{m} \sum_l \left( \prod_{i \neq 1} \braket{a\ind{l}_i, y_i} \left(\Braket{a\ind{l}_i, \braket{y_i, x_i} y_i - x_i} \right) \right) \Ketbra{a\ind{l}_1} \\
-    &= G_1.
-  \end{flalign}
-\end{proof}
-
