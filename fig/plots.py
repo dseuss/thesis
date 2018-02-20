@@ -341,17 +341,17 @@ def expandarize(datadir, samples, outfile):
 
 def plot_errors(x, y, hue, data, mode='violin', **kwargs):
     if mode == 'violin':
-        plot = sns.violinplot(x=x, y=y, hue=hue, data=data, linewidth=.1,
-                            scale='count', **kwargs)
+        sns.violinplot(x=x, y=y, hue=hue, data=data, linewidth=.1,
+                            scale='count', saturation=.5, **kwargs)
     elif mode == 'scatter':
-        plot = sns.stripplot(x=x, y=y, hue=hue, data=data, dodge=True, jitter=.2,
+        sns.stripplot(x=x, y=y, hue=hue, data=data, dodge=True, jitter=.2,
                             size=3, **kwargs)
     else:
         raise ValueError('{} is not a valid mode', mode)
 
     medians = data.groupby([x, hue]).median().reset_index()
-    sns.stripplot(x=x, y=y, hue=hue, data=medians, dodge=True, marker='D',
-                  linewidth=0.5, size=6, **kwargs)
+    plot = sns.stripplot(x=x, y=y, hue=hue, data=medians, dodge=True, marker='D',
+                         linewidth=0.5, size=6, **kwargs)
     return plot
 
 
@@ -402,7 +402,7 @@ def explot_overview(infile, mode):
     pl.tight_layout()
     fig.subplots_adjust(top=0.95, bottom=0.30)
     handles, labels = plot.get_legend_handles_labels()
-    axes[0].legend(handles[:2], ['Uniform', 'RECR'], loc='upper left')
+    axes[0].legend(handles[2:], ['Uniform', 'RECR'], loc='upper left')
     pl.savefig('phaselift_ex_overview.pdf')
 
 
@@ -428,7 +428,7 @@ def explot_target(infile, mode):
     pl.tight_layout()
     fig.subplots_adjust(top=0.95, bottom=0.30)
     handles, labels = plot.get_legend_handles_labels()
-    ax.legend(handles[:3], ['Uniform', 'RECR', 'HOM-dip'], loc='upper left')
+    ax.legend(handles[3:], ['Uniform', 'RECR', 'HOM-dip'], loc='upper left')
     ax.set_ylim(0, ax.get_ylim()[1])
     pl.savefig('phaselift_ex_targetref.pdf')
 
