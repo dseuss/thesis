@@ -279,7 +279,7 @@ Therefore, we are going to treat it separately below.
   \label{prop:gauss+recr_requirements}
   The following measurement ensembles are attentive according to \cref{def:pl.attentive}:
   \begin{enumerate}
-    \item\label{item:gauss+recr_requirements.gaussian} \emph{Gaussian sampling scheme:} $\alpha \in \mathbb{C}^n$ chosen from the standard complex normal distribution $\mathcal{N}(0,\tfrac{1}{2}\1_n)+ i \mathcal{N}(0,\tfrac{1}{2}\1_n)$.
+    \item\label{item:gauss+recr_requirements.gaussian} \emph{Gaussian sampling scheme:} $\alpha \in \mathbb{C}^n$ chosen from the standard complex normal distribution $\mathcal{N}(0,\tfrac{1}{2}\1_n) + \ii \mathcal{N}(0,\tfrac{1}{2}\1_n)$.
     In this case
     \[
       C_\mathrm{I} = C_\mathrm{SI} = C_\mathrm{SG} = 1.
@@ -898,7 +898,7 @@ We start by stating its rigorous version.
 \end{protocol}
 
 Note that \cref{eq:pl.transfermat_estimator} simply amounts to stacking the separately recovered row vectors $ M_j^\sharp$.
-Now, a simple extension of \cref{thm:pl.phaselift_noisy,thm:pl.phaselift_noisy_recr} yield a similar performance guarantee for \cref{prot:pl.detailed_reconstruction}:
+Now, a simple extension of \cref{thm:pl.phaselift_noisy} yields a similar performance guarantee for \cref{prot:pl.detailed_reconstruction}:
 Due to the similarity of the intensity measurements~\eqref{eq:pl.intensities_as_overlap} for a single row $M_j$ of the transfer matrix and the measurements assumed in \cref{thm:pl.phaselift_noisy}, the latter guarantees recovery of said row with high probability by means of PhaseLift~\eqref{eq:pl.PhaseLift}.
 In order to succinctly state the final result, we introduce some additional notation.
 Define the total noise at detector $j$ (measured in $\ell_1$-norm) to be
