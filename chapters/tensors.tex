@@ -1071,17 +1071,17 @@ Note that \cref{thm:ana.conditions} assumes concentration properties for operato
 From \cref{eq:ana.gradient_of_error} we see that if the error term $\tilde B_1^{-1} \tilde G_1 \ket{x_1}$ is small, then the overlaps of the remaining local tensors $\braket{x_i, y_i}$ for $i=2,\ldots,N$ determine how close $\tilde y_1$ is to its true value $x_1$.
 The following lemma makes this precise.
 
-\begin{lemma}
+\begin{lemma}%
   \label{lem:ana.local_error_bound}
   Let $\ket{y_1} := \frac{\ket{\tilde y_1}}{\ltwonorm{\tilde y_1}}$ with $\ket{\tilde y_1}$ given by \cref{eq:ana.gradient_of_error}.
-  Assume that the conditions of \cref{eq:ana.conditions.lmin,eq:ana.conditions.lmax} hold, then we have
-  \[
-    \label{eq:ana.local_error_bound}
-    1 - \Braket{x_1, y_1}^2 \le \frac{\prod_{i \neq 1} (1 - \braket{x_i, y_i}^2)}{\kappa_1^2}
-  \]
-  with
+  Furthermore, define
   \[
     \kappa_1 = \frac{1 - \delta}{\delta} \prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \prod_{i \neq 1} \sqrt{1 - \braket{x_i, y_i}^2}.
+  \]
+  Assume that the conditions of \cref{eq:ana.conditions.lmin,eq:ana.conditions.lmax} hold and $\kappa_1 > 0$, then we have
+  \[
+    \label{eq:ana.local_error_bound}
+    1 - \Braket{x_1, y_1}^2 \le \frac{\prod_{i \neq 1} (1 - \braket{x_i, y_i}^2)}{\kappa_1^2}.
   \]
 \end{lemma}
 \begin{proof}
@@ -1106,13 +1106,12 @@ The following lemma makes this precise.
     \Ltwonorm{\tilde B_1^{-1} \tilde G_1 x_1} \leq \frac{\delta}{1 - \delta} \, \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}.
   \]
   Next, using \cref{eq:ana.gradient_of_error}, we can lower bound the overlap
-  \todo{Check signs!}
   \begin{align}
     \Abs{\braket{x_1, \tilde y_1}}
     &= \Abs{\prod_{i \neq 1} \braket{x_i, y_i} - \braket{x_i, B_1^{-1} G_1 x_1}} \\
     &\ge \Abs{\prod_{i \neq 1} \abs{\braket{x_i, y_i}} - \Abs{\braket{x_1, B_1^{-1} G_1 x_1}}} \\
-    &\ge \Abs{\prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \Ltwonorm{B_1^{-1} G_1 x_1}} \\
-    &\ge \Abs{\prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \frac{\delta}{1 - \delta} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}}.
+    &\ge {\prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \Ltwonorm{B_1^{-1} G_1 x_1}} \\
+    &\ge {\prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \frac{\delta}{1 - \delta} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}}.
     \label{eq:ana.local_error_bound_step.overlap_x}
   \end{align}
   by the Cauchy-Schwartz inequality and \cref{eq:ana.error_term_bound}.
@@ -1124,8 +1123,7 @@ The following lemma makes this precise.
     &\le \frac{\delta}{1 - \delta} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}.
     \label{eq:ana.local_error_bound_step.overlap_xperp}
   \end{align}
-
-  By the Pythagorean Theorem, we have
+  Finally, note that by the Pythagorean Theorem, we have
   \[
     \Ltwonorm{\tilde y_1}^2
     = \braket{x_1, \tilde y_1}^2 + \braket{x_1^\perp, \tilde y_1}^2.
@@ -1140,7 +1138,61 @@ The following lemma makes this precise.
     &\le \frac{%
       {\left(\frac{\delta}{1 - \delta}\right)}^2 \prod_{i \neq 1} \left(1 - {\braket{x_i, y_i}}^2 \right)
     }{%
-      {\left( \prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \frac{\delta}{1 - \delta} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2} \right)}^2.
+      {\left( \prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \frac{\delta}{1 - \delta} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2} \right)}^2
     }
+  \end{align}
+  provided the right hand side of \cref{eq:ana.local_error_bound_step.overlap_x} is positive.
+  This completes the proof.
+\end{proof}
+
+The next step is to derive a lower bound on $\kappa_1$ assuming that the overlap of the local tensors is not too small.
+
+\begin{lemma}%
+  \label{lem:ana.kappa_bound}
+  Let $\alpha_i \in [0,1]$ with $i = 1, \ldots, N - 1$.
+  If $\prod_i \alpha_i^2 \ge 1 - \epsilon^2$ holds, then
+  \[
+    \frac{1 - \delta}{\delta} \prod_i \alpha_i - \prod_i \sqrt{1 - \alpha_i^2} \ge \frac{1 - \delta - \epsilon}{\delta}.
+  \]
+\end{lemma}
+\begin{proof}
+  We first show that the function
+  \[
+    g(\eta_1, \ldots, \eta_{N-1}) = 1 - \prod_i \eta_i - \prod_i \left( 1 - \eta_i \right)
+  \]
+  satisfies
+  \[
+    \label{eq:ana.kappa_bound.g_is_positive}
+    g(\eta_1, \ldots, \eta_{N-1}) \ge 0
+  \]
+  on $\Omega = \{\eta \in \Reals^{N - 1}\colon 0 \le \eta_i \le 1 \quad i = 1, \ldots, N - 1\}$.
+  For this purpose, we use the \emph{Hopf Maximum Principle}~\cite{Taylor}:
+  Due to
+  \[
+    \laplace g (\eta) = \sum_i \partial_{\eta_i}^2 g (\eta) = 0,
+  \]
+  $g$ and $\Omega$ fulfill the conditions of Proposition~2.1 in \cite{Taylor}.
+  Therefore,
+  \[
+    \inf_{\eta \in \Omega} g(\eta) = \inf_{\eta \in \partial \Omega} g(\eta).
+  \]
+  Note that for $\eta \in \partial \Omega$, $\eta_j = 0$ or $\eta_j = 1$ for one $j$.
+  Since $g$ is symmetric under permutation of the $\eta_i$ and under the transformation $\eta \mapsto 1 - \eta$, we can assume $\eta_1 = 1$ w.l.o.g.
+  Therefore,
+  \[
+    \inf_{\eta \in \partial \Omega} g(\eta) = \inf_{{(0 \le \eta_i \le 1)}_{i > 1}} 1 - \prod_{i > 1} \eta_i = 0,
+  \]
+  and hence, \cref{eq:ana.kappa_bound.g_is_positive} holds.
+
+  By substituting $\eta_i = \alpha_i^2$, \cref{eq:ana.kappa_bound.g_is_positive} and the assumption $\prod_i \alpha_i^2 \ge 1 - \epsilon^2$ gives
+  \[
+    \prod_i \left( 1 - \alpha_i^2 \right) \le 1 - \prod_i \alpha_i^2 \le \epsilon^2.
+  \]
+  Therefore, we obtain the claim of this Lemma via
+  \begin{align}
+    \frac{1 - \delta}{\delta} \prod_i \alpha_i - \prod_i \sqrt{1 - \alpha_i^2}
+    &\ge \frac{1 - \delta}{\delta} \sqrt{1 - \epsilon^2} - \epsilon \\
+    &\ge \frac{1 - \delta}{\delta} \left(1 - \epsilon\right) - \epsilon \\
+    &= \frac{1 - \delta - \epsilon}{\delta}.
   \end{align}
 \end{proof}
