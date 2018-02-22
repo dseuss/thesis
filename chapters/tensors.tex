@@ -878,6 +878,7 @@ The resulting algorithm is presented below:
 
   \Output{Y}
 \end{algorithm}
+\todo{Update initialization?}
 
 In this version of the alternating least squares scheme, we start updating the left-most tensor and then move through the chain all the way to the right.
 When we reach the last tensor of the MPS, we start again on the left after bringing the MPS to right-canonical form.
@@ -941,41 +942,45 @@ Then, $X$ can be written as a tensor product of $N$ normalized vectors $x_i \in 
 \]
 
 The main theorem of this section provides necessary conditions on a general product measurement~\eqref{eq:als.rank1_measurements} for successfully recovering the rank-1 tensor $X$.
+Here, we introduce the notation $\Nset := \{1, 2, \ldots, N\}$ as well as $\NsetSub{j} := \Nset \setminus \{j\}$.
 \begin{theorem}%
   \label{thm:ana.conditions}
-  Let $X \in \Reals^{d^N}$ be a normalized tensor of unit rank, $H$ be the number of epochs in the ALS \cref{alg:als}, and $M = (HN + 1)m$.
+  Let $X \in \Reals^{d^N}$ be a normalized tensor of unit rank, $H$ be the number of epochs in the ALS \cref{alg:als}, and $M = HNm$.
   Denote one batch of size $m$ of random measurement tensors and their overlaps with $X$ by $A\ind{l}$ and $b\ind{l}$, respectively.
-  Finally, let $\AA = \sum_{l=1}^m \ket{l}\bra{A\ind{l}}$ denote the corresponding measurement matrix of that batch.
-  Assume $\AA$ satisfies the following properties with parameter $\delta$
+  Assume that the following three conditions are satisfied for some $\delta < \frac{1}{3}$
   \begin{enumerate}
     \item\label{lbl:conditions.init}\textbf{Initialization}:
-      \todo{Which norm?}
+      There is a rank-one tensor $X_\mathrm{init}$ with $\Fnorm{X} = 1$ satisfying
       \[
-        \Norm{X - \adj{\AA}\AA X} \le \delta.
+        \label{eq:ana.conditions.init}
+        \sqrt{1 - \Braket{X, X_\mathrm{init}}^2} \le \delI.
       \]
     \item\label{lbl:conditions.B}\textbf{Concentration of the $B_j$ operators}:
-      Let $v_i \in \Reals^d$ with $\norm{v_i}_2 = 1$ be independent of all the $a\ind{l}_i$.
-      For $j \in [N]$, define
+      For all $j \in \Nset$, consider $v_i \in \Reals^d$ with $\norm{v_i}_2 = 1$ ($i \in \NsetSub{j}$) independent of all the $a\ind{l}_i$.
+      Define
       \[
         \label{eq:ana.conditions.B}
-        B_j(v_1, \ldots, v_N) = \frac{1}{m} \sum_{l=1}^m \left( \prod_{i\neq j} \Braket{a\ind{l}_i, v_i} \right)^2 \Ketbra{a\ind{l}}.
+        B_j\left((v_i)_{i \in \NsetSub{j}}\right)
+        = \frac{1}{m} \sum_{l=1}^m \left( \prod_{i\neq j} \Braket{a\ind{l}_i, v_i} \right)^2 \Ketbra{a_i\ind{l}},
       \]
-      Then, with high probability the smallest eigenvalue of $B_j(v_1, \ldots, v_N)$ should satisfy
+      Then, with high probability the smallest eigenvalue of $B_j\left((v_i)_{i \in \NsetSub{j}}\right)$ should satisfy
       \[
         \label{eq:ana.conditions.lmin}
-        \lambda_\mathrm{min}\left(B_j(v_1, \ldots, v_N)\right) \ge 1 - \delta.
+        \lambda_\mathrm{min}\left(B_j\left((v_i)_{i \in \NsetSub{j}}\right)\right) \ge \delB.
       \]
     \item\label{lbl:conditions.G}\textbf{Concentration of the $G_j$ operators}:
-      Let $v_i, v_i^\perp \in \Reals^d$ with $\norm{v_i}_2 = \norm{v_i^\perp}= 1$ be independent of all the $a\ind{l}_i$ and satisfy $\braket{v_i, v_i^\perp} = 0$
-      For $j \in [N]$, define
+      For all $j \in [N]$, consider $v_i, v_i^\perp \in \Reals^d$ ($i \in \NsetSub{j})$ independent of all the $a\ind{l}_i$.
+      Furthermore, they should satisfy $\norm{v_i}_2 = \norm{v_i^\perp}= 1$ and $\braket{v_i, v_i^\perp} = 0$ for $i\in\NsetSub{j}$
+      Define
       \[
         \label{eq:ana.conditions.G}
-        G_j(v_1, v_1^\perp, \ldots, v_N^\perp) = \frac{1}{m} \sum_{l=1}^m \left( \prod_{i\neq j} \Braket{a\ind{l}_i, v_i} \Braket{a\ind{l}_i, v_i^\perp} \right) \Ketbra{a\ind{l}}.
+        G_j\left({(v_i, v_i^\perp)}_{i \in \NsetSub{j}} \right)
+        = \frac{1}{m} \sum_{l=1}^m \left( \prod_{i\neq j} \Braket{a\ind{l}_i, v_i} \Braket{a\ind{l}_i, v_i^\perp} \right) \Ketbra{a\ind{l}}.
       \]
-      Then, with high probability the largest eigenvalue of $G_j(v_1, v_1^\perp, \ldots, v_N^\perp)$ should satisfy
+      Then, with high probability the largest singular value of $G_j\left({(v_i, v_i^\perp)}_{i \in \NsetSub{j}} \right)$ should satisfy
       \[
         \label{eq:ana.conditions.lmax}
-        \lambda_\mathrm{max}\left(G_j(v_1, v_1^\perp, \ldots, v_N^\perp)\right) \le \delta
+        \Opnorm{G_j\left({(v_i, v_i^\perp)}_{i \in \NsetSub{j}} \right)} \le \delG.
       \]
   \end{enumerate}
   Then, the output $Y$ of the ALS \cref{alg:als} after $H$ epochs satisfies
@@ -986,14 +991,8 @@ The main theorem of this section provides necessary conditions on a general prod
   \todo{Fill in condition on epochs}.
 \end{theorem}
 
-The idea of the proof of \cref{thm:ana.conditions} is summarized in the following:
-The initialization condition~\ref{lbl:conditions.init} guarantees that the initializer
-\[
-  S = \adj{A}A X = \sum_{l=1}^m b\ind{l} A\ind{l}
-\]
-is close to the target $X$.
-However, since the rank of $S$ is generically $m$, which is much larger than $1$, we need to compress it as indicated in line~\ref{line:als.initialization} of the algorithm.
-Using \cref{eq:mps.quasi_optimal}, we can then bound the error of the compressed version of $S$.
+The idea of the proof of \cref{thm:ana.conditions} is as follows:
+The initialization condition~\ref{lbl:conditions.init} guarantees that the initializer $X_\mathrm{init}$ is already close to the target $X$.
 Next, we need to show that every local update reduces the distance between the updated local tensor and its true value by at least a given multiplicative constant.
 Finally, combining these two fact shows that the distance of the estimated tensor and the true tensor reduces exponentially fast in $H$.\\
 
@@ -1024,11 +1023,11 @@ We now derive an explicit representation of the minimizer of \cref{eq:ana.l2_err
     \label{eq:ana.b_operator}
     \tilde B_1 &= \frac{1}{m} \sum_l {\left( \prod_{i \neq 1} \Braket{a\ind{l}_i,y_i} \right)}^2 \Ketbra{a\ind{l}_1} \\
     \label{eq:ana.g_operator}
-    \tilde G_1 &= \frac{1}{m} \sum_l {\left( \prod_{i \neq 1} \Braket{a\ind{l}_i, \tilde x_i^\perp} \Braket{a\ind{l}_i,y_i} \right)}\Ketbra{a\ind{l}_1} \\
-    \tilde x_i^\perp &= \left(\ketbra{y_i} - \1 \right) x_i.
+    \tilde G_1 &= \frac{1}{m} \sum_l {\left( \prod_{i \neq 1} \Braket{a\ind{l}_i, \tilde y_i^\perp} \Braket{a\ind{l}_i,y_i} \right)}\Ketbra{a\ind{l}_1} \\
+    \tilde y_i^\perp &= \left(\ketbra{y_i} - \1 \right) x_i \quad(i \in \NsetSub{1}).
   \end{align}
 \end{lemma}
-Note that \cref{thm:ana.conditions} assumes concentration properties for operators of the same type (up to normalization) as $\tilde B_1$ and $\tilde G_1$.
+Note that \cref{thm:ana.conditions} assumes concentration properties for operators of the same type (up to normalization) as $\tilde B_1$ and $\tilde G_1$ since $\braket{y_i, \tilde y_i^\perp} = 0$.
 \begin{proof}
   We begin by computing the derivative of $F$
   \[
@@ -1045,19 +1044,19 @@ Note that \cref{thm:ana.conditions} assumes concentration properties for operato
   \[
   \sum_l {\left(\prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right)}^2 \, \Ket{a\ind{l}_1} \Braket{a\ind{l}_1, \tilde y_1}
   =
-  \sum_l \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, x_i} \Braket{a\ind{l}_i, y_i} \right) \, \Ket{a\ind{l}_1} \Braket{a\ind{l}_i, x_i},
+  \sum_l \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, x_i} \Braket{a\ind{l}_i, y_i} \right) \, \Ket{a\ind{l}_1} \Braket{a\ind{l}_1, x_1},
   \]
   and therefore,
   \[
     \tilde  B_1 \Ket{\tilde y_1} =
-    \underbrace{ \frac{1}{m} \left[ \sum_l \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, x_i} \Braket{a\ind{l}_i, y_i} \right) \, \Ketbra{a\ind{l}_1} \right]}_{=: \tilde O_1} \Ket{x_i}.
+    \underbrace{ \frac{1}{m} \left[ \sum_l \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, x_i} \Braket{a\ind{l}_i, y_i} \right) \, \Ketbra{a\ind{l}_1} \right]}_{=: \tilde O_1} \Ket{x_1}.
   \]
   Since we assume by \cref{thm:ana.conditions} that the smallest eigenvalue of $\tilde B_1$ is larger than zero, it is invertible and we can multiply the last equation by its inverse and obtain
   \[
     \Ket{\tilde y_1} = \left( \prod_{i \neq 1} \Braket{x_i, y_i} \right) \Ket{x_i} - \tilde B_1^{-1} \left( \left(\prod_{i \neq 1} \Braket{x_i, y_i} \right) \tilde B_1 - \tilde O_1 \right) \Ket{x_i}.
   \]
   Note that the first and second summand cancel each other.
-  Finally, we simplify the expression in parentheses, which completes the proof
+  Finally, we simplify the expression in parentheses, which completes the proof:
   \todo{Fix alignment}
   \begin{flalign}
     \left(\prod_{i \neq 1} \Braket{x_i, y_i} \right) \tilde B_1 - \tilde O_1 \\
@@ -1076,6 +1075,7 @@ The following lemma makes this precise.
   Let $\ket{y_1} := \frac{\ket{\tilde y_1}}{\ltwonorm{\tilde y_1}}$ with $\ket{\tilde y_1}$ given by \cref{eq:ana.gradient_of_error}.
   Furthermore, define
   \[
+    \label{eq:ana.local_error_bound.def_kappa}
     \kappa_1 = \frac{1 - \delta}{\delta} \prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \prod_{i \neq 1} \sqrt{1 - \braket{x_i, y_i}^2}.
   \]
   Assume that the conditions of \cref{eq:ana.conditions.lmin,eq:ana.conditions.lmax} hold and $\kappa_1 > 0$, then we have
@@ -1085,18 +1085,18 @@ The following lemma makes this precise.
   \]
 \end{lemma}
 \begin{proof}
-  First note that $\tilde B_1 = B_1(y_2, \ldots, y_N)$.
+  First note that $\tilde B_1 = B_1(y_2, \ldots, y_N)$ as defined in \cref{thm:ana.conditions}.
   Since $\ltwonorm{y_i} = 1$, the lower bound on the smallest eigenvalue of $\tilde B_1$ in \cref{eq:ana.conditions.lmin} translates to
   \[
     \label{eq:ana.error_term_bound.B}
     \Opnorm{\tilde B_1^{-1}} = \frac{1}{\lambda_\mathrm{min}(\tilde B_1)} \le \frac{1}{1 - \delta}.
   \]
-  Furthermore, $\tilde G_1 = G_1(y_2, \tilde x_2^\perp, \ldots, \tilde x_N^\perp)$, and hence, normalization of the $\tilde x_i^\perp$ yields
+  Furthermore, $\tilde G_1 = G_1(y_2, \tilde y_2^\perp, \ldots, y_N, \tilde y_N^\perp)$, and hence, normalization of the $\tilde y_i^\perp$ yields
   \[
     \label{eq:ana.error_term_bound.G}
     \begin{split}
       \Opnorm{\tilde G_1}
-      &\le \delta \prod_{i \neq 1} \ltwonorm{\tilde x_i^\perp} \\
+      &\le \delta \prod_{i \neq 1} \ltwonorm{\tilde y_i^\perp} \\
       &\le \delta \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}.
     \end{split}
   \]
@@ -1115,9 +1115,10 @@ The following lemma makes this precise.
     \label{eq:ana.local_error_bound_step.overlap_x}
   \end{align}
   by the Cauchy-Schwartz inequality and \cref{eq:ana.error_term_bound}.
-  Similarly, we obtain for any $x_1^\perp$ with $\ltwonorm{x_1^\perp} = 1$ and $\braket{x_1, x_1^\perp} = 0$
+  Along the same lines, we obtain for any $x_1^\perp$ with $\ltwonorm{x_1^\perp} = 1$ and $\braket{x_1, x_1^\perp} = 0$
   \begin{align}
     \Abs{\braket{x_1^\perp, \tilde y_1}}
+    &= \Abs{\Braket{x_1, x_1^\perp} \prod_{i \neq 1} \Braket{x_i, y_i} - \Braket{x_1^\perp, \tilde B_1^{-1} \tilde G_1 x_1}} \\
     &= \Abs{\Braket{x_1^\perp, \tilde B_1^{-1} \tilde G_1 x_1}} \\
     &\le \Ltwonorm{x_1^\perp} \Ltwonorm{\tilde B_1^{-1} \tilde G_1 x_1} \\
     &\le \frac{\delta}{1 - \delta} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}.
@@ -1150,7 +1151,7 @@ The next step is to derive a lower bound on $\kappa_1$ assuming that the overlap
 \begin{lemma}%
   \label{lem:ana.kappa_bound}
   Let $\alpha_i \in [0,1]$ with $i = 1, \ldots, N - 1$.
-  If $\prod_i \alpha_i^2 \ge 1 - \epsilon^2$ holds, then
+  If for $\epsilon \in (0, 1)$, $\prod_i \alpha_i^2 \ge 1 - \epsilon^2$ holds, then for any $\delta \in (0, 1)$
   \[
     \frac{1 - \delta}{\delta} \prod_i \alpha_i - \prod_i \sqrt{1 - \alpha_i^2} \ge \frac{1 - \delta - \epsilon}{\delta}.
   \]
@@ -1167,11 +1168,12 @@ The next step is to derive a lower bound on $\kappa_1$ assuming that the overlap
   \]
   on $\Omega = \{\eta \in \Reals^{N - 1}\colon 0 \le \eta_i \le 1 \quad i = 1, \ldots, N - 1\}$.
   For this purpose, we use the \emph{Hopf Maximum Principle}~\cite{Taylor}:
-  Due to
+  Since $g$ is linear in each $\eta_i$, we have
   \[
     \laplace g (\eta) = \sum_i \partial_{\eta_i}^2 g (\eta) = 0,
   \]
   $g$ and $\Omega$ fulfill the conditions of Proposition~2.1 in \cite{Taylor}.
+  \todo{Put version in appendix}
   Therefore,
   \[
     \inf_{\eta \in \Omega} g(\eta) = \inf_{\eta \in \partial \Omega} g(\eta).
@@ -1184,15 +1186,41 @@ The next step is to derive a lower bound on $\kappa_1$ assuming that the overlap
   \]
   and hence, \cref{eq:ana.kappa_bound.g_is_positive} holds.
 
-  By substituting $\eta_i = \alpha_i^2$, \cref{eq:ana.kappa_bound.g_is_positive} and the assumption $\prod_i \alpha_i^2 \ge 1 - \epsilon^2$ gives
+  By substituting $\eta_i = \alpha_i^2$, \cref{eq:ana.kappa_bound.g_is_positive} gives
   \[
-    \prod_i \left( 1 - \alpha_i^2 \right) \le 1 - \prod_i \alpha_i^2 \le \epsilon^2.
+    \label{eq:ana.kappa_bound.sqrt_to_prod}
+    \prod_i \left( 1 - \alpha_i^2 \right) \le 1 - \prod_i \alpha_i^2
   \]
-  Therefore, we obtain the claim of this Lemma via
+  Therefore, we obtain the claim of this Lemma as follows
   \begin{align}
     \frac{1 - \delta}{\delta} \prod_i \alpha_i - \prod_i \sqrt{1 - \alpha_i^2}
     &\ge \frac{1 - \delta}{\delta} \sqrt{1 - \epsilon^2} - \epsilon \\
     &\ge \frac{1 - \delta}{\delta} \left(1 - \epsilon\right) - \epsilon \\
     &= \frac{1 - \delta - \epsilon}{\delta}.
   \end{align}
+\end{proof}
+
+
+\begin{proof}[Proof of \cref{thm:ana.conditions}]
+  We start with the first iteration step for $h = 1$ and denote the local tensors of $X_\mathrm{init}$ by $y_i^0$, i.e.
+  \[
+    X_\mathrm{init} = y_1^0 \otimes \cdots \otimes y_N^0.
+  \]
+  The initialization condition~\eqref{eq:ana.conditions.init} as well as the normalization of $X$ and $X_\mathrm{init}$ imply that
+  \[
+    \label{eq:ana.conditions.partial_overlap}
+    \prod_{i \neq 1} \braket{x_i, y_i^0}^2 \ge \prod_{i} \braket{x_i, y_i^0}^2 \ge 1 - \delta^2.
+  \]
+  Therefore, by \cref{lem:ana.kappa_bound} we have for $\delta < \frac{1}{2}$ and $\kappa_1$ defined in \cref{eq:ana.local_error_bound.def_kappa}
+  \[
+    \kappa_1 \ge \frac{1 - 2\delta}{\delta} > 0.
+  \]
+  Then, \cref{lem:ana.local_error_bound} combined with \cref{eq:ana.kappa_bound.sqrt_to_prod} yield for the normalized local update $y_1^1$
+  \begin{align}
+    \sqrt{1 - \Braket{x_1, y_1^1}^2}
+    &\le \frac{\delta}{1 - 2\delta} \, \prod_{i \neq 1} \sqrt{1 - \Braket{x_i, y_i^0}^2} \\
+    &\le \frac{\delta}{1 - 2\delta} \, \sqrt{1 - \prod_{i \neq 1} \Braket{x_i, y_i^0}^2} \\
+    &\le \frac{\delta^2}{1 - 2\delta}.
+  \end{align}
+  where the last line follows from the estimate~\eqref{eq:ana.conditions.partial_overlap}
 \end{proof}
