@@ -1076,7 +1076,7 @@ The following lemma makes this precise.
   Furthermore, define
   \[
     \label{eq:ana.local_error_bound.def_kappa}
-    \kappa_1 = \frac{1 - \delta}{\delta} \prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \prod_{i \neq 1} \sqrt{1 - \braket{x_i, y_i}^2}.
+    \kappa_1 = \frac{\delB}{\delG} \prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \prod_{i \neq 1} \sqrt{1 - \braket{x_i, y_i}^2}.
   \]
   Assume that the conditions of \cref{eq:ana.conditions.lmin,eq:ana.conditions.lmax} hold and $\kappa_1 > 0$, then we have
   \[
@@ -1086,24 +1086,25 @@ The following lemma makes this precise.
 \end{lemma}
 \begin{proof}
   First note that $\tilde B_1 = B_1(y_2, \ldots, y_N)$ as defined in \cref{thm:ana.conditions}.
-  Since $\ltwonorm{y_i} = 1$, the lower bound on the smallest eigenvalue of $\tilde B_1$ in \cref{eq:ana.conditions.lmin} translates to
+  Since $\ltwonorm{y_i} = 1$ and $\tilde B_1$ is positive definite, the lower bound on the smallest eigenvalue of $\tilde B_1$ in \cref{eq:ana.conditions.lmin} translates to
   \[
     \label{eq:ana.error_term_bound.B}
-    \Opnorm{\tilde B_1^{-1}} = \frac{1}{\lambda_\mathrm{min}(\tilde B_1)} \le \frac{1}{1 - \delta}.
+    \Opnorm{\tilde B_1^{-1}} = \frac{1}{\lambda_\mathrm{min}(\tilde B_1)} \le \frac{1}{\delB}.
   \]
   Furthermore, $\tilde G_1 = G_1(y_2, \tilde y_2^\perp, \ldots, y_N, \tilde y_N^\perp)$, and hence, normalization of the $\tilde y_i^\perp$ yields
   \[
     \label{eq:ana.error_term_bound.G}
     \begin{split}
       \Opnorm{\tilde G_1}
-      &\le \delta \prod_{i \neq 1} \ltwonorm{\tilde y_i^\perp} \\
-      &\le \delta \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}.
+      &\le \delG \prod_{i \neq 1} \ltwonorm{\tilde y_i^\perp} \\
+      &\le \delG \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}.
     \end{split}
   \]
   Combining \cref{eq:ana.error_term_bound.B,eq:ana.error_term_bound.G} as well as the condition $\ltwonorm{x_1} = 1$ yields the bound on the error term
   \[
     \label{eq:ana.error_term_bound}
-    \Ltwonorm{\tilde B_1^{-1} \tilde G_1 x_1} \leq \frac{\delta}{1 - \delta} \, \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}.
+    \Ltwonorm{\tilde B_1^{-1} \tilde G_1 x_1}
+    \leq \frac{\delG}{\delB} \, \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}.
   \]
   Next, using \cref{eq:ana.gradient_of_error}, we can lower bound the overlap
   \begin{align}
@@ -1111,7 +1112,7 @@ The following lemma makes this precise.
     &= \Abs{\prod_{i \neq 1} \braket{x_i, y_i} - \braket{x_i, B_1^{-1} G_1 x_1}} \\
     &\ge \Abs{\prod_{i \neq 1} \abs{\braket{x_i, y_i}} - \Abs{\braket{x_1, B_1^{-1} G_1 x_1}}} \\
     &\ge {\prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \Ltwonorm{B_1^{-1} G_1 x_1}} \\
-    &\ge {\prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \frac{\delta}{1 - \delta} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}}.
+    &\ge {\prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \frac{\delG}{\delB} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}}.
     \label{eq:ana.local_error_bound_step.overlap_x}
   \end{align}
   by the Cauchy-Schwartz inequality and \cref{eq:ana.error_term_bound}.
@@ -1121,7 +1122,7 @@ The following lemma makes this precise.
     &= \Abs{\Braket{x_1, x_1^\perp} \prod_{i \neq 1} \Braket{x_i, y_i} - \Braket{x_1^\perp, \tilde B_1^{-1} \tilde G_1 x_1}} \\
     &= \Abs{\Braket{x_1^\perp, \tilde B_1^{-1} \tilde G_1 x_1}} \\
     &\le \Ltwonorm{x_1^\perp} \Ltwonorm{\tilde B_1^{-1} \tilde G_1 x_1} \\
-    &\le \frac{\delta}{1 - \delta} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}.
+    &\le \frac{\delG}{\delB} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2}.
     \label{eq:ana.local_error_bound_step.overlap_xperp}
   \end{align}
   Finally, note that by the Pythagorean Theorem, we have
@@ -1137,9 +1138,9 @@ The following lemma makes this precise.
     &= \frac{  \Braket{x_1^\perp, \tilde y_1}^2  }{  \Braket{x_1, \tilde y_1}^2 + \Braket{x_1^\perp, \tilde y_1}^2  } \\
     &\le \frac{  \Braket{x_1^\perp, \tilde y_1}^2  }{  \Braket{x_1, \tilde y_1}^2  } \\
     &\le \frac{%
-      {\left(\frac{\delta}{1 - \delta}\right)}^2 \prod_{i \neq 1} \left(1 - {\braket{x_i, y_i}}^2 \right)
+      {\left(\frac{\delG}{\delB}\right)}^2 \prod_{i \neq 1} \left(1 - {\braket{x_i, y_i}}^2 \right)
     }{%
-      {\left( \prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \frac{\delta}{1 - \delta} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2} \right)}^2
+      {\left( \prod_{i \neq 1} \Abs{\braket{x_i, y_i}} - \frac{\delG}{\delB} \prod_{i \neq 1} \sqrt{1 - {\braket{x_i, y_i}}^2} \right)}^2
     }
   \end{align}
   provided the right hand side of \cref{eq:ana.local_error_bound_step.overlap_x} is positive.
@@ -1151,9 +1152,9 @@ The next step is to derive a lower bound on $\kappa_1$ assuming that the overlap
 \begin{lemma}%
   \label{lem:ana.kappa_bound}
   Let $\alpha_i \in [0,1]$ with $i = 1, \ldots, N - 1$.
-  If for $\epsilon \in (0, 1)$, $\prod_i \alpha_i^2 \ge 1 - \epsilon^2$ holds, then for any $\delta \in (0, 1)$
+  If for $\delI \in (0, 1)$, $\prod_i \alpha_i^2 \ge 1 - \delI^2$ holds, then for any $C > 0$
   \[
-    \frac{1 - \delta}{\delta} \prod_i \alpha_i - \prod_i \sqrt{1 - \alpha_i^2} \ge \frac{1 - \delta - \epsilon}{\delta}.
+    C \prod_i \alpha_i - \prod_i \sqrt{1 - \alpha_i^2} \ge C  - \delI (1 + C)
   \]
 \end{lemma}
 \begin{proof}
@@ -1192,10 +1193,9 @@ The next step is to derive a lower bound on $\kappa_1$ assuming that the overlap
   \]
   Therefore, we obtain the claim of this Lemma as follows
   \begin{align}
-    \frac{1 - \delta}{\delta} \prod_i \alpha_i - \prod_i \sqrt{1 - \alpha_i^2}
-    &\ge \frac{1 - \delta}{\delta} \sqrt{1 - \epsilon^2} - \epsilon \\
-    &\ge \frac{1 - \delta}{\delta} \left(1 - \epsilon\right) - \epsilon \\
-    &= \frac{1 - \delta - \epsilon}{\delta}.
+    C \prod_i \alpha_i - \prod_i \sqrt{1 - \alpha_i^2}
+    &\ge C \sqrt{1 - \delI^2} - \delI \\
+    &\ge C \left(1 - \delI\right) - \delI \\
   \end{align}
 \end{proof}
 
@@ -1209,10 +1209,6 @@ The next step is to derive a lower bound on $\kappa_1$ assuming that the overlap
   \[
     \label{eq:ana.conditions.partial_overlap}
     \prod_{i \neq 1} \braket{x_i, y_i^0}^2 \ge \prod_{i} \braket{x_i, y_i^0}^2 \ge 1 - \delta^2.
-  \]
-  Therefore, by \cref{lem:ana.kappa_bound} we have for $\delta < \frac{1}{2}$ and $\kappa_1$ defined in \cref{eq:ana.local_error_bound.def_kappa}
-  \[
-    \kappa_1 \ge \frac{1 - 2\delta}{\delta} > 0.
   \]
   Then, \cref{lem:ana.local_error_bound} combined with \cref{eq:ana.kappa_bound.sqrt_to_prod} yield for the normalized local update $y_1^1$
   \begin{align}
