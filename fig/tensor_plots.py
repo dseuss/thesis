@@ -2,7 +2,6 @@ import functools as ft
 import itertools as it
 import time
 from collections import namedtuple
-from multiprocessing import Pool
 from pathlib import Path
 
 import click
@@ -100,22 +99,10 @@ def compute_all(samples, batch_size, output_dir, mode):
     dim_pool = [5, 10, 20, 40]
     const_pool = [10, 100]
 
+    iterator = it.product(sites_pool, dim_pool, const_pool)
     total = len(sites_pool) * len(dim_pool) * len(const_pool)
-    progress = tqdm(total=total)
-
-    pool = Pool()
-    result = pool.map_async(
-        MashedFunction(f),
-        list(it.product(sites_pool, dim_pool, const_pool)),
-        callback=lambda _: progress.update()
-    )
-
-    while not result.ready():
-        progress.refresh()
-        time.sleep(1)
-
-    pool.close()
-    pool.join()
+    for sites, dim, const in tqdm(iterator, total=total):
+        f(sites, dim, const)
 
 
 if __name__ == '__main__':
