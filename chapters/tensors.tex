@@ -1276,7 +1276,7 @@ Here, $Y^\sharp$ denotes the final output of ALS.
 \subsection{Gaussian Measurements}%
 \label{sub:als.gaussian_measurements}
 
-The results from \cref{sec:als.ana} apply to general rank-1 measurements
+The results from \cref{sub:als.ana} apply to general rank-1 measurements
 \[
   A\ind{l} = a\ind{l}_1 \otimes \cdots \otimes a\ind{l}_N,
   \label{eq:gaussian.rank1_measurements}
@@ -1293,10 +1293,10 @@ where
   Y_j\ind{l} = \prod_{i \neq j} \Braket{a_i\ind{l}, v_i}^2 = \prod_{i = 1}^{N - 1} {g\ind{l}_i}^2
 \]
 is a product of squares of $N - 1$ independent standard Gaussians $g\ind{l}_i \sim \Normal(0, 1)$.
-Similarly, for $G_j(v)$ defined in \cref{eq:ana.conditions.G}
+Similarly, for $G_j(v, v^\perp)$ defined in \cref{eq:ana.conditions.G}
 \[
   \label{eq:als.gaussian.G}
-  G_j(v) = \frac{1}{m} \sum_{l=1}^m X_j\ind{l} \Ketbra{a\ind{l}_j},
+  G_j(v, v^\perp) = \frac{1}{m} \sum_{l=1}^m X_j\ind{l} \Ketbra{a\ind{l}_j},
 \]
 with
 \[
@@ -1310,12 +1310,63 @@ In numerical simulations, we also show that truncations of said expansions at th
 However, since at this time, we do not have explicit error bounds for these truncations, we investigate the concentration properties of the operators~\eqref{eq:als.gaussian.B} and~\eqref{eq:als.gaussian.G} numerically at the end of this section.\\
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+  \centering
+  \includegraphics[width=\linewidth]{fig/tensor_lognormal}
+  \caption{%
+    Distribution function of $\log X$ given by \cref{eq:gaussian.X} for different numbers of factors $n$.
+    The histogram is taken over 100,000 samples and the solid line depicts the probability density function of a normal random variable with mean $\mu n$ and standard deviation $\sigma \sqrt n$.
+    Here, $\mu$ and $\sigma$ denotes the mean and standard deviation of $\log g_i^2$ as given by \cref{eq:gaussian.means_and_std}.
+    }%
+  \label{fig:als.lognormal}
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % goal: consider product of squares as in B -> need lower bound on lmin -> need lower tail bound on sums of random opeartors
 % standard approach: moment based concentration as in chapter ...
 % the problem with products of gaussians prefactor
 %   -> log normal with mean/variance -> hgihly fluctuating on orders of magintude
 %   -? standard higher-moment based concentration inequalities do not work
 % main problem: fluctuating prefactor -> deriving tail bounds for Y
+
+Recall from \cref{sub:als.ana} that one of the conditions needed for successful recovery via ALS is a lower bound on the operator $B_j(v)$ from \cref{eq:als.gaussian.B}.
+In words, we need a lower tail bound on the smallest eigenvalue of sums of independent random operators of the form $X \times \ketbra{a}$, where $a \sim \Normal(0, \1_d)$ and $X$ is a product of squares of standard Gaussians, i.e.
+\[
+  \label{eq:gaussian.X}
+  X = \prod_{i=1}^n g_i^2, \quad\mbox{ with } g_i \sim \Normal(0, 1).
+\]
+We encountered a similar problem in \cref{cha:phaselift}, where the proof of the main \cref{thm:pl.phaselift_noisy} relied on the moment conditions in \cref{def:pl.attentive}.
+However, these standard concentration inequalities are not applicable to the problem of tensor recovery due to the large fluctuations of $X$ in \cref{eq:gaussian.X}:
+Due to independence of the $g_i$, the $k$-th moments of $X$ are given by
+\[
+  \Exp X^k = \prod_{i=1}^n \Exp g_i^{2k} = \left( (2k - 1)!! \right)^n.
+\]
+So although the expectation value of $X$ is 1 for all values of $n$, the variance of $X$ scales as $(3!!)^n = 3^n$.
+This might be surprising since $X > 0$ almost surely.
+The reason for the exponentially strong fluctuations about the mean are realizations of $X$ which are exponentially large, but which only occur with extremely small probability.
+
+In order to illustrate the strong fluctuations of $X$ more clearly, note that
+\[
+  \log X = \sum_{i=1}^n \log g_i^2.
+\]
+That is, the logarithm of $X$ is a sum of independent random variables with
+\[
+  \label{eq:gaussian.means_and_std}
+  \mu = \Exp \log g_i^2 = -(\gamma + \log 2)
+  \quad\mbox{and}\quad
+  \sigma^2 = \Var \log g_i^2 = \frac{\pi^2}{2}.
+\]
+By the central limit theorem, we can approximate $\log X$ by a normal distribution with mean $\mu n$ and standard deviation $\sigma \sqrt{n}$ as depicted in \cref{fig:als.lognormal}.
+In other words, $X$ is approximately log-normal distributed, and hence, the fluctuations of $X$ are of order $\sigma \sqrt{n}$ on a logarithmic scale, i.e.\ they manifest on the order of magnitude of $X$.
+In contrast, the sum of $n$ independent standard Gaussian is a Gaussian with standard deviation $\sqrt{n}$, which is naturally measured on a linear scale.
+
+
+
+
+
+
 
 % our approach: compute PDF as funciton of Meijer G-function
 Meijer G-functions are a family of special functions in one variable that is closed under several operations including

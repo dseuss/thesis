@@ -10,6 +10,7 @@ import matplotlib.pyplot as pl
 import numpy as np
 import seaborn as sns
 from tqdm import tqdm
+from scipy import stats
 
 
 @click.group()
@@ -103,6 +104,31 @@ def compute_all(samples, batch_size, output_dir, mode):
     total = len(sites_pool) * len(dim_pool) * len(const_pool)
     for sites, dim, const in tqdm(iterator, total=total):
         f(sites, dim, const)
+
+
+@main.command(name='tensor_lognormal.pdf')
+@click.option('--samples', default=100000, type=int)
+def lognormal_plot(samples):
+    N = [5, 20, 50]
+    rgen = np.random.RandomState(1234)
+
+    fig, ax = pl.subplots(figsize=(6, 3))
+    z = np.linspace(-100, 10, 1000)
+    bins = 100
+    for n in N:
+        x = np.prod(rgen.randn(samples, n)**2, axis=-1)
+        dist = stats.norm(loc=-(np.euler_gamma + np.log(2)) * n,
+                          scale=np.pi / np.sqrt(2) * np.sqrt(n))
+        l, = pl.plot(z, dist.pdf(z), label=r'$n=' + str(n) + '$')
+        ax.hist(np.log(x), bins=bins, color=l.get_color(), density=True)
+
+    ax.set_xlim(-100, 10)
+    ax.set_xlabel(r'$x$')
+    ax.set_ylabel(r'$\mathbb{P}\left((\log(X^2) = x \right)$')
+    ax.legend(loc='upper left')
+    fig.tight_layout()
+    fig.savefig('tensor_lognormal.pdf')
+
 
 
 if __name__ == '__main__':
