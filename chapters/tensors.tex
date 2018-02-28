@@ -938,7 +938,65 @@ Then, $X$ can be written as a tensor product of $N$ normalized vectors $x_i \in 
   b\ind{l} = \braket{A\ind{l}, X} = \prod_{i=1}^N \braket{a\ind{l}_i, x_i}.
   \label{eq:ana.b_as_product}
 \]
-Finally, we assume that the rank-1 measurement tensors defined in \cref{eq:als.rank1_measurements} satisfy the following conditions:
+One main result of this chapter is \cref{thm:ana.local_convergence}.
+It shows that under certain assumptions on the initialization and measurement tensors, each micro-iteration brings the local tensor closer to its true value in a suitable metric.
+In the case of rank-1 tensor reconstruction, this metric between the local tensors $x$ and $y$ with $\ltwonorm{x} = \ltwonorm{y} = 1$ is given by
+\[
+  \mathrm{dist}(x, y) = \sqrt{1 - \Abs{\braket{x, y}}^2}.
+  \label{eq:ana.infidelity}
+\]
+It is known as \emph{infidelity} if $x, y \in \Complex^d$ represent pure quantum states~\cite{Nielsen_2010_Quantum}.
+\Cref{eq:ana.infidelity} is also the one-dimensional special case of the \emph{principle angle distance} of subspaces~\cite{Golub}, which is the appropriate distance measure for higher-rank generalizations of the results presented here.
+
+In the first lemma, we relate the \quotes{global} distance of two tensors, which is measured in Frobenius norm, to the distances of the local tensors.
+\begin{lemma}%
+  \label{lem:ana.local_global_closeness}
+  Let $X = \otimes_{i=1}^N x_i$ and $Y = \otimes_{i=1}^N y_i$ be two product tensors of unit norm.
+  Assume that for each $i \in \Nset$, we have $\ltwonorm{x_i} = \ltwonorm{y_i} = 1$ and
+  \[
+    \label{eq:ana.local_global_closeness.local_close}
+    1 - \Braket{x_i, y_i}^2 \le \delta_i^2.
+  \]
+  Then,
+  \[
+    \min_{\eta = \pm 1} \Fnorm{X - \eta Y} \le \sqrt{2} \sum_{i=1}^N \delta_i.
+  \]
+\end{lemma}
+\begin{proof}
+  First, note that \cref{eq:ana.local_global_closeness.local_close} implies
+  \begin{align}
+    \min_{\eta = \pm 1} \ltwonorm{x_i - \eta y_i}^2
+    &= \min_{\eta = \pm 1} 2 (1 - \eta \braket{x_i, y_i})
+    = 2 (1 - \abs{\braket{x_i, y_i}}) \\
+    &\le 2 (1 - \braket{x_i, y_i}^2)
+    \le 2 \delta_i^2.
+  \end{align}
+  Therefore, we get for the Frobenius norm distance of the full tensors
+  \begin{align}
+    \min_{\eta=\pm1} \Fnorm{X - \eta Y}
+    &= \min_{\eta \in \{\pm1\}} \Fnorm{x_1 \otimes \cdots \otimes x_N - \eta\, y_1 \otimes \cdots y_N} \\
+    &\begin{aligned}
+      \le \min_{\eta,\xi \in \{\pm1\}} \Large(
+        \Fnorm{x_1 \otimes x_2 \otimes \cdots \otimes x_N - \eta \xi \, x_1 \otimes y_2 \otimes \cdots \otimes y_N} \\
+        + \Fnorm{\eta \xi \, x_1 \otimes y_2 \otimes \cdots \otimes y_N - \eta\, y_1 \otimes y_2 \otimes \cdots y_N}
+      \Large)
+    \end{aligned}\\
+    &\begin{aligned}
+      = \min_{\eta\in\{\pm1\}} \Fnorm{x_2 \otimes \cdots \otimes x_N - \eta \, y_2 \otimes \cdots \otimes y_N} \\
+        + \min_{\eta\in\{\pm1\}} \Fnorm{x_1 - \eta\, y_1}.
+    \end{aligned}
+  \end{align}
+  By telescoping this argument, we get
+  \[
+    \min_{\eta = \pm 1} \ltwonorm{x_i - \eta y_i}^2
+    \le \sum_{i=1}^N \left( \min_{\eta\in\{\pm1\}} \Fnorm{x_i - \eta y_i} \right)
+    \le \sqrt{2} \sum_{i=1}^N \delta_i,
+  \]
+  which completes the proof.
+\end{proof}
+
+We now turn to the main problem in this section, namely providing upper bounds on the ALS-reconstruction.
+For this purpose, we assume that the following two conditions hold for our measurements:
 \begin{enumerate}
   \item\label{lbl:conditions.B}\textbf{Concentration of the $B_j$ operators}:
     For all $j \in \Nset$, let $v_i \in \Reals^d$ with $\norm{v_i}_2 = 1$ ($i \in \NsetSub{j}$) independent of all the $a\ind{l}_i$.
@@ -946,7 +1004,7 @@ Finally, we assume that the rank-1 measurement tensors defined in \cref{eq:als.r
     \[
       \label{eq:ana.conditions.B}
       B_j\left((v_i)_{i \in \NsetSub{j}}\right)
-      = \frac{1}{m} \sum_{l=1}^m \left( \prod_{i\neq j} \Braket{a\ind{l}_i, v_i} \right)^2 \Ketbra{a_i\ind{l}},
+      = \frac{1}{m} \sum_{l=1}^m \left( \prod_{i\neq j} \Braket{a\ind{l}_i, v_i} \right)^2 \Ketbra{a_j\ind{l}},
     \]
     Then, the smallest eigenvalue of $B_j\left((v_i)_{i \in \NsetSub{j}}\right)$ should satisfy
     \[
@@ -961,7 +1019,7 @@ Finally, we assume that the rank-1 measurement tensors defined in \cref{eq:als.r
     \[
       \label{eq:ana.conditions.G}
       G_j\left({(v_i, v_i^\perp)}_{i \in \NsetSub{j}} \right)
-      = \frac{1}{m} \sum_{l=1}^m \left( \prod_{i\neq j} \Braket{a\ind{l}_i, v_i} \Braket{a\ind{l}_i, v_i^\perp} \right) \Ketbra{a\ind{l}}.
+      = \frac{1}{m} \sum_{l=1}^m \left( \prod_{i\neq j} \Braket{a\ind{l}_i, v_i} \Braket{a\ind{l}_i, v_i^\perp} \right) \Ketbra{a_j\ind{l}}.
     \]
     Then, with high probability the largest singular value of $G_j\left({(v_i, v_i^\perp)}_{i \in \NsetSub{j}} \right)$ should satisfy
     \[
@@ -1141,7 +1199,7 @@ It shows that the Alternating Least Squares algorithm improves the overlap of ea
   \]
   If $\theta < 1$, the local updates after completing one epoch satisfy
   \[
-    \sqrt{1 - \braket{x_i, y_i^1}} \le \theta^{2^{i - 1}} \delI.
+    \sqrt{1 - \braket{x_i, y_i^1}^2} \le \theta^{2^{i - 1}} \delI.
     \label{eq:ana.local_convergence.bound}
   \]
 \end{theorem}
@@ -1181,8 +1239,8 @@ Note that for $\theta = \const < 1$, \cref{eq:ana.local_convergence.bound} impli
 Hence, we expect an $N$-dependent \quotes{constant} $\theta$ with $\theta \to 1$ as $N \to \infty$.
 Also, \cref{eq:ana.local_convergence.bound} suggests that the order in which we optimize the local tensors in \cref{alg:als} is not optimal:
 Due to the dependence of the right hand side of said equation on the site-index $i$, the rightmost local tensor benefits the most from the improvements of the previous steps.
-Therefore, an alternating left-right-left sweep may be more beneficial for improving the global error of the reconstruction.
-Such a strategy also is widely used in related algorithms such as DMRG.
+Therefore, an alternating left-right-left sweep may be more beneficial for improving the global error of the reconstruction as the latter is determined by the largest error of the local tensors according to \cref{lem:ana.local_global_closeness}.
+Such sweeping strategy also is widely used in related algorithms such as DMRG.
 In contrast to such alternating sweep strategies, one-directional sweeping requires additional canonicalization after each completed sweep in order
 to bring the tensor into the necessary form.
 
@@ -1210,59 +1268,12 @@ Since we deal with a rank-1 MPS and fix all the norms of the local tensors, the 
 for $i \neq j$.
 The ability to reconstruct all local tensors only up to sign implies that we are able to reconstruct $X$ only up to a global sign using ALS as we show in \cref{lem:ana.local_global_closeness} below.
 However, in our idealized scenario without noise, the sign can be easily recovered simply by comparing $b\ind{l}= \braket{A\ind{l}, X}$ to $\braket{A\ind{l}, Y^\sharp}$ for any $l$ provided $b\ind{l}$ is larger than the small remaining reconstruction error.
-Here, $Y^\sharp$ denotes the final output of ALS.\\
+Here, $Y^\sharp$ denotes the final output of ALS.
 
-
-
-We conclude this chapter with a lemma that shows that if all the local tensors are close in the metric used in \cref{thm:ana.local_convergence}, then the full tensors are also close in Frobenius norm up to a sign.
-\begin{lemma}%
-  \label{lem:ana.local_global_closeness}
-  Let $X = \otimes_{i=1}^N x_i$ and $Y = \otimes_{i=1}^N y_i$ be two product tensors of unit norm.
-  Assume that for each $i \in \Nset$, we have $\ltwonorm{x_i} = \ltwonorm{y_i} = 1$ and
-  \[
-    \label{eq:ana.local_global_closeness.local_close}
-    1 - \Braket{x_i, y_i}^2 \le \delta_i^2.
-  \]
-  Then,
-  \[
-    \min_{\eta = \pm 1} \Fnorm{X - \eta Y} \le \sqrt{2} \sum_{i=1}^N \delta_i.
-  \]
-\end{lemma}
-\begin{proof}
-  First, note that \cref{eq:ana.local_global_closeness.local_close} implies
-  \begin{align}
-    \min_{\eta = \pm 1} \ltwonorm{x_i - \eta y_i}^2
-    &= \min_{\eta = \pm 1} 2 (1 - \eta \braket{x_i, y_i})
-    = 2 (1 - \abs{\braket{x_i, y_i}}) \\
-    &\le 2 (1 - \braket{x_i, y_i}^2)
-    \le 2 \delta_i^2.
-  \end{align}
-  Therefore, we get for the Frobenius norm distance of the full tensors
-  \begin{align}
-    \min_{\eta=\pm1} \Fnorm{X - \eta Y}
-    &= \min_{\eta \in \{\pm1\}} \Fnorm{x_1 \otimes \cdots \otimes x_N - \eta\, y_1 \otimes \cdots y_N} \\
-    &\begin{aligned}
-      \le \min_{\eta,\xi \in \{\pm1\}} \Large(
-        \Fnorm{x_1 \otimes x_2 \otimes \cdots \otimes x_N - \eta \xi \, x_1 \otimes y_2 \otimes \cdots \otimes y_N} \\
-        + \Fnorm{\eta \xi \, x_1 \otimes y_2 \otimes \cdots \otimes y_N - \eta\, y_1 \otimes y_2 \otimes \cdots y_N}
-      \Large)
-    \end{aligned}\\
-    &\begin{aligned}
-      = \min_{\eta\in\{\pm1\}} \Fnorm{x_2 \otimes \cdots \otimes x_N - \eta \, y_2 \otimes \cdots \otimes y_N} \\
-        + \min_{\eta\in\{\pm1\}} \Fnorm{x_1 - \eta\, y_1}.
-    \end{aligned}
-  \end{align}
-  By telescoping this argument, we get
-  \[
-    \min_{\eta = \pm 1} \ltwonorm{x_i - \eta y_i}^2
-    \le \sum_{i=1}^N \left( \min_{\eta\in\{\pm1\}} \Fnorm{x_i - \eta y_i} \right)
-    \le \sqrt{2} \sum_{i=1}^N \delta_i,
-  \]
-  which completes the proof.
-\end{proof}
 
 \subsection{Gaussian Measurements}%
 \label{sub:als.gaussian_measurements}
+
 
 
 
