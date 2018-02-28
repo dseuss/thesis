@@ -19,56 +19,55 @@ Adapted from \cite[Thm. 2.1]{Taylor}
 \end{theorem}
 
 
-\todo{We don't need this anymore?}
-The next step is to derive a lower bound on $\kappa_1$ assuming that the overlap of the local tensors is not too small.
-For this purpose, we state the following Lemma.
 
-\begin{lemma}%
-  \label{lem:ana.kappa_bound}
-  Let $\alpha_i \in [0,1]$ with $i = 1, \ldots, N - 1$.
-  If for $\delta \in (0, 1)$, $\prod_i \alpha_i^2 \ge 1 - \delta^2$ holds, then for any $C > 0$
-  \[
-    C \prod_i \alpha_i - \prod_i \sqrt{1 - \alpha_i^2} \ge C  - \delta (1 + C)
-  \]
-\end{lemma}
-\begin{proof}
-  We first show that the function
-  \[
-    g(\eta_1, \ldots, \eta_{N-1}) = 1 - \prod_i \eta_i - \prod_i \left( 1 - \eta_i \right)
-  \]
-  satisfies
-  \[
-    \label{eq:ana.kappa_bound.g_is_positive}
-    g(\eta_1, \ldots, \eta_{N-1}) \ge 0
-  \]
-  on $\Omega = \{\eta \in \Reals^{N - 1}\colon 0 \le \eta_i \le 1 \quad i = 1, \ldots, N - 1\}$.
-  For this purpose, we use the \emph{Hopf Maximum Principle}~\cite{Taylor}:
-  Since $g$ is linear in each $\eta_i$, we have
-  \[
-    \laplace g (\eta) = \sum_i \partial_{\eta_i}^2 g (\eta) = 0,
-  \]
-  $g$ and $\Omega$ fulfill the conditions of \cref{thm:ana.max_principle} on page \pageref{thm:ana.max_principle}.
-  Therefore,
-  \[
-    \inf_{\eta \in \Omega} g(\eta) = \inf_{\eta \in \partial \Omega} g(\eta).
-  \]
-  Note that for $\eta \in \partial \Omega$, $\eta_j = 0$ or $\eta_j = 1$ for one $j$.
-  Since $g$ is symmetric under permutation of the $\eta_i$ and under the transformation $\eta \mapsto 1 - \eta$, we can assume $\eta_1 = 1$ w.l.o.g.
-  Therefore,
-  \[
-    \inf_{\eta \in \partial \Omega} g(\eta) = \inf_{{(0 \le \eta_i \le 1)}_{i > 1}} 1 - \prod_{i > 1} \eta_i = 0,
-  \]
-  and hence, \cref{eq:ana.kappa_bound.g_is_positive} holds.
+\subsection{Meijer G-functions}%
+\label{sub:tensors.meijer}
 
-  By substituting $\eta_i = \alpha_i^2$, \cref{eq:ana.kappa_bound.g_is_positive} gives
+Meijer G-functions are a family of special functions in one variable that is closed under several operations including
+\[
+  x \mapsto -x, \,
+  x \mapsto 1/x,
+  \text{ multiplication by } x^p,
+  \text{ differentiation},
+  \text{ and integration}.
+\]
+%
+\begin{definition}\label{Def:MeijerG}
+  For integers $m,n,p,q$ satisfying $0\leq m \leq q$, $0 \leq n \leq p$ and for $a_i, b_j \in \mathbb{C}$ (with $i=1,\ldots,p$; $j=1,\ldots,q$), the Meijer G-function
+  $G_{p,q}^{m,n}\roundbra{\, \cdot \,\, \Big| \begin{matrix} a_1,a_2, \ldots a_p \\ b_1, b_2,\ldots, b_q\end{matrix}}$ is defined by the line integral
   \[
-    \label{eq:ana.kappa_bound.sqrt_to_prod}
-    \prod_i \left( 1 - \alpha_i^2 \right) \le 1 - \prod_i \alpha_i^2
+    \label{eq:the_G}
+    G_{p,q}^{m,n}\roundbra{z \Big| \begin{matrix} a_1,a_2, \ldots a_p \\ b_1, b_2,\ldots, b_q\end{matrix}}
+    =
+    \frac{1}{2\pi \i} \int_{\mathcal{L}} \mathcal{H}_{p,q}^{m,n} (s) z^{-s} \, \d s \, ,
   \]
-  Therefore, we obtain the claim of this Lemma as follows
-  \begin{align}
-    C \prod_i \alpha_i - \prod_i \sqrt{1 - \alpha_i^2}
-    &\ge C \sqrt{1 - \delta^2} - \delta \\
-    &\ge C \left(1 - \delta\right) - \delta \\
-  \end{align}
-\end{proof}
+  with
+  \[\label{Hmnpq}
+    \mathcal{H}_{p,q}^{m,n}(s) :=   \frac{\prod_{j=1}^m \Gamma(b_j+s) \prod_{i=1}^n \Gamma(1-a_i-s)}{\prod_{i=n+1}^p \Gamma(a_i+s) \prod_{j=m+1}^q \Gamma(1-b_j-s)}
+    \,.
+  \]
+  Here,
+  \[
+    z^{-s}=\exp\roundbra{-s \curlybra{\log |z|+ \i \arg z}}, \quad z \neq 0, \quad \i=\sqrt{-1},
+  \]
+  where $\log|z|$ represents the natural logarithm of $|z|$ and $\arg z$ is not necessarily the principal value.
+  Empty products are identified with one.
+  The parameter vectors $a$ and $b$ need to be chosen such that the poles
+  \[\label{polesB}
+    b_{j\ell} = -b_j - \ell \quad (j=1,2,\ldots,m;\, \ell=0,1,2,\ldots)
+  \]
+  of the gamma functions $s\mapsto \Gamma(b_j+s)$ and the poles
+  \[\label{polesA}
+    a_{ik} = 1-a_i+k \quad (i=1,2,\ldots,n;\, k=0,1,2,\ldots)
+  \]
+  of the gamma functions $s\mapsto \Gamma(1-a_i-s)$ do not coincide, i.e.
+  \[
+    b_j+\ell \neq a_i-k-1 \quad (i=1,\ldots,n;\, j=1,\ldots,m;\,  k,\ell=0,1,2,\ldots).
+  \]
+  The integral is taken over an infinite contour $\mathcal{L}$ that separates all  poles $b_{j\ell}$ in Eq.~\eqref{polesB} to the left and $a_{ik}$ in Eq.~\eqref{polesA} to the right of $\mathcal{L}$, and has one of the following forms:
+  \begin{enumerate}
+    \item $\mathcal{L}=\mathcal{L}_{-\infty}$ is a left loop situated in a horizontal strip starting at the point $-\infty+\i \phi_1$ and terminating at the point $-\infty + \i \phi_2$ with $-\infty < \phi_1 < \phi_2 < +\infty$;
+    \item $\mathcal{L}=\mathcal{L}_{+\infty}$ is a right loop situated in a horizontal strip starting at the point $+\infty+\i \phi_1$ and terminating at the point $+\infty + \i \phi_2$ with $-\infty < \phi_1 < \phi_2 < +\infty$;
+    \item $\mathcal{L}=\mathcal{L}_{\i \gamma \infty}$ is a contour starting at the point $\gamma-\i \infty$ and terminating at the point $\gamma+\i \infty$, where $\gamma \in \Reals$.
+  \end{enumerate}
+\end{definition}

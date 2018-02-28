@@ -337,7 +337,7 @@ Clearly, the following gauge transformation leaves \cref{eq:mps.open_boundary} i
   \tilde M\ind{l}_i = L\ind{l - 1} M\ind{l}_i R\ind{l} \quad (1 < l < N)
 \end{align}
 provided the (generally non-square) matrices $L\ind{l}$ and $R\ind{l}$ satisfy $L\ind{l} R\ind{l} = \1$ since then
-\begin{equation}
+\[
   \begin{tikzpicture}[baseline=-.5ex]
     \mpa{4}{{S=1, tensor_name='A', len_horizontal_legs=0.1}}
     \node at (A_1) {$M\ind{1}$};
@@ -361,7 +361,7 @@ provided the (generally non-square) matrices $L\ind{l}$ and $R\ind{l}$ satisfy $
     \node at (L_6) {$L\ind{2}$};
     \node at (L_9) {$L\ind{3}$};
   \end{tikzpicture}
-\end{equation}
+\]
 As shown in~\cite[Thm. 2]{Garcia_2006_Matrix}, these local transformations on the virtual degrees of freedom are the only possible gauge transformations of the MPS representation.
 A number of canonical forms exist that partially fix the gauge~\cite{Garcia_2006_Matrix,Schollwoeck_2011_DensityMatrix,Bridgeman_2017_HandWaving}.
 The following definition summarizes the corresponding gauge conditions
@@ -1307,7 +1307,99 @@ Therefore, the problem of proving the concentration properties \cref{eq:ana.cond
 
 In this section we are going to summarize the results from~\cite{Stojanac,Stojanac}, where we compute a power-log series expansion for the cumulative distribution function of products of independent standard Gaussians as well their absolute values and squares.
 In numerical simulations, we also show that truncations of said expansions at the first-order provide very close approximations, and therefore, may be used to derive strong concentration properties for said random variables.
-However, since at this time, we do not have explicit error bounds for these truncations, we investigate the concentration properties of the operators~\eqref{eq:als.gaussian.B} and~\eqref{eq:als.gaussian.G} numerically at the end of this section.
+However, since at this time, we do not have explicit error bounds for these truncations, we investigate the concentration properties of the operators~\eqref{eq:als.gaussian.B} and~\eqref{eq:als.gaussian.G} numerically at the end of this section.\\
+
+
+% goal: consider product of squares as in B -> need lower bound on lmin -> need lower tail bound on sums of random opeartors
+% standard approach: moment based concentration as in chapter ...
+% the problem with products of gaussians prefactor
+%   -> log normal with mean/variance -> hgihly fluctuating on orders of magintude
+%   -? standard higher-moment based concentration inequalities do not work
+% main problem: fluctuating prefactor -> deriving tail bounds for Y
+
+% our approach: compute PDF as funciton of Meijer G-function
+Meijer G-functions are a family of special functions in one variable that is closed under several operations including
+\[
+x \mapsto -x, \,
+x \mapsto 1/x,
+\text{ multiplication by } x^p,
+\text{ differentiation},
+\text{ and integration}.
+\]
+% PROP
+%
+% main theorem: compute power-log expansion of certin Meijer G fucntion
+% although of general interst ,here only final result for products of Gaussians
+
+\begin{lemma}%
+  \label{lem:gaussians.cdf_as_meijer_g}
+  Let $\{g_i\}_{i=1}^N $ be a set of independent identically distributed standard Gaussian random variables (i.e., $g_i \sim \mathcal{N}(0,1)$) and $X := \prod_{i=1}^N g_i$, $Y := \prod_{i=1}^N g_i^2$, $Z := \prod_{i=1}^N |g_i|$ with $N \in \mathbb{N}$.
+  Define the function $g_{\alpha}$ by
+  \[\label{eq:g_alpha}
+    g_{\alpha}(z)
+    :=
+    1 - \frac{1}{2^{\alpha}} \cdot \frac{1}{\pi^{\frac{N}{2}}}    G_{N+1, 1}^{0,N+1} \left(z \Big|  \begin{matrix} 1,1/2,\ldots,1/2 \\ 0 \end{matrix} \right).
+  \]
+  Then, for any $t> 0$,
+  \begin{align}
+    \Prob\roundbra{X \leq t}&= \Prob\roundbra{X \geq -t}  = g_{1}\roundbra{\frac{2^N}{t^2}} \\
+    \Prob\roundbra{Y \leq t} &=  g_{0}\roundbra{\frac{2^N}{t}} \\
+    \Prob\roundbra{Z \leq t} &= g_{0}\roundbra{\frac{2^N}{t^2}}.
+  \end{align}
+\end{lemma}
+In Ref.~\cite{SPIE_Gauss} we have provided a proof of the above proposition by deriving first a result for the random variable $X$. The results for random variables $Y$ and $Z$ then follow trivially. For completeness, we derive a proof for a random variable $Y$ in the Appendix~\ref{App:Proofs} (see Lemma~\ref{lemma:CDFofY}).
+The statements for $X$ and $Z$ are  simple consequences of this result, since for $t>0$,
+\begin{align}
+  \Prob (Z \leq t) &= \Prob (Z^2 \leq t^2) =  \Prob (Y \leq t^2) \, , \label{eq:relate_Y_Z}
+  \\
+  \Prob (X \leq t)
+  &= \frac{1}{2}\roundbra{2\Prob (X \leq t)}
+  = \frac{1}{2} \roundbra{\Prob (X \leq t) + 1 - \Prob (X \leq -t)}
+  \\
+  &= \frac{1}{2} \roundbra{\Prob (-t \leq X \leq t) + 1}
+  =
+  \frac{1}{2} \roundbra{\Prob (X^2 \leq t^2) + 1}
+  = \frac{1}{2} \roundbra{\Prob (Y \leq t^2) + 1}. \label{eq:relate_X_Y}
+\end{align}
+
+Now we are ready to present the main result of this section.
+The proof is based on the theory of power-log series of Fox H-functions~\cite[Theorem 1.5]{Htransform}.
+
+\begin{theorem}%
+  \label{thm:CDF_as_mejier_g}
+  Let $\{g_i\}_{i=1}^N $ be a set of independent identically distributed standard Gaussian random variables (i.e., $g_i \sim \mathcal{N}(0,1)$) and $X := \prod_{i=1}^N g_i$, $Y := \prod_{i=1}^N g_i^2$, $Z := \prod_{i=1}^N |g_i|$ with $N \in \mathbb{N}$.
+  Define the function $f_{\nu,\xi}$ by
+  \[\label{eq:power-log-series}
+    f_{\nu, \xi}(u)
+    :=
+    \nu + \frac{1}{2^{\xi}} \cdot \frac{1}{\pi^{N/2}} \sum_{k=0}^{\infty} u^{-1/2-k} \sum_{j=0}^{N-1} H_{kj} \cdot \sqbra{\log u}^j
+  \]
+  with
+  \begin{align}
+    H_{kj}
+    &:=
+    \frac{(-1)^{Nk}}{j!} \,
+    \sum_{n=j}^{N-1}
+    \roundbra{\frac{1}{2}+k}^{-(n-j+1)}
+    \nonumber \\ \label{HkjFinal}
+    & \quad \cdot
+    \sum_{j_1+\ldots+j_N=N-1-n} \ \prod_{t=1}^N
+    \curlybra{\sum_{\ell_1+\ldots+\ell_{k+1}=j_t} \frac{\Gamma^{(\ell_{k+1})}(1)}{\ell_{k+1}!} \curlybra{\prod_{i=1}^{k-1} \roundbra{k-i+1}^{-(\ell_i+1)}}}
+  \end{align}
+  and with $j_i \in \Naturals_0$ and $\ell_i\in \Naturals$.
+  Then, for any $t> 0$,
+  \begin{align}
+    \Prob\roundbra{X \leq t}&= \Prob\roundbra{X \geq -t}
+    =
+    f_{1/2,1}\Bigl(\frac{2^N}{t^2}\Bigr) \, , \label{eq:X_expansion}
+    \\
+    \Prob\roundbra{Y \leq t} &=
+    f_{0,0}\Bigl(\frac{2^N}{t}\Bigr)  \, ,\label{eq:Y_expansion}
+    \\
+    \Prob\roundbra{Z \leq t} &=
+    f_{0,0}\Bigl(\frac{2^N}{t^2}\Bigr) \, .\label{eq:Z_expansion}
+  \end{align}
+\end{theorem}
 
 
 
