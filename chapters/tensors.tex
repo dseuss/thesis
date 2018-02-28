@@ -1271,8 +1271,48 @@ However, in our idealized scenario without noise, the sign can be easily recover
 Here, $Y^\sharp$ denotes the final output of ALS.
 
 
+
+
 \subsection{Gaussian Measurements}%
 \label{sub:als.gaussian_measurements}
+
+The results from \cref{sec:als.ana} apply to general rank-1 measurements
+\[
+  A\ind{l} = a\ind{l}_1 \otimes \cdots \otimes a\ind{l}_N,
+  \label{eq:gaussian.rank1_measurements}
+\]
+which satisfy the fundamental concentration conditions in \cref{eq:ana.conditions.lmin,eq:ana.conditions.lmax}.
+In this section, we consider measurements of the form~\eqref{eq:gaussian.rank1_measurements}, where the local tensors are chosen independently from a standard normal $d$-variate distribution, i.e.\ $a\ind{l}_N \sim \Normal(0, \1_d)$.
+In this case, the operators $B_j(v)$ defined in \cref{eq:ana.conditions.B} are of the form
+\[
+  \label{eq:als.gaussian.B}
+  B_j(v) = \frac{1}{m} \sum_{l=1}^m Y_j\ind{l} \Ketbra{a\ind{l}_j},
+\]
+where
+\[
+  Y_j\ind{l} = \prod_{i \neq j} \Braket{a_i\ind{l}, v_i}^2 = \prod_{i = 1}^{N - 1} {g\ind{l}_i}^2
+\]
+is a product of squares of $N - 1$ independent standard Gaussians $g\ind{l}_i \sim \Normal(0, 1)$.
+Similarly, for $G_j(v)$ defined in \cref{eq:ana.conditions.G}
+\[
+  \label{eq:als.gaussian.G}
+  G_j(v) = \frac{1}{m} \sum_{l=1}^m X_j\ind{l} \Ketbra{a\ind{l}_j},
+\]
+with
+\[
+  X_j\ind{l} = \prod_{i = 1}^{2(N - 1)} {g\ind{l}_i}
+\]
+being a product of $2(N - 1)$ independent standard Gaussians.
+Therefore, the problem of proving the concentration properties \cref{eq:ana.conditions.lmin,eq:ana.conditions.lmax} requires a better understanding of the distribution of products of Gaussian random variables.
+
+In this section we are going to summarize the results from~\cite{Stojanac,Stojanac}, where we compute a power-log series expansion for the cumulative distribution function of products of independent standard Gaussians as well their absolute values and squares.
+In numerical simulations, we also show that truncations of said expansions at the first-order provide very close approximations, and therefore, may be used to derive strong concentration properties for said random variables.
+However, since at this time, we do not have explicit error bounds for these truncations, we investigate the concentration properties of the operators~\eqref{eq:als.gaussian.B} and~\eqref{eq:als.gaussian.G} numerically at the end of this section.
+
+
+
+
+
 
 
 
