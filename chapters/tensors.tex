@@ -1430,47 +1430,34 @@ Now we are ready to present the main result of this section, which is a power-lo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}
   \begin{subfigure}{\columnwidth}
-    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_X_N_3}
-    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_X_N_6}
-    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_X_N_13_new}
+    \includegraphics[width=\textwidth]{fig/tensor_series_f}
     \caption{%
-      CDF $\Prob(X \le t)$ and approximations for $X = \prod_{i=1}^N g_i$
+      \label{fig:gaussians.cdf.f}%
+      CDFs and approximations
     }
   \end{subfigure}
   \begin{subfigure}{\columnwidth}
-    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Y_N_3_new}
-    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Y_N_6_new}
-    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Y_N_13_new}
+    \includegraphics[width=\textwidth]{fig/tensor_series_err}
     \caption{%
-      CDF $\Prob(Y \le t)$ and approximations for $Y = \prod_{i=1}^N g_i^2$
-    }
-  \end{subfigure}
-  \begin{subfigure}{\columnwidth}
-    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Z_N_3}
-    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Z_N_6_new}
-    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Z_N_13_new}
-    \caption{%
-      CDF $\Prob(Z \le t)$ and approximations for $X = \prod_{i=1}^N g_i$
+      \label{fig:gaussians.cdf.err}%
+      Approximation errors
     }
   \end{subfigure}
   \caption{%
     \label{fig:gaussians.cdfs}%
-    The plots of the  CDFs (red lines) of the random variables $X$, $Y$, and $Z$ with their power-log series \eqref{eq:gaussians.series}
-    truncated at $k=0$ (green lines) and $k=1$ (blue lines),
-    Each inset shows the approximation error of the truncations on a logarithmic scale.
-    \todo[inline]{Update plot}
+    \Cref{fig:gaussians.cdf.f} shows the CDFs ($k=\infty$) of the random variables $X$, $Y$, and $Z$ with their power-log series~\eqref{eq:gaussians.series} truncated at different orders $k$.
+    Note that the first order approximation $k=1$ lies right on top of the true value.
+    In \cref{fig:gaussians.cdf.err}, we show the approximation error, i.e.\ the absolute value of the difference of the truncation and the true value, on a log-scale.
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The proof this theorem is based on the theory of power-log series of Fox H-functions and can be found in~\cite{Stojanac}.
 Here, we are mostly interested in the power-log series expansion~\eqref{eq:gaussians.series}, because already its zeroth and first order truncation approximate the cdfs of $X$, $Y$, and $Z$ well as shown in \cref{fig:gaussians.cdfs}.
-Said figure depicts the true cdf as well as their series approximations from \cref{eq:gaussians.series} for $k=0$ and $k=1$.
+Said figure depicts the true cdf as well as their series approximations from \cref{eq:gaussians.series.f} for $k=0$ and $k=1$.
 We can see that for all three random variables as well as for all values of $N$, the zeroth order approximation is good for small values of $t$, but worsens for increasing $t$.
-The first order approximation behaves similarly, but the approximation error remains small enough so that it cannot be distinguished from the true cdf on the linear plots.
-\todo{Really?}
-Therefore, we provide insets showing the logarithmic approximation error.
-There, we see that the first-order approximation error remains below $10^{-5}$ for all shown.
+The first order approximation behaves similarly, but the approximation error remains small enough so that it cannot be distinguished from the true cdf in the linear plots.
+Therefore, we show the logarithmic approximation error in \cref{fig:gaussians.cdfs.err}, where we see that the first-order approximation error remains below $10^{-2}$ for all shown cases.
 Note that the approximation also gets better for increasing $N$.
 Therefore, we obtain the worst approximations for the generally better behaved smaller values of $n$.
 

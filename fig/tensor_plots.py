@@ -238,7 +238,7 @@ def series_plot(datafile, size, aspect):
     grid = sns.FacetGrid(df_1, col='rv', row='N', hue='truncation order',
                          sharex=True, sharey=True, legend_out=True,
                          margin_titles=True, size=size, aspect=aspect)
-    grid.map(pl.plot, x_name, y_name, ls=':') \
+    grid.map(pl.plot, x_name, y_name, ls='--') \
         .add_legend()
     pl.savefig('tensor_series_f.pdf')
 
@@ -250,7 +250,7 @@ def series_plot(datafile, size, aspect):
     grid = sns.FacetGrid(df_1, col='rv', row='N', hue='truncation order',
                          sharex=True, sharey=True, legend_out=True,
                          margin_titles=True, size=size, aspect=aspect)
-    grid.map(pl.semilogy, x_name, y_name, ls=':') \
+    grid.map(pl.semilogy, x_name, y_name) \
         .add_legend()
     pl.savefig('tensor_series_err.pdf')
 
