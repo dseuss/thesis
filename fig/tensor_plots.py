@@ -6,11 +6,17 @@ from pathlib import Path
 
 import click
 
+import matlab.engine
 import matplotlib.pyplot as pl
+import mpmath
 import numpy as np
+import pandas as pd
 import seaborn as sns
-from tqdm import tqdm
 from scipy import stats
+from tqdm import tqdm
+
+MATLAB_ENGINE = None
+π = np.pi
 
 
 @click.group()
@@ -43,11 +49,12 @@ def get_samplefun(N, d, m):
 
 NR_MEASUREMENTS = {
     'lin_lin': lambda C, N, d: C * N * d,
-    'sq_sq': lambda C, N, d: C * N**2 * d**2
+    'sq_sq': lambda C, N, d: C * N**2 * d**2,
+    'sq_lin': lambda C, N, d: C * N**2 * d
 }
 
 
-def compute_routine(sites, dim, const, samples, batch_size, mode, output_dir,
+def concentration_compute_routine(sites, dim, const, samples, batch_size, mode, output_dir,
                     use_tqdm=True):
     batch_samples = [batch_size] * (samples // batch_size)
     batch_samples = tqdm(batch_samples) if use_tqdm else batch_samples
@@ -64,7 +71,7 @@ def compute_routine(sites, dim, const, samples, batch_size, mode, output_dir,
             result, allow_pickle=False)
 
 
-@main.command()
+@main.command(name='concentration-compute')
 @click.option('--sites', required=True, type=int)
 @click.option('--dim', required=True, type=int)
 @click.option('--const', default=10, type=int)
@@ -73,37 +80,29 @@ def compute_routine(sites, dim, const, samples, batch_size, mode, output_dir,
 @click.option('--mode', default='lin_lin', type=click.Choice(NR_MEASUREMENTS.keys()))
 @click.option('--output-dir', default='../data/',
               type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True))
-def compute(sites, dim, const, samples, batch_size, mode, output_dir):
+def concentration_compute(sites, dim, const, samples, batch_size, mode, output_dir):
     assert batch_size <= samples
-    compute_routine(sites, dim, const, samples, batch_size, mode, output_dir)
+    concentration_compute_routine(sites, dim, const, samples, batch_size, mode, output_dir)
     print('Done.')
 
 
-class MashedFunction(object):
-    def __init__(self, f):
-        self.f = f
-
-    def __call__(self, args):
-        return self.f(*args)
-
-
-@main.command(name='compute-all')
-@click.option('--samples', default=100000, type=int)
+@main.command(name='concentration-compute-all')
+@click.option('--samples', default=10000, type=int)
 @click.option('--batch-size', default=256, type=int)
 @click.option('--output-dir', default='../data/',
               type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True))
 @click.option('--mode', default='lin_lin', type=click.Choice(NR_MEASUREMENTS.keys()))
-def compute_all(samples, batch_size, output_dir, mode):
-    f = ft.partial(compute_routine, output_dir=output_dir, samples=samples,
-                   batch_size=batch_size, mode=mode, use_tqdm=False)
-    sites_pool = [10, 20, 40, 80]
-    dim_pool = [5, 10, 20, 40]
-    const_pool = [10, 100]
-
-    iterator = it.product(sites_pool, dim_pool, const_pool)
-    total = len(sites_pool) * len(dim_pool) * len(const_pool)
-    for sites, dim, const in tqdm(iterator, total=total):
-        f(sites, dim, const)
+@click.option('--const', default=10)
+def concentration_compute_all(samples, batch_size, output_dir, mode, const):
+    f = ft.partial(concentration_compute_routine, output_dir=output_dir,
+                   samples=samples, batch_size=batch_size, mode=mode,
+                   const=const, use_tqdm=True)
+    sites_pool = [2, 4, 8, 16, 32, 64]
+    dim_pool = [2, 4, 8, 16, 32]
+    pool = list(it.product(sites_pool, dim_pool))
+    for sites, dim, in tqdm(pool):
+        f(sites, dim)
+    print('Done')
 
 
 @main.command(name='tensor_lognormal.pdf')
@@ -129,6 +128,84 @@ def lognormal_plot(samples):
     fig.tight_layout()
     fig.savefig('tensor_lognormal.pdf')
 
+
+def true_cdf_function(α, n):
+    def f(z):
+        y = mpmath.meijerg(a_s=[[1] + [1/2] * n, []], b_s=[[], [0]], z=z)
+        return 1 - 1/2**α * π**(-n / 2) * y
+    return np.frompyfunc(f, 1, 1)
+
+
+def approx_cdf_function(ν, ξ, N, order):
+    # convert to float due to MATLAB's weird behavior
+    H0j = MATLAB_ENGINE.H0j(float(N))
+    H1j = MATLAB_ENGINE.H1j(float(N))
+
+    def zeroth_order_approx(z):
+        zeroth_order = np.sum(H0j * np.log(z)**np.arange(N))
+        return ν + 2**(-ξ) * π**(-N / 2) * z**(-1 / 2) * zeroth_order
+
+    def first_order_approx(z):
+        zeroth_order = z**(-1 / 2) * np.sum(H0j * np.log(z)**np.arange(N))
+        first_order = z**(-3 / 2) * np.sum(H1j * np.log(z)**np.arange(N))
+        return ν + 2**(-ξ) * π**(-N / 2) * (zeroth_order + first_order)
+
+    f = {0: zeroth_order_approx, 1: first_order_approx}.get(order)
+    return np.frompyfunc(f, 1, 1)
+
+
+def powerlog_dataframe(t, N, key):
+    true_cdfs = {
+        'X': true_cdf_function(1, N),
+        'Y': true_cdf_function(0, N),
+        'Z': true_cdf_function(0, N)
+    }
+
+    zeroth_orders = {
+        'X': approx_cdf_function(1/2, 1, N, 0),
+        'Y': approx_cdf_function(0, 0, N, 0),
+        'Z': approx_cdf_function(0, 0, N, 0),
+    }
+
+    first_orders = {
+        'X': approx_cdf_function(1/2, 1, N, 1),
+        'Y': approx_cdf_function(0, 0, N, 1),
+        'Z': approx_cdf_function(0, 0, N, 1),
+    }
+
+    t_to_zs = {
+        'X': lambda n, t: 2**n / t**2,
+        'Y': lambda n, t: 2**n / t,
+        'Z': lambda n, t: 2**n / t**2
+    }
+
+    z = t_to_zs[key](N, t)
+    df = pd.DataFrame(data=t, columns=['t'])
+    df['y_inf'] = true_cdfs[key](z)
+    df['y_0'] = zeroth_orders[key](z)
+    df['y_1'] = first_orders[key](z)
+    df['N'] = N
+    df['rv'] = key
+    return df
+
+
+@main.command(name='series-compute')
+@click.option('--sites', default='3:8:12')
+@click.option('--output-file', default='../data/series.csv',
+              type=click.Path(file_okay=True, dir_okay=False, writable=True))
+def series_compute(sites, output_file):
+    print('Starting MATLAB engine. This might take a while...')
+    global MATLAB_ENGINE
+    MATLAB_ENGINE = matlab.engine.start_matlab(option='-nodesktop -nojvm')
+    MATLAB_ENGINE.addpath('matlab_lib/')
+
+    t = np.linspace(1e-7, 1, 100)
+    Ns = [int(n) for n in sites.split(':')]
+    df = pd.concat([powerlog_dataframe(t, N, key)
+                    for N, key in tqdm(list(it.product(Ns, ['X', 'Y', 'Z'])))],
+                   ignore_index=True, verify_integrity=True)
+    df.to_csv(output_file)
+    print('Done.')
 
 
 if __name__ == '__main__':
