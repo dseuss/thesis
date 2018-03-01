@@ -193,13 +193,14 @@ def powerlog_dataframe(t, N, key):
 @click.option('--sites', default='2:5:8')
 @click.option('--output-file', default='../data/series.csv',
               type=click.Path(file_okay=True, dir_okay=False, writable=True))
-def series_compute(sites, output_file):
+@click.option('--nr-points', default=100)
+def series_compute(sites, output_file, nr_points):
     print('Starting MATLAB engine. This might take a while...')
     global MATLAB_ENGINE
     MATLAB_ENGINE = matlab.engine.start_matlab(option='-nodesktop -nojvm')
     MATLAB_ENGINE.addpath('matlab_lib/')
 
-    t = np.linspace(1e-7, 1, 100)
+    t = np.linspace(1e-10, 1, nr_points)
     Ns = [int(n) for n in sites.split(':')]
     df = pd.concat([powerlog_dataframe(t, N, key)
                     for N, key in tqdm(list(it.product(Ns, ['X', 'Y', 'Z'])))],
@@ -221,8 +222,8 @@ def melt_cols(df, col_names, **kwargs):
 @click.option('--aspect', default=1.6)
 def series_plot(datafile, size, aspect):
     df = pd.read_csv(datafile, index_col=0)
-    df['err_0'] = np.log(np.abs(df['y_inf'] - df['y_0']))
-    df['err_1'] = np.log(np.abs(df['y_inf'] - df['y_1']))
+    df['err_0'] = np.abs(df['y_inf'] - df['y_0'])
+    df['err_1'] = np.abs(df['y_inf'] - df['y_1'])
     df.rv.replace('X', r'$X$', inplace=True)
     df.rv.replace('Y', r'$Y$', inplace=True)
     df.rv.replace('Z', r'$Z$', inplace=True)
@@ -242,14 +243,14 @@ def series_plot(datafile, size, aspect):
     pl.savefig('tensor_series_f.pdf')
 
     x_name = r'$t$'
-    y_name = r'$log(| f_∞(x) - f_k(x) |)$'
+    y_name = r'$| f_∞(x) - f_k(x) |$'
     df_1 = melt_cols(df.rename(columns=err_names), list(err_names.values()),
                      var_name='truncation order', value_name=y_name)
     df_1.rename(columns={'t': x_name}, inplace=True)
     grid = sns.FacetGrid(df_1, col='rv', row='N', hue='truncation order',
                          sharex=True, sharey=True, legend_out=True,
                          margin_titles=True, size=size, aspect=aspect)
-    grid.map(pl.plot, x_name, y_name, ls=':') \
+    grid.map(pl.semilogy, x_name, y_name, ls=':') \
         .add_legend()
     pl.savefig('tensor_series_err.pdf')
 
