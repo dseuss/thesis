@@ -1398,39 +1398,89 @@ Now we are ready to present the main result of this section, which is a power-lo
 
 \begin{theorem}%
   \label{thm:CDF_as_mejier_g}
-  Denote by $X$, $Y$, and $Z$ the product of $N$ independent Gaussians, Gaussians squared, and their absolute value as defined in \cref{eq:gaussians.XYZ}.
-  Define the function $f_{\nu,\xi}$ by
-  \[\label{eq:power-log-series}
+  Denote by $X$, $Y$, and $Z$ the product of $N$ independent Gaussians, Gaussians squared, and their absolute value, respectively, as given by \cref{eq:gaussians.XYZ}.
+  Define the function
+  \[
+    \label{eq:gaussians.series}
     f_{\nu, \xi}(u)
     :=
     \nu + \frac{1}{2^{\xi}} \cdot \frac{1}{\pi^{n/2}} \sum_{k=0}^{\infty} u^{-1/2-k} \sum_{j=0}^{n-1} H_{kj} \cdot \sqbra{\log u}^j
   \]
   with
-  \begin{align}
-    H_{kj}
-    &:=
-    \frac{(-1)^{nk}}{j!} \,
-    \sum_{l=j}^{N-1}
-    \roundbra{\frac{1}{2}+k}^{-(l-j+1)}
-    \nonumber \\ \label{HkjFinal}
-    & \quad \cdot
-    \sum_{j_1+\ldots+j_n=n-1-l} \ \prod_{t=1}^N
-    \curlybra{\sum_{\ell_1+\ldots+\ell_{k+1}=j_t} \frac{\Gamma^{(\ell_{k+1})}(1)}{\ell_{k+1}!} \curlybra{\prod_{i=1}^{k-1} \roundbra{k-i+1}^{-(\ell_i+1)}}}
-  \end{align}
-  and with $j_i \in \Naturals_0$ and $\ell_i\in \Naturals$.
+  \[
+    \begin{split}
+      H_{kj}
+      :=&
+      \frac{{(-1)}^{nk}}{j!} \, \sum_{l=j}^{N-1} \roundbra{\frac{1}{2}+k}^{-(l-j+1)} \\
+      & \times \sum_{j_1+\ldots+j_n=n-1-l} \ \prod_{t=1}^N \curlybra{\sum_{\ell_1+\ldots+\ell_{k+1}=j_t} \frac{\Gamma^{(\ell_{k+1})}(1)}{\ell_{k+1}!} \curlybra{\prod_{i=1}^{k-1} \roundbra{k-i+1}^{-(\ell_i+1)}}}
+    \end{split}
+  \]
+  Here, $j_i \in \Naturals_0$ and $\ell_i\in \Naturals$.
   Then, for any $t> 0$,
   \begin{align}
-    \Prob\roundbra{X \leq t}&= \Prob\roundbra{X \geq -t}
-    =
-    f_{1/2,1}\Bigl(\frac{2^n}{t^2}\Bigr) \, , \label{eq:X_expansion}
+    \Prob\roundbra{X \leq t}&= \Prob\roundbra{X \geq -t} = f_{1/2,1}\left(\frac{2^n}{t^2}\right) \, , \label{eq:X_expansion}
     \\
-    \Prob\roundbra{Y \leq t} &=
-    f_{0,0}\Bigl(\frac{2^n}{t}\Bigr)  \, ,\label{eq:Y_expansion}
+    \Prob\roundbra{Y \leq t} &= f_{0,0}\left(\frac{2^n}{t}\right)  \, ,\label{eq:Y_expansion}
     \\
-    \Prob\roundbra{Z \leq t} &=
-    f_{0,0}\Bigl(\frac{2^n}{t^2}\Bigr) \, .\label{eq:Z_expansion}
+    \Prob\roundbra{Z \leq t} &= f_{0,0}\left(\frac{2^n}{t^2}\right) \, .\label{eq:Z_expansion}
   \end{align}
 \end{theorem}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+  \begin{subfigure}{\columnwidth}
+    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_X_N_3}
+    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_X_N_6}
+    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_X_N_13_new}
+    \caption{%
+      CDF $\Prob(X \le t)$ and approximations for $X = \prod_{i=1}^N g_i$
+    }
+  \end{subfigure}
+  \begin{subfigure}{\columnwidth}
+    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Y_N_3_new}
+    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Y_N_6_new}
+    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Y_N_13_new}
+    \caption{%
+      CDF $\Prob(Y \le t)$ and approximations for $Y = \prod_{i=1}^N g_i^2$
+    }
+  \end{subfigure}
+  \begin{subfigure}{\columnwidth}
+    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Z_N_3}
+    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Z_N_6_new}
+    \includegraphics[width=0.32\textwidth,trim={97 240 120 217}]{fig/tmp/inset_Z_N_13_new}
+    \caption{%
+      CDF $\Prob(Z \le t)$ and approximations for $X = \prod_{i=1}^N g_i$
+    }
+  \end{subfigure}
+  \caption{%
+    \label{fig:gaussians.cdfs}%
+    The plots of the  CDFs (red lines) of the random variables $X$, $Y$, and $Z$ with their power-log series \eqref{eq:gaussians.series}
+    truncated at $k=0$ (green lines) and $k=1$ (blue lines),
+    Each inset shows the approximation error of the truncations on a logarithmic scale.
+    \todo[inline]{Update plot}
+  }
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The proof this theorem is based on the theory of power-log series of Fox H-functions and can be found in~\cite{Stojanac}.
+Here, we are mostly interested in the power-log series expansion~\eqref{eq:gaussians.series}, because already its zeroth and first order truncation approximate the cdfs of $X$, $Y$, and $Z$ well as shown in \cref{fig:gaussians.cdfs}.
+Said figure depicts the true cdf as well as their series approximations from \cref{eq:gaussians.series} for $k=0$ and $k=1$.
+We can see that for all three random variables as well as for all values of $N$, the zeroth order approximation is good for small values of $t$, but worsens for increasing $t$.
+The first order approximation behaves similarly, but the approximation error remains small enough so that it cannot be distinguished from the true cdf on the linear plots.
+\todo{Really?}
+Therefore, we provide insets showing the logarithmic approximation error.
+There, we see that the first-order approximation error remains below $10^{-5}$ for all shown.
+Note that the approximation also gets better for increasing $N$.
+Therefore, we obtain the worst approximations for the generally better behaved smaller values of $n$.
+
+In conclusion, the numerical simulations depicted in \cref{fig:gaussians.cdfs} shows that the power-log series expansion of the cdfs of the random variables $X$, $Y$, and $Z$ provides excellent approximation even for very low truncation order.
+The problem of proving such a statement rigorously remains, however.
+Furthermore, applying this approximation to prove the concentration properties from \cref{sub:als.ana} is also left for future work.
+In the rest of this section, we investigate those properties through numerical simulations.
+
+
+
 
 
 
@@ -1451,4 +1501,5 @@ Now we are ready to present the main result of this section, which is a power-lo
 %   -> here we see thta eq:contraction only improves bound; still might happend here
 %   - for this, might be beneficial to study
 
-
+% - proof constants for gaussain measurements (e.g. using the power-log series expansion)
+%   for this, we need to show that approximation is indeed good for 1st order.
