@@ -190,7 +190,7 @@ def powerlog_dataframe(t, N, key):
 
 
 @main.command(name='series-compute')
-@click.option('--sites', default='3:8:12')
+@click.option('--sites', default='2:5:8')
 @click.option('--output-file', default='../data/series.csv',
               type=click.Path(file_okay=True, dir_okay=False, writable=True))
 def series_compute(sites, output_file):
@@ -206,6 +206,52 @@ def series_compute(sites, output_file):
                    ignore_index=True, verify_integrity=True)
     df.to_csv(output_file)
     print('Done.')
+
+
+def melt_cols(df, col_names, **kwargs):
+    return df.melt(id_vars=df.columns.drop(col_names), value_vars=col_names,
+                   **kwargs)
+
+
+@main.command(name='series-plot')
+@click.option('--datafile', default='../data/series.csv',
+              type=click.Path(exists=True, file_okay=True, dir_okay=False,
+                              readable=True))
+@click.option('--size', default=2)
+@click.option('--aspect', default=1.6)
+def series_plot(datafile, size, aspect):
+    df = pd.read_csv(datafile, index_col=0)
+    df['err_0'] = np.log(np.abs(df['y_inf'] - df['y_0']))
+    df['err_1'] = np.log(np.abs(df['y_inf'] - df['y_1']))
+    df.rv.replace('X', r'$X$', inplace=True)
+    df.rv.replace('Y', r'$Y$', inplace=True)
+    df.rv.replace('Z', r'$Z$', inplace=True)
+    f_names = {'y_inf': r'$k=∞$', 'y_0': r'$k=0$', 'y_1': r'$k=1$'}
+    err_names = {'err_0': r'$k=0$', 'err_1': r'$k=1$'}
+
+    x_name = r'$t$'
+    y_name = r'$f_k(x)$'
+    df_1 = melt_cols(df.rename(columns=f_names), list(f_names.values()),
+                     var_name='truncation order', value_name=y_name)
+    df_1.rename(columns={'t': x_name}, inplace=True)
+    grid = sns.FacetGrid(df_1, col='rv', row='N', hue='truncation order',
+                         sharex=True, sharey=True, legend_out=True,
+                         margin_titles=True, size=size, aspect=aspect)
+    grid.map(pl.plot, x_name, y_name, ls=':') \
+        .add_legend()
+    pl.savefig('tensor_series_f.pdf')
+
+    x_name = r'$t$'
+    y_name = r'$log(| f_∞(x) - f_k(x) |)$'
+    df_1 = melt_cols(df.rename(columns=err_names), list(err_names.values()),
+                     var_name='truncation order', value_name=y_name)
+    df_1.rename(columns={'t': x_name}, inplace=True)
+    grid = sns.FacetGrid(df_1, col='rv', row='N', hue='truncation order',
+                         sharex=True, sharey=True, legend_out=True,
+                         margin_titles=True, size=size, aspect=aspect)
+    grid.map(pl.plot, x_name, y_name, ls=':') \
+        .add_legend()
+    pl.savefig('tensor_series_err.pdf')
 
 
 if __name__ == '__main__':
