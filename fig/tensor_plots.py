@@ -298,32 +298,28 @@ def series_plot(datafile, size, aspect):
     df.rv.replace('X', r'$X$', inplace=True)
     df.rv.replace('Y', r'$Y$', inplace=True)
     df.rv.replace('Z', r'$Z$', inplace=True)
-    f_names = {'y_0': r'$k=0$', 'y_1': r'$k=1$', 'y_inf': r'$k=∞$'}
-    err_names = {'err_0': r'$k=0$', 'err_1': r'$k=1$'}
 
-    x_name = r'$t$'
-    y_name = r'$f_k(x)$'
+    f_names = {'y_0': r'$k=0$', 'y_1': r'$k=1$', 'y_inf': r'$k=∞$'}
     df_1 = melt_cols(df.rename(columns=f_names), list(f_names.values()),
-                     var_name='truncation order', value_name=y_name)
-    df_1.rename(columns={'t': x_name}, inplace=True)
-    grid = sns.FacetGrid(df_1, col='rv', row='N', hue='truncation order',
-                         sharex=True, sharey=True, legend_out=True,
+                     var_name='truncation order', value_name='f')
+    grid = sns.FacetGrid(df_1, col='N', row='rv', hue='truncation order',
+                         sharex=True, sharey='row', legend_out=True,
                          margin_titles=True, size=size, aspect=aspect,
                          hue_order=list(f_names.values()))
-    grid.map(pl.plot, x_name, y_name, ls='--') \
-        .add_legend()
+    grid.map(pl.plot, 't', 'f', ls='--').add_legend()
+    grid.set_xlabels(r'$t$')
+    grid.set_ylabels(r'$f_k(t)$')
     pl.savefig('tensor_series_f.pdf')
 
-    x_name = r'$t$'
-    y_name = r'$| f_∞(x) - f_k(x) |$'
+    err_names = {'err_0': r'$k=0$', 'err_1': r'$k=1$'}
     df_1 = melt_cols(df.rename(columns=err_names), list(err_names.values()),
-                     var_name='truncation order', value_name=y_name)
-    df_1.rename(columns={'t': x_name}, inplace=True)
-    grid = sns.FacetGrid(df_1, col='rv', row='N', hue='truncation order',
-                         sharex=True, sharey=True, legend_out=True,
+                     var_name='truncation order', value_name='err')
+    grid = sns.FacetGrid(df_1, col='N', row='rv', hue='truncation order',
+                         sharex=True, sharey='row', legend_out=True,
                          margin_titles=True, size=size, aspect=aspect)
-    grid.map(pl.semilogy, x_name, y_name) \
-        .add_legend()
+    grid.map(pl.semilogy, 't', 'err').add_legend()
+    grid.set_xlabels(r'$t$')
+    grid.set_ylabels(r'$\left\vert f_\infty(x) - f_k(x) \right\vert$')
     pl.savefig('tensor_series_err.pdf')
 
 
