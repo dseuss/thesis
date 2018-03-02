@@ -1,5 +1,6 @@
 import functools as ft
 import itertools as it
+import re
 import time
 from collections import namedtuple
 from pathlib import Path
@@ -49,7 +50,8 @@ def get_samplefun(N, d, m):
 NR_MEASUREMENTS = {
     'lin_lin': lambda C, N, d: C * N * d,
     'sq_sq': lambda C, N, d: C * N**2 * d**2,
-    'sq_lin': lambda C, N, d: C * N**2 * d
+    'sq_lin': lambda C, N, d: C * N**2 * d,
+    'lin_sq': lambda C, N, d: C * N * d**2
 }
 
 
@@ -107,6 +109,70 @@ def concentration_compute_batch(samples, batch_size, output_dir, mode, const,
     for sites, dim, in tqdm(pool):
         f(sites, dim)
     print('Done')
+
+
+FILENAME_PARSER = re.compile(r'samples_N=(?P<N>\d+)_d=(?P<d>\d+)_C=(?P<C>\d+)_mode=(?P<mode>\w+)')
+
+
+def parse_fname(path):
+    fname = Path(path).stem
+    return FILENAME_PARSER.search(fname).groupdict()
+
+
+def load_as_dataframe(path):
+    data = np.load(path)
+    df = pd.DataFrame(data=data.T, columns=['lmin_B', 'lmax_G'])
+    # drop invalid rows
+    df = df.loc[df['lmin_B'] > 0]
+    df['lmin_B'] = np.log(df['lmin_B'])
+    df['lmax_G'] = np.log(df['lmax_G'])
+    df['quotient'] = df['lmin_B'] - df['lmax_G']
+    for key, val in parse_fname(path).items():
+        df[key] = val
+    for key in ['N', 'd', 'C']:
+        df[key] = df[key].astype(int)
+    return df
+
+def add_quantiles(df, grid, mode='lin_lin', q=0.05):
+    quantiles = df.groupby(['N', 'd', 'C', 'mode']).quotient.quantile(q)
+    the_iter = it.product(enumerate(grid.row_names),
+                          enumerate(grid.col_names),
+                          enumerate(grid.hue_names))
+    for (i, N), (j, d), (k, C) in the_iter:
+        try:
+            x = quantiles[(N, d, C, mode)]
+        except KeyError:
+            continue
+        ax = grid.axes[i, j]
+        color = ax.get_lines()[k].get_color()
+        ax.axvline(x, color=color, ls=':')
+
+
+@main.command(name='concentration-facetplot')
+@click.option('--datadir', default='../data/',
+              type=click.Path(exists=True, file_okay=False, dir_okay=True,
+                              readable=True))
+@click.option('--glob', default='samples_*lin_lin*.npy')
+@click.option('--outfile', default='tensor_concentration_facet.pdf')
+@click.option('--size', default=2.2)
+@click.option('--aspect', default=0.9)
+def concentration_facetplot(datadir, glob, outfile, size, aspect):
+    datafiles = list(Path(datadir).glob(glob))
+    mode = parse_fname(datafiles[0])['mode']
+    assert set(parse_fname(f)['mode'] for f in datafiles) == {mode}
+
+    df = pd.concat((load_as_dataframe(path) for path in tqdm(datafiles)),
+                   ignore_index=True)
+    df_sel = df.loc[(df['N'] <= 64) & (df['d'] <= 32)]
+    grid = sns.FacetGrid(df_sel, col='d', row='N', hue='C', sharex='col',
+                         sharey=False, margin_titles=True, aspect=aspect,
+                         size=size)
+    grid.map(sns.distplot, 'quotient', bins=100)
+    grid.add_legend()
+    add_quantiles(df, grid, mode=mode)
+
+    grid.set_xlabels(r'$\Delta$')
+    pl.savefig(outfile)
 
 
 @main.command(name='tensor_lognormal.pdf')
@@ -240,8 +306,8 @@ def series_plot(datafile, size, aspect):
     df_1 = melt_cols(df.rename(columns=f_names), list(f_names.values()),
                      var_name='truncation order', value_name=y_name)
     df_1.rename(columns={'t': x_name}, inplace=True)
-    grid = sns.FacetGrid(df_1, col='N', row='rv', hue='truncation order',
-                         sharex='col', sharey='row', legend_out=True,
+    grid = sns.FacetGrid(df_1, col='rv', row='N', hue='truncation order',
+                         sharex=True, sharey=True, legend_out=True,
                          margin_titles=True, size=size, aspect=aspect,
                          hue_order=list(f_names.values()))
     grid.map(pl.plot, x_name, y_name, ls='--') \
@@ -253,8 +319,8 @@ def series_plot(datafile, size, aspect):
     df_1 = melt_cols(df.rename(columns=err_names), list(err_names.values()),
                      var_name='truncation order', value_name=y_name)
     df_1.rename(columns={'t': x_name}, inplace=True)
-    grid = sns.FacetGrid(df_1, col='N', row='rv', hue='truncation order',
-                         sharex='col', sharey='row', legend_out=True,
+    grid = sns.FacetGrid(df_1, col='rv', row='N', hue='truncation order',
+                         sharex=True, sharey=True, legend_out=True,
                          margin_titles=True, size=size, aspect=aspect)
     grid.map(pl.semilogy, x_name, y_name) \
         .add_legend()
