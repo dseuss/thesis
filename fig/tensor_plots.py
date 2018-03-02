@@ -6,7 +6,6 @@ from pathlib import Path
 
 import click
 
-import matlab.engine
 import matplotlib.pyplot as pl
 import mpmath
 import numpy as np
@@ -57,10 +56,12 @@ NR_MEASUREMENTS = {
 def concentration_compute_routine(sites, dim, const, samples, batch_size, mode, output_dir,
                     use_tqdm=True):
     batch_samples = [batch_size] * (samples // batch_size)
-    batch_samples = tqdm(batch_samples) if use_tqdm else batch_samples
+    batch_samples = batch_samples
     rest = samples % batch_size
     if rest > 0:
         batch_samples += [rest]
+    if use_tqdm:
+        batch_samples = tqdm(batch_samples)
 
     m = NR_MEASUREMENTS[mode](const, sites, dim)
     samplefun = get_samplefun(sites, dim, m)
@@ -86,19 +87,22 @@ def concentration_compute(sites, dim, const, samples, batch_size, mode, output_d
     print('Done.')
 
 
-@main.command(name='concentration-compute-all')
+@main.command(name='concentration-compute-batch')
 @click.option('--samples', default=10000, type=int)
 @click.option('--batch-size', default=256, type=int)
 @click.option('--output-dir', default='../data/',
               type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True))
 @click.option('--mode', default='lin_lin', type=click.Choice(NR_MEASUREMENTS.keys()))
 @click.option('--const', default=10)
-def concentration_compute_all(samples, batch_size, output_dir, mode, const):
+@click.option('--sites', default='2:4:8:16:32:64')
+@click.option('--dims', default='2:4:8:16:32')
+def concentration_compute_batch(samples, batch_size, output_dir, mode, const,
+                                sites, dims):
     f = ft.partial(concentration_compute_routine, output_dir=output_dir,
                    samples=samples, batch_size=batch_size, mode=mode,
                    const=const, use_tqdm=True)
-    sites_pool = [2, 4, 8, 16, 32, 64]
-    dim_pool = [2, 4, 8, 16, 32]
+    sites_pool = [int(s) for s in sites.split(':')]
+    dim_pool = [int(s) for s in dims.split(':')]
     pool = list(it.product(sites_pool, dim_pool))
     for sites, dim, in tqdm(pool):
         f(sites, dim)
@@ -196,6 +200,7 @@ def powerlog_dataframe(t, N, key):
 @click.option('--nr-points', default=100)
 def series_compute(sites, output_file, nr_points):
     print('Starting MATLAB engine. This might take a while...')
+    import matlab.engine
     global MATLAB_ENGINE
     MATLAB_ENGINE = matlab.engine.start_matlab(option='-nodesktop -nojvm')
     MATLAB_ENGINE.addpath('matlab_lib/')
@@ -227,7 +232,7 @@ def series_plot(datafile, size, aspect):
     df.rv.replace('X', r'$X$', inplace=True)
     df.rv.replace('Y', r'$Y$', inplace=True)
     df.rv.replace('Z', r'$Z$', inplace=True)
-    f_names = {'y_inf': r'$k=∞$', 'y_0': r'$k=0$', 'y_1': r'$k=1$'}
+    f_names = {'y_0': r'$k=0$', 'y_1': r'$k=1$', 'y_inf': r'$k=∞$'}
     err_names = {'err_0': r'$k=0$', 'err_1': r'$k=1$'}
 
     x_name = r'$t$'
@@ -235,9 +240,10 @@ def series_plot(datafile, size, aspect):
     df_1 = melt_cols(df.rename(columns=f_names), list(f_names.values()),
                      var_name='truncation order', value_name=y_name)
     df_1.rename(columns={'t': x_name}, inplace=True)
-    grid = sns.FacetGrid(df_1, col='rv', row='N', hue='truncation order',
-                         sharex=True, sharey=True, legend_out=True,
-                         margin_titles=True, size=size, aspect=aspect)
+    grid = sns.FacetGrid(df_1, col='N', row='rv', hue='truncation order',
+                         sharex='col', sharey='row', legend_out=True,
+                         margin_titles=True, size=size, aspect=aspect,
+                         hue_order=list(f_names.values()))
     grid.map(pl.plot, x_name, y_name, ls='--') \
         .add_legend()
     pl.savefig('tensor_series_f.pdf')
@@ -247,8 +253,8 @@ def series_plot(datafile, size, aspect):
     df_1 = melt_cols(df.rename(columns=err_names), list(err_names.values()),
                      var_name='truncation order', value_name=y_name)
     df_1.rename(columns={'t': x_name}, inplace=True)
-    grid = sns.FacetGrid(df_1, col='rv', row='N', hue='truncation order',
-                         sharex=True, sharey=True, legend_out=True,
+    grid = sns.FacetGrid(df_1, col='N', row='rv', hue='truncation order',
+                         sharex='col', sharey='row', legend_out=True,
                          margin_titles=True, size=size, aspect=aspect)
     grid.map(pl.semilogy, x_name, y_name) \
         .add_legend()
