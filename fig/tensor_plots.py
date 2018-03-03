@@ -75,7 +75,7 @@ def add_quantiles(df, grid, mode='lin_lin', q=0.05):
 def concentration_distplot(datafile, outfile, size, aspect):
     df = pd.read_pickle(datafile)
     df_sel = df.loc[(df['N'] <= 64) & (df['d'] <= 32) & (df['mode'] == 'lin_lin')]
-    grid = sns.FacetGrid(df_sel, col='d', row='N', hue='desc', sharex='col',
+    grid = sns.FacetGrid(df_sel, col='d', row='N', hue='desc', sharex=True,
                          sharey=False, margin_titles=True, aspect=aspect,
                          size=size)
     grid.map(sns.distplot, 'quotient', bins=100)
