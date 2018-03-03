@@ -7,6 +7,7 @@ from socket import gethostname
 
 import click
 
+import mpmath as mp
 import numpy as np
 import pandas as pd
 import ziggurat
@@ -18,6 +19,10 @@ def lambda_min(A):
     return np.linalg.eigvalsh(A)[0]
 
 
+def opnorm(A):
+    return np.max(np.abs(np.linalg.eigvalsh(A)))
+
+
 def chunks(n, batch_size):
     return [batch_size] * (n // batch_size) + [n % batch_size]
 
@@ -26,7 +31,6 @@ def get_samplefun(N, d, m, samples,
                   available_memory=int(0.2 * virtual_memory().available),
                   rgen=np.random):
     batch_size = available_memory // (64 * samples * d**2)
-    print(f'Using batch_size={batch_size} for N={N} d={d} m={m} samples={samples}')
     assert batch_size > 0
 
     def prod_gaussians(shape, N, rgen):
@@ -37,8 +41,8 @@ def get_samplefun(N, d, m, samples,
         Bs = np.zeros((samples, d, d))
         Gs = np.zeros((samples, d, d))
 
-        desc = f'N={N} d={d} '
-        the_iter = tqdm(chunks(m, batch_size), desc=desc, bar_format='{desc} {percentage:3.0f}%')
+        bar_fmt = f'N={N} d={d} | ' + '{desc} {percentage:3.0f}%'
+        the_iter = tqdm(chunks(m, batch_size), desc='prod', bar_format=bar_fmt)
         for chunk, chunk_size in enumerate(the_iter):
             X = prod_gaussians((chunk_size, samples), N - 1, rgen)
             Y = prod_gaussians((chunk_size, samples), N - 1, rgen)
@@ -48,12 +52,10 @@ def get_samplefun(N, d, m, samples,
             Bs += 1 / m * np.sum(z[:, :, :, None] * z[:, :, None, :], axis=0)
             Gs += 1 / m * np.sum(((X * Y)[:, :, None, None] * A[:, :, :, None]) * A[:, :, None, :], axis=0)
 
-        print(Gs.shape)
-        result = np.empty((2, samples), dtype=np.float_)
-        result[0, :] = np.fromiter((lambda_min(B) for B in Bs), dtype=np.float_)
+        lmin_B = [lambda_min(B) for B in Bs]
         # compute 2 -> 2 norm
-        result[1, :] = np.linalg.norm(Gs, ord=2, axis=(1, 2))
-        return result
+        lmax_G = [opnorm(G) for G in Gs]
+        return lmin_B, lmax_G
 
     return sample
 
@@ -95,29 +97,31 @@ def main():
 def compute(sites, dims, const, samples, mode, output_dir, seed):
     sites_pool = [int(s) for s in sites.split(':')]
     dim_pool = [int(s) for s in dims.split(':')]
+    filename = f'samples_const={const}_mode={mode}_{gethostname()}.csv'
     pool = list(it.product(sites_pool, dim_pool))
     seed_gen = np.random.RandomState(seed=seed)
-    print(f'Using global seed={seed}')
 
-    df = pd.concat((sample_as_df(site, dim, const, mode, samples, seed_gen)
-                    for site, dim, in tqdm(pool, desc='TOTAL')),
-                   ignore_index=True)
+    the_iter = (sample_as_df(site, dim, const, mode, samples, seed_gen)
+                for site, dim, in tqdm(pool, desc='TOTAL', bar_format='{desc} {percentage:3.0f}%'))
+    df = next(the_iter)
+    for df_new in the_iter:
+        df = pd.concat((df, df_new), ignore_index=True)
+        df.to_csv(Path(output_dir) / filename, index=False)
 
-    filename = f'samples_const={const}_mode={mode}_{gethostname()}.csv'
-    df.to_csv(filename, index=False)
     print()
     print('Done')
 
 
 @main.command()
-@click.argument('globpatt')
+@click.argument('files', nargs=-1, required=True,
+              type=click.Path(file_okay=True, dir_okay=False, readable=True))
 @click.option('--output-file', required=True, default='samples.csv',
               type=click.Path(file_okay=True, dir_okay=False, writable=True))
-def merge(globpatt, output_file):
-    files = list(glob(globpatt))
+def merge(files, output_file):
     df = pd.concat((pd.read_csv(fpath, index_col=False) for fpath in tqdm(list(files))),
                    ignore_index=True)
     df.to_csv(output_file, index=False)
+    print(f'Total nr. of samples: {len(df)}')
 
 
 if __name__ == '__main__':

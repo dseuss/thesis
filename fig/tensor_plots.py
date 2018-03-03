@@ -24,114 +24,28 @@ def main():
     pass
 
 
-def lambda_min(A):
-    return np.linalg.eigvalsh(A)[0]
-
-
-def get_samplefun(N, d, m):
-    def sample(samples, rgen=np.random):
-        # since overlaps are iid Gaussians
-        overlap_a_v = np.prod(rgen.randn(samples, m, N - 1), axis=2)
-        overlap_a_v_perp = np.prod(rgen.randn(samples, m, N - 1), axis=2)
-        a_N = rgen.randn(samples, m, d)
-        B_Ns = 1 / m * np.sum(((overlap_a_v * overlap_a_v)[:, :, None, None] * a_N[:, :, :, None]) * a_N[:, :, None, :],
-                              axis=1)
-        G_Ns = 1 / m * np.sum(((overlap_a_v * overlap_a_v_perp)[:, :, None, None] * a_N[:, :, :, None]) * a_N[:, :, None, :],
-                              axis=1)
-        result = np.empty((2, samples), dtype=np.float_)
-        result[0, :] = np.fromiter((lambda_min(B_N) for B_N in B_Ns), dtype=np.float_)
-        # compute 2 -> 2 norm
-        result[1, :] = np.linalg.norm(G_Ns, ord=2, axis=(1, 2))
-        return result
-
-    return sample
-
-
-NR_MEASUREMENTS = {
-    'lin_lin': lambda C, N, d: C * N * d,
-    'sq_sq': lambda C, N, d: C * N**2 * d**2,
-    'sq_lin': lambda C, N, d: C * N**2 * d,
-    'lin_sq': lambda C, N, d: C * N * d**2
-}
-
-
-def concentration_compute_routine(sites, dim, const, samples, batch_size, mode, output_dir,
-                    use_tqdm=True):
-    batch_samples = [batch_size] * (samples // batch_size)
-    batch_samples = batch_samples
-    rest = samples % batch_size
-    if rest > 0:
-        batch_samples += [rest]
-    if use_tqdm:
-        batch_samples = tqdm(batch_samples)
-
-    m = NR_MEASUREMENTS[mode](const, sites, dim)
-    samplefun = get_samplefun(sites, dim, m)
-    samples = (samplefun(batch, rgen=np.random.RandomState(seed=np.random.randint(int(2**31))))
-               for batch in batch_samples)
-    result = np.concatenate(list(samples), axis=1)
-    np.save(Path(output_dir) / 'samples_N={}_d={}_C={}_mode={}.npy'.format(sites, dim, const, mode),
-            result, allow_pickle=False)
-
-
-@main.command(name='concentration-compute')
-@click.option('--sites', required=True, type=int)
-@click.option('--dim', required=True, type=int)
-@click.option('--const', default=10, type=int)
-@click.option('--samples', default=100000, type=int)
-@click.option('--batch-size', default=256, type=int)
-@click.option('--mode', default='lin_lin', type=click.Choice(NR_MEASUREMENTS.keys()))
-@click.option('--output-dir', default='../data/',
-              type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True))
-def concentration_compute(sites, dim, const, samples, batch_size, mode, output_dir):
-    assert batch_size <= samples
-    concentration_compute_routine(sites, dim, const, samples, batch_size, mode, output_dir)
-    print('Done.')
-
-
-@main.command(name='concentration-compute-batch')
-@click.option('--samples', default=10000, type=int)
-@click.option('--batch-size', default=256, type=int)
-@click.option('--output-dir', default='../data/',
-              type=click.Path(exists=True, file_okay=False, dir_okay=True, writable=True))
-@click.option('--mode', default='lin_lin', type=click.Choice(NR_MEASUREMENTS.keys()))
-@click.option('--const', default=10)
-@click.option('--sites', default='2:4:8:16:32:64')
-@click.option('--dims', default='2:4:8:16:32')
-def concentration_compute_batch(samples, batch_size, output_dir, mode, const,
-                                sites, dims):
-    f = ft.partial(concentration_compute_routine, output_dir=output_dir,
-                   samples=samples, batch_size=batch_size, mode=mode,
-                   const=const, use_tqdm=True)
-    sites_pool = [int(s) for s in sites.split(':')]
-    dim_pool = [int(s) for s in dims.split(':')]
-    pool = list(it.product(sites_pool, dim_pool))
-    for sites, dim, in tqdm(pool):
-        f(sites, dim)
-    print('Done')
-
-
-FILENAME_PARSER = re.compile(r'samples_N=(?P<N>\d+)_d=(?P<d>\d+)_C=(?P<C>\d+)_mode=(?P<mode>\w+)')
-
-
-def parse_fname(path):
-    fname = Path(path).stem
-    return FILENAME_PARSER.search(fname).groupdict()
-
-
-def load_as_dataframe(path):
-    data = np.load(path)
-    df = pd.DataFrame(data=data.T, columns=['lmin_B', 'lmax_G'])
-    # drop invalid rows
-    df = df.loc[df['lmin_B'] > 0]
-    df['lmin_B'] = np.log(df['lmin_B'])
-    df['lmax_G'] = np.log(df['lmax_G'])
+@main.command(name='concentration-preprocess')
+@click.option('--datafile', default='../data/concentration_samples.csv',
+              type=click.Path(exists=True, file_okay=True, dir_okay=False,
+                              readable=True))
+@click.option('--outfile', default='../data/concentration_samples.pkl')
+def concentration_preprocess(datafile, outfile):
+    df = pd.read_csv(datafile)
+    df.replace([np.inf, -np.inf], np.nan, inplace=True)
+    df.dropna(inplace=True)
     df['quotient'] = df['lmin_B'] - df['lmax_G']
-    for key, val in parse_fname(path).items():
-        df[key] = val
-    for key in ['N', 'd', 'C']:
-        df[key] = df[key].astype(int)
-    return df
+
+    lookup = {
+        'lin_lin': r'm = {} \times N \times d',
+        'sq_lin': r'm = {} \times N^2 \times d',
+        'lin_sq': r'm = {} \times N \times d^2',
+    }
+
+    df['desc'] = df.apply(
+        lambda row: r'$' + lookup[row['mode']].format(row['C']) + '$', axis=1
+    )
+    df.to_pickle(outfile)
+
 
 def add_quantiles(df, grid, mode='lin_lin', q=0.05):
     quantiles = df.groupby(['N', 'd', 'C', 'mode']).quotient.quantile(q)
@@ -140,38 +54,75 @@ def add_quantiles(df, grid, mode='lin_lin', q=0.05):
                           enumerate(grid.hue_names))
     for (i, N), (j, d), (k, C) in the_iter:
         try:
+            # dirty hack :)
+            C = int(C.split()[2])
             x = quantiles[(N, d, C, mode)]
         except KeyError:
+            print(f'No quantile found for {N}, {d}, {mode}')
             continue
         ax = grid.axes[i, j]
         color = ax.get_lines()[k].get_color()
         ax.axvline(x, color=color, ls=':')
 
 
-@main.command(name='concentration-facetplot')
-@click.option('--datadir', default='../data/',
-              type=click.Path(exists=True, file_okay=False, dir_okay=True,
+@main.command(name='tensor_concentration_dists.pdf')
+@click.option('--datafile', default='../data/concentration_samples.pkl',
+              type=click.Path(exists=True, file_okay=True, dir_okay=False,
                               readable=True))
-@click.option('--glob', default='samples_*lin_lin*.npy')
-@click.option('--outfile', default='tensor_concentration_facet.pdf')
+@click.option('--outfile', default='tensor_concentration_dists.pdf')
 @click.option('--size', default=2.2)
 @click.option('--aspect', default=0.9)
-def concentration_facetplot(datadir, glob, outfile, size, aspect):
-    datafiles = list(Path(datadir).glob(glob))
-    mode = parse_fname(datafiles[0])['mode']
-    assert set(parse_fname(f)['mode'] for f in datafiles) == {mode}
-
-    df = pd.concat((load_as_dataframe(path) for path in tqdm(datafiles)),
-                   ignore_index=True)
-    df_sel = df.loc[(df['N'] <= 64) & (df['d'] <= 32)]
-    grid = sns.FacetGrid(df_sel, col='d', row='N', hue='C', sharex='col',
+def concentration_distplot(datafile, outfile, size, aspect):
+    df = pd.read_pickle(datafile)
+    df_sel = df.loc[(df['N'] <= 64) & (df['d'] <= 32) & (df['mode'] == 'lin_lin')]
+    grid = sns.FacetGrid(df_sel, col='d', row='N', hue='desc', sharex='col',
                          sharey=False, margin_titles=True, aspect=aspect,
                          size=size)
     grid.map(sns.distplot, 'quotient', bins=100)
-    grid.add_legend()
-    add_quantiles(df, grid, mode=mode)
+    add_quantiles(df, grid, mode='lin_lin')
 
-    grid.set_xlabels(r'$\Delta$')
+    grid.add_legend(title='Legend')
+    grid.set_xlabels(r'$\log\, \frac{z_B}{z_G}$')
+    pl.savefig(outfile)
+
+
+def compute_quantiles(df, quantile):
+    res1 = df.groupby(['N', 'd', 'desc']).quotient.quantile(quantile)
+    q_B = df.groupby(['N', 'd', 'desc']).lmin_B.quantile(quantile / 2)
+    q_G = df.groupby(['N', 'd', 'desc']).lmax_G.quantile(1 - quantile / 2)
+    res2 = q_B - q_G
+    result = pd.concat([res1, res2], axis=1)
+    result.columns = ['coherent', 'incoherent']
+    return result
+
+
+@main.command(name='tensor_concentration_quantiles.pdf')
+@click.option('--datafile', default='../data/concentration_samples.pkl',
+              type=click.Path(exists=True, file_okay=True, dir_okay=False,
+                              readable=True))
+@click.option('--outfile', default='tensor_concentration_quantiles.pdf')
+@click.option('--size', default=2.2)
+@click.option('--aspect', default=2.8)
+@click.option('--quantile', default=0.05)
+def concentration_quantileplot(datafile, outfile, size, aspect, quantile):
+    df = pd.read_pickle(datafile)
+    df_sel = df.loc[(df['N'] <= 128) & (df['d'] <= 32)]
+    quantiles = compute_quantiles(df_sel, quantile).reset_index()
+
+    grid = sns.FacetGrid(quantiles, row='desc', hue='d', sharex='col',
+                         sharey=False, aspect=aspect, size=size)
+    grid.map(pl.semilogx, 'N', 'coherent')
+    grid.map(pl.semilogx, 'N', 'incoherent', ls='--')
+
+    grid.add_legend(title='Legend')
+    grid.set_xlabels(r'$N$')
+    grid.set_ylabels(r'$\log \, x_q$')
+    grid.set_titles('{row_name}')
+
+    for ax in grid.axes[:, 0]:
+        ax.set_xticks([2, 4, 8, 16, 32, 64, 128])
+        ax.set_xticks([], minor=True)
+        ax.set_xticklabels([2, 4, 8, 16, 32, 64, 128])
     pl.savefig(outfile)
 
 
