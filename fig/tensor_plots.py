@@ -24,6 +24,12 @@ def main():
     pass
 
 
+CONCENTRATION_DESCS = {
+    'lin_lin': r'm = {} \times N \times d',
+    'sq_lin': r'm = {} \times N^2 \times d',
+    'lin_sq': r'm = {} \times N \times d^2',
+}
+
 @main.command(name='concentration-preprocess')
 @click.option('--datafile', default='../data/concentration_samples.csv',
               type=click.Path(exists=True, file_okay=True, dir_okay=False,
@@ -35,14 +41,9 @@ def concentration_preprocess(datafile, outfile):
     df.dropna(inplace=True)
     df['quotient'] = df['lmin_B'] - df['lmax_G']
 
-    lookup = {
-        'lin_lin': r'm = {} \times N \times d',
-        'sq_lin': r'm = {} \times N^2 \times d',
-        'lin_sq': r'm = {} \times N \times d^2',
-    }
-
     df['desc'] = df.apply(
-        lambda row: r'$' + lookup[row['mode']].format(row['C']) + '$', axis=1
+        lambda row: r'$' + CONCENTRATION_DESCS[row['mode']].format(row['C']) + '$',
+        axis=1
     )
     df.to_pickle(outfile)
 
@@ -108,15 +109,22 @@ def concentration_quantileplot(datafile, outfile, size, aspect, quantile):
     df = pd.read_pickle(datafile)
     df_sel = df.loc[(df['N'] <= 128) & (df['d'] <= 32)]
     quantiles = compute_quantiles(df_sel, quantile).reset_index()
+    row_order = [
+        '$' + CONCENTRATION_DESCS['lin_lin'].format(10) + '$',
+        '$' + CONCENTRATION_DESCS['lin_lin'].format(100) + '$',
+        '$' + CONCENTRATION_DESCS['lin_sq'].format(10) + '$',
+        '$' + CONCENTRATION_DESCS['sq_lin'].format(10) + '$',
+    ]
 
     grid = sns.FacetGrid(quantiles, row='desc', hue='d', sharex='col',
-                         sharey=False, aspect=aspect, size=size)
+                         sharey=False, aspect=aspect, size=size,
+                         row_order=row_order)
     grid.map(pl.semilogx, 'N', 'coherent')
     grid.map(pl.semilogx, 'N', 'incoherent', ls='--')
 
     grid.add_legend(title='Legend')
     grid.set_xlabels(r'$N$')
-    grid.set_ylabels(r'$\log \, x_q$')
+    grid.set_ylabels(r'$\log \ x_{0.05}$')
     grid.set_titles('{row_name}')
 
     for ax in grid.axes[:, 0]:
