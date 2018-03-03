@@ -219,3 +219,4 @@ TSWLatexianTemp*
 *-tags.tex
 
 build/
+data/concentration_samples.pkl
