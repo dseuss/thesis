@@ -1,5 +1,6 @@
 import functools as ft
 import itertools as it
+import pickle
 import re
 import time
 from collections import namedtuple
@@ -9,6 +10,7 @@ import click
 
 import matplotlib.pyplot as pl
 import mpmath
+import mpnum as mp
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -280,6 +282,27 @@ def series_plot(datafile, size, aspect):
     grid.set_xlabels(r'$t$')
     grid.set_ylabels(r'$\left\vert f_\infty(x) - f_k(x) \right\vert$')
     pl.savefig('tensor_series_err.pdf')
+
+
+@main.command(name='recovery-plot')
+@click.option('--datafile', default='../data/recoveries_rank1_5percent.pkl',
+              type=click.Path(exists=True, file_okay=True, dir_okay=False,
+                              readable=True))
+def recovery_plot(datafile):
+    with open(datafile, 'rb') as buf:
+        X, recoveries = pickle.load(buf)
+
+    fig, ax = pl.subplots(figsize=(3, 4))
+    x = np.arange(len(recoveries[0])) + 1
+
+    for X_sharp in recoveries:
+        ax.plot(x, [mp.normdist(X, X_s) for X_s in X_sharp])
+
+    outfile = 'tensor_' + str(Path(datafile).stem) + '.pdf'
+    ax.set_xlabel(r'Epoch $h$')
+    ax.set_ylabel(r'$\left\Vert X - Y \right\Vert_2$')
+    pl.tight_layout()
+    pl.savefig(outfile)
 
 
 if __name__ == '__main__':
