@@ -836,7 +836,7 @@ For this purpose, we want an efficient reconstruction algorithm and $m$ to scale
 
 The idea to recover $X$ is simply to find the tensor $Y$ of desired rank that minimizes the empirical $\ell_2$ error
 \[
-  \sum_l \left( y\ind{l} - \braket{A\ind{l}, Y} \right)^2.
+  \sum_l \left( b\ind{l} - \braket{A\ind{l}, Y} \right)^2.
   \label{eq:als.empirical_l2}
 \]
 However, this problem is generally hard to solve directly since the space of MPS of given rank is non-convex.
@@ -1462,12 +1462,9 @@ Therefore, we obtain the worst approximations for the generally better behaved s
 
 In conclusion, \cref{fig:gaussians.cdfs} shows that the power-log series expansion of the cdfs of the random variables $X$, $Y$, and $Z$ provides excellent approximation even for very low truncation order.
 The problem of proving such a statement rigorously remains, however.
-Furthermore, applying this approximation to prove the concentration properties from \cref{sub:als.ana} is also left for future work.
+Furthermore, applying this approximation to prove the concentration properties from \cref{sub:als.ana} is also left for future work.\\
 
 
-
-\subsection{Numerical Experiments}%
-\label{sub:als.numerics}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}
@@ -1495,13 +1492,7 @@ Furthermore, applying this approximation to prove the concentration properties f
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-In this section, we investigate the Gaussian measurement ensemble proposed in \cref{sub:als.gaussian_measurements} numerically.
-First, we are going to examine the distribution and scaling w.r.t.\ the parameters $N$ and $d$ of the crucial constant $\frac{\delB}{\delG}$ introduced in \cref{sub:als.ana}.
-Second, we demonstrate full reconstruction of low-rank tensors using the ALS algorithm.
-In this part, we also discuss implementation details and variations of \cref{alg:als}, which are harder to analyse, but perform well in practice.\\
-
-
+For the remainder of this section, we investigate the distribution and scaling w.r.t.\ the parameters $N$ and $d$ of the crucial constant $\frac{\delB}{\delG}$ introduced in \cref{sub:als.ana}.
 Recall the main result of \cref{sub:als.ana}, the condition~\eqref{eq:ana.theta_condition}, which relates the quotient of the measurement constants $\frac\delB\delG$ to the error $\delI$ in the initialization.
 We are now going to investigate the scaling said fraction numerically for the Gaussian measurement ensemble.
 For this purpose, we sample the operators $B_j(v)$ and $G_j(v, v\perp)$ defined in \cref{eq:ana.conditions.B,eq:ana.conditions.G}, respectively for Gaussian measurements and for different values of $N$, $d$, and $m$.
@@ -1544,7 +1535,89 @@ Note that if $Z_\mathrm{B} \ge \delB$ with probability $1 - \frac{q}{2}$ and $Z_
 \]
 with probability $1 - \frac{q}{2} - \frac{q}{2} = 1 - q$.
 Therefore, we can lower bound the $q$-th quantile of $\frac{Z_\mathrm{B}}{Z_\mathrm{G}}$ by the fraction of the $\frac{q}{2}$ and $1 - \frac{q}{2}$ quantiles of $Z_\mathrm{B}$ and $Z_\mathrm{G}$, respectively.
-This lower bound indicated by the dashed lines is exactly used by the proof strategy with separate probabilistic bound of $Z_\mathrm{B}$ and $Z_\mathrm{G}$.\\
+This lower bound indicated by the dashed lines is exactly used by the proof strategy with separate probabilistic bound of $Z_\mathrm{B}$ and $Z_\mathrm{G}$.
+
+Note that the dotted lines show a similar behavior as the solid lines, and in particular, they are lower bounded for all values depicted as well.
+Hence, these numerics suggest that such an approximation of the quantiles of $\frac{Z_\mathrm{B}}{Z_\mathrm{G}}$ is might be able to provide suitable analytic bounds.
+In conclusion, \cref{fig:numerics.quantiles} indicates that the crucial random variable $\frac{Z_\mathrm{B}}{Z_\mathrm{G}}$ can -- at least for fixed local dimension $d$ -- be lower bounded by a constant.
+
+
+
+\subsection{Numerical Reconstructtion}%
+\label{sub:als.numerics}
+
+In this section, we are going to numerically demonstrate the recovery of low-rank -- and not unnecessarily rank one -- tensors via ALS.
+For this purpose, we introduce a modified version of the ALS algorithm and also comment on implementation details, which enable the reconstruction of large tensors.\\
+
+The ALS algorithm as introduced in \cref{alg:als} has two drawbacks in practice:
+On the one hand, it uses a fresh batch of size $m$ of measurements for each micro-iteration.
+Therefore, it requires $HNm$ measurements and measurement tensors.
+On the other hand, it does not provide an explicit initialization $X_\mathrm{init}$.
+These choices were made to simplify the analysis of the algorithm, but they make \cref{alg:als} less suited in practice.
+
+For the numerical experiments in this section, we are going to use a modified ALS algorithm.
+To alleviate the drawbacks mentioned above, we are simply going to reuse the same batch of size $m$ of measurements in each iteration.
+Furthermore, we use these measurements to compute a suitable initialzation:
+Consider the problem of recovering a rank $r$ tensor $X \in \Reals^{d^N}$.
+Let
+\[
+  \label{eq:numerics.S}
+  \tilde X_\mathrm{init} = \sum_{l=1}^m b\ind{l} A\ind{l},
+\]
+then we use a rank $r$ approximation of $\tilde X_\mathrm{init}$ as initialization, that is
+\[
+  X_\mathrm{init} = \mathtt{compress}_r(\tilde X_\mathrm{init}).
+\]
+Here, $\mathtt{compress}_r$ denotes a suitable compression routine such as SVD-compression introduced in \cref{sub:mps.tensor_representation} yielding a rank $r$ approximation.
+To understand the motivation behind \cref{eq:numerics:S}, note that $\tilde X_\mathrm{init} = \frac{1}{m} \adj{\AA}\AA X$, where $\AA$ is the measurement operator introduced in \cref{prop:pl.nsp}
+\[
+  \AA = \sum_{l=1}^m \ket{e_l}\bra{A\ind{l}}
+\]
+with $e_l$ denoting the $l$-th canonical basis vector.
+Therefore, for the Gaussian measurements introduced in \cref{sub:als.gaussian_measurements}, we have
+\begin{align}
+  \Exp \adj{\AA}\AA
+  &= \Exp \left( \sum_l \Ketbra{A\ind{l}} \right) \\
+  &= m \Exp\left( \otimes_{i=1}^N \Ketbra{a_i} \right) \\
+  &= m \otimes_{i=1}^N \left( \Exp \Ketbra{a_i} \right) \\
+  &= m \1_d \otimes \cdots \1_d, lv
+\end{align}
+and hence $\Exp \tilde X_\mathrm{init} = X$.
+In words, in expectation, the (uncompressed) initialization is exactly the tensor we are trying to reconstruct.
+Therefore, we expect that $\tilde X_\mathrm{init}$ is close to $X$ provided $m$ is \quotes{large enough}.
+The exact value of $m$ to make this precise depends on the fluctuations of $\AA$.
+
+The \quotes{practical} ALS algorithm used throughout this section is summarized below:
+\begin{algorithm}[H]
+  \caption{\label{alg:als_practical}Practical Alternating Least Squares (ALS) for $\ell_2$ minimization}
+  \SetKwInOut{Input}{Input}
+  \SetKwInOut{Output}{Output}
+
+  \Input{%
+    Number of epochs $H$, target rank $r$, measurement tensors $A\ind{l}$ and measurement outcomes $b\ind{l}$ with $i = 1, m$ \newline
+  }
+
+  \tcc{Spectral initialization}
+  $Y \gets \mathtt{compress}_r(\sum_{l=1}^m b\ind{l} A\ind{l})$ \label{line:als_practical.init}
+
+  \For{$h \gets 1$ \KwTo $H$}{
+    \tcc{right-normalize all local tensors}
+    $\mathtt{right\_canonicalize}(Y)$
+
+    \For{$n \gets 1$ \KwTo $N$}{
+      \For{$l \gets 1$ \KwTo $m$} {
+        \tcc{contract $A\ind{l}$ with all but n-th local tensors}
+        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$ \label{line:als_practical.partial_contraction}
+      }
+      $\hat Z \gets \argmin_Z \sum_l \left( b\ind{l} - B\ind{l}Z \right)^2$
+
+      \tcc{update the n-th local tensor inplace}
+      $Y_n \gets \mathtt{left\_normalize}(\hat Z)$
+    }
+  }
+
+  \Output{Y}
+\end{algorithm}
 
 
 
@@ -1554,11 +1627,35 @@ This lower bound indicated by the dashed lines is exactly used by the proof stra
 
 
 
-
-
-
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure*}
+  \begin{subfigure}{.3 \columnwidth}
+    \includegraphics[width=\textwidth]{fig/tensor_recoveries_rank1_5percent.pdf}
+    \caption{%
+      \label{fig:numerics.recov.rank1_5percent}%
+      $r = 1$, $m = 0.05 \, d^N$
+    }
+  \end{subfigure}
+  \begin{subfigure}{.3 \columnwidth}
+    \includegraphics[width=\textwidth]{fig/tensor_recoveries_rank10_10percent.pdf}
+    \caption{%
+      \label{fig:numerics.recov.rank10_10percent}%
+      $r = 10$, $m = 0.1 \, d^N$
+    }
+  \end{subfigure}
+  \begin{subfigure}{.3 \columnwidth}
+    \includegraphics[width=\textwidth]{fig/tensor_recoveries_rank10_20percent.pdf}
+    \caption{%
+      \label{fig:numerics.recov.rank10_20percent}%
+      $r = 10$, $m = 0.2 \, d^N$
+    }
+  \end{subfigure}
+  \caption{%
+    \label{fig:numerics.recov}%
+    Recovery error of the ALS algorithm as
+  }
+\end{figure*}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
