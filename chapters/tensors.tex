@@ -852,24 +852,24 @@ The resulting algorithm is presented below:
   \SetKwInOut{Output}{Output}
 
   \Input{%
-    Measurement tensors $A\ind{l}$, measurement outcomes $y\ind{l}$, target rank $r$, and number of epochs $H$ \newline
-    Divide $(A\ind{l}, y\ind{l})_l$ into $HN + 1$ subsets of size $m$, which are denoted by ${\left(A\ind{0;l}, y\ind{0;l}\right)}_l$ and ${\left(A\ind{h,n;l}, y\ind{h,n;l}\right)}_l$ ($h \in [H], n \in [N]$)
+    Number of epochs $H$ and initialization MPS $X_\mathrm{init}$ of order $N$, rank $r$, and local dimension $d$ \newline
+    Measurement tensors $A\ind{l}$ and measurement outcomes $b\ind{l}$ with $i = 1, \ldots, H \times N \times m$ \newline
+    Divide $(A\ind{l}, y\ind{l})_l$ into $HN$ subsets of size $m$, which are denoted by ${\left(A\ind{h,n;l}, b\ind{h,n;l}\right)}_l$ ($h \in [H], n \in [N]$)
   }
   \BlankLine
 
-  \tcc{Initialize $Y$ as MPS with given rank}
-  $Y \gets \mathtt{compress}\left(\sum_{l=1}^m y\ind{0;l} A\ind{0;l}, r\right)$ \label{line:als.initialization}
+  $Y \gets X_\mathrm{init}$
 
   \For{$h \gets 1$ \KwTo $H$}{
     \tcc{right-normalize all local tensors}
-    $\mathtt{right\-canonicalize}(Y)$ \label{line:als.right_canonical}
+    $\mathtt{right\_canonicalize}(Y)$ \label{line:als.right_canonical}
 
     \For{$n \gets 1$ \KwTo $N$}{
       \For{$l \gets 1$ \KwTo $m$} {
-        \tcc{contract $A\ind{h,n;l}$ with all but n-th local tensors of $X$}
-        $B\ind{l} \gets \mathtt{contract}(A\ind{h,n;l}, X_{[N] \backslash n})$ \label{line:als.partial_contraction}
+        \tcc{contract $A\ind{h,n;l}$ with all but n-th local tensors}
+        $B\ind{l} \gets \mathtt{contract}(A\ind{h,n;l}, Y_{[N] \backslash n})$ \label{line:als.partial_contraction}
       }
-      $\hat Z \gets \argmin_Z \sum_l \left( y\ind{h,n;l} - B\ind{l}Z   \right)^2$ \label{line:als.min}
+      $\hat Z \gets \argmin_Z \sum_l \left( b\ind{h,n;l} - B\ind{l}Z   \right)^2$ \label{line:als.min}
 
       \tcc{update the n-th local tensor inplace}
       $Y_n \gets \mathtt{left\_normalize}(\hat Z)$
@@ -878,7 +878,6 @@ The resulting algorithm is presented below:
 
   \Output{Y}
 \end{algorithm}
-\todo{Update initialization?}
 
 In this version of the alternating least squares scheme, we start updating the left-most tensor and then move through the chain all the way to the right.
 When we reach the last tensor of the MPS, we start again on the left after bringing the MPS to right-canonical form.
