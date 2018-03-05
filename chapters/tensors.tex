@@ -1,10 +1,8 @@
  % -*- root: ../thesis.tex -*-
 
-\chapter{Tensors}%
+\chapter{Low-rank tensor recovery}%
 \label{chap:tensors}
 
-
-\todo{The $A\ind{l}$ notation is used for two different things here.}
 
 The theoretical and numerical study of many-body quantum systems is severely hindered by the \emph{curse of dimensionality}, which in this context refers to the exponential growth of the Hilbert space of quantum states w.r.t.\ the number of constituents.
 However, many realistic systems do not exhibit this pathological complexity and can be described efficiently in terms of \emph{tensor networks}~\cite{}.
@@ -13,21 +11,21 @@ An especially simple but important special case of tensor networks is known unde
 Examples for quantum states that can be efficiently described as MPS include W-, GHZ-, and cluster states.
 More generally, low energy states of one-dimensional gapped Hamiltonians with local interactions have an efficient MPS description and vice versa~\cite{}.
 Here, \quotes{efficient description} refers to the fact that the number of parameters required to describe such a state scales polynomially in the number of subsystem.
+The idea of low-complexity tensor representations have also received attention in the context of machine learning~\cite{Novikov_2015_Tensorizing,Tai_2015_Convolutional,Yang_2016_Deep,Stoudenmire_2016_Supervised,Chen_2017_Parallelized,Bengua}.
 
 The question we are attempting to answer in this chapter is whether such MPS can be efficiently reconstructed from few linear measurements\footnote{%
   Note that since we assume a linear measurement model, the results of this section do not apply to the problem of estimating pure quantum states.
   We use the term \quotes{matrix product state} to not only refer to quantum states, but to general tensors in the MPS format.
 }.
-More precisely, we provide evidence that the number of measurements required to recover a MPS is related to its intrinsic complexity -- and hence, scales polynomially in the number of constituents -- although its Hilbert space is exponentially large.
-\todo{Two fold: compressed sensing and scalable MMLE}
+More precisely, we provide evidence that the number of measurements required to recover a MPS is related to its intrinsic complexity -- and hence, scales polynomially in the number of constituents -- although the Hilbert space of tensors grows exponentially in the number of constituents.
 This work is a natural extension of \emph{low-rank matrix recovery}, which formed the foundation of the results in \cref{chap:phaselift}, to higher-order tensors.\\
-\todo{tensors -> higher order, rank}
+
+
 
 This chapter is structured as follows:
-In \cref{sec:tensors.mps}, we introduce the MPS tensor format.
-\Cref{sec:tensors.als} reports on work in progress, which is concerned with recovering MPS from few linear measurements using an \emph{Alternating Least Squares} (ALS) algorithm.
-Finally, in \cref{sec:tensors.mpnum} we present the software library \mpnum dealing with tensors in MPS representation.
+In \cref{sec:tensors.mps}, we introduce the MPS tensor format and in \cref{sec:tensors.mpnum}, we present the software library \mpnum dealing with tensors in MPS representation.
 \mpnum was developed as part of this work to facilitate numerical computations in a user friendly and reusable manner.
+Finally, \cref{sec:tensors.als} reports on work in progress, which is concerned with provably recovering MPS from few linear measurements using an \emph{Alternating Least Squares} (ALS) algorithm.
 
 
 \subsection*{Relevant publications}
@@ -41,20 +39,19 @@ Finally, in \cref{sec:tensors.mpnum} we present the software library \mpnum deal
 \label{sec:tensors.mps}
 
 Tensors are a generalization of vectors and matrices.
-Although there is a coordinate-free definition for tensors in terms of multi-linear functionals~\cite{Browder_2012_Mathematical}, we are going to identify a tensor with its coordinate representation here.
-\todo{Also no distinguishing co/contravariant indices -> euclidean}
-A complex tensor of order $N$ is an element $X \in \Complex^{d_1 \times \cdots \times d_N}$ and the $d_i$ are called \emph{local dimensions}.
+Although there is a coordinate-free definition for tensors in terms of multi-linear functionals~\cite{Browder_2012_Mathematical}, we are going to identify a tensor with its coordinate representation w.r.t.\ a fixed basis here.
+A complex tensor of order $N$ is an element $X \in \Complex^{d_1 \times \cdots \times d_N}$, where the $d_i$ are called \emph{local dimensions}.
 Hence, a vector is a tensor of order 1 and a matrix is a tensor of order 2.
 For the sake of simplicity, we assume that $d_1 = \cdots = d_N$ throughout this chapter.
 
 
 
-\subsection{Graphical Notation}
+\subsection{Graphical Notation}%
 \label{sub:mps.graphical_notation}
 
 Since formulas with higher-order tensors may become incomprehensible due to the large amount of indices necessary, we introduce a common graphical notation~\cite{Orus_2014_Practical,Bridgeman_2017_HandWaving}.
-A tensor $X \in \Complex^{d^N}$ is represented by a geometric shape with legs attached, one for each index.
-For example, consider the case $N = 3$, then
+A tensor $X \in \Complex^{d^N}$ is represented by a geometric shape with legs attached, where each leg corresponds to one index.
+For example, consider the case $N = 3$, then the components of the tensor $X$ are given by
 \[
   X_{i,j,k}
   =
@@ -67,9 +64,9 @@ For example, consider the case $N = 3$, then
   \end{tikzpicture}
   .
 \]
-A variable written next to a leg fixes the corresponding index to the given value, while an anonymous tensor leg represents an unmatched index.
-In the following, we will make use of the following notation for an unmatched index inspired by Python's and Matlab's syntax:
-Given above $X \in \Complex^{d^3}$, we define the slice $X_{:,j,:} \in \Complex^{d^2}$ by
+A variable written next to a leg fixes the corresponding index to the given value, while an unlabeled tensor leg represents an unmatched index.
+In the following, we make use of the following notation for an unmatched index inspired by Python's and Matlab's syntax:
+As an example, consider $X$ as above, then we define the slice $X_{:,j,:} \in \Complex^{d^2}$ for each $j$ by
 \[
   \label{eq:mps.slicing}
   X_{:,j,:}
@@ -81,10 +78,12 @@ Given above $X \in \Complex^{d^3}$, we define the slice $X_{:,j,:} \in \Complex^
   \end{tikzpicture}
   .
 \]
-For the components, we have the slightly cumbersome equality $\left(X_{:,j,:}\right)_{i,k} = X_{i,j,k}$.
-The advantage of this graphical notation becomes clear once we express tensors composed of other tensors by operations such as index contraction or tensor products:
+Written out explicitly, we have the slightly cumbersome equality $\left(X_{:,j,:}\right)_{i,k} = X_{i,j,k}$.
+The advantage of this graphical notation becomes clear once we express tensors composed of other tensors by operations such as contraction or tensor products.
+The most common operations and their graphical notation are summarized below:
+
 \begin{description}[font=$\bullet$\ \scshape\bfseries]
-  \item[Contractions] are indicated by joining two legs, e.g.\ for matrices $A, B \in \Complex^{d \times d}$ their product $AB$ is written as
+  \item[Contractions] are indicated by joining two legs, e.g.\ for matrices $A, B \in \Complex^{d \times d}$, their product $AB$ is written as
     \[
       \begin{tikzpicture}[baseline=-.5ex]
         \tensor{{W=1, E=1, tensor_name='AB'}}
@@ -141,7 +140,7 @@ The advantage of this graphical notation becomes clear once we express tensors c
     \]
     This operation is often used in numerical implementations of tensor network algorithms as it reduces most tensor operations to standard matrix  operations.
     For example, the twofold contraction on the left hand side of \cref{eq:tensors.intro.grouping} is converted to a matrix multiplication on the right hand side.
-    In the following, we often implicitly perform grouping on neighbouring tensor legs.
+    In the following, we often perform grouping on neighbouring tensor legs implicitly.
 \end{description}
 
 
@@ -149,13 +148,11 @@ The advantage of this graphical notation becomes clear once we express tensors c
 \subsection{MPS tensor representation}%
 \label{sub:mps.tensor_representation}
 
-The tensor representation we are interested in has been established in quantum physics independently under the names \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} and \emph{matrix-product states}~\cite{Klumper_1991_Equivalence,Kluemper_1992_Groundstate}.
+The tensor representation we are interested in has been established independently in quantum physics under the names \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} and \emph{matrix-product states}~\cite{Klumper_1991_Equivalence,Kluemper_1992_Groundstate}.
 Subsequently, it has been rediscovered in other contexts:
 It is known under the guise of the \emph{density matrix renormalization group}~\cite{White_1992_Density,Schollwoeck_2011_DensityMatrix} in condensed matter physics.
 Furthermore, the MPS representation is also known as a special case of the \emph{Hierarchical Tucker} tensor format~\cite{Hackbusch_2012_Tensor,Grasedyck_2010_Hierarchical} and under name \emph{tensor-train}~\cite{Oseledets_2011_TensorTrain} in the applied math community.
 However, similar structures have been known for much longer in the form of \emph{deterministic finite automata}~\cite{Hopcroft_2014_Introduction} and \emph{hidden Markov models}~\cite{Cappe_2006_Inference}.
-
-\todo{More motivation?}
 
 To introduce the MPS representation, consider a tensor $X \in \Complex^{d^N}$.
 By splitting off the first index, grouping the remaining $N-1$ indices, and performing a SVD on the resulting matrix, we can factor $X$ into three parts
@@ -233,17 +230,23 @@ In the following, we identify the index order as follows:
     \tensor{{W=1, S=1, E=1}}
     \node at (X) {$M\ind{l}$};
     \node [anchor=east] at (X_W1e) {\small $i$};
-    \node [anchor=west] at (X_S1e) {\small $j$};
-    \node [anchor=north] at (X_W1e) {\small $k$};
+    \node [anchor=north] at (X_S1e) {\small $j$};
+    \node [anchor=west] at (X_E1e) {\small $k$};
   \end{tikzpicture}
 \]
-The horizontal, contracted legs corresponding to the indices $i$ and $k$, are often referred to as \emph{bond} or \emph{virtual legs} and the vertical, unmatched ones corresponding to $j$ are referred to as \emph{physical} legs.
+The horizontal legs corresponding to the indices $i$ and $k$ are often referred to as \emph{bond} or \emph{virtual legs}, and the vertical ones corresponding to $j$ are referred to as \emph{physical} legs.
 By fixing each physical leg to some value $k_l$ in \cref{eq:mps.matrix_product}, we see that each component of $X$ is given by product of $N$ matrices
 \[
   \label{eq:mps.local_matrices}
   M\ind{l}_{k_l} := M\ind{l}_{:,k_l,:},
 \]
 hence the name \quotes{matrix-product representation}.
+In this case, we have
+\[
+  \label{eq:mps.open_boundary}
+  X_{i_1,\ldots,i_N} = M\ind{1}_{i_1}\ \cdots\  M\ind{N}_{i_N},
+\]
+where we used the shorthand notation from \cref{eq:mps.local_matrices}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}
@@ -273,7 +276,7 @@ hence the name \quotes{matrix-product representation}.
       -- end
     \end{luacode*}
 
-    \draw[pointerline] (psi) -- +(2,-1) node[pointernode] {global tensor};
+    \draw[pointerline] (psi) -- +(2,-1.5) node[pointernode] {global tensor};
     \draw[pointerline] (A_2) -- +(1,1) node[pointernode] {local tensor};
     \draw[pointerline] (A_3_E1e) -- +(0.5,1) node[pointernode] {virtual leg};
     \draw[pointerline] (A_3_S1) -- +(-0.5,-0.5) node[pointernode,anchor=east] {physical leg};
@@ -285,32 +288,33 @@ hence the name \quotes{matrix-product representation}.
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-So far this construction is exact and completely general, i.e.\ every tensor can be represented in MPS form, but not efficient:
-Generically, the SVD in the $i$-th step yields $r_i = \min{d^i, d^{N - i}}$ non-zero singular values $\lambda\ind{i}$, and therefore, the local tensors $M\ind{i}$ have shape $(d, r_{i-1}, r_i)$.
-However, suppose that all but $r$ of the singular values in each cut vanish, then we can truncate the local tensor $M\ind{i}$ to shape $(d, r, r)$.
-In this case, the number of parameters scales as $\Order(r^2 N d)$ and $X$ can be represented efficiently by matrix products according to \cref{eq:mps.matrix_product}.
+So far this construction is exact and completely general, i.e.\ every tensor can be represented in MPS form.
+However, this representation still requires exponentially many parameters in general:
+Generically, the SVD in the $i$-th step yields
+\[
+  \label{eq:mps.generic_ranks}
+  r_i = \min{d^i, d^{N - i}}
+\]
+non-zero singular values $\lambda\ind{i}$, and therefore, the local tensors $M\ind{i}$ have shape $(r_{i-1}, d, r_i)$.
+However, suppose that all but $r$ of the singular values in each cut vanish, then we can truncate the local tensor $M\ind{i}$ to shape $(r, d, r)$ while still preserving the exact equality~\eqref{eq:mps.matrix_product}.
+In this case, the number of parameters scales as $\Order(r^2 N d)$ and $X$ can be represented efficiently.
 Although this assumption may seem overly strict on a first glance, many tensors in our applications of interest are well approximated by such an MPS with small $r$.
-The following definition sums up this section so far.
+The following definition sums up the discussion in this section so far.
 
 \begin{definition}%
   \label{def:mps.mps}
-  A \emph{matrix-product state representation} of a tensor $X \in \Complex^{d^N}$ is defined in terms of a tuple of local tensors $(M\ind{l})_{l \in [N]}$ with $M\ind{l} \in \Complex^{r_{l - 1} \times d \times r_l}$ where $r_0 = r_N$.
+  A \emph{matrix-product state representation} of a tensor $X \in \Complex^{d^N}$ is defined in terms of a tuple of local tensors $(M\ind{l})_{l \in [N]}$ with $M\ind{l} \in \Complex^{r_{l - 1} \times d \times r_l}$ where $r_0 = r_N = 1$.
   Then, the components of $X$ are given by
   \[
-    \label{eq:mps.periodic_boundary}
-    X_{i_1,\ldots,i_N} = \tr \left( M\ind{1}_{:,i_1,:}\ \cdots\  M\ind{N}_{:,i_N,:} \right).
+    \label{eq:mps.mps_rep}
+    X_{i_1,\ldots,i_N} = M\ind{1}_{:,i_1,:}\ \cdots\  M\ind{N}_{:,i_N,:}.
   \]
-  We say that the MPS representation has \emph{open boundary conditions} if $r_0 = r_N = 1$, otherwise the representation has \emph{periodic boundary conditions}.
+  We say that the representation in \cref{eq:mps.mps_rep} has \emph{open boundary conditions}.
 \end{definition}
 
-For the sake of simplicity, we restrict our attention to the open boundary case in the following.
-In this case, we have
-\[
-  \label{eq:mps.open_boundary}
-  X_{i_1,\ldots,i_N} = M\ind{1}_{i_1}\ \cdots\  M\ind{N}_{i_N},
-\]
-where we used the shorthand notation from \cref{eq:mps.local_matrices}
-As already noted above, the crucial parameter balancing the efficiency of the MPS representation on one hand and its expressive power on the other hand is the size of the virtual legs $r_l$.
+By allowing larger boundary ranks $r_0$ and $r_N$, and tracing over the resulting matrix in \cref{eq:mps.mps_rep}, we obtain MPS with periodic boundary conditions.
+These are more suited if there are strong correlations between the first and the last site as well, e.g.\ if the geometry of subsystems is not linear but circular.
+As already noted above, the crucial parameter balancing the efficiency of the variational class of MPS on one hand and its expressive power on the other hand is the size of the virtual legs $r_l$.
 This warrants the following definition.
 
 \begin{definition}%
@@ -321,12 +325,10 @@ This warrants the following definition.
 \end{definition}
 
 Note that by~\cite[Thm.\ 2.2]{Oseledets_2011_TensorTrain}, the definition of MPS-rank in \cref{def:mps.rank} agrees with the usual definition using matrications of $X$, and hence, is well defined.
-\todo{Fix this}
-In contrast to the matrix case, there are multiple inequivalent definitions rank for tensors~\cite{???}.
-% Each notion of rank is induced by a tensor representation analogous to the MPS case.
-% The choice which format to use in practice is mainly determined by two factors:
-% On the one hand, the natural structure of the problem determines, which tensor format yields the most efficient
-\\
+In contrast to the matrix case, there are multiple inequivalent definitions rank for tensors~\cite{???}, which arise from different tensor representations.
+Throughout this work, we focus on the MPS-representation and the corresponding notion of rank due to its advantages outlined in \cref{sub:mps.applications}
+Therefore, we simply call the MPS-rank \quotes{rank}.\\
+
 
 
 With the factorization of the tensor $X$ in \cref{def:mps.mps}, we have introduced new virtual degrees of freedom such that the partial trace over them equals $X$.
@@ -409,7 +411,7 @@ The following definition summarizes the corresponding gauge conditions
 The exceptions for the local tensors at the beginning and end of the chain are necessary to accommodate tensors with Frobenius norm different from one.
 In practice, we often deal with a mixed left-right-canonical form, e.g.\ in variational algorithms updating one local tensor at a time such as DMRG or the alternating least squares algorithm presented in \cref{sec:tensors.als}.
 For these purposes, efficient algorithms exist that transform an MPS to a canonical form~\cite{Schollwoeck_2011_DensityMatrix,Orus_2014_Practical}.
-If we neglect transformations that change the bond dimensions, the remaining gauge group is unitary, and hence, computations on canonical MPS are far more stable numerically.\\
+If we set aside transformations that change the bond dimensions, the remaining gauge group is unitary, and hence, computations on canonical MPS are far more stable numerically.\\
 
 
 We have already emphasized the ability of the MPS representation to represent certain tensors efficiently, i.e.\ with a number of parameters scaling polynomially in the order of the tensor.
@@ -442,7 +444,7 @@ we obtain an MPS representation of a tensor of 0th order, i.e.\ a scalar, which 
 
 As most arithmetic operations increase the virtual dimension substantially, we need methods to approximate the result by another MPS with lower virtual dimension while keeping the approximation error small.
 Although computing the \emph{best} rank $r$ approximation of an MPS is computationally infeasible in general~\cite{Hillar_2013_Most}, there are efficient algorithms that produce good results in practice:
-One of them is \emph{SVD compression}, which successively performs an SVD followed by a truncation of negligible singular values on the local tensors similar to the higher-order SVD introduced in \cref{eq:mps.matrix_product}~\cite{Schollwoeck_2011_DensityMatrix}.
+One of them is \emph{SVD compression}, which successively performs an SVD followed by a truncation of negligible singular values on the local tensors similar to the higher-order SVD~\eqref{eq:mps.matrix_product}~\cite{Schollwoeck_2011_DensityMatrix}.
 If we truncate all but the $r$ largest singular values in each step, we obtain a quasi-optimal rank $r$ approximation of $X \in \Complex^{d^N}$, i.e.\
 \[
   \norm{X - X_\mathrm{SVD}} \le \sqrt{N - 1} \norm{X - X_\mathrm{best}}.
@@ -450,38 +452,6 @@ If we truncate all but the $r$ largest singular values in each step, we obtain a
 \]
 Here, $\norm{\cdot}$ denotes the Frobenius norm of tensors, $X_\mathrm{SVD}$ the rank $r$ SVD compression, and $X_\mathrm{best}$ the best rank $r$ approximation of $X$.
 
-
-
-\todo{Mention CANDECOMP/PARAFAC}
-% \Cref{def:mps.rank} generalizes the notion of \quotes{matrix rank} to tensors of higher orders based on the MPS tensor format.
-% Similar to the approach given in this section, the matrix rank can be defined in terms of a factorizing representation:
-% The rank of a $d \times d$ matrix $X$ is the smallest integer $r$ such that $X$ can be written as a product of two $d \times r$ matrices $U$ and $V$:
-% \[
-%   A = U \adj{V}
-%   \label{eq:mps.matrix_rank}
-% \]
-% Alternatively, the matrix rank can be defined in terms of sums of rank-1 matrices, i.e.\ as the smallest number of summands $r$ such that $X$ can be written as
-% \[
-%   A = \sum_{l=1}^r \ket{u\ind{l}} \bra{v\ind{l}}
-%   \label{eq:mps.matrix_cannon_rank}
-% \]
-% with $u\ind{l}, v\ind{l} \in \Complex^d$.
-% Of course, Eqs.~\eqref{eq:mps.matrix_rank} and \eqref{eq:mps.matrix_cannon_rank} are equivalent by the simple identification $u\ind{l} = U_{:,l}$ and $v\ind{l} = V_{:,l}$.
-
-% The natural generalization of the matrix rank induced by \eqref{eq:mps.matrix_cannon_rank} to tensors of higher order is known as the \emph{canonical tensor rank}~\cite{Kolda_2009_Tensor}.
-% For $X \in \Complex^{d^N}$, it defined as the smallest number of rank-1 tensors that add up to $X$:
-% \[
-%   X = \sum_{l=1}^r a\ind{l}_1 \otimes \cdots a\ind{l}_N, \quad a\ind{l}_i \in \Complex^d.
-%   \label{eq:mps.canonical_decomposition}
-% \]
-% In other words, the canonical tensor rank is induced by the tensor decomposition~\eqref{eq:mps.canonical_decomposition}, which is known as \emph{CANDECOMP/PARAFAC}~\cite{Kolda_2009_Tensor}.
-% In contrast to the matrix case, these two notions of tensor rank are not equivalent~\cite{}.
-
-% Although it captures the natural structure of many problems~\cite{} and only requires $\Order(r N d)$ parameters, it has shortcomings in practice:
-% First and foremost, computing the canonical tensor rank is $\NP$-complete~\cite{Hastad_1990_Tensor}.
-% Furthermore, the best rank-$r$ approximation of a given tensor may not exist and it is also hard to compute if it exists~\cite{Hastad_1990_Tensor,Hillar_2013_Most,Lim}.
-% In general, the CANDECOMP/PARAFAC decomposition is hard to deal with computationally.
-% This is the reason why the MPS tensor format is becoming more popular.
 
 
 \subsection{Applications of the MPS format}%
@@ -511,7 +481,7 @@ For those states, the entanglement entropy of a subsystem asymptotically only de
 Although those stats occupy only a small corner of the enormous many-body Hilbert space as depicted in \cref{fig:mps.cartoon}, they are exceptionally important in practice.
 %   - time evolution stays there -> see Orus 3.4
 
-In one dimensional systems, any many-body state $\ket{psi}$ with an area law\footnote{%
+In one dimensional systems, any many-body state $\ket{\psi}$ with an area law\footnote{%
   In one dimension, the boundary area of any connected region is constant and independent of the size of the region, and therefore, the area law implies constant entanglement entropy.
 }
 also has an efficient representation.
@@ -527,7 +497,8 @@ States of the form~\eqref{eq:mps.state_parametrization} are appropriately referr
 For higher dimensional regular latices, one can generalize the MPS representation.
 The resulting efficient tensor network representation is referred to as \emph{projected entangled pair states} (PEPS).
 However, a statement analogous to the one above does not hold:
-For dimensions $D > 1$, not every state satisfying an area law can be efficiently represented as a PEPS.\\
+For dimensions $D > 1$, not every state satisfying an area law can be efficiently represented as a PEPS~\cite{}
+.\\
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -566,12 +537,12 @@ For dimensions $D > 1$, not every state satisfying an area law can be efficientl
 
 
 So far, we were only concerned with multi-body pure states.
-The MPS tensor format from \cref{sub:tensors.mps} can also be adapted for the description of mixed sates.
+The MPS tensor format from \cref{sub:mps.tensor_representation} can also be adapted for the description of mixed sates.
 As an example consider a MPS\footnote{%
   From now on we do not distinguish between the state and its corresponding coordinate representation w.r.t.\ a fixed product basis.
 }
 $\ket\psi$.
-The corresponding projector can be written as
+The corresponding pure state projector can be written as
 \[
   \ket{\psi}\bra{\psi} =
   \begin{tikzpicture}[baseline=-.5ex]
@@ -593,7 +564,7 @@ Its local tensors $A\ind{l}$ are defined in terms of the local tensors $B\ind{l}
   =
   \begin{tikzpicture}[baseline=-.5ex]
     \tensor{{N=1, W=1, E=1, tensor_name='Bu', y=0.5}}
-    \node at (Bu) {$\cc{B\ind{l}}$};
+    \node at (Bu) {$\cc{B}\ind{l}$};
     \tensor{{S=1, W=1, E=1, tensor_name='Bu', y=-0.5}}
     \node at (Bu) {${B\ind{l}}$};
   \end{tikzpicture}
@@ -601,7 +572,7 @@ Its local tensors $A\ind{l}$ are defined in terms of the local tensors $B\ind{l}
 \]
 with implicit grouping of the virtual indices of $B\ind{l}$.
 This is an example of a matrix-product density operator (MPDO), which were introduced in \cite{Verstraete_2004_Matrix,Zwolak_2004_MixedState}.
-In general, any operator acting on the many-body Hilbert space can be expressed as an MPO with local tensors $A\ind{l} \in \Complex^{d \times d \times r \times r}$ as depicted in \cref{fig:mps.mpo}.
+In general, any operator acting on the many-body Hilbert space can be expressed as an MPO with local tensors $A\ind{l} \in \Complex^{r \times d \times d \times r}$ as depicted in \cref{fig:mps.mpo}.
 This representation is efficient if the operator acts \quotes{locally}, e.g.\ for a Hamiltonian with nearest neighbor interactions.
 
 The explicit parametrization~\eqref{eq:mps.mpdo_local_tensors} of the local tensors makes it easy to see that the corresponding MPO is positive semidefinite (psd), and hence, represents a valid physical state.
@@ -671,26 +642,26 @@ Similarly, a \emph{local purification matrix product state} (PMPS)~\cite{Cuevas_
 This is an inherently positive semidefinite parametrization of $\rho$ in matrix product form.
 However, this advantage comes at a price:
 The PMPS representation of a state can be arbitrarily more costly than its MPDO representation~\cite{Cuevas_2013_Purifications}.
-More precisely, there a families of states $(\rho_N)_{N \in \Naturals}$  with $\rho_N \in \Complex^{d^N}$ such that $\rho_N$ has constant MPO-rank, but the PMPS-rank of $rho_N$ scales as $\Order(N)$.
+More precisely, there a families of states $(\rho_N)_{N \in \Naturals}$  with $\rho_N \in \Complex^{d^N}$ such that $\rho_N$ has constant MPO-rank, but the PMPS-rank of $\rho_N$ scales as $\Order(N)$.
 This and the hardness result from~\cite{Kliesch_2014_Matrix} shows that no efficient algorithm for computing an exact local purification from an MPDO exists in general.
-However, the questions how generic this hardness is and how hard approximative versions of this problem are remain open?\\
+However, the questions, how generic this hardness is and how hard approximative versions of this problem are, remain open.
 
 
 
 Besides the original applications in physics, the MPS tensor format has recently also found applications in the field of machine learning:
-Deploying the latest neural networks on mobile devices such as smart phones or IOT devices is challenging due to the high dimensional hidden layers, e.g. a single weight matrix of a fully connected layer can have millions of parameters.
+Deploying the latest neural networks on mobile devices such as smart phones or IoT devices is challenging due to the high dimensional hidden layers, e.g. a single weight matrix of a fully connected layer can have millions of parameters.
 By approximating this weight matrix by an MPS with small bond dimension, the authors in~\cite{Novikov_2015_Tensorizing} were able to compress state-of-art image detection networks by a factor of seven with only minor performance penalties.
 Other examples of applications of tensor decompositions in deep learning include regularization~\cite{Tai_2015_Convolutional} and deep representation learning~\cite{Yang_2016_Deep}.
 
 Another use of the MPS tensor format in machine learning was pioneered in~\cite{Stoudenmire_2016_Supervised}.
-They consider a support vector machine classifier, which for the binary (yes/no) outcome is given by
+They consider a binary support vector machine classifier with a decision function
 \[
-  f(X) = \braket{W, X},
+  f(X) = \braket{W, X}.
 \]
-where $X$ is the input vector and $W$ is the model vector.
+Here, $X$ is the input vector and $W$ is the model vector.
 The goal is to determine $W$ in such a way that $f(X) > 0$ if $X$ is in the \quotes{yes} class and $f(X) < 0$ otherwise.
 By using a MPS representation for $W$ and $X$, they are able to efficiently learn such a model even in high-dimensional settings.
-A similar can also be applied to learning polynomial classifiers~\cite{Chen_2017_Parallelized} as well as for image compression and classification~\cite{Bengua}.
+A similar approach can also be applied to learning polynomial classifiers~\cite{Chen_2017_Parallelized} as well as to image compression and classification~\cite{Bengua}.
 
 
 
@@ -698,19 +669,15 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen_2017
 \section{The Python Library mpnum}%
 \label{sec:tensors.mpnum}
 
+The Python library \mpnum~\cite{} was developed during this work to simplify the process of prototyping numerical algorithms with MPS.
+Its main design principles are flexibility, user-friendliness, and expandability.
+We placed special emphasis on making the API of \mpnum as accessible as possible for researchers with little background in programming:
+Compared to the existing TT-toolboxes for Matlab and Python~\cite{}, we used object-oriented design principles to make the syntax as close to mathematical notation as possible and to hide the details of the MPS representation for the user.
+We were partly inspired by the fantastic ITensor library~\cite{} for C++, but preferred an implementation in pure Python due to its ease of use and widespread use in science.
+
+
 \input{notebooks/Introduction}
-\todo{Examples for thermal state computation}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Scalable maximum likelihood estimation for quantum states}%
-\label{sec:tensors.mle}
-
-\todo{Leave this out?}
-% QSE -> see chapter ..., number of measurements without further assumptions ~ dimension of hilber space ^2 -> exponential for many body states
-% slight reduction using low-rank matrix recovery, but still exponential
-% here: assuming efficient MPO description -> # of measurements -> linear in N
-%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Efficient low-rank tensor reconstruction}%
@@ -728,16 +695,16 @@ A similar can also be applied to learning polynomial classifiers~\cite{Chen_2017
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-With the ability to approximate structured tensors from many applications efficiently in MPS form, one crucial question remains:
-How can we \emph{efficiently} recover this representation in practice from measurable quantities?
+So far, we have seen that the MPS tensor format provides the means to efficiently represent and manipulate tensors, which occur in practical applications in e.g.\ quantum physics or machine learning.
+In this context, the question arises: How can we \emph{efficiently} recover this representation in practice from measurable quantities?
 Here, \quotes{efficiency} refers to two different aspects.
 On the one hand, we want to bound the number of measurements required to perform reconstruction, i.e.\ the \emph{sample complexity}.
-On the other hand, it refers to the \quotes{computational complexity} as outlined in \cref{sec:error.complexity}
+On the other hand, it refers to the \emph{computational complexity} as outlined in \cref{sec:error.complexity}.
 Both aspects are especially critical for tensor reconstruction as na\"ive approaches generally suffer from the curse of dimensionality.
 
 In the context of quantum estimation, existing work addresses this question for the reconstruction of MPS~\cite{Cramer_2010_Efficient}, MPDO~\cite{Baumgratz_2013_Scalable,Baumgratz_2013_Scalablea,Lanyon_2017_Efficient}, and unitary quantum processes~\cite{Holzaepfel_2014_Scalable} from local measurements.
-More precisely, they consider measurements that act non-trivially only on blocks of $R$ adjacent qudits as depicted in \cref{fig:als.quantum_measurements}.
-This results in a sample complexity scaling as $\Order(N \times d^R)$ compared to the $m = \Order(d^N)$ for the na\"ive approach.
+More precisely, they consider informationally complete measurement on blocks of length $R$ as depicted in \cref{fig:als.quantum_measurements}.
+Since there are exactly $N - R + 1$ such blocks, this requires a number of measurements scaling as $\Order(N \times d^R)$ compared to the $\Order(d^N)$ scaling of full-fledged quantum state tomography.
 Numerical experiments in~\cite{Cramer_2010_Efficient,Baumgratz_2013_Scalable,Baumgratz_2013_Scalablea} demonstrate successful recovery of W-states as well as ground and thermal states of nearest-neighbor Hamiltonians for small values of $R$ independent of $N$.
 Naturally, these are all examples of MPS or MPO with small bond dimension.
 The drastically reduced sampling complexity makes the approaches efficient and viable for large-scale quantum experiments.
@@ -750,8 +717,10 @@ Similar rigorous recovery guarantees have only been proven for comparable, but i
 
 
 The question that motivated the work presented in this chapter is whether we can identify other measurement schemes and algorithms that \emph{provably} allow for efficiently reconstructing low-rank tensors.
-Recall that we already encountered a similar question in \cref{cha:phaselift} for the problem of \emph{low-rank matrix recovery}.
-The latter asks under which conditions we can recover a low-rank matrix $X \in \Complex^{d \times d}$ from $m$ linear measurements of the form
+Recall that we already encountered a similar question in \cref{chap:phaselift} for the problem of \emph{low-rank matrix recovery}.
+The latter is concerned with the question, under which conditions we can recover a low-rank matrix $X \in \Complex^{d \times d}$ from $m$ linear measurements of the form\footnote{%
+  Note that we take up the notation from \cref{chap:phaselift} for the rest of this chapter, where the index $l$ in $A\ind{l}$ labels different measurement tensors, and not their local tensors.
+}
 \[
   y\ind{l} = \braket{A\ind{l}, X}, \quad l=1, \ldots, m.
   \label{eq:als.matrix_measurements}
@@ -763,8 +732,8 @@ Here, $A\ind{l} \in \Complex^{d \times d}$ denote the measurement matrices and
 the Frobenius inner product.
 For a general matrix $X$, the number of measurements $m$ needs to scale as $d^2$ by the pigeonhole principle.
 However, by exploiting the low-rank structure of $X$, we can reduce $m$.
-For example, \cref{thm:???} shows that we can recover any positive semi-definite rank-1 matrix $X$ from only $m = \Order(d)$ measurements provided the $A\ind{l}$ are sampled from an appropriate distribution of random matrices.
-Furthermore, said theorem also provides an efficient reconstruction algorithm, namely the semi-definite program~\eqref{eq:???}.
+For example, \cref{thm:pl.phaselift_noisy} shows that we can recover any positive semi-definite rank-1 matrix $X$ from only $m = \Order(d)$ measurements provided the $A\ind{l}$ are sampled from an appropriate distribution of random matrices.
+Furthermore, said theorem also provides an efficient reconstruction algorithm, namely the semi-definite program~\eqref{eq:pl.PhaseLift}.
 
 More generally, we can recover any $X \in \Complex^{d \times d}$ with $\rank X = r$ from $m = \Order(d r)$ randomly chosen measurements~\cite{Candes_2011_Tight,Kueng_2014_Low}.
 Intuitively, this sample complexity is asymptotically optimal since we need at least $2 d r$ complex parameters to specify the left- and right-singular vectors of $X$, see~\cite{Eldar_2012_Uniqueness,Li_2017_Optimal} for rigorous lower bounds.\\
@@ -777,7 +746,7 @@ Here, we consider the generalization of low-rank matrix recovery to higher order
 }
 $X \in \Reals^{d^N}$ of low MPS-rank.
 For this purpose, we study an \emph{Alternating Least Squares} (ALS) algorithm inspired by DMRG methods in quantum physics.
-The observable quantities are -- analogous to \cref{eq:als.marix_measurements} -- given by overlaps with measurement tensors $A\ind{l} \in \Reals$
+The observable quantities are -- analogous to \cref{eq:als.matrix_measurements} -- given by overlaps with measurement tensors $A\ind{l} \in \Reals$
 \[
   y\ind{l} = \braket{A\ind{l}, X}
   \label{eq:als.tensor_measurements}
@@ -795,12 +764,13 @@ However, numerical investigations using an alternating least squares algorithm s
 
 % low-rank approximation
 % Riemannian optimization -> Lubich
+\todo{More refs!}
 % ALtmin local convergence for Optimization-> Rohwedder, Uschmajew; Holtz, Rohwedder\tabularnewline
 
 Stronger analytical results exist for a different measurement ensemble:
 The authors in~\cite{Rauhut_2014_Tensor}, consider fully Gaussian measurements, i.e.\ measurement tensors with independent components sampled from a normal distribution.
-In this approach, a number of such measurements scaling polynomially in the crucial parameters $d$, $N$, and $r$ is sufficient to recover any rank $r$ tensor.
-Although their result is highly sample efficient, it is still infeasible for high-order tensors due to the exponentially scaling memory requirement for the measurement tensors.
+In this approach, a number of measurements scaling polynomially in the crucial parameters $d$, $N$, and $r$ is sufficient to recover any rank $r$ tensor.
+Although their result is highly efficient in the sample complexity, it is still infeasible for high-order tensors due to the exponentially scaling memory requirement for the measurement tensors and the resulting exponential runtime of any algorithm using them.
 
 In conclusion, the existing rigorous work on recovering low MPS-rank tensors is currently situated at two different ends of a spectrum:
 On the on hand, there is tensor completion, which is highly relevant for practical applications and efficiently implementable, but without any recovery guarantees for a polynomially scaling number of measurements.
@@ -818,32 +788,42 @@ We take the measurement tensors to be of the form
 \]
 with local tensors randomly chosen from a standard multivariate normal distribution $a\ind{l}_k \sim \Normal(0, \1_d)$.
 In contrast to the fully Gaussian model from~\cite{}, the measurement tensors~\eqref{eq:als.rank1_measurements} can be represented efficiently as MPS of unit rank.
-And, unlike the tensor completion problem, history does not dictate that its solution requires at least one Fields medalist.
+And, unlike the tensor completion problem, history does not dictate that its solution requires at least one Fields medalist.\\
+
+
+
+The rest of this section is structured as follows:
+In \cref{sub:als.algorithm}, we introduce the \emph{alternating least squares} (ALS) algorithm for tensors, which we analyse analytically in \cref{sub:als.ana} for general rank-1 measurements.
+The particular case of Gaussian rank-1 Gaussian measurements is then treated in \cref{sub:als.gaussian_measurements}.
+This is still work in progress, so we report on some tools to tackle the problem of Gaussian rank-1 measurements and perform numerical simulations of their properties.
+Finally, in \cref{sub:als.numerics}, we report on numerical simulations of tensor recovery via ALS and some optimization strategies for scaling the implementation to large tensors.
 
 
 
 \subsection{The alternating least squares algorithm}%
+\label{sub:als.algorithm}
 
-In this section, we are going to report on work in progress for the problem of reconstructing low-rank tensors from few measurements.
 To recapitulate, the goal is to recover a tensor $X \in \Reals^{d^N}$ with MPS-rank\footnote{%
   From now on, we simply say \quotes{rank} instead of \quotes{MPS-rank}.
 } $r$ from $M$ linear measurements of the form
 \[
   b\ind{l} = \braket{A\ind{l}, X}, \ldots l=1,\ldots,M,
 \]
-where $A\ind{l}$ is a product of Gaussian vectors as defined in \cref{eq:als_rank1_measurements}.
-For this purpose, we want an efficient reconstruction algorithm and $m$ to scale polynomially in the parameters $d$, $N$, and $r$.
+where $A\ind{l}$ is a product of Gaussian vectors as defined in \cref{eq:als.rank1_measurements}.
+For this purpose, we want an efficient reconstruction algorithm and $M$ to scale polynomially in the parameters $d$, $N$, and $r$.
 
 The idea to recover $X$ is simply to find the tensor $Y$ of desired rank that minimizes the empirical $\ell_2$ error
 \[
-  \sum_l \left( b\ind{l} - \braket{A\ind{l}, Y} \right)^2.
+  \frac{1}{M} \, \sum_l \left( b\ind{l} - \braket{A\ind{l}, Y} \right)^2.
   \label{eq:als.empirical_l2}
 \]
 However, this problem is generally hard to solve directly since the space of MPS of given rank is non-convex.
-Nevertheless, in the case of $M=\Order(???)$ fully Gaussian measurements, a projected gradient descent on~\eqref{eq:als.empirical_l2} is able to recover $X$.
-However, the same proof techniques fail in the case of structured measurements such as the ones defined in \cref{eq:als.rank1_measurements} as we show in \cref{???}.
+\todo{Fill in order!}
+Nevertheless, in the case of $M=\Order(???)$ fully Gaussian measurements, a projected gradient descent on~\eqref{eq:als.empirical_l2} is able to recover $X$~\cite{Rauhut_2014_Tensor}.
+However, the same proof techniques fail in the case of structured measurements such as the ones defined in \cref{eq:als.rank1_measurements} as we show in \cref{sub:tensors.trip}.
 
-Instead of updating each local tensor at the same time as in the gradient descent, we iteratively optimize the empirical error over a single local tensor at a time.
+Instead of updating all local tensor simultaneously as in the gradient descent, we iteratively optimize the empirical error over a single local tensor at a time.
+Since the minimization of \cref{eq:als.empirical_l2} over a single local tensor is a linear-least squares problem, it can be solved efficiently.
 The resulting algorithm is presented below:
 
 \begin{algorithm}[H]
@@ -853,8 +833,7 @@ The resulting algorithm is presented below:
 
   \Input{%
     Number of epochs $H$ and initialization MPS $X_\mathrm{init}$ of order $N$, rank $r$, and local dimension $d$ \newline
-    Measurement tensors $A\ind{l}$ and measurement outcomes $b\ind{l}$ with $i = 1, \ldots, H \times N \times m$ \newline
-    Divide $(A\ind{l}, y\ind{l})_l$ into $HN$ subsets of size $m$, which are denoted by ${\left(A\ind{h,n;l}, b\ind{h,n;l}\right)}_l$ ($h \in [H], n \in [N]$)
+    Measurement tensors $A\ind{l}$ and measurement outcomes $b\ind{l}$ with $i = 1, \ldots, H \times N \times m$ divided into $HN$ batches of size $m$, which are denoted by ${\left(A\ind{h,n;l}, b\ind{h,n;l}\right)}_l$ ($h \in [H], n \in [N]$)
   }
   \BlankLine
 
@@ -882,20 +861,19 @@ The resulting algorithm is presented below:
 In this version of the alternating least squares scheme, we start updating the left-most tensor and then move through the chain all the way to the right.
 When we reach the last tensor of the MPS, we start again on the left after bringing the MPS to right-canonical form.
 Hence, all tensors to the left and right of the currently updated tensor are left- and right-normalized, respectively.
-This process is repeated $H$ number of times.
-In practice, we make the algorithm slightly faster by skipping the right-canonicalization step in line~\ref{line:als.right_canonical} and perform a sweep left-right-left instead.
+This process for a total of $H$ epochs.
 
 The crucial step in this algorithm is the local minimization in line~\ref{line:als.min}.
-It amounts to keeping all but the $n$-th local tensor of $Y$ fixes and minimizing the empirical error over $Y_n$.
+It amounts to keeping all but the $n$-th local tensor of $Y$ fixed and minimizing the empirical error over $Y_n$.
 The minimizer $\hat Z$ can be computed efficiently from the linear least squares problem
 \[
   \hat Z
-  = \argmin_Z \sum_l \left( y\ind{h,n;l} - B\ind{l}Z   \right)^2
-  = \norm{y\ind{h,n} - B Z}_{\ell_2}^2.
+  = \argmin_Z \sum_l \left( b\ind{h,n;l} - B\ind{l}Z   \right)^2
+  = \norm{b\ind{h,n} - B Z}_{\ell_2}^2.
   \label{eq:als.llsq}
 \]
 Here, the rows of the matrix\footnote{%
-  More precisely, we have $B \in \Reals^{m \times (rd)}$ for $n=1$ or $n=N$.
+  More specifically, we have $B \in \Reals^{m \times (rd)}$ for $n=1$ or $n=N$.
 }
 $B \in \Reals^{m \times (dr^2)}$ are defined in line~\ref{line:als.partial_contraction} in terms of partial contractions of $A\ind{h,n;l}$ and $Y$ leaving out the $n$-th local tensor of $Y$:
 \[
@@ -912,25 +890,25 @@ $B \in \Reals^{m \times (dr^2)}$ are defined in line~\ref{line:als.partial_contr
 Therefore, the solution $\hat Z$ of \cref{eq:als.llsq} is a $d r^2$ dimensional vector, which can be reshaped to the correct form.
 If we replace the exact local minimization in \cref{eq:als.llsq} by a finite gradient descent step, we obtain a standard nonlinear block Gauss–Seidel iteration~\cite{Schechter}.
 
-Finally, note that the sample splitting at the beginning is necessary for the analysis of the algorithm below as it requires independent updates at each step.
-Therefore, we use a fresh batch of measurement tensors and measurement values in each step, which results in a total number of $M = (HN + 1)m$ measurements.
-Provided that both $H$ and $m$ scale polynomially in the system's parameters, then so does $M$.
-However, numerical experiments below show that this resampling is unnecessary in practice.\\
+Finally, note that the sample splitting at the beginning is necessary for the analysis of the algorithm below as it requires independent updates for each micro-iteration.
+Therefore, we use a fresh batch of measurement tensors and measurement values in each step, which results in a total number of $M = HNm$ measurements.
+Provided that both, the number of epochs $H$ and the batch size $m$ scale polynomially in the system's parameters, then so does $M$.
+However, numerical experiments in \cref{sub:als.numerics} show that this resampling is unnecessary in practice.\\
 
-
-
-Alternating algorithms such as ALS updating only a few local tensors at a time are a very common approximation technique for circumventing intractabilities when dealing with MPS.
-Well known examples include variational compression and DMRG~\cite{Schollwoeck} --  an iterative algorithm for approximating the smallest eigenvalue of a hermitian MPO.
-Local convergence of these alternating algorithms has been proved for a large class of problems in~\cite{Rohwedder}.
-However, these result only show that the ALS algorithm converges to a local minimum, which unless the initialization is chosen well differs from the target tensor $X$.
-Furthermore, it remains to be shown that the minimizer of the empirical $\ell_2$ error~\eqref{eq:als.empirical_l2} with given rank is equal to $X$, i.e.\ that the given measurements suffice to identify $X$.
 
 
 \subsection{Analysis of the ALS}%
 \label{sub:als.ana}
 
-We now turn to the problem of analysing \cref{alg:als}, generalizing the ideas from~\cite{Zhong} to the tensor case.
-For the sake of simplicity, we are only going to treat the case of a product signal tensor, i.e.\ $X$ is assumed to have rank one.
+Alternating algorithms such as ALS updating only a few local tensors at a time are a very common approximation technique for circumventing intractabilities when dealing with MPS.
+Well known examples include variational compression and DMRG~\cite{Schollwoeck} --  an iterative algorithm for approximating the smallest eigenvalue of a hermitian MPO.
+Local convergence of these alternating algorithms has been proven for a large class of problems in~\cite{Rohwedder}.
+These result show that alternating minimization algorithms of many cost functions converge to a local minimum.
+However, it remains to be shown that the minimizer of the empirical $\ell_2$ error~\eqref{eq:als.empirical_l2} with given rank is equal to $X$, i.e.\ that the given measurements suffice to identify $X$.
+
+Here, we attack the problem directly by analysing the micro-iterations of \cref{alg:als} directly.
+For this purpose, we generalize the ideas from~\cite{Zhong} to the tensor case.
+For the sake of simplicity, we only treat the case of a product signal tensor, i.e.\ $X$ is assumed to have rank one.
 Furthermore, we also assume w.l.o.g.\ that $X$ is normalized in Frobenius norm, i.e.\ $\norm{X}_2 = 1$.
 Then, $X$ can be written as a tensor product of $N$ normalized vectors $x_i \in \Reals^d$ and we have
 \[
@@ -946,8 +924,7 @@ In the case of rank-1 tensor reconstruction, this metric between the local tenso
 \]
 It is known as \emph{infidelity} if $x, y \in \Complex^d$ represent pure quantum states~\cite{Nielsen_2010_Quantum}.
 \Cref{eq:ana.infidelity} is also the one-dimensional special case of the \emph{principle angle distance} of subspaces~\cite{Golub}, which is the appropriate distance measure for higher-rank generalizations of the results presented here.
-
-In the first lemma, we relate the \quotes{global} distance of two tensors, which is measured in Frobenius norm, to the distances of the local tensors.
+In the first lemma, we relate the \quotes{global} distance of two tensors, which is measured in Frobenius norm, to the distances of the local tensors measured by~\eqref{eq:ana.infidelity}.
 \begin{lemma}%
   \label{lem:ana.local_global_closeness}
   Let $X = \otimes_{i=1}^N x_i$ and $Y = \otimes_{i=1}^N y_i$ be two product tensors of unit norm.
@@ -994,8 +971,11 @@ In the first lemma, we relate the \quotes{global} distance of two tensors, which
   which completes the proof.
 \end{proof}
 
-We now turn to the main problem in this section, namely providing upper bounds on the ALS-reconstruction.
-For this purpose, we assume that the following two conditions hold for our measurements:
+
+
+We now turn to the main problem in this section, namely investigating the ALS update step.
+In the following, we denote by $\Nset = {1, \ldots, N}$ the set of all integers up to $N$ and by $\NsetSub{j} = \Nset \setminus \{j\}$.
+For our analysis, the following two conditions on the measurement tensors $A\ind{l}$ are crucial:
 \begin{enumerate}
   \item\label{lbl:conditions.B}\textbf{Concentration of the $B_j$ operators}:
     For all $j \in \Nset$, let $v_i \in \Reals^d$ with $\norm{v_i}_2 = 1$ ($i \in \NsetSub{j}$) independent of all the $a\ind{l}_i$.
@@ -1020,7 +1000,7 @@ For this purpose, we assume that the following two conditions hold for our measu
       G_j\left({(v_i, v_i^\perp)}_{i \in \NsetSub{j}} \right)
       = \frac{1}{m} \sum_{l=1}^m \left( \prod_{i\neq j} \Braket{a\ind{l}_i, v_i} \Braket{a\ind{l}_i, v_i^\perp} \right) \Ketbra{a_j\ind{l}}.
     \]
-    Then, with high probability the largest singular value of $G_j\left({(v_i, v_i^\perp)}_{i \in \NsetSub{j}} \right)$ should satisfy
+    Then, the largest singular value of $G_j\left({(v_i, v_i^\perp)}_{i \in \NsetSub{j}} \right)$ should satisfy
     \[
       \label{eq:ana.conditions.lmax}
       \Opnorm{G_j\left({(v_i, v_i^\perp)}_{i \in \NsetSub{j}} \right)} \le \delG.
@@ -1030,8 +1010,8 @@ For this purpose, we assume that the following two conditions hold for our measu
 In \cref{sub:als.gaussian_measurements} we elaborate on work in progress with the goal of proving that random local tensors $a\ind{l}_i$ sampled independently from a standard $d$-variate Gaussian distribution satisfy these conditions with high probability.\\
 
 
-We start the analysis by examining a single update step in \cref{alg:als} for the leftmost local tensor with $n = 1$.
-Denote by $\tilde y^{h+1}_1$ the minimizer $\hat Z$ in line~\ref{line:als.min} and by $y^h_i$ the remaining local tensors of $Y$, which are kept fixed during this micro-iteration.
+We start the analysis by examining a single ALS update step for the leftmost local tensor with $n = 1$.
+Denote by $\tilde y^{h+1}_1$ the minimizer $\hat Z$ in line~\ref{line:als.min} of \cref{alg:als} and by $y^h_i$ the remaining local tensors of $Y$, which are kept fixed during this micro-iteration.
 The empirical error as a function of $\tilde y^{h+1}_n$ then reads
 \[
   F\left(\tilde y^{h+1}_1\right)
@@ -1047,7 +1027,7 @@ We now derive an explicit representation of the minimizer of \cref{eq:ana.l2_err
   Denote by $F$ the empirical $\ell_2$ error defined in \cref{eq:ana.l2_error}.
   Then, the extremal point $\tilde y_1$ with $\frac{\partial F(\tilde y_1)}{\partial \tilde y_1} = 0$ is given by
   \[
-    \Ket{\tilde y_1} = {\left( \prod_{i \neq 1} \Braket{x_i, y_i} \right)} \Ket{x_1} - \tilde B_1^{-1} \tilde G_1 \Ket{x_1}
+    {\tilde y_1} = {\left( \prod_{i \neq 1} \Braket{x_i, y_i} \right)} {x_1} - \tilde B_1^{-1} \tilde G_1 {x_1}
     \label{eq:ana.gradient_of_error}
   \]
   with $\tilde B_1$ and $\tilde G_1$ given by
@@ -1063,29 +1043,29 @@ We now derive an explicit representation of the minimizer of \cref{eq:ana.l2_err
   We begin by computing the derivative of $F$
   \[
     \frac{\partial F(\tilde y_1)}{\partial \tilde y_1}
-    = -2 \sum_l \left( \prod_i \Braket{a\ind{l}_i, x_i} - \Braket{a\ind{l}_1, \tilde y_1} \, \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, \Ket{a\ind{l}_1},
+    = -2 \sum_l \left( \prod_i \Braket{a\ind{l}_i, x_i} - \Braket{a\ind{l}_1, \tilde y_1} \, \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, {a\ind{l}_1},
   \]
   which is equal to zero if and only if
   \[
-  \sum_l \left( \Braket{a\ind{l}_1, \tilde y_1} \, \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, \Ket{a\ind{l}_1}
+  \sum_l \left( \Braket{a\ind{l}_1, \tilde y_1} \, \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, {a\ind{l}_1}
   =
-  \sum_l \left( \prod_i \Braket{a\ind{l}_i, x_i} \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, \Ket{a\ind{l}_1}.
+  \sum_l \left( \prod_i \Braket{a\ind{l}_i, x_i} \prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right) \, {a\ind{l}_1}.
   \]
   Reordering terms and factoring out the terms with $i = 1$ gives
   \[
-  \sum_l {\left(\prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right)}^2 \, \Ket{a\ind{l}_1} \Braket{a\ind{l}_1, \tilde y_1}
+  \sum_l {\left(\prod_{i \neq 1} \Braket{a\ind{l}_i, y_i} \right)}^2 \, {a\ind{l}_1} \, \Braket{a\ind{l}_1, \tilde y_1}
   =
-  \sum_l \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, x_i} \Braket{a\ind{l}_i, y_i} \right) \, \Ket{a\ind{l}_1} \Braket{a\ind{l}_1, x_1},
+  \sum_l \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, x_i} \Braket{a\ind{l}_i, y_i} \right) \, {a\ind{l}_1} \, \Braket{a\ind{l}_1, x_1},
   \]
   and therefore,
   \[
     \tilde  B_1 \Ket{\tilde y_1} =
-    \underbrace{ \frac{1}{m} \left[ \sum_l \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, x_i} \Braket{a\ind{l}_i, y_i} \right) \, \Ketbra{a\ind{l}_1} \right]}_{=: \tilde O_1} \Ket{x_1}.
+    \underbrace{ \frac{1}{m} \left[ \sum_l \left( \prod_{i \neq 1} \Braket{a\ind{l}_i, x_i} \Braket{a\ind{l}_i, y_i} \right) \, \Ketbra{a\ind{l}_1} \right]}_{=: \tilde O_1} {x_1}.
   \]
   Note that $\tilde B_1 = B_1(y_2, \ldots, y_N)$ as defined in \cref{eq:ana.conditions.B}.
   Since we assume by \cref{eq:ana.conditions.lmin} that the smallest eigenvalue of $\tilde B_1$ is larger than zero, it is invertible and we can multiply the last equation by its inverse and obtain
   \[
-    \Ket{\tilde y_1} = \left( \prod_{i \neq 1} \Braket{x_i, y_i} \right) \Ket{x_i} - \tilde B_1^{-1} \left( \left(\prod_{i \neq 1} \Braket{x_i, y_i} \right) \tilde B_1 - \tilde O_1 \right) \Ket{x_i},
+    {\tilde y_1} = \left( \prod_{i \neq 1} \Braket{x_i, y_i} \right) {x_i} - \tilde B_1^{-1} \left( \left(\prod_{i \neq 1} \Braket{x_i, y_i} \right) \tilde B_1 - \tilde O_1 \right) {x_i},
   \]
   where the first and second summand cancel each other.
   Finally, we simplify the expression in parentheses, which completes the proof:
@@ -1099,12 +1079,12 @@ We now derive an explicit representation of the minimizer of \cref{eq:ana.l2_err
   \end{flalign}
 \end{proof}
 
-From \cref{eq:ana.gradient_of_error} we see that if the error term $\tilde B_1^{-1} \tilde G_1 \ket{x_1}$ is small, then the overlaps of the remaining local tensors $\braket{x_i, y_i}$ for $i=2,\ldots,N$ determine how close $\tilde y_1$ is to its true value $x_1$.
+From \cref{eq:ana.gradient_of_error} we see that if the error term $\tilde B_1^{-1} \tilde G_1 {x_1}$ is small, then the overlaps of the remaining local tensors $\braket{x_i, y_i}$ for $i=2,\ldots,N$ determine how close $\tilde y_1$ is to its true value $x_1$.
 The following lemma makes this precise.
 
 \begin{lemma}%
   \label{lem:ana.local_error_bound}
-  Let $\ket{y_1} := \frac{\ket{\tilde y_1}}{\ltwonorm{\tilde y_1}}$ with $\ket{\tilde y_1}$ given by \cref{eq:ana.gradient_of_error}.
+  Let ${y_1} := \frac{{\tilde y_1}}{\ltwonorm{\tilde y_1}}$ with ${\tilde y_1}$ given by \cref{eq:ana.gradient_of_error}.
   Furthermore, define
   \[
     \label{eq:ana.local_error_bound.def_kappa}
@@ -1117,7 +1097,7 @@ The following lemma makes this precise.
   \]
 \end{lemma}
 \begin{proof}
-  First recall that $\tilde B_1 = B_1(y_2, \ldots, y_N)$ as defined in \cref{thm:ana.conditions.B}.
+  First recall that $\tilde B_1 = B_1(y_2, \ldots, y_N)$ as defined in \cref{eq:ana.conditions.B}.
   Since $\ltwonorm{y_i} = 1$ and $\tilde B_1$ is positive definite, the lower bound on the smallest eigenvalue of $\tilde B_1$ in \cref{eq:ana.conditions.lmin} translates to
   \[
     \label{eq:ana.error_term_bound.B}
@@ -1305,8 +1285,7 @@ being a product of $2(N - 1)$ independent standard Gaussians.
 Therefore, the problem of proving the concentration properties \cref{eq:ana.conditions.lmin,eq:ana.conditions.lmax} requires a better understanding of the distribution of products of Gaussian random variables.
 
 In this section we are going to summarize the results from~\cite{Stojanac,Stojanac}, where we compute a power-log series expansion for the cumulative distribution function of products of independent standard Gaussians as well their absolute values and squares.
-\todo{ok?}
-As the main work in these publications was done by Ž.\ Stojanac, we only sketch those results here.
+As the main work in these publications was done by Ž.\ Stojanac, we only sketch the results here.
 In numerical simulations, we also show that truncations of said expansions at the first-order provide very close approximations, and therefore, may be used to derive strong concentration properties for said random variables.
 However, since at this time, we do not have explicit error bounds for these truncations, we investigate the concentration properties of the operators~\eqref{eq:als.gaussian.B} and~\eqref{eq:als.gaussian.G} numerically at the end of this section.\\
 
@@ -1326,35 +1305,35 @@ However, since at this time, we do not have explicit error bounds for these trun
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-Recall from \cref{sub:als.ana} that one of the conditions needed for successful recovery via ALS is a lower bound on the operator $B_j(v)$ from \cref{eq:als.gaussian.B}.
-In words, we need a lower tail bound on the smallest eigenvalue of sums of independent random operators of the form $X \times \ketbra{a}$, where $a \sim \Normal(0, \1_d)$ and $X$ is a product of squares of standard Gaussians, i.e.
+Recall from \cref{sub:als.ana} that one of the conditions needed for successful recovery via ALS is a lower bound on $\lambda\mathrm{min}(B_j(v))$ with $B_j(v)$ from \cref{eq:als.gaussian.B}.
+In words, we need a lower tail bound on the smallest eigenvalue of sums of independent random operators of the form $Y \times \ketbra{a}$, where $a \sim \Normal(0, \1_d)$ and $Y$ is a product of squares of standard Gaussians, i.e.
 \[
   \label{eq:gaussian.X}
-  X = \prod_{i=1}^n g_i^2, \quad\mbox{ with } g_i \sim \Normal(0, 1).
+  Y = \prod_{i=1}^n g_i^2, \quad\mbox{ with } g_i \sim \Normal(0, 1).
 \]
-We encountered a similar problem in \cref{cha:phaselift}, where the proof of the main \cref{thm:pl.phaselift_noisy} relied on the moment conditions in \cref{def:pl.attentive}.
-However, these standard concentration inequalities are not applicable to the problem of tensor recovery due to the large fluctuations of $X$ in \cref{eq:gaussian.X}:
-Due to independence of the $g_i$, the $k$-th moments of $X$ are given by
+We encountered a similar problem in \cref{chap:phaselift}, where the proof of the main \cref{thm:pl.phaselift_noisy} relied on the moment conditions in \cref{def:pl.attentive}.
+However, these standard concentration inequalities are not applicable to the problem of tensor recovery due to the large fluctuations of $Y$ in \cref{eq:gaussian.X}:
+Because of the independence of the $g_i$, the $k$-th moments of $Y$ are given by
 \[
-  \Exp X^k = \prod_{i=1}^n \Exp g_i^{2k} = \left( (2k - 1)!! \right)^n.
+  \Exp Y^k = \prod_{i=1}^n \Exp g_i^{2k} = \left( (2k - 1)!! \right)^n.
 \]
-So although the expectation value of $X$ is 1 for all values of $n$, the variance of $X$ scales as $(3!!)^n = 3^n$.
-This might be surprising since $X > 0$ almost surely.
-The reason for the exponentially strong fluctuations about the mean are realizations of $X$ which are exponentially large, but which only occur with extremely small probability.
+So although the expectation value of $Y$ is 1 for all values of $n$, the variance of $X$ scales as $(3!!)^n = 3^n$.
+This might be surprising since $Y > 0$ almost surely.
+The reason for the exponentially strong fluctuations about the mean are realizations of $Y$ which are exponentially large, but which only occur with extremely small probability.
 
-In order to illustrate the strong fluctuations of $X$ more clearly, note that
+In order to illustrate the strong fluctuations of $Y$ more clearly, note that
 \[
-  \log X = \sum_{i=1}^n \log g_i^2.
+  \log Y = \sum_{i=1}^n \log g_i^2.
 \]
-That is, the logarithm of $X$ is a sum of independent random variables with
+That is, the logarithm of $Y$ is a sum of independent random variables with
 \[
   \label{eq:gaussian.means_and_std}
-  \mu = \Exp \log g_i^2 = -(\gamma + \log 2)
+  \Exp \log g_i^2 = \mu = -(\gamma + \log 2)
   \quad\mbox{and}\quad
-  \sigma^2 = \Var \log g_i^2 = \frac{\pi^2}{2}.
+  \Var \log g_i^2 = \sigma^2 = \frac{\pi^2}{2}.
 \]
-By the central limit theorem, we can approximate $\log X$ by a normal distribution with mean $\mu n$ and standard deviation $\sigma \sqrt{n}$ as depicted in \cref{fig:gaussians.lognormal}.
-In other words, $X$ is approximately log-normal distributed, and hence, the fluctuations of $X$ are of order $\sigma \sqrt{n}$ on a logarithmic scale, i.e.\ they manifest on the order of magnitude of $X$.
+By the central limit theorem, we can approximate $\log Y$ for large $n$ by a normal distribution with mean $\mu n$ and standard deviation $\sigma \sqrt{n}$ as depicted in \cref{fig:gaussians.lognormal}.
+In other words, $Y$ is approximately log-normal distributed, and hence, the fluctuations of $Y$ are of order $\sigma \sqrt{n}$ on a logarithmic scale, i.e.\ they manifest on the order of magnitude of $Y$.
 In contrast, the sum of $n$ independent standard Gaussian is a Gaussian with standard deviation $\sqrt{n}$, which is naturally measured on a linear scale.\\
 
 
@@ -1393,11 +1372,11 @@ We refer the reader to~\cite{Stojanac} for the proofs of the following statement
   \end{align}
 \end{lemma}
 
-Now we are ready to present the main result of this section, which is a power-log series expansion of the cdfs of the random variables defined in \cref{eq:gaussians.XYZ}
+Based on the identities in \cref{lem:gaussians.cdf_as_meijer}, we now develop a power-log series of the cdfs of $X$, $Y$, and $Z$ based on the theory of Fox H-functions.
 
 \begin{theorem}%
   \label{thm:CDF_as_mejier_g}
-  Denote by $X$, $Y$, and $Z$ the product of $N$ independent Gaussians, Gaussians squared, and their absolute value, respectively, as given by \cref{eq:gaussians.XYZ}.
+  Denote by $X$, $Y$, and $Z$ the product of $n$ independent Gaussians, Gaussians squared, and their absolute value, respectively, as given by \cref{eq:gaussians.XYZ}.
   Define the function
   \[
     \label{eq:gaussians.series}
@@ -1410,8 +1389,8 @@ Now we are ready to present the main result of this section, which is a power-lo
     \begin{split}
       H_{kj}
       :=&
-      \frac{{(-1)}^{nk}}{j!} \, \sum_{l=j}^{N-1} \roundbra{\frac{1}{2}+k}^{-(l-j+1)} \\
-      & \times \sum_{j_1+\ldots+j_n=n-1-l} \ \prod_{t=1}^N \curlybra{\sum_{\ell_1+\ldots+\ell_{k+1}=j_t} \frac{\Gamma^{(\ell_{k+1})}(1)}{\ell_{k+1}!} \curlybra{\prod_{i=1}^{k-1} \roundbra{k-i+1}^{-(\ell_i+1)}}}
+      \frac{(-1)^{nk}}{j!} \, \sum_{q=j}^{n-1} \roundbra{\frac{1}{2}+k}^{-(q-j+1)} \\
+      & \times \sum_{j_1+\ldots+j_n=n-1-q} \ \prod_{t=1}^n \curlybra{\sum_{\ell_1+\ldots+\ell_{k+1}=j_t} \frac{\Gamma^{(\ell_{k+1})}(1)}{\ell_{k+1}!} \curlybra{\prod_{i=1}^{k-1} \roundbra{k-i+1}^{-(\ell_i+1)}}}
     \end{split}
   \]
   Here, $j_i \in \Naturals_0$ and $\ell_i\in \Naturals$.
@@ -1451,16 +1430,16 @@ Now we are ready to present the main result of this section, which is a power-lo
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The proof this theorem is based on the theory of power-log series of Fox H-functions and can be found in~\cite{Stojanac}.
+The proof can be found in \cite{Stojanac}.
 Here, we are mostly interested in the power-log series expansion~\eqref{eq:gaussians.series}, because already its zeroth and first order truncation approximate the cdfs of $X$, $Y$, and $Z$ well as shown in \cref{fig:gaussians.cdfs}.
-Said figure depicts the true cdf as well as their series approximations from \cref{eq:gaussians.series.f} for $k=0$ and $k=1$.
-We can see that for all three random variables as well as for all values of $N$, the zeroth order approximation is good for small values of $t$, but worsens for increasing $t$.
+Said figure depicts the true cdf as well as their series approximations from \cref{eq:gaussians.series} for $k=0$ and $k=1$.
+We can see that for all three random variables as well as for all values of $n$, the zeroth order approximation is good for small values of $t$, but worsens for increasing $t$.
 The first order approximation behaves similarly, but the approximation error remains small enough so that it cannot be distinguished from the true cdf in the linear plots.
-Therefore, we show the logarithmic approximation error in \cref{fig:gaussians.cdfs.err}, where we see that the first-order approximation error remains below $10^{-2}$ for all shown cases.
-Note that the approximation also gets better for increasing $N$.
+Therefore, we show the logarithmic approximation error in \cref{fig:gaussians.cdf.err}, where we see that the first-order approximation error remains below $10^{-2}$ for all shown cases.
+Note that the approximation also gets better for increasing $n$.
 Therefore, we obtain the worst approximations for the generally better behaved smaller values of $n$.
 
-In conclusion, \cref{fig:gaussians.cdfs} shows that the power-log series expansion of the cdfs of the random variables $X$, $Y$, and $Z$ provides excellent approximation even for very low truncation order.
+In conclusion, \cref{fig:gaussians.cdfs} shows that the power-log series expansion of the cdfs of the random variables $X$, $Y$, and $Z$ provides excellent approximation the very truncation order $k=1$.
 The problem of proving such a statement rigorously remains, however.
 Furthermore, applying this approximation to prove the concentration properties from \cref{sub:als.ana} is also left for future work.\\
 
@@ -1492,11 +1471,11 @@ Furthermore, applying this approximation to prove the concentration properties f
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-For the remainder of this section, we investigate the distribution and scaling w.r.t.\ the parameters $N$ and $d$ of the crucial constant $\frac{\delB}{\delG}$ introduced in \cref{sub:als.ana}.
+For the remainder of this section, we investigate the distribution and scaling of the crucial constant $\frac{\delB}{\delG}$ introduced in \cref{sub:als.ana} w.r.t.\ the parameters $N$ and $d$ .
 Recall the main result of \cref{sub:als.ana}, the condition~\eqref{eq:ana.theta_condition}, which relates the quotient of the measurement constants $\frac\delB\delG$ to the error $\delI$ in the initialization.
-We are now going to investigate the scaling said fraction numerically for the Gaussian measurement ensemble.
-For this purpose, we sample the operators $B_j(v)$ and $G_j(v, v\perp)$ defined in \cref{eq:ana.conditions.B,eq:ana.conditions.G}, respectively for Gaussian measurements and for different values of $N$, $d$, and $m$.
-In the following, we use the following shorthand notation
+We are now going to investigate the scaling of said fraction numerically for the Gaussian measurement ensemble.
+For this purpose, we sample the operators $B_j(v)$ and $G_j(v, v^\perp)$ defined in \cref{eq:ana.conditions.B,eq:ana.conditions.G}, respectively for Gaussian measurements and for different values of $N$, $d$, and $m$.
+In the following, we use the shorthand notation
 \[
   \label{eq:numerics.zs}
   Z_\mathrm{B} = \lambda_\mathrm{min}\left(B_j(v)\right),
@@ -1505,9 +1484,9 @@ In the following, we use the following shorthand notation
 \]
 
 In \cref{fig:numerics.dists}, we show the empirical distribution of $\frac{Z_\mathrm{{B}}}{Z_\mathrm{G}}$ over 10000 realizations.
-Here, we chose the number of measurements according to $m = C N d$ for $C \in \{10, 100\}$, which is the same scaling as the information-theoretic lower bound $N d$.
+Here, we chose the number of measurements according to $m = C N d$ for $C \in \{10, 100\}$, which is the same asymptotical scaling as the information-theoretic lower bound $N d$.
 The most influential parameter on the empirical distribution of $\frac{Z_\mathrm{{B}}}{Z_\mathrm{G}}$ is the number of sites $N$.
-From \cref{fig:numerics.dists}, we see with increasing $N$, the distribution becomes more spread out.
+From \cref{fig:numerics.dists}, we see with that increasing $N$, the distribution becomes more spread out.
 With \cref{fig:gaussians.lognormal} in mind, this is to be expected as the strong fluctuations of $Z_\mathrm{B}$ and $Z_\mathrm{G}$ are due to their weighting factors, which are products of independent Gaussian.
 The dependence of the empirical distribution of $\frac{Z_\mathrm{{B}}}{Z_\mathrm{G}}$ on $d$ is weak for the depicted parameter range, as the histograms look very similar in each row.
 
@@ -1526,7 +1505,7 @@ To further investigate the scaling of the quantiles, we plot them as a function 
 In general, for the parameters under consideration, the quantiles either grow monotonically, or do so after attaining their minimum value for some value of $N$.
 In other words, the plots indicate that for fixed $d$ and $m > 10 N d$, the quantiles are bounded from below.
 Furthermore, comparing the plots with linear scaling for $C = 10$ and $C = 100$ shows that, as expected, increasing the constants also increases the quantiles throughout.
-We also get a larger lower bound for the other two quadratic sampling rates.
+We also get larger quantiles for the other two quadratic sampling rates.
 
 Finally, the dashed lines in \cref{fig:numerics.quantiles} show the lower bound from combining separate quantiles for $Z_\mathrm{B}$ and $Z_\mathrm{g}$ incoherently:
 Note that if $Z_\mathrm{B} \ge \delB$ with probability $1 - \frac{q}{2}$ and $Z_\mathrm{G} \le \delG$ with probability $1 - \frac{q}{2}$, then a union bound argument shows that
@@ -1566,6 +1545,7 @@ Let
 \]
 then we use a rank $r$ approximation of $\tilde X_\mathrm{init}$ as initialization, that is
 \[
+  \label{eq:numerics.Xinit}
   X_\mathrm{init} = \mathtt{compress}_r(\tilde X_\mathrm{init}).
 \]
 Here, $\mathtt{compress}_r$ denotes a suitable compression routine such as SVD-compression introduced in \cref{sub:mps.tensor_representation} yielding a rank $r$ approximation.
@@ -1580,14 +1560,16 @@ Therefore, for the Gaussian measurements introduced in \cref{sub:als.gaussian_me
   &= \Exp \left( \sum_l \Ketbra{A\ind{l}} \right) \\
   &= m \Exp\left( \otimes_{i=1}^N \Ketbra{a_i} \right) \\
   &= m \otimes_{i=1}^N \left( \Exp \Ketbra{a_i} \right) \\
-  &= m \1_d \otimes \cdots \1_d, lv
+  &= m \1_d \otimes \cdots \1_d,
 \end{align}
 and hence $\Exp \tilde X_\mathrm{init} = X$.
 In words, in expectation, the (uncompressed) initialization is exactly the tensor we are trying to reconstruct.
 Therefore, we expect that $\tilde X_\mathrm{init}$ is close to $X$ provided $m$ is \quotes{large enough}.
 The exact value of $m$ to make this precise depends on the fluctuations of $\AA$.
 
+Additionally, we also employ a left-right-left sweep as suggested by the analysis in \cref{sub:als.ana}.
 The \quotes{practical} ALS algorithm used throughout this section is summarized below:
+
 \begin{algorithm}[H]
   \caption{\label{alg:als_practical}Practical Alternating Least Squares (ALS) for $\ell_2$ minimization}
   \SetKwInOut{Input}{Input}
@@ -1614,17 +1596,21 @@ The \quotes{practical} ALS algorithm used throughout this section is summarized 
       \tcc{update the n-th local tensor inplace}
       $Y_n \gets \mathtt{left\_normalize}(\hat Z)$
     }
+
+    \For{$n \gets N$ \KwTo $1$}{
+      \For{$l \gets 1$ \KwTo $m$} {
+        \tcc{contract $A\ind{l}$ with all but n-th local tensors}
+        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$ \label{line:als_practical.partial_contraction}
+      }
+      $\hat Z \gets \argmin_Z \sum_l \left( b\ind{l} - B\ind{l}Z \right)^2$
+
+      \tcc{update the n-th local tensor inplace}
+      $Y_n \gets \mathtt{right\_normalize}(\hat Z)$
+    }
   }
 
   \Output{Y}
 \end{algorithm}
-
-
-
-
-
-
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1652,10 +1638,22 @@ The \quotes{practical} ALS algorithm used throughout this section is summarized 
   \end{subfigure}
   \caption{%
     \label{fig:numerics.recov}%
-    Recovery error of the ALS algorithm as
+    Recovery error of the ALS algorithm~\ref{alg:als_practical} as a function of the epoch $h$.
+    All pictures show the recovery of a fixed randomly chosen tensor $X \in \Reals^{d^N}$ for $d = 4$ and $N = 8$.
+    Each line corresponds to a different set of measurements from the Gaussian ensemble.
+    In \cref{fig:numerics.recov.rank1_5percent}, we chose $X$ to be of rank 1, whereas \cref{fig:numerics.recov.rank10_10percent,fig:numerics.recov.rank10_20percent} show the reconstruction of a rank 10 tensor.
+    For initialization, we used the spectral initialization~\eqref{eq:numerics.Xinit}.
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In \cref{fig:numerics.recov}, we show the reconstruction error of \cref{alg:als_practical} as a function of the epoch $h$ for different ranks of the target $X$ as well as different sampling rates $m$.
+The target tensor was chosen randomly and is kept fixed in each figure.
+Each line corresponds to a different set of randomly chosen measurement tensors $A\ind{l}$ from the Gaussian ensemble.
+
+\Cref{fig:numerics.recov.rank1_5percent} depicts the reconstruction error for the recovery of a rank 1 tensor $X$ from $m = 0.05 d^N$ measurements.
+The convergence of the estimate to the true value is very fast as about five sweeps are enough for most runs to reduce the error to a value indistinguishable from zero.
+However, note that one line p
 
 
 
