@@ -296,7 +296,7 @@ def recovery_plot(datafile):
     x = np.arange(len(recoveries[0])) + 1
 
     for X_sharp in recoveries:
-        ax.plot(x, [mp.normdist(X, X_s) for X_s in X_sharp])
+        ax.semilogy(x, [mp.normdist(X, X_s) for X_s in X_sharp])
 
     outfile = 'tensor_' + str(Path(datafile).stem) + '.pdf'
     ax.set_xlabel(r'Epoch $h$')

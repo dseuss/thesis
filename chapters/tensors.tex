@@ -1580,15 +1580,14 @@ The \quotes{practical} ALS algorithm used throughout this section is summarized 
 
   \tcc{Spectral initialization}
   $Y \gets \mathtt{compress}_r(\sum_{l=1}^m b\ind{l} A\ind{l})$ \label{line:als_practical.init}
+  $\mathtt{right\_canonicalize}(Y)$
 
   \For{$h \gets 1$ \KwTo $H$}{
-    \tcc{right-normalize all local tensors}
-    $\mathtt{right\_canonicalize}(Y)$
 
     \For{$n \gets 1$ \KwTo $N$}{
       \For{$l \gets 1$ \KwTo $m$} {
         \tcc{contract $A\ind{l}$ with all but n-th local tensors}
-        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$ 
+        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$
       }
       $\hat Z \gets \argmin_Z \sum_l \left( b\ind{l} - B\ind{l}Z \right)^2$
 
@@ -1599,7 +1598,7 @@ The \quotes{practical} ALS algorithm used throughout this section is summarized 
     \For{$n \gets N$ \KwTo $1$}{
       \For{$l \gets 1$ \KwTo $m$} {
         \tcc{contract $A\ind{l}$ with all but n-th local tensors}
-        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$ 
+        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$
       }
       $\hat Z \gets \argmin_Z \sum_l \left( b\ind{l} - B\ind{l}Z \right)^2$
 
@@ -1651,8 +1650,17 @@ The target tensor was chosen randomly and is kept fixed in each figure.
 Each line corresponds to a different set of randomly chosen measurement tensors $A\ind{l}$ from the Gaussian ensemble.
 
 \Cref{fig:numerics.recov.rank1_5percent} depicts the reconstruction error for the recovery of a rank 1 tensor $X$ from $m = 0.05 d^N$ measurements.
-The convergence of the estimate to the true value is very fast as about five sweeps are enough for most runs to reduce the error to a value indistinguishable from zero.
-However, note that one line p
+The convergence of the estimate to the true value is very fast as about six sweeps are enough for most runs to reduce the error below $10^{-2}$.
+Since the reconstruction error decays approximately linear on a semi-logarithmic scale, the convergence in these examples is exponentially fast.
+We see a slower convergence of the reconstruction error for a rank-10 tensor in \cref{fig:numerics.recov.rank10_10percent}.
+This is expected as the number of parameters for a rank-$r$ MPS scale as $\Order(N d r^2)$, and hence, more measurements are necessary to recover such a tensor successfully.
+By doubling $mm$ in \cref{fig:numerics.recov.rank10_20percent}, we are able to speed up convergence and obtain a similar speed as for the rank-1 case.
+Note that the reconstruction error curves for the rank-10 tensor are more uniform for different measurement tensors.
+This is likely due to correlations between local tensors for non-product tensors.
+
+In all the examples shown, we are able to recover the target tensor with only few iterations from fewer measurements than $d^N$.
+By exploiting the low-rank structure, we are not only able to reduce the sample complexity, but also speed up the computation.\\
+
 
 
 
