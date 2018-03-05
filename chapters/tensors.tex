@@ -1587,7 +1587,7 @@ The \quotes{practical} ALS algorithm used throughout this section is summarized 
     \For{$n \gets 1$ \KwTo $N$}{
       \For{$l \gets 1$ \KwTo $m$} {
         \tcc{contract $A\ind{l}$ with all but n-th local tensors}
-        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$
+        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$ \label{line:als_practical.B1}
       }
       $\hat Z \gets \argmin_Z \sum_l \left( b\ind{l} - B\ind{l}Z \right)^2$
 
@@ -1598,7 +1598,7 @@ The \quotes{practical} ALS algorithm used throughout this section is summarized 
     \For{$n \gets N$ \KwTo $1$}{
       \For{$l \gets 1$ \KwTo $m$} {
         \tcc{contract $A\ind{l}$ with all but n-th local tensors}
-        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$
+        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$ \label{line:als_practical.B2}
       }
       $\hat Z \gets \argmin_Z \sum_l \left( b\ind{l} - B\ind{l}Z \right)^2$
 
@@ -1663,9 +1663,48 @@ By exploiting the low-rank structure, we are not only able to reduce the sample 
 
 
 
+For the remainder of this section, we comment on implementation details, which enable scaling \cref{alg:als_practical} even to large instances.
+The first bottleneck in a straight-forward implementation of the ALS algorithm is the initialization in line~\ref{line:als_practical.init} of \cref{alg:als_practical}.
+A na\"ive implementation in \mpnum would read
+\begin{pythoncode}
+  A = [mp.random_mpa(N, d, rank=1) for _ in range(m)]
+  b = [mp.inner(a, X) for a in A]
+  X_init, _ = mp.sumup(A, weights=b).compression(rank=r)
+\end{pythoncode}
+The first two lines are simply generating the random measurement tensors \texttt{A} and the corresponding measurement values \texttt{b}.
+Here, \texttt{X} is the original tensor of rank $r$, we are trying to recover.
+The third line first computes $\tilde X_\mathrm{init}$ from \cref{eq:numerics.S} and then compresses it to the desired rank.
+Note that as a sum of $m$ rank-1 operators, $\tilde X_\mathrm{init}$ is of rank $m$.
+The main bottleneck here is bringing $\tilde X_\mathrm{init}$ to canonical form as required for the compression:
+A general-purpose canonicalization as implemented in \mpnum has to compute matrix products of $m d \times m$ and $m \times d m$ matrices in this case.
+Furthermore, the subsequent compression is based on SVDs of similar sized matrices.
 
+In order to speed this up, we implemented a joint sum-and-compression routine in \mpnum, which benefits from the explicit representation of sums of rank-1 tensors.
+The corresponding local tensors are highly sparse, and up to a constant factor, already normalized.
+% We can therefore compute and compress the local tensors of \texttt{X_init} one at a time while keeping the required memory linear in $m$.
+% Finally, we use the randomized SVD from~\cite{Halko} to only compute the $r$ largest singular values in each step, which speeds up the compression even further.
+The last line of the example above then translates to
+\begin{pythoncode}
+  X_init = mp.special.sumup(A, rank=r, weights=b)
+\end{pythoncode}
+which provides a ?? speedup for the computations in \cref{fig:numerics.recov.rank10_20percent}.
 
+% iteration: dynamic programming & GPUs
+For the iteration steps of \cref{alg:als_practical}, the main bottleneck for large instances is the computation of the matrices $B$ in the lines~\ref{line:als_practical.B1} and~\ref{line:als_practical.B2}.
+These can be speed up in two different ways:
+First, not all contractions in \cref{eq:als.minimization_matrix} have to be recomputed in every step.
+In a left-sweep, the contraction at the $i$-th site are reused $i$ times until said site is update.
+Furthermore, once the site is updated, its contraction is required for the following $N - i - 1$ updates.
+Therefore, by using dynamic programming techniques and caching intermediate computation, which are reused later, we are able to speed up the computation of the $B$ significantly.
 
+Second, we note that the computation of each row $B\ind{l}$ of $B$ is independent from all the other rows, and therefore, can be parallelized on shared-memory architectures.
+In particular, since this is a typical example of a same-instruction-multiple-data parallelism (SIMD), it is suitable for implementation on modern GPUs.
+The latter are especially suited for problems with number of independent SIMD computations much larger than the number of GPU cores, and which do not require a lot of data copying between the CPU and the GPU.
+Both points apply in our case:
+For the rather small example of \cref{fig:numerics.recov.rank10_20percent}, we already have $m = 13107$, which is significantly larger than $3584$ -- the number of cores of the state-of-art NVIDIA Pascal P100 GPU accelerator.
+Since each micro-iteration only requires updating the previous local tensor of size $r^2 d$ on the GPU and downloading the matrix $B$ of size $m \times r^2d$ to the CPU, the faster computation of $B$ on the GPU amortizes already for medium-sized instances and provides speedups on the order of $10\times$ even on older GPUs.
+
+We provide optimized implementations of the ALS algorithm~\ref{alg:als_practical} for both CPU and GPU at \url{https://github.com/dseuss/pycsalgs}.
 
 
 
