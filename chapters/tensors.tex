@@ -5,13 +5,12 @@
 
 
 The theoretical and numerical study of many-body quantum systems is severely hindered by the \emph{curse of dimensionality}, which in this context refers to the exponential growth of the Hilbert space of quantum states w.r.t.\ the number of constituents.
-However, many realistic systems do not exhibit this pathological complexity and can be described efficiently in terms of \emph{tensor networks}~\cite{}.
-An especially simple but important special case of tensor networks is known under names such as \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} or \emph{matrix-product states} (MPS)~\cite{Garcia_2006_Matrix,Verstraete_2008_Matrix,Orus_2014_Practical}.
-\todo{Check this!}
+However, many realistic systems do not exhibit this pathological complexity and can be described efficiently in terms of \emph{tensor networks}~\cite{Bridgeman_2017_HandWaving,Orus_2014_Practical}.
+An especially simple but important special case of tensor networks is known under names such as \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} or \emph{matrix-product states} (MPS)~\cite{Garcia_2006_Matrix,Verstraete_2008_Matrix}.
 Examples for quantum states that can be efficiently described as MPS include W-, GHZ-, and cluster states.
-More generally, low energy states of one-dimensional gapped Hamiltonians with local interactions have an efficient MPS description and vice versa~\cite{}.
+More generally, low energy states of one-dimensional gapped Hamiltonians with local interactions have an efficient MPS description and vice versa~\cite{Hastings_2006_Solving,Verstraete_2006_Matrix,Eisert_2010_Colloquium,Arad_2013_Area,Arad_2016_Rigorous}.
 Here, \quotes{efficient description} refers to the fact that the number of parameters required to describe such a state scales polynomially in the number of subsystem.
-The idea of low-complexity tensor representations have also received attention in the context of machine learning~\cite{Novikov_2015_Tensorizing,Tai_2015_Convolutional,Yang_2016_Deep,Stoudenmire_2016_Supervised,Chen_2017_Parallelized,Bengua}.
+The idea of low-complexity tensor representations have also received attention in the context of machine learning~\cite{Novikov_2015_Tensorizing,Tai_2015_Convolutional,Yang_2016_Deep,Stoudenmire_2016_Supervised,Chen_2017_Parallelized,Bengua_2015_Optimal,Bengua_2016_Matrix}.
 
 The question we are attempting to answer in this chapter is whether such MPS can be efficiently reconstructed from few linear measurements\footnote{%
   Note that since we assume a linear measurement model, the results of this section do not apply to the problem of estimating pure quantum states.
@@ -325,7 +324,7 @@ This warrants the following definition.
 \end{definition}
 
 Note that by~\cite[Thm.\ 2.2]{Oseledets_2011_TensorTrain}, the definition of MPS-rank in \cref{def:mps.rank} agrees with the usual definition using matrications of $X$, and hence, is well defined.
-In contrast to the matrix case, there are multiple inequivalent definitions rank for tensors~\cite{???}, which arise from different tensor representations.
+In contrast to the matrix case, there are multiple inequivalent definitions rank for tensors~\cite{Kolda_2009_Tensor}, which arise from different tensor representations.
 Throughout this work, we focus on the MPS-representation and the corresponding notion of rank due to its advantages outlined in \cref{sub:mps.applications}
 Therefore, we simply call the MPS-rank \quotes{rank}.\\
 
@@ -497,7 +496,7 @@ States of the form~\eqref{eq:mps.state_parametrization} are appropriately referr
 For higher dimensional regular latices, one can generalize the MPS representation.
 The resulting efficient tensor network representation is referred to as \emph{projected entangled pair states} (PEPS).
 However, a statement analogous to the one above does not hold:
-For dimensions $D > 1$, not every state satisfying an area law can be efficiently represented as a PEPS~\cite{}
+For dimensions $D > 1$, not every state satisfying an area law can be efficiently represented as a PEPS~\cite{Ge_2016_Area}
 .\\
 
 
@@ -661,7 +660,7 @@ They consider a binary support vector machine classifier with a decision functio
 Here, $X$ is the input vector and $W$ is the model vector.
 The goal is to determine $W$ in such a way that $f(X) > 0$ if $X$ is in the \quotes{yes} class and $f(X) < 0$ otherwise.
 By using a MPS representation for $W$ and $X$, they are able to efficiently learn such a model even in high-dimensional settings.
-A similar approach can also be applied to learning polynomial classifiers~\cite{Chen_2017_Parallelized} as well as to image compression and classification~\cite{Bengua}.
+A similar approach can also be applied to learning polynomial classifiers~\cite{Chen_2017_Parallelized} as well as to image compression and classification~\cite{Bengua_2015_Optimal,Bengua_2016_Matrix}.
 
 
 
@@ -669,11 +668,11 @@ A similar approach can also be applied to learning polynomial classifiers~\cite{
 \section{The Python Library mpnum}%
 \label{sec:tensors.mpnum}
 
-The Python library \mpnum~\cite{} was developed during this work to simplify the process of prototyping numerical algorithms with MPS.
+The Python library \mpnum~\cite{Suess_2017_Mpnum} was developed during this work to simplify the process of prototyping numerical algorithms with MPS.
 Its main design principles are flexibility, user-friendliness, and expandability.
 We placed special emphasis on making the API of \mpnum as accessible as possible for researchers with little background in programming:
-Compared to the existing TT-toolboxes for Matlab and Python~\cite{}, we used object-oriented design principles to make the syntax as close to mathematical notation as possible and to hide the details of the MPS representation for the user.
-We were partly inspired by the fantastic ITensor library~\cite{} for C++, but preferred an implementation in pure Python due to its ease of use and widespread use in science.
+Compared to the existing TT-toolboxes for Matlab and Python~\cite{Oseledets_2018_Git,Oseledets_2018_Ttpy}, we used object-oriented design principles to make the syntax as close to mathematical notation as possible and to hide the details of the MPS representation for the user.
+We were partly inspired by the fantastic ITensor library~\cite{Stoudenmire_2018_Itensor} for C++, but preferred an implementation in pure Python due to its ease of use and widespread use in science.
 
 
 \input{notebooks/Introduction}
@@ -777,9 +776,9 @@ On the on hand, there is tensor completion, which is highly relevant for practic
 On the other hand, the authors in~\cite{Rauhut_2014_Tensor} prove reconstruction with near-optimal sample complexity, but their full Gaussian measurements are computationally very demanding.
 
 This situation can be understood better by comparing to the history of low-rank matrix recovery and compressive sensing -- the related problem of reconstructing sparse vectors from few measurements.
-The first rigorous on compressed sensing from Gaussian measurements were due to Donoho~\cite{For_most} in 2006.
-In the same year, Candes and Tao -- a Fields medalist -- proved guarantees for orthonormal basis vector measurements~\cite{Stable_signal}, which can be considered as the analogue of matrix completion for vectors.
-The same authors also proved the first matrix recovery guarantees for Gaussian sampling matrices~\cite{} and for matrix completion~\cite{}.
+The first rigorous on compressed sensing from Gaussian measurements were due to Donoho~\cite{Donoho_2006_For} in 2006.
+In the same year, Candes, Romberg, and Tao -- a Fields medalist -- proved guarantees for orthonormal basis vector measurements~\cite{Candes_2006_Stable}, which can be considered as the analogue of matrix completion for vectors.
+Candes and Tao also proved the first matrix recovery guarantees for matrix completion~\cite{Candes_2010_Power}, while the first guarantees for Gaussian matrices were proven in~\cite{Recht_2010_Guaranteed}.
 Here, we are going to study a measurement ensemble for tensors that combines the advantages of both approaches.
 We take the measurement tensors to be of the form
 \[
@@ -787,7 +786,7 @@ We take the measurement tensors to be of the form
   \label{eq:als.rank1_measurements}
 \]
 with local tensors randomly chosen from a standard multivariate normal distribution $a\ind{l}_k \sim \Normal(0, \1_d)$.
-In contrast to the fully Gaussian model from~\cite{}, the measurement tensors~\eqref{eq:als.rank1_measurements} can be represented efficiently as MPS of unit rank.
+In contrast to the fully Gaussian model from~\cite{Rauhut_2014_Tensor,Rauhut_2016_Low}, the measurement tensors~\eqref{eq:als.rank1_measurements} can be represented efficiently as MPS of unit rank.
 And, unlike the tensor completion problem, history does not dictate that its solution requires at least one Fields medalist.\\
 
 
@@ -819,7 +818,7 @@ The idea to recover $X$ is simply to find the tensor $Y$ of desired rank that mi
 \]
 However, this problem is generally hard to solve directly since the space of MPS of given rank is non-convex.
 \todo{Fill in order!}
-Nevertheless, in the case of $M=\Order(???)$ fully Gaussian measurements, a projected gradient descent on~\eqref{eq:als.empirical_l2} is able to recover $X$~\cite{Rauhut_2014_Tensor}.
+Nevertheless, in the case of $M=\Order(???)$ fully Gaussian measurements, a projected gradient descent on~\eqref{eq:als.empirical_l2} is able to recover $X$~\cite{Rauhut_2014_Tensor,Rauhut_2016_Low}.
 However, the same proof techniques fail in the case of structured measurements such as the ones defined in \cref{eq:als.rank1_measurements} as we show in \cref{sub:tensors.trip}.
 
 Instead of updating all local tensor simultaneously as in the gradient descent, we iteratively optimize the empirical error over a single local tensor at a time.
@@ -888,7 +887,7 @@ $B \in \Reals^{m \times (dr^2)}$ are defined in line~\ref{line:als.partial_contr
   \label{eq:als.minimization_matrix}
 \]
 Therefore, the solution $\hat Z$ of \cref{eq:als.llsq} is a $d r^2$ dimensional vector, which can be reshaped to the correct form.
-If we replace the exact local minimization in \cref{eq:als.llsq} by a finite gradient descent step, we obtain a standard nonlinear block Gauss–Seidel iteration~\cite{Schechter}.
+If we replace the exact local minimization in \cref{eq:als.llsq} by a finite gradient descent step, we obtain a standard nonlinear block Gauss–Seidel iteration~\cite{Schechter_1962_Iteration}.
 
 Finally, note that the sample splitting at the beginning is necessary for the analysis of the algorithm below as it requires independent updates for each micro-iteration.
 Therefore, we use a fresh batch of measurement tensors and measurement values in each step, which results in a total number of $M = HNm$ measurements.
@@ -901,13 +900,13 @@ However, numerical experiments in \cref{sub:als.numerics} show that this resampl
 \label{sub:als.ana}
 
 Alternating algorithms such as ALS updating only a few local tensors at a time are a very common approximation technique for circumventing intractabilities when dealing with MPS.
-Well known examples include variational compression and DMRG~\cite{Schollwoeck} --  an iterative algorithm for approximating the smallest eigenvalue of a hermitian MPO.
-Local convergence of these alternating algorithms has been proven for a large class of problems in~\cite{Rohwedder}.
+Well known examples include variational compression and DMRG~\cite{Schollwoeck_2011_DensityMatrix} --  an iterative algorithm for approximating the smallest eigenvalue of a hermitian MPO.
+Local convergence of these alternating algorithms has been proven for a large class of problems in~\cite{Rohwedder_2013_On}.
 These result show that alternating minimization algorithms of many cost functions converge to a local minimum.
 However, it remains to be shown that the minimizer of the empirical $\ell_2$ error~\eqref{eq:als.empirical_l2} with given rank is equal to $X$, i.e.\ that the given measurements suffice to identify $X$.
 
 Here, we attack the problem directly by analysing the micro-iterations of \cref{alg:als} directly.
-For this purpose, we generalize the ideas from~\cite{Zhong} to the tensor case.
+For this purpose, we generalize the ideas from~\cite{Zhong_2015_Efficient} to the tensor case.
 For the sake of simplicity, we only treat the case of a product signal tensor, i.e.\ $X$ is assumed to have rank one.
 Furthermore, we also assume w.l.o.g.\ that $X$ is normalized in Frobenius norm, i.e.\ $\norm{X}_2 = 1$.
 Then, $X$ can be written as a tensor product of $N$ normalized vectors $x_i \in \Reals^d$ and we have
@@ -923,7 +922,7 @@ In the case of rank-1 tensor reconstruction, this metric between the local tenso
   \label{eq:ana.infidelity}
 \]
 It is known as \emph{infidelity} if $x, y \in \Complex^d$ represent pure quantum states~\cite{Nielsen_2010_Quantum}.
-\Cref{eq:ana.infidelity} is also the one-dimensional special case of the \emph{principle angle distance} of subspaces~\cite{Golub}, which is the appropriate distance measure for higher-rank generalizations of the results presented here.
+\Cref{eq:ana.infidelity} is also the one-dimensional special case of the \emph{principle angle distance} of subspaces~\cite{Golub_2013_Matrix}, which is the appropriate distance measure for higher-rank generalizations of the results presented here.
 In the first lemma, we relate the \quotes{global} distance of two tensors, which is measured in Frobenius norm, to the distances of the local tensors measured by~\eqref{eq:ana.infidelity}.
 \begin{lemma}%
   \label{lem:ana.local_global_closeness}
@@ -1284,8 +1283,8 @@ with
 being a product of $2(N - 1)$ independent standard Gaussians.
 Therefore, the problem of proving the concentration properties \cref{eq:ana.conditions.lmin,eq:ana.conditions.lmax} requires a better understanding of the distribution of products of Gaussian random variables.
 
-In this section we are going to summarize the results from~\cite{Stojanac,Stojanac}, where we compute a power-log series expansion for the cumulative distribution function of products of independent standard Gaussians as well their absolute values and squares.
-As the main work in these publications was done by Ž.\ Stojanac, we only sketch the results here.
+In this section we are going to summarize the results from~\cite{}, where we compute a power-log series expansion for the cumulative distribution function of products of independent standard Gaussians as well their absolute values and squares.
+As the main work in these publications was done by the first author, we only sketch the results here.
 In numerical simulations, we also show that truncations of said expansions at the first-order provide very close approximations, and therefore, may be used to derive strong concentration properties for said random variables.
 However, since at this time, we do not have explicit error bounds for these truncations, we investigate the concentration properties of the operators~\eqref{eq:als.gaussian.B} and~\eqref{eq:als.gaussian.G} numerically at the end of this section.\\
 
@@ -1340,7 +1339,7 @@ In contrast, the sum of $n$ independent standard Gaussian is a Gaussian with sta
 
 From the discussion above it becomes clear that standard tail bounds for sums of independent random variables are not suitable to bound $\lambda_\mathrm{min}(B_j(v))$ efficiently.
 For this purpose, a more thorough understanding of the distribution of the product of squares of $n$ independent Gaussian random variables is necessary.
-This was the main motivation behind the publications~\cite{Stojanac,Stojanac}.
+This was the main motivation behind the publications~\cite{Stojanac_2017_Ona,Stojanac_2017_On}.
 In this work, we derive a power-log series expansion of the cumulative density functions (cdf) of the following three random variables:
 \[
   \label{eq:gaussians.XYZ}
@@ -1352,7 +1351,7 @@ based on the theory of special functions.
 More precisely, we show that the cdfs of said random variables can be expressed in terms of \emph{Meijer G-functions}.
 Meijer G-functions are a family of special functions in one variable $x$ that is closed under several operations including $x \mapsto -x$, $x \mapsto 1/x$, multiplication by $x^p$, differentiation, and integration.
 For the sake of completeness, we provide the definition of Meijer G-functions and further references in \cref{sub:tensors.meijer}.
-We refer the reader to~\cite{Stojanac} for the proofs of the following statements.
+We refer the reader to~\cite{Stojanac_2017_On} for the proofs of the following statements.
 
 \begin{lemma}%
   \label{lem:gaussians.cdf_as_meijer}
@@ -1430,7 +1429,7 @@ Based on the identities in \cref{lem:gaussians.cdf_as_meijer}, we now develop a 
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The proof can be found in \cite{Stojanac}.
+The proof can be found in \cite{Stojanac_2017_On}.
 Here, we are mostly interested in the power-log series expansion~\eqref{eq:gaussians.series}, because already its zeroth and first order truncation approximate the cdfs of $X$, $Y$, and $Z$ well as shown in \cref{fig:gaussians.cdfs}.
 Said figure depicts the true cdf as well as their series approximations from \cref{eq:gaussians.series} for $k=0$ and $k=1$.
 We can see that for all three random variables as well as for all values of $n$, the zeroth order approximation is good for small values of $t$, but worsens for increasing $t$.
@@ -1589,7 +1588,7 @@ The \quotes{practical} ALS algorithm used throughout this section is summarized 
     \For{$n \gets 1$ \KwTo $N$}{
       \For{$l \gets 1$ \KwTo $m$} {
         \tcc{contract $A\ind{l}$ with all but n-th local tensors}
-        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$ \label{line:als_practical.partial_contraction}
+        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$ 
       }
       $\hat Z \gets \argmin_Z \sum_l \left( b\ind{l} - B\ind{l}Z \right)^2$
 
@@ -1600,7 +1599,7 @@ The \quotes{practical} ALS algorithm used throughout this section is summarized 
     \For{$n \gets N$ \KwTo $1$}{
       \For{$l \gets 1$ \KwTo $m$} {
         \tcc{contract $A\ind{l}$ with all but n-th local tensors}
-        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$ \label{line:als_practical.partial_contraction}
+        $B\ind{l} \gets \mathtt{contract}(A\ind{l}, Y_{[N] \backslash n})$ 
       }
       $\hat Z \gets \argmin_Z \sum_l \left( b\ind{l} - B\ind{l}Z \right)^2$
 
