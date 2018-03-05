@@ -1,5 +1,7 @@
  % -*- root: thesis.tex -*-
 \usepackage{amsmath,amsbsy,amssymb,amsthm}
+\usepackage[nameinlink,capitalize]{cleveref}
+
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{corollary}[theorem]{Corollary}
@@ -10,6 +12,9 @@
 \newtheorem{protocol}[theorem]{Protocol}
 \numberwithin{theorem}{chapter}
 
+\crefname{algocf}{Alg.}{Algs.}
+\Crefname{algocf}{Algorithm}{Algorithms}
+
 \usepackage{braket}
 \usepackage{bbm}
 
@@ -17,9 +22,6 @@
 \usepackage{color}
 \usetikzlibrary{calc,fadings,backgrounds,shapes.geometric,decorations.pathreplacing,positioning,fit,patterns,chains}
 
-\usepackage[nameinlink,capitalize]{cleveref}
-\crefname{algocf}{Alg.}{Algs.}
-\Crefname{algocf}{Algorithm}{Algorithms}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                             Text Macros                             %
