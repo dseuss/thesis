@@ -4,11 +4,70 @@
 \label{chap:introduction}
 
 
-% physics -> empirical science -> knowledge only thrrough observation/experiments
-% quantitative outcomes can fluctuate from one meas. to another due to imperfections (uncontrollable degrees of freedom in the system, measurement errors, etc.)
-% additionally, measurement outcomes in quantum mechanics inherently random. 
-% necessitates
+Physics as an inherently empirical science relies on experimental data to single out theories that are compatible with our observations~\cite{Popper}.
+It is therefore a fundamental problem to transform data into answers to questions posed by the physicist.
+A large fraction of experimental problems can be phrased in terms of parametric estimation:
+Given a mathematical model that relates the parameters of interest to observable outcomes, estimate the parameters that fit the data \quotes{best}.
+In other words, parameter estimation is an inverse problem for a fixed model of the system.
+
+Two crucial aspects of estimation problems in general are constraints and complexity.
+The former refers to the fact that for many settings, not all parameter values correspond to valid models.
+One typical example for constraints are mathematical facts, e.g.\ that the standard deviation of any random variable has to be non-negative.
+Others include assumptions or constraints of the physical model such as the condition that a valid density matrix of a physical system is positive semi-definite.
+Note that not all constraints need to be hard constraints as the examples above.
+Soft constraints can be used to promote desired properties of the estimate or the penalize values due to prior knowledge.
+
+The notion of complexity generally refers to the amount of resources required to solve inference problems as the size of the underlying models grows.
+On the one hand, this refers to the amount of experimental resources required, which is often phrased in terms of sample complexity, i.e.\ the number of measurements required.
+But also other measures such as the time required to perform a given experiment are possible if the necessary information can be quantified.
+On the other hand, we are interested in the amount of computational resources required to extract the desired information from the available data.
+The latter are most often quantified in terms of runtime of the inference computation.
+Note that the these two notions of complexity can be strongly related:
+If an experiment -- such as the ones performed at the LHC~\cite{} -- truly deserves the ubiquitous \quotes{Big Data} label, then an enormous amount of computational resources is necessary to perform even simple computations on the whole data.
+Additionally, inference problems can also be inherently hard to solve.\\
 
 
 
-% 
+In this work, we are interested in the interaction of constraints and complexity.
+The main motivation stems from recent progress in quantum technologies in general and quantum computing in particular:
+Many established techniques for characterization -- i.e.\ inferring a complete description of a system from experimental data -- work well for small systems with only a few qubits, which were prevalent in the past.
+However, many of these approaches do not scale to larger systems as they require exponentially large amounts of resources or yield meaningless results for feasible means.
+\todo{Hmm...}
+With the recent announcements of quantum computers with up to 72-qubits~\cite{Sciencenews}, it becomes clear that new techniques for characterization need to be developed.
+One way to go forward is to exploit constraints of or to impose additional assumptions on the model to reduce the amount of resources necessary or to improve estimates.
+To better understand the interplay of constraints and complexity, we investigate three estimation problems with applications to large-scale quantum experiments in this work.
+
+In \cref{chap:error}, we examine the problem of uncertainty quantification in quantum state estimation, i.e.\ estimating the density matrix $\rho$ of a physical system from measurements.
+Since all outcomes of measurements on a quantum system are inherently random, one should not only report the final result estimate, but also answer the question whether the result is statistically reliable or simply arose due to chance.
+For this purpose, we can use the notion of \quotes{error bars} or \quotes{error regions} from statistical inference.
+We investigate optimal error regions that are easy to compute in an unconstraint model.
+However, we show that taking into account the physical constraints on $\rho$, i.e.\ positive semi-definiteness, renders the problem of computing optimal error regions intractable.
+We also show that there are settings, where exactly those physical constraints drastically improve the power of the regions, and therefore, are necessary for optimal error regions.
+In conclusion, we show that taking the physical constraints on $\rho$ is essential to obtain optimal error regions, but doing so in an optimal way poses an intractable computational problem.
+
+Our second main result of this thesis is concerned with characterizing linear optical circuits, which have been proposed as one possible architecture for quantum computing~\cite{}.
+By measuring the output of such a device for different inputs, the problem is to reconstruct the \emph{transfer matrix} of the device.
+Here, the main challenge is that the standard measurement devices in optics -- single photon detectors and photo diodes -- are insensitive to the phases of the output.
+Therefore, we need to exploit interference between different modes of the device to gain information on the complex phases.
+This raises the question how to choose the inputs in an optimal way to reduce the total number of measurements required and how to reconstruct the transfer matrix in an efficient way.
+In \cref{chap:phaselift}, we propose a characterization method that is asymptotically optimal w.r.t.\ the sample complexity, comes with a rigorous proof of convergence, and is robust to noise.
+\todo{Hmmm.... 2}
+The suggested method adapts ideas from low-rank matrix recovery and leverages an exact mathematical constraint on the signal to be recovered to derive a reconstruction algorithm that is efficient w.r.t.\ both sample and computational complexity.
+
+% work in progress, but we provide evidence that ineed the ALS algorithm is able to efficienlty recover any such low-rank tensor by exploitng the low-rank constraint
+% therefore, in contrast to cha1, where constraint made problem harder,  here constraint is essential for efficient solution
+
+\Cref{chap:tensors} is dedicated to the problem of efficiently reconstructing low-rank tensors from linear measurements.
+We consider tensors $X \in \Reals^{d^N}$, where $d$ is the local dimension and $N$ the order of the tensor.
+Without any additional structure, reconstructing $X$ from measurements of the form  $\braket{A, X}$ for measurement tensors $A$ requires at least $d^N$ such overlaps as each component of $X$ is independent from the other.
+Therefore, the sample complexity scales exponentially in $N$ and the problem becomes infeasible already for moderate values of $N$.
+Furthermore, any reconstruction algorithm of an arbitrary tensor requires an exponentially long runtime as simply outputting the result takes this amount of time.
+However, many practically relevant tensors have additional structure that can be used to render reconstruction efficient.
+Here, we consider low-MPS rank tensors, which are a generalization of low-rank matrices and constitute a variational class of tenors that have an efficient description in terms of the matrix product state (MPS) representation.
+More precisely, the number of parameters required to express a tensor of fixed MPS rank in said representation scales linearly in $N$.
+The question we are trying to answer is whether such low-MPS rank tensors can be recovered from $m$ linear measurements such that $m$ only depends on the intrinsic complexity, i.e.\ scales at most polynomially in $N$, and not on the dimension of the full space.
+Additionally, we want reconstruction algorithm to be efficient.
+For this purpose, it is necessary to consider measurement tensors $A$ that also have an efficient representation, e.g.\ in the MPS tensor format.
+We are able to derive stringent conditions for successful recovery via an alternating-minimization algorithm and numerically show that Gaussian random product tensors are a viable candidate for the measurement tensors.
+This is in stark contrast to \cref{chap:error}, where imposing constraints on the parameter to be inferred rendered the problem computationally intractable.
+Here, the problem of tensor recovery only becomes tractable with the additional low-rank constraint.
