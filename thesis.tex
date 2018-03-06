@@ -49,10 +49,10 @@
 
 % if \makefull is defined (e.g. by commandline argument, include everything)
 \ifdefined\makefull\else
-  % \includeonly{intro,chapters/conclusion.tex}
+  \includeonly{chapters/introduction,chapters/conclusion}
   % \includeonly{chapters/error_region,chapters/error_region_appendix}
   % \includeonly{chapters/phaselift,chapters/phaselift_appendix}
-  \includeonly{chapters/tensors,chapters/tensors_appendix}
+  % \includeonly{chapters/tensors,chapters/tensors_appendix}
 \fi
 
 \input{macros}
@@ -73,6 +73,10 @@
 
 \frontmatter
 \maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \tableofcontents
 \newpage
 \makeatletter
@@ -101,4 +105,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printbibliography[heading=bibintoc]
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\chapter*{Erklärung}
+
+Ich versichere, dass ich die von mir vorgelegte Dissertation selbständig angefertigt, die benutzten Quellen und Hilfsmittel vollständig angegeben und die Stellen der Arbeit -- einschließlich Tabellen, Karten und Abbildungen --, die anderen Werken im Wortlaut oder dem Sinn nach entnommen sind, in jedem Einzelfall als Entlehnung kenntlich gemacht habe; dass diese Dissertation noch keiner anderen Fakultät oder Universität zur Prüfung vorgelegen hat; dass sie -- abgesehen von unten angegebenen Teilpublikationen -- noch nicht veröffentlicht worden ist, sowie, dass ich eine solche Veröffentlichung vor Abschluss des Promotionsverfahrens nicht vornehmen werde. 
+Die Bestimmungen der Promotionsordnung sind mir bekannt. 
+Die von mir vorgelegte Dissertation ist von Prof.\ Dr.\ David Gross betreut worden.
+
+\vspace{4cm}
+
+\hspace{2cm} Ort, Datum \hfill Unterschrift \hspace{2cm}
 \end{document}
