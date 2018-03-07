@@ -17,7 +17,7 @@
 \fi
 
 \usepackage{graphicx,subcaption}
-\usepackage[backend=biber,bibencoding=utf8]{biblatex}
+\usepackage[backend=biber,style=alphabetic,bibencoding=utf8]{biblatex}
 \bibliography{references_ds}
 
 \usepackage[color=red!50!white,textsize=small,textwidth=2.5cm]{todonotes}
@@ -49,7 +49,7 @@
 
 % if \makefull is defined (e.g. by commandline argument, include everything)
 \ifdefined\makefull\else
-  \includeonly{chapters/introduction,chapters/conclusion}
+  \includeonly{chapters/introduction,chapters/conclusion,chapters/tensors}
   % \includeonly{chapters/error_region,chapters/error_region_appendix}
   % \includeonly{chapters/phaselift,chapters/phaselift_appendix}
   % \includeonly{chapters/tensors,chapters/tensors_appendix}
@@ -122,7 +122,9 @@ By using efficiently representable measurement tensors, our approach is also com
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage
+\chapter*{Acknowledgments}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter*{Erklärung}
 
 Ich versichere, dass ich die von mir vorgelegte Dissertation selbständig angefertigt, die benutzten Quellen und Hilfsmittel vollständig angegeben und die Stellen der Arbeit -- einschließlich Tabellen, Karten und Abbildungen --, die anderen Werken im Wortlaut oder dem Sinn nach entnommen sind, in jedem Einzelfall als Entlehnung kenntlich gemacht habe; dass diese Dissertation noch keiner anderen Fakultät oder Universität zur Prüfung vorgelegen hat; dass sie -- abgesehen von unten angegebenen Teilpublikationen -- noch nicht veröffentlicht worden ist, sowie, dass ich eine solche Veröffentlichung vor Abschluss des Promotionsverfahrens nicht vornehmen werde.
@@ -141,5 +143,6 @@ Die von mir vorgelegte Dissertation ist von Prof.\ Dr.\ David Gross betreut word
   \item Ž.\ Stojanac, D.\ Suess, M.\ Kliesch, \textit{On products of Gaussian random variables}, arXiv:1711.10516
   \item D.\ Suess, M.\ Holzaepfel, \textit{mpnum: A matrix product representation library for Python}, Journal of Open Source Software, 2(20), 465 (2017)
 \end{itemize}
+
 
 \end{document}
