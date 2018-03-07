@@ -74,6 +74,21 @@
 \frontmatter
 \maketitle
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter*{Abstract}
+
+In this thesis, we study the interplay of constraints and complexity in quantum estimation.
+We investigate three inference problems, where additional structure in the form of constraints is exploited to reduce the sample and/or computational complexity.
+The first example is concerned with uncertainty quantification in quantum state estimation, where the positive-semidefinite constraint is used to construct more powerful, that is smaller, error regions.
+However, as we show in this work, doing so in an optimal way constitutes a computationally hard problem, and therefore, is intractable for larger systems.
+This is in stark contrast to the unconstrained version of the problem under consideration.
+The second inference problem deals with phase retrieval in general, and characterizing linear optical circuits in particular.
+The main challenge here is the fact that the measurements are oblivious to phases, and hence, their reconstruction requires deliberate interference.
+We propose a reconstruction algorithm based on ideas from low-rank matrix recovery, which exploits an exact rank-one constraint on the signal to be  recovered.
+Furthermore, in this work we propose a measurement ensemble tailored to the specific application in characterizing linear optical devices.
+Finally, we investigate low-rank tensor recovery -- the problem of reconstructing a low-complexity tensor embedded in an exponentially large space.
+We provide evidence that a low-rank tensor $X$ can be recovered from a number of measurements that only depends on its intrinsic complexity, and hence scales polynomially in the order of tensor.
+Therefore, the low-rank constraint can be exploited to dramatically reduce the sample complexity of the problem.
+By using efficiently representable measurement tensors, our approach is also computationally efficient.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
