@@ -721,7 +721,7 @@ The latter is concerned with the question, under which conditions we can recover
   Note that we take up the notation from \cref{chap:phaselift} for the rest of this chapter, where the index $l$ in $A\ind{l}$ labels different measurement tensors, and not their local tensors.
 }
 \[
-  y\ind{l} = \braket{A\ind{l}, X}, \quad l=1, \ldots, m.
+  b\ind{l} = \braket{A\ind{l}, X}, \quad l=1, \ldots, m.
   \label{eq:als.matrix_measurements}
 \]
 Here, $A\ind{l} \in \Complex^{d \times d}$ denote the measurement matrices and
@@ -747,7 +747,7 @@ $X \in \Reals^{d^N}$ of low MPS-rank.
 For this purpose, we study an \emph{Alternating Least Squares} (ALS) algorithm inspired by DMRG methods in quantum physics.
 The observable quantities are -- analogous to \cref{eq:als.matrix_measurements} -- given by overlaps with measurement tensors $A\ind{l} \in \Reals$
 \[
-  y\ind{l} = \braket{A\ind{l}, X}
+  b\ind{l} = \braket{A\ind{l}, X}
   \label{eq:als.tensor_measurements}
 \]
 with the Frobenius inner product of tensors defined by \cref{eq:mps.inner}.
@@ -767,7 +767,7 @@ However, numerical investigations using an alternating least squares algorithm s
 % ALtmin local convergence for Optimization-> Rohwedder, Uschmajew; Holtz, Rohwedder\tabularnewline
 
 Stronger analytical results exist for a different measurement ensemble:
-The authors in~\cite{Rauhut_2014_Tensor}, consider fully Gaussian measurements, i.e.\ measurement tensors with independent components sampled from a normal distribution.
+The authors in~\cite{Rauhut_2014_Tensor,Rauhut_2016_Low}, consider fully Gaussian measurements, i.e.\ measurement tensors with independent components sampled from a normal distribution.
 In this approach, a number of measurements scaling polynomially in the crucial parameters $d$, $N$, and $r$ is sufficient to recover any rank $r$ tensor.
 Although their result is highly efficient in the sample complexity, it is still infeasible for high-order tensors due to the exponentially scaling memory requirement for the measurement tensors and the resulting exponential runtime of any algorithm using them.
 
@@ -1687,7 +1687,7 @@ The last line of the example above then translates to
 \begin{pythoncode}
   X_init = mp.special.sumup(A, rank=r, weights=b)
 \end{pythoncode}
-which provides a ?? speedup for the computations in \cref{fig:numerics.recov.rank10_20percent}.
+which provides a $5\times$ speedup for the computations in \cref{fig:numerics.recov.rank10_20percent} and reduces memory footprint significantly.
 
 % iteration: dynamic programming & GPUs
 For the iteration steps of \cref{alg:als_practical}, the main bottleneck for large instances is the computation of the matrices $B$ in the lines~\ref{line:als_practical.B1} and~\ref{line:als_practical.B2}.
@@ -1708,16 +1708,54 @@ We provide optimized implementations of the ALS algorithm~\ref{alg:als_practical
 
 
 
-\section{conclusion}
+\section{Conclusion \& Outlook}%
 \label{sec:conclusion}
 
+The MPS tensor format provides an efficient representation for many tensors occurring in practical applications.
+In contrast to general tensors, which require exponentially many parameters w.r.t.\ the order of the tensor, tensors of MPS rank $r$ can be parameterized using only $\Order(N d r^2)$ real numbers.
+Here, we show how to recover such an efficient representation from few linear measurements using the ALS algorithm.
+In contrast to previous work, which either requires an exponentially large number of measurements or incompressible Gaussian measurement tensors, our work investigates recovery using Gaussian product measurements.
+Therefore, the proposed scheme aims no only to be sample efficient, but also computationally efficient.
 
-% on the other hand, especially in the last theorem, we made quite strong simplifications to simplify analysis
-% future work:
-%   - investigate if such a bound can be derived by only assuming global closeness of the initialzation
-%   - main problem: if y_1 perfect, the others not, likely to make y_1 worse ->
-%   -> here we see thta eq:contraction only improves bound; still might happend here
-%   - for this, might be beneficial to study
+The main result of this chapter is the sufficient condition for reconstruction from rank-one measurements via ALS in \cref{eq:ana.local_convergence}.
+It relates the fraction $\frac\delB\delG$ of constants quantifying concentration properties of the measurements and the deviation of the initialization from the true value.
+As discussed below said equation, there is a trade-off between the properties of the measurements and the initialization:
+A tighter bound for the conditions~\eqref{eq:ana.conditions.lmin} and~\eqref{eq:ana.conditions.lmax} allows us to weaken the requirements on the initialization, and vice versa.
+In \cref{sub:als.gaussian_measurements}, we examine the conditions for Gaussian product measurements.
+These results suggest that for fixed $d$, $m = \Order(N)$ measurements are indeed sufficient to fulfill the conditions with high probability.
+Furthermore, we also demonstrate successful numerical reconstruction in \cref{sub:als.numerics} of rank-one and low-rank tensors with severe under-sampling.
+To support the numerical experiments, we developed \mpnum -- a library for MPS representation algorithms.\\
 
-% - proof constants for gaussain measurements (e.g. using the power-log series expansion)
-%   for this, we need to show that approximation is indeed good for 1st order.
+
+
+The most pressing goal for future work is to proof a lower bound for the fraction $\frac\delB\delG$ for Gaussian rank-one measurements.
+For this purpose, we have computed a power-log series expansion for the cdfs of products of independent Gaussians and their square.
+Numerical experiments have shown that the low order truncations of this series provide extremely accurate approximations.
+Therefore, one viable option to bound the measurement constants is to use the zeroth- or first order truncation of the power-log series expansion and bound the error of the truncation.
+An alternative approach is based on the observation that sums of products of independent Gaussians are dominated by a single, namely the largest summand.
+This is due to the fact that products of Gaussians exhibit fluctuations on orders of magnitude instead of on a linear scale.
+Making this precise would allow for a tremendous simplification of the problem as the full sum can be replaced by a sum over few terms.
+
+Another important point for future work is the generalization of the convergence proof to higher-rank target tensors $X$.
+As mentioned in \cref[sub:als.ana], the setting of higher-rank matrices is analysed by means of the principle angle distance in~\cite{Zhong_2015_Efficient}.
+This, or a similar distance measure for the local tensors, should also be useful for the higher-rank tensor case.
+
+We also note that the proof in of \cref{thm:ana.local_convergence} is certainly not optimal.
+Strengthening the condition for the initialization from a local condition, i.e.\ a condition for each local tensor, to a global condition, i.e.\ a condition for the full initialization tensor, would make the result more robust.
+However, note that the ALS algorithm does not unnecessarily improve the error of the full tensor in each micro-iteration:
+Consider the case, where the first local tensor equal to its true value, i.e.\ $y_1^0 = x_1$, while the other local tensor deviate from their true values.
+Then, the exact form of the minimizer in \cref{lem:ana.gradient_of_error} shows that the update $y_1^1$ is not equal to $x_1$ any longer.
+This increases the global error $\Fnorm{Y - X}$ in the first micro-iteration.
+One way to bound the possible error in each micro iteration is to replace the exact minimization of the empirical $\ell_2$-error in each step by a finite gradient descent step.
+
+Finally, a better understanding of the initial value is an important point for future work.
+Note that the initialization used in \cref{sub:als.numerics} is based on the following na\"ive intuition:
+First, the uncompressed initialization $\tilde X_\mathrm{init}$ defined in \cref{eq:numerics.S} should be \quotes{close} to the true value\footnote{%
+  Note that close is very vague in this context:
+  In principle, the local condition in \cref{thm:ana.local_convergence} still allows for an exponentially small overlap of $X$ and $X_\mathrm{init}$.
+}.
+Second, the compression of $\tilde X_\mathrm{init}$ to the appropriate rank does not invalidate this condition.
+One way to bound the error caused by compression is \cref{eq:mps.quasi_optimal}.
+However, in numerical experiments, we note that after re-normalization, $X_\mathrm{init}$ is often closer to $X$ than $\tilde X_\mathrm{init}$, especially for very large $N$.
+This is not surprising as the compression regularizes the estimate -- this is exactly the effect that allows for recovering $X$ from fewer than $d^N$ measurements.
+A better understanding of these effects and possibly more elaborate initialization schemes would further reduce the number of required measurements for reconstruction.
