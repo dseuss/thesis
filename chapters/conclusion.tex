@@ -4,7 +4,7 @@
 \label{chap:conclusion}
 
 To summarize, we investigated three inference problem from quantum physics, which are subject to different types of constraints.
-The main motivation of this work stems from the observation, that exploiting additional structure in inference problems often helps to reduce its sample complexity.
+The main motivation of this work stems from the observation that exploiting additional structure in inference problems often helps to reduce their sample complexity.
 However, the examples in this work differ in how taking the constraints into account affects their computational complexity.\\
 
 
@@ -30,10 +30,10 @@ To overcome to challenge of phase-insensitive measurements, we map the problem t
 By exploiting the exact rank-one constraint, we are able to perform reconstruction using an asymptotically optimal number of measurements.
 Furthermore, our recovery protocol can be implemented efficiently using a positive-semidefinite program called \quotes{PhaseLift} and it is robust to noise as the rigorously proven recovery guarantees show.
 From an experimentalist's point of view, characterization of linear-optical networks via PhaseLift is favourable because it reduces the number of different measurement configurations required.
-As reconfiguring the chip for another input takes more time on the architecture used for the current experiment than the actual measuring process, the efficiency of our protocol reduces the total amount of time required.
+As reconfiguring the chip for another input takes more time on the architecture used for the current experiment than the actual measuring process, the sample efficiency of our protocol reduces the total amount of time required.
 
 We also propose a measurement ensemble for phase retrieval tailored to the application in optics.
-In contrast to the Gaussian ensemble used in previous work, the RECR ensemble only necessitates the ability to prepare four complex phases per mode and discrete magnitudes.S
+In contrast to the Gaussian ensemble used in previous work, the RECR ensemble only necessitates the ability to prepare four complex phases per mode and discrete magnitudes.
 \todo{Add phaselift conclusions}
 This allows for calibrating the preparation stage more accurately, and hence, reduce the total error due to a mismatch of theoretical and implemented input vectors.\\
 
@@ -52,11 +52,8 @@ As a prototypical example, we consider Gaussian product measurements, which are 
 Additionally, numerical reconstruction experiments show that we are able to reconstruct large tensors from serenely under sampled measurements.
 
 
-% Altmin reconstructino from rank-1 combines sample & computationally efficiency for tensors,
-% get exponential improvement in the sample rate and the comp time compared to naive reconstruction
-% this is in constrast to  CS and low-rank matrix recovery, where poly measurements and runtime still suffice for naive reconstruction
 The ALS algorithm using rank-one measurements combines both sample and computational efficiency for tensor reconstruction.
 By exploiting the low-rank constraint we obtain an exponential improvement for the sampling rate compared to na\"ive approaches.
-This reduction of the data is also crucial for making the reconstruction computationally efficient.
-The reduction of sample and computational complexity for low-rank tensor recovery is therefore even qualitatively different from existing work on compressive sensing an low-rank matrix recovery.
+This reduction of the number of measurements necessary for recovery is also crucial for making the reconstruction computationally efficient.
+The reduction of sample and computational complexity for low-rank tensor recovery is therefore qualitatively different from existing work on compressive sensing and low-rank matrix recovery.
 For the latter, reconstruction without additional constraints is still feasible and, at least in the sense of polynomial scaling, still efficient.

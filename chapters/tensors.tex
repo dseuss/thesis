@@ -1714,10 +1714,10 @@ We provide optimized implementations of the ALS algorithm~\ref{alg:als_practical
 The MPS tensor format provides an efficient representation for many tensors occurring in practical applications.
 In contrast to general tensors, which require exponentially many parameters w.r.t.\ the order of the tensor, tensors of MPS rank $r$ can be parameterized using only $\Order(N d r^2)$ real numbers.
 Here, we show how to recover such an efficient representation from few linear measurements using the ALS algorithm.
-In contrast to previous work, which either requires an exponentially large number of measurements or incompressible Gaussian measurement tensors, our work investigates recovery using Gaussian product measurements.
+In contrast to previous work, which either requires an exponentially large number of measurements or incompressible Gaussian measurement tensors, our work investigates recovery using product measurements.
 Therefore, the proposed scheme aims no only to be sample efficient, but also computationally efficient.
 
-The main result of this chapter is the sufficient condition for reconstruction from rank-one measurements via ALS in \cref{eq:ana.local_convergence}.
+The main result of this chapter is the sufficient condition for reconstruction from rank-one measurements via ALS in \cref{eq:ana.theta_condition}.
 It relates the fraction $\frac\delB\delG$ of constants quantifying concentration properties of the measurements and the deviation of the initialization from the true value.
 As discussed below said equation, there is a trade-off between the properties of the measurements and the initialization:
 A tighter bound for the conditions~\eqref{eq:ana.conditions.lmin} and~\eqref{eq:ana.conditions.lmax} allows us to weaken the requirements on the initialization, and vice versa.
@@ -1742,7 +1742,7 @@ This, or a similar distance measure for the local tensors, should also be useful
 
 We also note that the proof in of \cref{thm:ana.local_convergence} is certainly not optimal.
 Strengthening the condition for the initialization from a local condition, i.e.\ a condition for each local tensor, to a global condition, i.e.\ a condition for the full initialization tensor, would make the result more robust.
-However, note that the ALS algorithm does not unnecessarily improve the error of the full tensor in each micro-iteration:
+However, note that the ALS algorithm does not necessarily improve the error of the full tensor in each micro-iteration:
 Consider the case, where the first local tensor equal to its true value, i.e.\ $y_1^0 = x_1$, while the other local tensor deviate from their true values.
 Then, the exact form of the minimizer in \cref{lem:ana.gradient_of_error} shows that the update $y_1^1$ is not equal to $x_1$ any longer.
 This increases the global error $\Fnorm{Y - X}$ in the first micro-iteration.
@@ -1754,8 +1754,8 @@ First, the uncompressed initialization $\tilde X_\mathrm{init}$ defined in \cref
   Note that close is very vague in this context:
   In principle, the local condition in \cref{thm:ana.local_convergence} still allows for an exponentially small overlap of $X$ and $X_\mathrm{init}$.
 }.
-Second, the compression of $\tilde X_\mathrm{init}$ to the appropriate rank does not invalidate this condition.
+Second, the compression of $\tilde X_\mathrm{init}$ to the appropriate rank should not increase the error too dramatically.
 One way to bound the error caused by compression is \cref{eq:mps.quasi_optimal}.
 However, in numerical experiments, we note that after re-normalization, $X_\mathrm{init}$ is often closer to $X$ than $\tilde X_\mathrm{init}$, especially for very large $N$.
-This is not surprising as the compression regularizes the estimate -- this is exactly the effect that allows for recovering $X$ from fewer than $d^N$ measurements.
+This is not surprising as the compression regularizes the initial estimate -- this is exactly the effect that allows for recovering $X$ from fewer than $d^N$ measurements.
 A better understanding of these effects and possibly more elaborate initialization schemes would further reduce the number of required measurements for reconstruction.
