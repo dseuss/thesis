@@ -6,23 +6,26 @@
 
 The theoretical and numerical study of many-body quantum systems is severely hindered by the \emph{curse of dimensionality}, which in this context refers to the exponential growth of the Hilbert space of quantum states w.r.t.\ the number of constituents.
 However, many realistic systems do not exhibit this pathological complexity and can be described efficiently in terms of \emph{tensor networks}~\cite{Bridgeman_2017_HandWaving,Orus_2014_Practical}.
-An especially simple but important special case of tensor networks is known under names such as \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} or \emph{matrix-product states} (MPS)~\cite{Garcia_2006_Matrix,Verstraete_2008_Matrix}.
-Examples for quantum states that can be efficiently described as MPS include W-, GHZ-, and cluster states.
-More generally, low energy states of one-dimensional gapped Hamiltonians with local interactions have an efficient MPS description and vice versa~\cite{Hastings_2006_Solving,Verstraete_2006_Matrix,Eisert_2010_Colloquium,Arad_2013_Area,Arad_2016_Rigorous}.
 Here, \quotes{efficient description} refers to the fact that the number of parameters required to describe such a state scales polynomially in the number of subsystem.
-The idea of low-complexity tensor representations have also received attention in the context of machine learning~\cite{Novikov_2015_Tensorizing,Tai_2015_Convolutional,Yang_2016_Deep,Stoudenmire_2016_Supervised,Chen_2017_Parallelized,Bengua_2015_Optimal,Bengua_2016_Matrix}.
+An especially simple but important special case of tensor networks is known under names such as \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} or \emph{matrix-product states} (MPS)~\cite{Garcia_2006_Matrix,Verstraete_2008_Matrix}.
+Many states used in quantum information processing have an efficient description in terms of an MPS.
+
+The idea of low-complexity tensor representations have also received attention in the context of machine learning.
+One important application is model compression:
+State of the art deep neural networks have millions of parameters and high-dimensional hidden layers, which complicates deploying them on devices with limit capabilities such as smart phones or IoT devices.
+By \quotes{compressing} the learned weights using efficient tensor formats, we can reduce the complexity of the model with only slight degradation in performance~\cite{Novikov_2015_Tensorizing,Tai_2015_Convolutional,Yang_2016_Deep}.
 
 The question we are attempting to answer in this chapter is whether such MPS can be efficiently reconstructed from few linear measurements\footnote{%
   Note that since we assume a linear measurement model, the results of this section do not apply to the problem of estimating pure quantum states.
   We use the term \quotes{matrix product state} to not only refer to quantum states, but to general tensors in the MPS format.
 }.
-More precisely, we provide evidence that the number of measurements required to recover a MPS is related to its intrinsic complexity -- and hence, scales polynomially in the number of constituents -- although the Hilbert space of tensors grows exponentially in the number of constituents.
+More precisely, we provide evidence that the number of measurements required to recover an MPS is related to its intrinsic complexity -- and hence, scales polynomially in the number of constituents -- although the Hilbert space of tensors grows exponentially in the number of constituents.
 This work is a natural extension of \emph{low-rank matrix recovery}, which formed the foundation of the results in \cref{chap:phaselift}, to higher-order tensors.\\
 
 
 
 This chapter is structured as follows:
-In \cref{sec:tensors.mps}, we introduce the MPS tensor format and in \cref{sec:tensors.mpnum}, we present the software library \mpnum dealing with tensors in MPS representation.
+In \cref{sec:tensors.mps}, we introduce the MPS tensor format and in \cref{sec:tensors.mpnum}, we present the software library \mpnum{} dealing with tensors in MPS representation.
 \mpnum was developed as part of this work to facilitate numerical computations in a user friendly and reusable manner.
 Finally, \cref{sec:tensors.als} reports on work in progress, which is concerned with provably recovering MPS from few linear measurements using an \emph{Alternating Least Squares} (ALS) algorithm.
 
@@ -48,7 +51,7 @@ For the sake of simplicity, we assume that $d_1 = \cdots = d_N$ throughout this 
 \subsection{Graphical Notation}%
 \label{sub:mps.graphical_notation}
 
-Since formulas with higher-order tensors may become incomprehensible due to the large amount of indices necessary, we introduce a common graphical notation~\cite{Orus_2014_Practical,Bridgeman_2017_HandWaving}.
+Since formulas with higher-order tensors may become incomprehensible due to the large amount of indices, we introduce a widely used graphical notation~\cite{Orus_2014_Practical,Bridgeman_2017_HandWaving} here.
 A tensor $X \in \Complex^{d^N}$ is represented by a geometric shape with legs attached, where each leg corresponds to one index.
 For example, consider the case $N = 3$, then the components of the tensor $X$ are given by
 \[
@@ -139,7 +142,7 @@ The most common operations and their graphical notation are summarized below:
     \]
     This operation is often used in numerical implementations of tensor network algorithms as it reduces most tensor operations to standard matrix  operations.
     For example, the twofold contraction on the left hand side of \cref{eq:tensors.intro.grouping} is converted to a matrix multiplication on the right hand side.
-    In the following, we often perform grouping on neighbouring tensor legs implicitly.
+    In the following, we often perform grouping on neighboring tensor legs implicitly.
 \end{description}
 
 
@@ -148,10 +151,10 @@ The most common operations and their graphical notation are summarized below:
 \label{sub:mps.tensor_representation}
 
 The tensor representation we are interested in has been established independently in quantum physics under the names \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} and \emph{matrix-product states}~\cite{Klumper_1991_Equivalence,Kluemper_1992_Groundstate}.
+However, similar structures have been known for much longer in the form of  \emph{hidden Markov models}~\cite{Cappe_2006_Inference}.
 Subsequently, it has been rediscovered in other contexts:
 It is known under the guise of the \emph{density matrix renormalization group}~\cite{White_1992_Density,Schollwoeck_2011_DensityMatrix} in condensed matter physics.
 Furthermore, the MPS representation is also known as a special case of the \emph{Hierarchical Tucker} tensor format~\cite{Hackbusch_2012_Tensor,Grasedyck_2010_Hierarchical} and under name \emph{tensor-train}~\cite{Oseledets_2011_TensorTrain} in the applied math community.
-However, similar structures have been known for much longer in the form of \emph{deterministic finite automata}~\cite{Hopcroft_2014_Introduction} and \emph{hidden Markov models}~\cite{Cappe_2006_Inference}.
 
 To introduce the MPS representation, consider a tensor $X \in \Complex^{d^N}$.
 By splitting off the first index, grouping the remaining $N-1$ indices, and performing a SVD on the resulting matrix, we can factor $X$ into three parts
@@ -233,7 +236,7 @@ In the following, we identify the index order as follows:
     \node [anchor=west] at (X_E1e) {\small $k$};
   \end{tikzpicture}
 \]
-The horizontal legs corresponding to the indices $i$ and $k$ are often referred to as \emph{bond} or \emph{virtual legs}, and the vertical ones corresponding to $j$ are referred to as \emph{physical} legs.
+The horizontal legs corresponding to the indices $i$ and $k$ are often referred to as \emph{bonds} or \emph{virtual legs}, and the vertical ones corresponding to $j$ are referred to as \emph{physical} legs.
 By fixing each physical leg to some value $k_l$ in \cref{eq:mps.matrix_product}, we see that each component of $X$ is given by product of $N$ matrices
 \[
   \label{eq:mps.local_matrices}
@@ -474,12 +477,13 @@ Here, $\norm{\cdot}$ denotes the Frobenius norm of tensors, $X_\mathrm{SVD}$ the
 The main application of the MPS representation in quantum information and condensed matter physics is the efficient description of certain many-body states.
 As the corresponding Hilbert space grows exponentially fast in the number of constituents $N$, the full description of any state in terms of its coefficients w.r.t.\ a fixed basis is only feasible for small $N$.
 Fortunately, not all quantum states of a many-body system are equally relevant in practice.
-Many systems of interest are well described by a Hamiltonian with local interactions, e.g.\ nearest neighbour interactions, which reflects in the structure of correlations in their low energy spectrum.
+Many systems of interest are well described by a Hamiltonian with local interactions, e.g.\ nearest neighbor interactions, which reflects in the structure of correlations in their low energy spectrum.
 More specifically, low energy eigenstates of gapped Hamiltonians with local interactions obey the \emph{area-law} for entanglement entropy~\cite{Hastings_2006_Solving,Verstraete_2006_Matrix,Eisert_2010_Colloquium}:
 For those states, the entanglement entropy of a subsystem asymptotically only depends on its boundary size and not on its volume.
 Although those stats occupy only a small corner of the enormous many-body Hilbert space as depicted in \cref{fig:mps.cartoon}, they are exceptionally important in practice.
 %   - time evolution stays there -> see Orus 3.4
 
+\todo{Check the whole area law <=> MPS thing}
 In one dimensional systems, any many-body state $\ket{\psi}$ with an area law\footnote{%
   In one dimension, the boundary area of any connected region is constant and independent of the size of the region, and therefore, the area law implies constant entanglement entropy.
 }
@@ -537,7 +541,7 @@ For dimensions $D > 1$, not every state satisfying an area law can be efficientl
 
 So far, we were only concerned with multi-body pure states.
 The MPS tensor format from \cref{sub:mps.tensor_representation} can also be adapted for the description of mixed sates.
-As an example consider a MPS\footnote{%
+As an example consider an MPS\footnote{%
   From now on we do not distinguish between the state and its corresponding coordinate representation w.r.t.\ a fixed product basis.
 }
 $\ket\psi$.
@@ -570,7 +574,7 @@ Its local tensors $A\ind{l}$ are defined in terms of the local tensors $B\ind{l}
   \label{eq:mps.mpdo_local_tensors}
 \]
 with implicit grouping of the virtual indices of $B\ind{l}$.
-This is an example of a matrix-product density operator (MPDO), which were introduced in \cite{Verstraete_2004_Matrix,Zwolak_2004_MixedState}.
+This is an example of a matrix-product density operator (MPDO)~\cite{Verstraete_2004_Matrix,Zwolak_2004_MixedState}.
 In general, any operator acting on the many-body Hilbert space can be expressed as an MPO with local tensors $A\ind{l} \in \Complex^{r \times d \times d \times r}$ as depicted in \cref{fig:mps.mpo}.
 This representation is efficient if the operator acts \quotes{locally}, e.g.\ for a Hamiltonian with nearest neighbor interactions.
 
@@ -610,7 +614,7 @@ Unfortunately, this problem is $\NP$-hard, even if we restrict to dimensions $d=
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-One way to cope with this problem is to use an inherently psd parameterization of the mixed state.
+One way to cope with this problem is to use a manifest psd parameterization of the mixed state.
 Denote by $\mathcal{H}_1$ the Hilbert space of the system and by $\rho$ the corresponding mixed state.
 By introducing a second \emph{auxiliary} Hilbert space $\mathcal{H}_2$, we can write~\cite{Nielsen_2010_Quantum}
 \[
@@ -659,7 +663,7 @@ They consider a binary support vector machine classifier with a decision functio
 \]
 Here, $X$ is the input vector and $W$ is the model vector.
 The goal is to determine $W$ in such a way that $f(X) > 0$ if $X$ is in the \quotes{yes} class and $f(X) < 0$ otherwise.
-By using a MPS representation for $W$ and $X$, they are able to efficiently learn such a model even in high-dimensional settings.
+By using an MPS representation for $W$ and $X$, they are able to efficiently learn such a model even in high-dimensional settings.
 A similar approach can also be applied to learning polynomial classifiers~\cite{Chen_2017_Parallelized} as well as to image compression and classification~\cite{Bengua_2015_Optimal,Bengua_2016_Matrix}.
 
 
@@ -701,6 +705,15 @@ On the one hand, we want to bound the number of measurements required to perform
 On the other hand, it refers to the \emph{computational complexity} as outlined in \cref{sec:error.complexity}.
 Both aspects are especially critical for tensor reconstruction as na\"ive approaches generally suffer from the curse of dimensionality.
 
+We first review existing work on efficient QSE using the MPS tensor format, which relies on local measurements on few neighboring sites, in \cref{sub:als.existing}
+Although the notion of \quotes{tracing out} unobserved degrees of freedom is natural in quantum mechanics, it does not exist for the linear measurement model considered in this work, which we introduce also in said section.
+In \cref{sub:als.algorithm}, we describe the alternating least squares algorithm used for reconstruction from general product measurements, which is further analysed in \cref{sub:als.ana}.
+In \cref{sub:als.gaussian_measurements} we consider the special case of Gaussian product measurements and present numerical reconstruction experiments in \cref{sub:als.numerics}.
+
+
+\subsection{Existing work}%
+\label{sub:als.existing}
+
 In the context of quantum estimation, existing work addresses this question for the reconstruction of MPS~\cite{Cramer_2010_Efficient}, MPDO~\cite{Baumgratz_2013_Scalable,Baumgratz_2013_Scalablea,Lanyon_2017_Efficient}, and unitary quantum processes~\cite{Holzaepfel_2014_Scalable} from local measurements.
 More precisely, they consider informationally complete measurement on blocks of length $R$ as depicted in \cref{fig:als.quantum_measurements}.
 Since there are exactly $N - R + 1$ such blocks, this requires a number of measurements scaling as $\Order(N \times d^R)$ compared to the $\Order(d^N)$ scaling of full-fledged quantum state tomography.
@@ -716,6 +729,11 @@ Similar rigorous recovery guarantees have only been proven for comparable, but i
 
 
 The question that motivated the work presented in this chapter is whether we can identify other measurement schemes and algorithms that \emph{provably} allow for efficiently reconstructing low-rank tensors.
+However, a rigorous analysis of the local measurement model introduced above is very challenging.
+Furthermore, it requires \quotes{tracing out} the $N - R$ unobserved sites for each measurements, which relies on the operator-structure of mixed quantum states.
+For a general linear measurement model on tensors, there is no natural notion of partial trace, and hence, no $R$-local measurements.
+Therefore, we consider the problem of efficient reconstruction from a linear measurement model with product tensors here.
+
 Recall that we already encountered a similar question in \cref{chap:phaselift} for the problem of \emph{low-rank matrix recovery}.
 The latter is concerned with the question, under which conditions we can recover a low-rank matrix $X \in \Complex^{d \times d}$ from $m$ linear measurements of the form\footnote{%
   Note that we take up the notation from \cref{chap:phaselift} for the rest of this chapter, where the index $l$ in $A\ind{l}$ labels different measurement tensors, and not their local tensors.
@@ -729,7 +747,7 @@ Here, $A\ind{l} \in \Complex^{d \times d}$ denote the measurement matrices and
   \braket{A, X} = \tr \adj{A} X
 \]
 the Frobenius inner product.
-For a general matrix $X$, the number of measurements $m$ needs to scale as $d^2$ by the pigeonhole principle.
+For a general matrix $X$, the number of measurements $m$ needs to scale as $d^2$ by simple parameter counting.
 However, by exploiting the low-rank structure of $X$, we can reduce $m$.
 For example, \cref{thm:pl.phaselift_noisy} shows that we can recover any positive semi-definite rank-1 matrix $X$ from only $m = \Order(d)$ measurements provided the $A\ind{l}$ are sampled from an appropriate distribution of random matrices.
 Furthermore, said theorem also provides an efficient reconstruction algorithm, namely the semi-definite program~\eqref{eq:pl.PhaseLift}.
@@ -744,7 +762,7 @@ Here, we consider the generalization of low-rank matrix recovery to higher order
   In contrast to the rest of this chapter, we consider real tensors in order to simplify notation.
 }
 $X \in \Reals^{d^N}$ of low MPS-rank.
-For this purpose, we study an \emph{Alternating Least Squares} (ALS) algorithm inspired by DMRG methods in quantum physics.
+For this purpose, we study an \emph{Alternating Least Squares} (ALS) algorithm.
 The observable quantities are -- analogous to \cref{eq:als.matrix_measurements} -- given by overlaps with measurement tensors $A\ind{l} \in \Reals$
 \[
   b\ind{l} = \braket{A\ind{l}, X}
@@ -755,21 +773,22 @@ with the Frobenius inner product of tensors defined by \cref{eq:mps.inner}.
 The field of low-rank tensor recovery has attracted increasing attention in recent years.
 Especially the problem of tensor completion, i.e.\ inferring missing values of a low-rank tensor, has been thoroughly studied due to its broad applicability in computer vision, neuroscience, remote sensing, and context-aware recommender systems~\cite{Li_2010_Tensor,Zhu_2016_ContextAware,Wang_2014_LowRank}.
 In contrast to our work, most analytical results in this area are concerned with different notions of tensor rank such as the Tucker rank~\cite{Kressner_2013_LowRank,Zhang_2016_Cross} or the canonical tensor rank~\cite{Krishnamurthy_2013_LowRank,Potechin_2017_Exact}.
-\todo{Why Tucker/canonical bad?, Why TT good}
+The Tucker model still requires exponentially many parameters, and therefore, is unsuitable for our purposes.
+Although the canonical tensor representation captures the structure of many applications very well, it has some drawbacks in practice~\cite{Kolda_2009_Tensor}:
+Approximation with fixed canonical rank in the Frobenius norm can be ill-posed~\cite{Silva_Lim}.
+Also, no equivalently tight bound on the approximation error as \cref{eq:mps.quasi_optimal} is known for the canonical format.
 
 The best analytical recovery guarantees for low-MPS rank tensor completion require -- to the best of the authors knowledge -- a number of measurements scaling exponentially in the order of the tensor~\cite{Phien_2016_Efficient}.
 Although their result gives a square-root advantage compared to na\"ive reconstruction, it is still infeasible for high-order tensors.
 However, numerical investigations using an alternating least squares algorithm similar to the one used in this work demonstrate successful recovery with sub-exponential sample complexity~\cite{Grasedyck_2015_Variants,Wang_2016_Tensor}.
 
-% low-rank approximation
-% Riemannian optimization -> Lubich
-\todo{More refs!}
-% ALtmin local convergence for Optimization-> Rohwedder, Uschmajew; Holtz, Rohwedder\tabularnewline
-
 Stronger analytical results exist for a different measurement ensemble:
 The authors in~\cite{Rauhut_2014_Tensor,Rauhut_2016_Low}, consider fully Gaussian measurements, i.e.\ measurement tensors with independent components sampled from a normal distribution.
 In this approach, a number of measurements scaling polynomially in the crucial parameters $d$, $N$, and $r$ is sufficient to recover any rank $r$ tensor.
 Although their result is highly efficient in the sample complexity, it is still infeasible for high-order tensors due to the exponentially scaling memory requirement for the measurement tensors and the resulting exponential runtime of any algorithm using them.
+
+In exisiting work~\cite{Holtz,Rohwedder}, the authors proof local convergence result for general minimization problems in the MPS format.
+Their work shows that alternating minimization-type algorithms can be used to provable find local minima of a large class of cost functions.
 
 In conclusion, the existing rigorous work on recovering low MPS-rank tensors is currently situated at two different ends of a spectrum:
 On the on hand, there is tensor completion, which is highly relevant for practical applications and efficiently implementable, but without any recovery guarantees for a polynomially scaling number of measurements.
@@ -777,7 +796,7 @@ On the other hand, the authors in~\cite{Rauhut_2014_Tensor} prove reconstruction
 
 This situation can be understood better by comparing to the history of low-rank matrix recovery and compressive sensing -- the related problem of reconstructing sparse vectors from few measurements.
 The first rigorous on compressed sensing from Gaussian measurements were due to Donoho~\cite{Donoho_2006_For} in 2006.
-In the same year, Candes, Romberg, and Tao -- a Fields medalist -- proved guarantees for orthonormal basis vector measurements~\cite{Candes_2006_Stable}, which can be considered as the analogue of matrix completion for vectors.
+In the same year, Candes, Romberg, and Tao -- a Fields Medalist -- proved guarantees for orthonormal basis vector measurements~\cite{Candes_2006_Stable}, which can be considered as the analogue of matrix completion for vectors.
 Candes and Tao also proved the first matrix recovery guarantees for matrix completion~\cite{Candes_2010_Power}, while the first guarantees for Gaussian matrices were proven in~\cite{Recht_2010_Guaranteed}.
 Here, we are going to study a measurement ensemble for tensors that combines the advantages of both approaches.
 We take the measurement tensors to be of the form
@@ -901,7 +920,7 @@ However, numerical experiments in \cref{sub:als.numerics} show that this resampl
 
 Alternating algorithms such as ALS updating only a few local tensors at a time are a very common approximation technique for circumventing intractabilities when dealing with MPS.
 Well known examples include variational compression and DMRG~\cite{Schollwoeck_2011_DensityMatrix} --  an iterative algorithm for approximating the smallest eigenvalue of a hermitian MPO.
-Local convergence of these alternating algorithms has been proven for a large class of problems in~\cite{Rohwedder_2013_On}.
+Local convergence of these alternating algorithms has been proven for a large class of problems in~\cite{Holtz,Rohwedder_2013_On}.
 These result show that alternating minimization algorithms of many cost functions converge to a local minimum.
 However, it remains to be shown that the minimizer of the empirical $\ell_2$ error~\eqref{eq:als.empirical_l2} with given rank is equal to $X$, i.e.\ that the given measurements suffice to identify $X$.
 
