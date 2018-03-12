@@ -85,16 +85,34 @@ The second inference problem deals with phase retrieval and its application to c
 The main challenge here is the fact that the measurements are insensitive to phases, and hence, their reconstruction requires deliberate utilization of interference.
 We propose a reconstruction algorithm based on ideas from low-rank matrix recovery.
 More specifically, we map the problem of reconstruction from phase-insensitive measurements to the problem recovering a rank-one matrix from linear measurements.
+For the efficient solution of the latter it is crucial to exploit the rank-one constraint.
 In this work we adapt existing work to the specific application of characterizing linear optical devices and propose a measurement ensemble tailored to this setting.
 Finally, we investigate \emph{low-rank tensor recovery} -- the problem of reconstructing a low-complexity tensor embedded in an exponentially large space.
-We provide evidence that a low-rank tensor can be recovered from a number of measurements that only depends on its intrinsic complexity, and hence, scales polynomially in the order of tensor.
+We derive a sufficient condition, which relates the error of the initialization and concentration properties of the measurements, for successful reconstruction from rank-one measurements.
+Furthermore, we provide evidence that this condition is satisfied with high probability by Gaussian product tensors with the number of measurements only depending on the target's intrinsic complexity, and hence, scaling polynomially in the order of tensor.
 Therefore, the low-rank constraint can be exploited to dramatically reduce the sample complexity of the problem.
 By using efficiently representable measurement tensors, our approach is also computationally efficient.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter*{Kurzzusammenfassung}
 
-\todo[inline]{TODO}
+In dieser Arbeit untersuchen wir das Zusammenspiel von Zwangsbedingungen und Komplexität in Quantenschätzproblemen.
+Für diesen Zweck betrachten wir drei Schätzprobleme, für die zusätzliche Struktur in der Form von Zwangsbedingungen ausgenutzt werden kann um die notwendige Zahl der Messungen oder die Berechnungskomplexität zu verringern.
+Das erste Beispiel beschäftigt sich mit der Unsicherheitsabschätzung in Quantenzustandstomographie.
+In diesem nutzen wir die Zwangsbedingung, dass physikalische gemischte durch positive-semidefinite Matrizen beschrieben werden, um kleinere und damit aussagekräftigäre Fehlerregionen zu konstruieren.
+Wir zeigen jedoch in dieser Arbeit, dass ein optimales Nutzen der Zwangsbedingungen ein rechnerisch schweres Problem darstellt und damit nicht effizient lösbar ist.
+Im Vergleich dazu ist das Model ohne Zwangsbedingungen effizient lösbar.
+Das zweite Schätzproblem beschäftigt sich mit Phase Retrieval und dessen Anwendung für die Charakterisierung von linear-optischen Schaltkreisen.
+Hier ist die größte Herausforderung, dass die Messungen phasenunempfindlich sind und deshalb das gezielte Ausnutzen von Inteferenz für die vollständige Rekonstruktion notwendig ist.
+Für diesen Zweck entwickeln wir einen Algorithmus, der auf Techniken der effizienten Rekonstruktion von Matrizen mit niedrigem Rang basiert.
+Genauer gesagt bilden wir das Problem der Rekonstruktion aus phasenunempfindlichen Messungen auf das Problem der Rekonstruktion von Matrizen mit Rang 1 aus linearen Messungen ab.
+Für dessen effiziente Lösung ist es notwendig die Zwangsbedingung an den Rang auszunutzen.
+Zuletzt untersuchen wir die Rekonstruktion von Tensoren mit niedrigem Rang, also das Problem einen Tensor mit niedriger Komplexität in einem exponentiell großem Hilbertraum zu rekonstruieren.
+Wir leiten eine hinreichende Bedingung für die erfolgreiche Rekonstruktion aus Rang 1 Messungen ab, die den erlaubten Fehler der Initialisierung und Konzentrationseigenschaften der Messungen miteinander in Verbindung setzt.
+Außerdem zeigen wir numerisch, dass Gauss'sche Produktmessungen diese Eigenschaften mit hoher Wahrscheinlichkeit erfüllen auch wenn die Zahl der Messungen nur polynomiell in der Ordnung des Zieltensors gewählt werden.
+Damit können die Rangbedingungen ausgenutzt werden um die Zahl der notwendigen Messungen drastisch zu reduzieren.
+Zusätzlich dazu ist unser Ansatz auch Recheneffizient, da wir effizient darstellbare Produkttensoren als Messungen verwenden.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \tableofcontents
