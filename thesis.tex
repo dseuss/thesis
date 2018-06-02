@@ -1,11 +1,32 @@
 %&thesis
-\documentclass[a4paper,11pt,BCOR=8mm,twoside,headsepline]{scrbook}
-\author{Daniel Suess}
-\title{Due to, or in spite of? The effect of constraints on efficiency in quantum estimation problems}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Begin of dumped preamble
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \usepackage[T1]{fontenc}
+\documentclass[
+  a4paper,
+  11pt,
+  BCOR=8mm,
+  twoside,
+  headsepline]{scrbook}
+
+% \documentclass[a4paper,
+		   % 11pt,
+		   % twoside,
+		   % bibliography=totoc,
+		   % DIV12,
+		   % BCOR16.153846mm,
+		   % headinclude,
+		   % numbers=noenddot,
+		   % final
+		   % ]{scrreprt}
+
+\usepackage[automark]{scrpage2}
+\setkomafont{pageheadfoot}{\normalcolor\sffamily\small}
+\setkomafont{pagenumber}{\normalcolor\sffamily\small}
+\setkomafont{captionlabel}{\sffamily\small\bf}
+% \setkomafont{captionlabel}{\bf}
+\setkomafont{caption}{\sffamily\footnotesize}
+\pagestyle{useheadings}
+% \setlength{\parskip}{10pt}
+
+%
 \usepackage{ifpdf}
 \ifpdf{}
   \usepackage[utf8]{inputenc}
@@ -68,11 +89,47 @@
 % \usepackage{autonum}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\author{Daniel Suess}
+\title{}
+
+
+
+\makeatletter %pdf meta data (with hyperref)
+\hypersetup{
+  pdftitle = {Due to, or in spite of? The effect of constraints on efficiency in quantum estimation problems},
+  pdfauthor = {Daniel Suess},
+  % pdfsubject = {},
+  %pdfkeywords = {}
+}
+\makeatother
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
 \frontmatter
-\maketitle
+%%%% Title %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\titlehead{\begin{center}\vspace{-1.4cm}\vbox{\sffamily{\Large Universit\"at zu K\"oln}\\Institut f\"ur theoretische Physik}
+\vspace{7mm}
+%\hyperref[toc]{\includegraphics[width=0.35\linewidth]{Fub_siegel}}
+%\includegraphics[width=0.35\linewidth]{fig/cologne_siegel}
+\vspace{-3mm}
+\end{center}
+}
+%\subject{\normalfont\normalsize\sffamily Im Fachbereich Physik der\\ Freien Universität Berlin\\ eingereichte Dissertation}
+\title{Due to, or in spite of? The effect of constraints on efficiency in quantum estimation problems\vspace{.5\baselineskip}}
+\subtitle{\normalfont\normalsize\sffamily Inaugural-Disseration\\zur\\Erlangung des Doktorgrades\\der Mathematisch-Naturwissenschaftlichen Fakult\"at\\der Universit\"at zu K\"oln\\vorgelegt von}
+\author{Daniel Suess\\ {\normalfont\normalsize aus Dresden}}
+\date{\normalfont\normalsize\sffamily K\"oln, 2018}
+{\let\newpage\relax \sffamily \maketitle}
+\vfill
+\begin{center}
+\begin{minipage}{.8\linewidth}
+  \begin{tabbing}%
+    Berichterstatter (Erstgutachter):      \hspace{1,5cm} \= Prof.\ David Gross\\
+    Berichterstatter (Zweitgutachter):\> Prof.\ Johannes Berg \\
+    Tag der Disputation:  \> %22.\ April 2015\\
+  \end{tabbing}
+\end{minipage}
+\end{center}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter*{Abstract}
 
@@ -149,17 +206,19 @@ Zusätzlich dazu ist unser Ansatz auch Recheneffizient, da wir effizient darstel
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter*{Erklärung}
+\pagenumbering{gobble}
 
-Ich versichere, dass ich die von mir vorgelegte Dissertation selbständig angefertigt, die benutzten Quellen und Hilfsmittel vollständig angegeben und die Stellen der Arbeit -- einschließlich Tabellen, Karten und Abbildungen --, die anderen Werken im Wortlaut oder dem Sinn nach entnommen sind, in jedem Einzelfall als Entlehnung kenntlich gemacht habe; dass diese Dissertation noch keiner anderen Fakultät oder Universität zur Prüfung vorgelegen hat; dass sie -- abgesehen von unten angegebenen Teilpublikationen -- noch nicht veröffentlicht worden ist, sowie, dass ich eine solche Veröffentlichung vor Abschluss des Promotionsverfahrens nicht vornehmen werde.
+Ich versichere, dass ich die von mir vorgelegte Dissertation selbständig angefertigt, die benutzten Quellen und Hilfsmittel vollständig angegeben und die Stellen der Arbeit -- einschließlich Tabellen, Karten und Abbildungen --, die anderen Werken im Wortlaut oder dem Sinn nach entnommen sind, in jedem Einzelfall als Entlehnung kenntlich gemacht habe; dass diese Dissertation noch keiner anderen Fakultät oder Universität zur Prüfung vorgelegen hat; dass sie -- abgesehen von den auf der nächsten Seite angegebenen Teilpublikationen -- noch nicht veröffentlicht worden ist, sowie, dass ich eine solche Veröffentlichung vor Abschluss des Promotionsverfahrens nicht vornehmen werde.
 Die Bestimmungen der Promotionsordnung sind mir bekannt.
 Die von mir vorgelegte Dissertation ist von Prof.\ Dr.\ David Gross betreut worden.
 
 \vspace{4cm}
 
-\hspace{2cm} Ort, Datum \hfill Unterschrift \hspace{2cm}
+Ort, Datum \hfill Unterschrift \hspace{2cm}
 
-\vspace{\fill}
-\subsection*{Teilpublikationen}
+\clearpage
+\pagestyle{empty}
+\section*{Teilpublikationen}
 \begin{itemize}
   \item D.\ Suess, Ł.\ Rudnicki, T.\ O.\ Maciel, D.\ Gross: \textit{Error regions in quantum state tomography: computational complexity caused by geometry of quantum states}, New J.\ Phys.\ 19 093013 (2017)
   \item Ž.\ Stojanac, D.\ Suess, M.\ Kliesch: \textit{On the distribution of a product of N Gaussian random variables}, Proceedings Volume 10394, Wavelets and Sparsity XVII; 1039419 (2017)
