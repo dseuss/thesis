@@ -26,7 +26,7 @@ This work is a natural extension of \emph{low-rank matrix recovery}, which forme
 
 This chapter is structured as follows:
 In \cref{sec:tensors.mps}, we introduce the MPS tensor format and in \cref{sec:tensors.mpnum}, we present the software library \mpnum{} dealing with tensors in MPS representation.
-\mpnum was developed as part of this work to facilitate numerical computations in a user friendly and reusable manner.
+\mpnum{} was developed as part of this work to facilitate numerical computations in a user friendly and reusable manner.
 Finally, \cref{sec:tensors.als} reports on work in progress, which is concerned with provably recovering MPS from few linear measurements using an \emph{Alternating Least Squares} (ALS) algorithm.
 
 
@@ -487,7 +487,7 @@ Although those stats occupy only a small corner of the enormous many-body Hilber
 In one dimensional systems, any many-body state $\ket{\psi}$ with an area law\footnote{%
   In one dimension, the boundary area of any connected region is constant and independent of the size of the region, and therefore, the area law implies constant entanglement entropy.
 }
-also has an efficient representation.
+has an efficient representation.
 If we expand $\ket{\psi}$ in a product basis with coefficient tensor $C$,
 \[
   \ket\psi = \sum_{i_1,\ldots,i_N} C_{i_1,\ldots,i_N} \, \ket{i_1} \otimes \cdots \otimes \ket{i_N},
@@ -642,7 +642,7 @@ Similarly, a \emph{local purification matrix product state} (PMPS)~\cite{Cuevas_
   \end{tikzpicture}
   \label{eq:mps.pmps}
 \]
-This is an inherently positive semidefinite parametrization of $\rho$ in matrix product form.
+This is a manifestly positive semidefinite parametrization of $\rho$ in matrix product form.
 However, this advantage comes at a price:
 The PMPS representation of a state can be arbitrarily more costly than its MPDO representation~\cite{Cuevas_2013_Purifications}.
 More precisely, there a families of states $(\rho_N)_{N \in \Naturals}$  with $\rho_N \in \Complex^{d^N}$ such that $\rho_N$ has constant MPO-rank, but the PMPS-rank of $\rho_N$ scales as $\Order(N)$.
@@ -728,7 +728,7 @@ Similar rigorous recovery guarantees have only been proven for comparable, but i
 
 
 
-The question that motivated the work presented in this chapter is whether we can identify other measurement schemes and algorithms that \emph{provably} allow for efficiently reconstructing low-rank tensors.
+The question that motivated the work presented in this chapter is whether we can identify \emph{other} measurement schemes and algorithms that \emph{provably} allow for efficiently reconstructing low-rank tensors.
 However, a rigorous analysis of the local measurement model introduced above is very challenging.
 Furthermore, it requires \quotes{tracing out} the $N - R$ unobserved sites for each measurements, which relies on the operator-structure of mixed quantum states.
 For a general linear measurement model on tensors, there is no natural notion of partial trace, and hence, no $R$-local measurements.
@@ -787,7 +787,7 @@ The authors in~\cite{Rauhut_2014_Tensor,Rauhut_2016_Low}, consider fully Gaussia
 In this approach, a number of measurements scaling polynomially in the crucial parameters $d$, $N$, and $r$ is sufficient to recover any rank $r$ tensor.
 Although their result is highly efficient in the sample complexity, it is still infeasible for high-order tensors due to the exponentially scaling memory requirement for the measurement tensors and the resulting exponential runtime of any algorithm using them.
 
-In exisiting work~\cite{Holtz,Rohwedder}, the authors proof local convergence result for general minimization problems in the MPS format.
+In existing work~\cite{Holtz,Rohwedder}, the authors proof local convergence result for general minimization problems in the MPS format.
 Their work shows that alternating minimization-type algorithms can be used to provable find local minima of a large class of cost functions.
 
 In conclusion, the existing rigorous work on recovering low MPS-rank tensors is currently situated at two different ends of a spectrum:
@@ -806,7 +806,7 @@ We take the measurement tensors to be of the form
 \]
 with local tensors randomly chosen from a standard multivariate normal distribution $a\ind{l}_k \sim \Normal(0, \1_d)$.
 In contrast to the fully Gaussian model from~\cite{Rauhut_2014_Tensor,Rauhut_2016_Low}, the measurement tensors~\eqref{eq:als.rank1_measurements} can be represented efficiently as MPS of unit rank.
-And, unlike the tensor completion problem, history does not dictate that its solution requires at least one Fields medalist.\\
+And, unlike the tensor completion problem, history does not dictate that its solution requires at least one Fields Medalist.\\
 
 
 
