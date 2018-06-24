@@ -2,14 +2,16 @@
 \chapter{Characterizing linear-optical networks via PhaseLift}%
 \label{chap:phaselift}
 
-\todo{Metnion that proof strategy unified}
 
-\todo{This whole intro needs work}
-
-Linear-optical networks composed of beamsplitting and phaseshifting operations are fundamental to the quantum and classical processing of information with light.
-Passive and reconfigurable linear optical circuits have been proposed and demonstrated for many applications including telecommunications~\cite{Miller_2015_Sorting}, machine learning~\cite{Shen_2017_Deep} and quantum computation~\cite{Carolan_2015_Universal} and simulation~\cite{Harris_2017_Quantum}.
+Even though photonics is often considered the \quotes{ugly duckling} of the approaches to quantum computing and simulation~\cite{Rudolph}, it has two main adages over other approaches:
+It is inherently robust towards stochastic noise and integrated photonic devices can be fabricated using present-day fabrication techniques for silicon-based semi-conductors~\cite{Rudolph}.
+Passive and reconfigurable linear optical circuits have been proposed and demonstrated for many applications including telecommunications~\cite{Miller_2015_Sorting}, machine learning~\cite{Shen_2017_Deep} as well as quantum computation~\cite{Carolan_2015_Universal} and simulation~\cite{Harris_2017_Quantum}.
 With the continuing development of large-scale integrated photonic platforms~\cite{Silverstone_2016_Silicon,Seok_2016_LargeScale}, practical and reliable techniques for characterizing and validating the operation of these devices are crucial.
-In this work, we present new protocols for characterizing linear optical devices with low experimental resources by exploiting a connection to the phase retrieval problem \cite{Walther_1963_Question}.
+
+In this chapter, we propose an efficient, robust, and conceptually simple technique for characterizing linear optical circuit by exploiting a connection to the phase retrieval problem \cite{Walther_1963_Question}.
+Not only do we adapt existing results from phase retrieval and low-rank matrix recovery to the problem of characterizing linear-optical networks, we also propose a measurement ensemble tailored to this specific application.
+To present the rigorous analysis of both approaches, we develop a unified proof strategy.
+Besides having these stringent recovery guarantees, the \emph{PhaseLift} reconstruction algorithm proposed here is robust to noise and efficient with respect to the number of measurements.
 
 Well-known techniques for characterizing linear optical circuits include quantum process tomography with non-classical~\cite{Brien_2004_Quantum} or coherent~\cite{Keshari_2011_Quantum} states, though these approaches scale exponentially with the number of modes.
 Simpler protocols tailored to linear optics have been proposed that use either single and two-photon probe states~\cite{Laing_2012_SuperStable,Dhand_2016_Accurate,Spagnolo_2017_Learning} or multimode coherent states~\cite{Keshari_2013_Direct,Tillmann_2016_On}.
@@ -18,15 +20,21 @@ While their recovery method is strikingly simple and relies only on $2n-1$ input
 Hence, the experiment needs to be performed interactively, where the phase shift is adjusted gradually throughout an individual measurement, or a large number of phase shifter settings need to be probed.
 Both alternatives require a large number of measurements to be performed in order to recover $M$ successfully.
 Furthermore, by construction, the protocol from~\cite{Keshari_2013_Direct} utilizes the obtained reconstruction of the first row to recover the remaining rows of $M$.
-This makes it a priori susceptible towards noise as any error in the determination of the first row propagates to the remaining rows.
+This makes it a priori susceptible towards noise as any error in the determination of the first row propagates to the remaining rows.\\
 
-In this chapter, we propose an efficient, robust, and conceptually simple technique for characterizing linear optical circuit based on recent advances in low-rank matrix recovery.
-Not only is the \emph{PhaseLift} reconstruction algorithm robust to noise and efficient with respect to the number of measurements, it also comes with stringent recovery guarantees.
+
+
+This chapter is structured as follows:
+In \cref{sec:pl.optics}, we recapitulate the fundamental problem of characterizing linear optical devices using either coherent states of light or single photon states.
+\Cref{sec:pl.phase_retrieval} is concerned with introducing the fundamental problem of phase retrieval.
+\Cref{sec:pl.results} contains the main theoretical results of this work, namely the proposed measurement scheme, the related recovery guarantees for the PhaseLift reconstruction algorithm as well as the characterization of linear-optical networks via PhaseLift.
+We present results from numerical and experimental investigation in \cref{sec:pl.results}.
+\Cref{sec:pl.final} concludes this chapter and provides an outlook on possible future work.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Device Characterization}%
 \label{sec:pl.optics}
-
 
 Mathematically, a linear optical device is fully characterized by its \emph{transfer matrix}, which relates the output to the input of the device by
 \[
@@ -133,6 +141,7 @@ Here the right hand side is the probability of simultaneously measuring $N_j$ ph
    }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Phase Retrieval}%
 \label{sec:pl.phase_retrieval}
@@ -1183,6 +1192,7 @@ We already mentioned that this can be rectified by better calibrating the prepar
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion and Outlook}
+\label{sec:pl.final}
 
 \todo{bootstrapping possible as demosntrated ...}
 \todo{Relation to 4QAM?}
