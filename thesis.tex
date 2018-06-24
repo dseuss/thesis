@@ -70,9 +70,9 @@
 
 % if \makefull is defined (e.g. by commandline argument, include everything)
 \ifdefined\makefull\else
-  \includeonly{chapters/introduction,chapters/conclusion}
+  % \includeonly{chapters/introduction,chapters/conclusion}
   % \includeonly{chapters/error_region,chapters/error_region_appendix}
-  % \includeonly{chapters/phaselift,chapters/phaselift_appendix}
+  \includeonly{chapters/phaselift,chapters/phaselift_appendix}
   % \includeonly{chapters/tensors,chapters/tensors_appendix}
 \fi
 
@@ -120,7 +120,13 @@
 \author{Daniel Suess\\ {\normalfont\normalsize aus Dresden}}
 \date{\normalfont\normalsize\sffamily K\"oln, 2018}
 {\let\newpage\relax \sffamily \maketitle}
-\vfill
+
+\newpage\phantom{CLEAR PAGE}
+\pagestyle{empty}
+\newpage
+\pagestyle{empty}
+
+\vspace*{\fill}
 \begin{center}
 \begin{minipage}{.8\linewidth}
   \begin{tabbing}%
@@ -192,10 +198,14 @@ Zusätzlich dazu ist unser Ansatz auch Recheneffizient, da wir effizient darstel
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
 
+\begingroup
 \chapter{Appendix}%
+
+\let\clearpage\relax
 \include{chapters/error_region_appendix}
 \include{chapters/phaselift_appendix}
 \include{chapters/tensors_appendix}
+\endgroup
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printbibliography[heading=bibintoc]

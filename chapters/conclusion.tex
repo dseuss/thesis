@@ -3,7 +3,7 @@
 \chapter{Conclusion}%
 \label{chap:conclusion}
 
-To summarize, we investigated three inference problem from quantum physics, which are subject to different types of constraints.
+To summarize, we have investigated three inference problem from quantum physics, which are subject to different types of constraints.
 The main motivation of this work stems from the observation that exploiting additional structure in inference problems often helps to reduce their sample complexity.
 However, the examples in this work differ in how taking the constraints into account affects their computational complexity.\\
 
@@ -38,6 +38,7 @@ In contrast to the Gaussian ensemble used in previous work, the RECR ensemble on
 This allows for calibrating the preparation stage more accurately, and hence, reduce the total error due to a mismatch of theoretical and implemented input vectors.\\
 
 
+
 The problem of low-rank tensor reconstruction shows that in some cases constraints are necessary for an efficient solution.
 High-order tensors are hard to deal with computationally due to the exponential scaling of the number of parameters.
 This motivated the development of different tensor formats such as the MPS format considered here, which by construction reflects the correlation structure of certain tensors occurring in applications.
@@ -53,7 +54,9 @@ Additionally, numerical reconstruction experiments show that we are able to reco
 
 
 The ALS algorithm using rank-one measurements combines both sample and computational efficiency for tensor reconstruction.
-By exploiting the low-rank constraint we obtain an exponential improvement for the sampling rate compared to na\"ive approaches.
+By exploiting the low-rank constraint we obtain an exponential improvement for the sampling rate compared to na\"ive approaches under the assumptions stated.
 This reduction of the number of measurements necessary for recovery is also crucial for making the reconstruction computationally efficient.
 The reduction of sample and computational complexity for low-rank tensor recovery is therefore qualitatively different from existing work on compressive sensing and low-rank matrix recovery.
 For the latter, reconstruction without additional constraints is still feasible and, at least in the sense of polynomial scaling, still efficient.
+Future work is necessary to prove the recovery condition for certain measurement ensembles.
+The most promising -- as the numerical investigation in this chapter shows -- are Gaussian product measurements.

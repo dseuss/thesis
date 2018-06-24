@@ -4,7 +4,7 @@
 \label{chap:tensors}
 
 
-The theoretical and numerical study of many-body quantum systems is severely hindered by the \emph{curse of dimensionality}, which in this context refers to the exponential growth of the Hilbert space of quantum states w.r.t.\ the number of constituents.
+The theoretical and numerical study of many-body quantum systems is severely hindered by the \emph{curse of dimensionality}, which in this context refers to the exponential growth of the dimension of the Hilbert space of quantum states w.r.t.\ the number of constituents.
 However, many realistic systems do not exhibit this pathological complexity and can be described efficiently in terms of \emph{tensor networks}~\cite{Bridgeman_2017_HandWaving,Orus_2014_Practical}.
 Here, \quotes{efficient description} refers to the fact that the number of parameters required to describe such a state scales polynomially in the number of subsystem.
 An especially simple but important special case of tensor networks is known under names such as \emph{finitely correlated states}~\cite{Fannes_1992_Finitely} or \emph{matrix-product states} (MPS)~\cite{Garcia_2006_Matrix,Verstraete_2008_Matrix}.
@@ -19,14 +19,14 @@ The question we are attempting to answer in this chapter is whether such MPS can
   Note that since we assume a linear measurement model, the results of this section do not apply to the problem of estimating pure quantum states.
   We use the term \quotes{matrix product state} to not only refer to quantum states, but to general tensors in the MPS format.
 }.
-More precisely, we provide evidence that the number of measurements required to recover an MPS is related to its intrinsic complexity -- and hence, scales polynomially in the number of constituents -- although the Hilbert space of tensors grows exponentially in the number of constituents.
+More precisely, we provide analytical and numerical evidence that the number of measurements required to recover an MPS is related to its intrinsic complexity -- and hence, scales polynomially in the number of constituents -- although the Hilbert space of tensors grows exponentially in the number of constituents.
 This work is a natural extension of \emph{low-rank matrix recovery}, which formed the foundation of the results in \cref{chap:phaselift}, to higher-order tensors.\\
 
 
 
 This chapter is structured as follows:
 In \cref{sec:tensors.mps}, we introduce the MPS tensor format and in \cref{sec:tensors.mpnum}, we present the software library \mpnum{} dealing with tensors in MPS representation.
-\mpnum{} was developed as part of this work to facilitate numerical computations in a user friendly and reusable manner.
+\mpnum{} was developed as part of this work to facilitate numerical computations in a user friendly and reusable manner and is the foundation of all the numerical experiments in this chapter.
 Finally, \cref{sec:tensors.als} reports on work in progress, which is concerned with provably recovering MPS from few linear measurements using an \emph{Alternating Least Squares} (ALS) algorithm.
 
 
@@ -368,7 +368,7 @@ provided the (generally non-square) matrices $L\ind{l}$ and $R\ind{l}$ satisfy $
 \]
 As shown in~\cite[Thm. 2]{Garcia_2006_Matrix}, these local transformations on the virtual degrees of freedom are the only possible gauge transformations of the MPS representation.
 A number of canonical forms exist that partially fix the gauge~\cite{Garcia_2006_Matrix,Schollwoeck_2011_DensityMatrix,Bridgeman_2017_HandWaving}.
-The following definition summarizes the corresponding gauge conditions
+The following definition summarizes the corresponding gauge conditions.
 
 \begin{definition}%
   \label{def:mps.canonical}
@@ -485,10 +485,10 @@ Although those stats occupy only a small corner of the enormous many-body Hilber
 
 \todo{Check the whole area law <=> MPS thing}
 In one dimensional systems, any many-body state $\ket{\psi}$ with an area law\footnote{%
-  In one dimension, the boundary area of any connected region is constant and independent of the size of the region, and therefore, the area law implies constant entanglement entropy.
+  In one dimension, the boundary area of any connected region is constant and independent of the size of the region, and therefore, the area law implies constant entanglement entropy across bipartitions.
 }
 has an efficient representation.
-If we expand $\ket{\psi}$ in a product basis with coefficient tensor $C$,
+If we expand $\ket{\psi}$ in a product basis with coefficient tensor~$C$,
 \[
   \ket\psi = \sum_{i_1,\ldots,i_N} C_{i_1,\ldots,i_N} \, \ket{i_1} \otimes \cdots \otimes \ket{i_N},
   \label{eq:mps.state_parametrization}
@@ -674,9 +674,10 @@ A similar approach can also be applied to learning polynomial classifiers~\cite{
 
 The Python library \mpnum~\cite{Suess_2017_Mpnum} was developed during this work to simplify the process of prototyping numerical algorithms with MPS.
 Its main design principles are flexibility, user-friendliness, and expandability.
-We placed special emphasis on making the API of \mpnum as accessible as possible for researchers with little background in programming:
+We placed special emphasis on making the API of \mpnum{} as accessible as possible for researchers with little background in programming:
 Compared to the existing TT-toolboxes for Matlab and Python~\cite{Oseledets_2018_Git,Oseledets_2018_Ttpy}, we used object-oriented design principles to make the syntax as close to mathematical notation as possible and to hide the details of the MPS representation for the user.
 We were partly inspired by the fantastic ITensor library~\cite{Stoudenmire_2018_Itensor} for C++, but preferred an implementation in pure Python due to its ease of use and widespread use in science.
+Beside our own work, \mpnum{} has been used in the study of experimental techniques in quantum optics~\cite{DNP,Pulsed}, optical quantum simulation~\cite{Proposal}, as well as quantum many-body tomography~\cite{Efficien}.
 
 
 \input{notebooks/Introduction}
@@ -772,7 +773,7 @@ with the Frobenius inner product of tensors defined by \cref{eq:mps.inner}.
 
 The field of low-rank tensor recovery has attracted increasing attention in recent years.
 Especially the problem of tensor completion, i.e.\ inferring missing values of a low-rank tensor, has been thoroughly studied due to its broad applicability in computer vision, neuroscience, remote sensing, and context-aware recommender systems~\cite{Li_2010_Tensor,Zhu_2016_ContextAware,Wang_2014_LowRank}.
-In contrast to our work, most analytical results in this area are concerned with different notions of tensor rank such as the Tucker rank~\cite{Kressner_2013_LowRank,Zhang_2016_Cross} or the canonical tensor rank~\cite{Krishnamurthy_2013_LowRank,Potechin_2017_Exact}.
+In contrast to our work, most analytical results in this area are concerned with different notions of tensor rank such as the Tucker rank~\cite{Kressner_2013_LowRank,Zhang_2016_Cross} or the canonical tensor rank~\cite{Krishnamurthy_2013_LowRank,Potechin_2017_Exact,Ghadermarzy}.
 The Tucker model still requires exponentially many parameters, and therefore, is unsuitable for our purposes.
 Although the canonical tensor representation captures the structure of many applications very well, it has some drawbacks in practice~\cite{Kolda_2009_Tensor}:
 Approximation with fixed canonical rank in the Frobenius norm can be ill-posed~\cite{Silva_Lim}.
@@ -806,14 +807,16 @@ We take the measurement tensors to be of the form
 \]
 with local tensors randomly chosen from a standard multivariate normal distribution $a\ind{l}_k \sim \Normal(0, \1_d)$.
 In contrast to the fully Gaussian model from~\cite{Rauhut_2014_Tensor,Rauhut_2016_Low}, the measurement tensors~\eqref{eq:als.rank1_measurements} can be represented efficiently as MPS of unit rank.
-And, unlike the tensor completion problem, history does not dictate that its solution requires at least one Fields Medalist.\\
+And, unlike the tensor completion problem, history does not suggest that its solution requires at least one Fields Medalist.\\
 
 
 
 The rest of this section is structured as follows:
 In \cref{sub:als.algorithm}, we introduce the \emph{alternating least squares} (ALS) algorithm for tensors, which we analyse analytically in \cref{sub:als.ana} for general rank-1 measurements.
-The particular case of Gaussian rank-1 Gaussian measurements is then treated in \cref{sub:als.gaussian_measurements}.
-This is still work in progress, so we report on some tools to tackle the problem of Gaussian rank-1 measurements and perform numerical simulations of their properties.
+This section also contains the main analytical result of this section, namely a sufficient condition for recovery, which connects the deviation of the initialization from the true value and inherent properties of the measurements.
+The particular case of Gaussian rank-1 Gaussian measurements is further investigated in \cref{sub:als.gaussian_measurements}.
+As the analysis of Gaussian product measurements poses tremendous challenges, this section contains work in progress.
+We develop mathematical tools, which might be useful in future work, and perform detailed numerical experiments investigation of the properties of said measurements.
 Finally, in \cref{sub:als.numerics}, we report on numerical simulations of tensor recovery via ALS and some optimization strategies for scaling the implementation to large tensors.
 
 
@@ -850,15 +853,15 @@ The resulting algorithm is presented below:
   \SetKwInOut{Output}{Output}
 
   \Input{%
-    Number of epochs $H$ and initialization MPS $X_\mathrm{init}$ of order $N$, rank $r$, and local dimension $d$ \newline
-    Measurement tensors $A\ind{l}$ and measurement outcomes $b\ind{l}$ with $i = 1, \ldots, H \times N \times m$ divided into $HN$ batches of size $m$, which are denoted by ${\left(A\ind{h,n;l}, b\ind{h,n;l}\right)}_l$ ($h \in [H], n \in [N]$)
+    Number of epochs $H$ and initialization MPS $X_\mathrm{init}$ of order $N$, rank $r$, and local dimension $d$, \newline
+    measurement tensors $A\ind{l} = a_1\ind{l} \otimes \cdots \otimes a_N\ind{l}$ and measurement outcomes $b\ind{l}$ with $i = 1, \ldots, H \times N \times m$ divided into $HN$ batches of size $m$, which are denoted by ${\left(A\ind{h,n;l}, b\ind{h,n;l}\right)}_l$ ($h \in [H], n \in [N]$)
   }
   \BlankLine
 
   $Y \gets X_\mathrm{init}$
 
   \For{$h \gets 1$ \KwTo $H$}{
-    \tcc{right-normalize all local tensors}
+    \tcc{right-normalize all local tensors, i.e.\ bring $Y$ to right-canonical form}
     $\mathtt{right\_canonicalize}(Y)$ \label{line:als.right_canonical}
 
     \For{$n \gets 1$ \KwTo $N$}{
@@ -868,7 +871,7 @@ The resulting algorithm is presented below:
       }
       $\hat Z \gets \argmin_Z \sum_l \left( b\ind{h,n;l} - B\ind{l}Z   \right)^2$ \label{line:als.min}
 
-      \tcc{update the n-th local tensor inplace}
+      \tcc{update the n-th local tensor inplace with a left-normalized form of $\hat Z$}
       $Y_n \gets \mathtt{left\_normalize}(\hat Z)$
     }
   }
@@ -908,7 +911,7 @@ $B \in \Reals^{m \times (dr^2)}$ are defined in line~\ref{line:als.partial_contr
 Therefore, the solution $\hat Z$ of \cref{eq:als.llsq} is a $d r^2$ dimensional vector, which can be reshaped to the correct form.
 If we replace the exact local minimization in \cref{eq:als.llsq} by a finite gradient descent step, we obtain a standard nonlinear block Gauss–Seidel iteration~\cite{Schechter_1962_Iteration}.
 
-Finally, note that the sample splitting at the beginning is necessary for the analysis of the algorithm below as it requires independent updates for each micro-iteration.
+Finally, note that the sample splitting into $H$ epochs at the beginning is necessary for the analysis of the algorithm below as it requires stochastically independent updates for each micro-iteration.
 Therefore, we use a fresh batch of measurement tensors and measurement values in each step, which results in a total number of $M = HNm$ measurements.
 Provided that both, the number of epochs $H$ and the batch size $m$ scale polynomially in the system's parameters, then so does $M$.
 However, numerical experiments in \cref{sub:als.numerics} show that this resampling is unnecessary in practice.\\
@@ -921,12 +924,12 @@ However, numerical experiments in \cref{sub:als.numerics} show that this resampl
 Alternating algorithms such as ALS updating only a few local tensors at a time are a very common approximation technique for circumventing intractabilities when dealing with MPS.
 Well known examples include variational compression and DMRG~\cite{Schollwoeck_2011_DensityMatrix} --  an iterative algorithm for approximating the smallest eigenvalue of a hermitian MPO.
 Local convergence of these alternating algorithms has been proven for a large class of problems in~\cite{Holtz,Rohwedder_2013_On}.
-These result show that alternating minimization algorithms of many cost functions converge to a local minimum.
+These results show that alternating minimization algorithms of many cost functions converge to a local minimum.
 However, it remains to be shown that the minimizer of the empirical $\ell_2$ error~\eqref{eq:als.empirical_l2} with given rank is equal to $X$, i.e.\ that the given measurements suffice to identify $X$.
 
-Here, we attack the problem directly by analysing the micro-iterations of \cref{alg:als} directly.
-For this purpose, we generalize the ideas from~\cite{Zhong_2015_Efficient} to the tensor case.
-For the sake of simplicity, we only treat the case of a product signal tensor, i.e.\ $X$ is assumed to have rank one.
+For this purpose, we generalize the ideas from the matrix case~\cite{Zhong_2015_Efficient} to the tensor case.
+More precisely, We adapt the idea from~\cite{Zhong_2015_Efficient} to analyse the micro-iterations of \cref{alg:als} directly by deriving a closed form expression for the minimizer of \cref{eq:als.llsq}.
+However, as the notation and the analysis is much more involved in the tensor case, we only treat the case of a product signal tensor, i.e.\ $X$ is assumed to have rank one.
 Furthermore, we also assume w.l.o.g.\ that $X$ is normalized in Frobenius norm, i.e.\ $\norm{X}_2 = 1$.
 Then, $X$ can be written as a tensor product of $N$ normalized vectors $x_i \in \Reals^d$ and we have
 \[
@@ -942,7 +945,8 @@ In the case of rank-1 tensor reconstruction, this metric between the local tenso
 \]
 It is known as \emph{infidelity} if $x, y \in \Complex^d$ represent pure quantum states~\cite{Nielsen_2010_Quantum}.
 \Cref{eq:ana.infidelity} is also the one-dimensional special case of the \emph{principle angle distance} of subspaces~\cite{Golub_2013_Matrix}, which is the appropriate distance measure for higher-rank generalizations of the results presented here.
-In the first lemma, we relate the \quotes{global} distance of two tensors, which is measured in Frobenius norm, to the distances of the local tensors measured by~\eqref{eq:ana.infidelity}.
+The following lemma relates the \quotes{global} distance of two tensors, which is measured in Frobenius norm, to the distances of the local tensors measured by~\eqref{eq:ana.infidelity}.
+Therefore, it shows how a reduction of the errors of the local tensors leads to a reduction of the error of the full tensor measured in Frobenius norm.
 \begin{lemma}%
   \label{lem:ana.local_global_closeness}
   Let $X = \otimes_{i=1}^N x_i$ and $Y = \otimes_{i=1}^N y_i$ be two product tensors of unit norm.
@@ -1684,7 +1688,7 @@ By exploiting the low-rank structure, we are not only able to reduce the sample 
 
 For the remainder of this section, we comment on implementation details, which enable scaling \cref{alg:als_practical} even to large instances.
 The first bottleneck in a straight-forward implementation of the ALS algorithm is the initialization in line~\ref{line:als_practical.init} of \cref{alg:als_practical}.
-A na\"ive implementation in \mpnum would read
+A na\"ive implementation in \mpnum{} would read
 \begin{pythoncode}
   A = [mp.random_mpa(N, d, rank=1) for _ in range(m)]
   b = [mp.inner(a, X) for a in A]
@@ -1695,7 +1699,7 @@ Here, \texttt{X} is the original tensor of rank $r$, we are trying to recover.
 The third line first computes $\tilde X_\mathrm{init}$ from \cref{eq:numerics.S} and then compresses it to the desired rank.
 Note that as a sum of $m$ rank-1 operators, $\tilde X_\mathrm{init}$ is of rank $m$.
 The main bottleneck here is bringing $\tilde X_\mathrm{init}$ to canonical form as required for the compression:
-A general-purpose canonicalization as implemented in \mpnum has to compute matrix products of $m d \times m$ and $m \times d m$ matrices in this case.
+A general-purpose canonicalization as implemented in \mpnum{} has to compute matrix products of $m d \times m$ and $m \times d m$ matrices in this case.
 Furthermore, the subsequent compression is based on SVDs of similar sized matrices.
 
 In order to speed this up, we implemented a joint sum-and-compression routine in \mpnum, which benefits from the explicit representation of sums of rank-1 tensors.
@@ -1743,7 +1747,7 @@ A tighter bound for the conditions~\eqref{eq:ana.conditions.lmin} and~\eqref{eq:
 In \cref{sub:als.gaussian_measurements}, we examine the conditions for Gaussian product measurements.
 These results suggest that for fixed $d$, $m = \Order(N)$ measurements are indeed sufficient to fulfill the conditions with high probability.
 Furthermore, we also demonstrate successful numerical reconstruction in \cref{sub:als.numerics} of rank-one and low-rank tensors with severe under-sampling.
-To support the numerical experiments, we developed \mpnum -- a library for MPS representation algorithms.\\
+To support the numerical experiments, we developed \mpnum{} -- a library for MPS representation algorithms.\\
 
 
 

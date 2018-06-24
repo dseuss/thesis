@@ -53,12 +53,13 @@ In \cref{chap:phaselift}, we propose a characterization method that is asymptoti
 \todo{Hmmm.... 2}
 The suggested method adapts ideas from low-rank matrix recovery and leverages an exact mathematical constraint on the signal to be recovered to derive a reconstruction algorithm that is efficient w.r.t.\ both sample and computational complexity.
 
-\Cref{chap:tensors} is dedicated to the problem of efficiently reconstructing low-rank tensors from linear measurements.
-We consider tensors $X \in \Reals^{d^N}$, where $d$ is the local dimension and $N$ the order of the tensor.
+\Cref{chap:tensors} is dedicated to efficiently reconstructing low-rank tensors from linear measurements.
+As a natural extension of low-rank matrix recovery, this challenging problem has received a lot of attention recently~\cite{}.
+Here, we consider tensors $X \in {\left(\Reals^d\right)}^{\otimes N}$, where $d$ is the local dimension and $N$ the order of the tensor.
 Without any additional structure, reconstructing $X$ from measurements of the form  $\braket{A, X}$ for measurement tensors $A$ requires at least $d^N$ such overlaps as each component of $X$ is independent from the other.
 Therefore, the sample complexity scales exponentially in $N$ and the problem becomes infeasible already for moderate values of $N$.
 Furthermore, any reconstruction algorithm of an arbitrary tensor requires an exponentially long runtime as simply outputting the result takes this amount of time.
-However, many practically relevant tensors have additional structure that can be used to render their description and reconstruction efficient.
+However, many tensors naturally occurring, e.g.\ in quantum physics,  have additional structure that can be used to render their description and reconstruction efficient.
 Here, we consider low-MPS rank tensors, which are a generalization of low-rank matrices and constitute a variational class of tenors that have an efficient description in terms of the matrix product state (MPS) representation.
 More precisely, the number of parameters required to express a tensor of fixed MPS rank in said representation scales linearly in $N$.
 The question we are trying to answer is whether such low-MPS rank tensors can be recovered from $m$ linear measurements such that $m$ scales polynomially in the intrinsic complexity, i.e.
