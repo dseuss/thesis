@@ -1191,19 +1191,20 @@ We already mentioned that this can be rectified by better calibrating the prepar
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusion and Outlook}
+\section{Conclusion and Outlook}%
 \label{sec:pl.final}
 
-\todo{bootstrapping possible as demosntrated ...}
-\todo{Relation to 4QAM?}
-\todo{Fix this}
-In this work, we introduce a solution to the problem of characterizing linear optical devices based on recent advances in phase retrieval and low-rank matrix recovery.
-The PhaseLift reconstruction outlined in \cref{prot:pl.detailed_reconstruction} can be used to reconstruct any transfer matrix using only intensity measurements and classical states of light as inputs, which are chosen at random from an appropriate ensemble.
-Not only do the number of measurements required for this approach scale linearly in the number of modes of the device, the theory behind it also provides stringent error bars for the reconstruction.
-As the major contribution of this work, we proof recovery guarantees for the RECR ensemble, which is especially suited for the application in linear optical devices.
-We also report on a successful experimental implementation of the PhaseLift characterisation protocol based on a universally reconfigurable six waveguide device.
-The results from this experiment show that although the experimental effort of our approach is much lower, it provides a similar performance compared to other characterisation techniques.
+In this chapter, we introduced a characterization technique for linear optical networks based on this problem's connection to phase retrieval.
+First and foremost, we showed that two different ensembles of \quotes{sensing vectors} allow for efficiently and stably reconstructing any complex vector from phaseless measurements, namely random vectors sampled uniformly from the hypersphere and RECR vectors.
+The latter were motivated by our particular application of characterizing linear optical networks.
+Based on these results, we propose a protocol to recover transfer matrices using the PhaseLift algorithm, which is not only robust to noise with rigorously proven error bounds, but also efficient with respect to the number of measurements required.
+The experimental results demonstrate this protocol's practicability and its advantages in applications.\\
 
-Another possible extension of the experimental work is the development of a dedicated state-preparation circuit.
-In the current architecture, possible errors in the preparation state for the coherent state inputs $\ket{\alpha}$ add up linearly due to the serial wiring in the preparation stage.
-With a tree-like arrangement of the directional couplers, we might be able to also benefit from the fact that the RECR scheme allows only for two possible values for the intensity of each input mode $\abs{\alpha_i}$.
+
+Future work should investigate the question whether the techniques developed in this work can also be used to prove recovery guarantees for other structured measurement ensembles, which naturally occur in practical applications of phase retrieval.
+Especially the general proof for attentitive vectors as well as the bounding-trick used in the proof for super-attentive vectors may be useful for other applications.
+
+For the specific application of characterizing linear optical networks, we would like to investiagte the applicability of our approach to larger systems, which may be out of reach for current techniques.
+Furthermore, we would like to investiagte better ways to implement the preparation of RECR vectors in linear optics.
+The main drawback of the current architecture is that possible errors in the preparation state for the coherent state inputs $\ket{\alpha}$ add up linearly due to the serial wiring in the preparation stage.
+Furthermore, with a tree-like arrangement of the directional couplers, we might be able to also benefit from the fact that the RECR scheme allows only for two possible values for the intensity of each input mode $\abs{\alpha_i}$, and therefore, prepare the required vectors with higher precision.
