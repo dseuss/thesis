@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 TIKZ_PREVIEW_FILE=build/tikz_preview.tex
 TEXENGINE=lualatex
@@ -9,8 +9,9 @@ fi
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-clear
+# clear
 echo "\\def\\inputfile{$1}\\input{$DIR/../tikz/template.tex}" > "$TIKZ_PREVIEW_FILE"
+echo $TIKZ_PREVIEW_FILE
 latexrun --latex-cmd lualatex "$TIKZ_PREVIEW_FILE"
 
 if [ $? -eq 0 ]; then
