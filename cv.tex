@@ -1,0 +1,178 @@
+\documentclass[11pt,a4paper,sans]{moderncv} % Font sizes: 10, 11, or 12; paper sizes: a4paper, letterpaper, a5paper, legalpaper, executivepaper or landscape; font families: sans or roman
+
+\moderncvstyle{classic} % CV theme - options include: 'casual' (default), 'classic', 'oldstyle' and 'banking'
+\moderncvcolor{blue} % CV color - options include: 'blue' (default), 'orange', 'green', 'red', 'purple', 'grey' and 'black'
+\renewcommand*{\addresssymbol}       {}
+\renewcommand*{\mobilephonesymbol}   {}
+\renewcommand*{\fixedphonesymbol}    {}
+\renewcommand*{\faxphonesymbol}      {}
+\renewcommand*{\emailsymbol}         {}
+\renewcommand*{\homepagesymbol}      {}
+\renewcommand*{\linkedinsocialsymbol}{}
+\renewcommand*{\twittersocialsymbol} {}
+\renewcommand*{\githubsocialsymbol}  {}
+
+\usepackage[top=3cm,bottom=2cm,left=2.5cm,right=2.5cm]{geometry} % Reduce document margins
+\usepackage{ifpdf}
+\ifpdf{}
+    \usepackage[utf8]{inputenc}
+\fi
+\usepackage{tabularx}
+
+
+%\usepackage[utf8]{inputenc} %utf8
+\usepackage[australian]{babel}
+\usepackage[T1]{fontenc}
+\AfterPreamble{\hypersetup{
+  pdfauthor={Daniel Suess},
+  pdftitle={CV for Daniel Suess},
+  pdfsubject={Short CV for Daniel Suess},
+  urlcolor=blue,
+}}
+%\pdfcompresslevel=9
+
+\def\first{{\raise.5ex\hbox{\small st}}\ }
+\def\second{{\raise.5ex\hbox{\small nd}}\ }
+\def\third{{\raise.5ex\hbox{\small rd}}\ }
+\def\fourth{{\raise.5ex\hbox{\small th}}\ }
+\def\CC{{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\tiny\textbf{++}}}}
+
+\setlength{\hintscolumnwidth}{3.3cm} % Uncomment to change the width of the dates column
+%\setlength{\makecvtitlenamewidth}{10cm} % For the 'classic' style, uncomment to adjust the width of the space allocated to your name
+
+\newcommand{\quotes}[1]{{\emph{``{#1}''}}}
+
+\usepackage{tikz}
+\newcommand{\grade}[1]{%
+  \begin{tikzpicture}
+  \clip (1em-.4em,-.4em) rectangle (5em +.5em ,.4em);
+  \foreach \x in {1,2,...,5}{
+  \fill[fill=orange!20] (\x em,0) circle (.3em);
+  }
+  \begin{scope}
+    \clip (1em-.4em,-.4em) rectangle (#1em +.5em ,.4em);
+    \foreach \x in {1,2,...,5}{
+    \fill[fill=orange] (\x em,0) circle (.3em);
+    }
+  \end{scope}
+  \end{tikzpicture}%
+}
+
+
+%------------------------------------------------------------------------------
+%	NAME AND CONTACT INFORMATION SECTION
+%------------------------------------------------------------------------------
+
+\firstname{Daniel} % Your first name
+\familyname{Suess} % Your last name
+
+% All information in this block is optional, comment out any lines you don't need
+\title{Lebenslauf}
+\address{202/78 Westbury St}{Balaclava, VIC 3183, Australien}
+% \mobile{+61 431 369097}
+% \mobile{+49 151 22723755}
+\email{daniel@dsuess.me}
+\homepage{dsuess.me}
+% \extrainfo{additional information}
+% \quote{"A witty and playful quotation" - John Smith}
+\photo{me}
+
+%------------------------------------------------------------------------------
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                 COVER LETTER                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                      CV                                      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makecvtitle % Print the CV title
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Persönliche Angaben}
+\cvitem{Name}{Daniel Suess}
+\cvitem{Geburtsdatum}{18.10.1987 in Dresden}
+\cvitem{Nationalität}{deutsch}
+\cvitem{Familienstand}{ledig}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ausbildung}
+
+\cventry{Oct 2010 -- Oct 2013}{Diplom \textnormal{in theoretischer Physik mit Nebenfach Mathematik}}{TU Dresden}{Deutschland}{}{%
+  \begin{itemize}
+    \item Note 1.0 (mit Auszeichnung bestanden)
+    \item Thema der Diplomarbeit: \quotes{Hierarchy of Quantum Trajectories applied to Photosynthetic Complexes}
+    \item Betreuer Prof.\ Dr.\ Walter T.\ Strunz\\
+  \end{itemize}
+}
+
+\cventry{Oct 2008 -- Oct 2010}{Vordiplom \textnormal{in Physik}}{TU Dresden}{Deutschland}{}{%
+  \begin{itemize}
+    \item Note 1.1
+  \end{itemize}
+}
+
+\cventry{1998 -- 2007}{Abitur}{Bertolt Brecht Gymnasium}{Deutschland}{}{}
+
+\cventry{2004 -- 2005}{Auslandsjahr}{Reeltown Highschool}{USA}{}{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Beruflicher Werdegang}
+
+\cventry{März 2018--}{Data Scientist}{Silverpond Pty Ltd}{Melbourne}{Australien}{}
+
+\cventry{Aug 2014 -- März 2018}{Wissenschaftlicher Mitarbeiter}{Universität zu Köln}{}{Deutschland}{}
+
+\cventry{Nov 2016 -- Jul 2017}{Gastwissenschaftler}{University of Sydney}{}{Australien}{}
+
+\cventry{Sep 2014 -- Aug 2015}{Wissenschaftlicher Mitarbeiter}{Albert-Ludwigs-Universität~Freiburg}{}{Deutschland}{}
+
+\cventry{Apr -- Jul 2014}{Gastwissenschaftler}{Max-Planck-Institut für Physik komplexer Systeme}{Dresden}{Deutschland}{}
+
+\cventry{Jan -- Mar 2014}{Gastwissenschaftler}{Griffith University}{Brisbane}{Australien}{}
+
+\cventry{2009 -- 2013}{Tutor für Mathematik}{TU Dresden}{}{Deutschland}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Veröffentlichungen und Auszeichnungen}
+
+\subsection{Publikationen}
+
+\cvitem{}{D.\ Suess, M.\ Holzaepfel, \textit{mpnum: A matrix product representation library for Python}, Journal of Open Source Software, 2(20), 465 (2017)}
+\cvitem{}{Ž.\ Stojanac, D.\ Suess, M.\ Kliesch: \textit{On the distribution of a product of N Gaussian random variables}, Proceedings Volume 10394, Wavelets and Sparsity XVII; 1039419 (2017)}
+\cvitem{}{D.\ Suess, Ł.\ Rudnicki, T.\ O.\ Maciel, D.\ Gross: \textit{Error regions in quantum state tomography: computational complexity caused by geometry of quantum states}, New J.\ Phys.\ 19 093013 (2017)}
+\cvitem{}{D.\ Suess, W.\ T.\ Strunz, A.\ Eisfeld: \textit{Hierarchical equations for open system dynamics in fermionic and bosonic environments}, J.\ Stat.\ Phys.\ 159, Issue 6, pp 1048--1423 (2015)}
+\cvitem{}{G.\ Ritschel, D.\ Suess W.\ T.\ Strunz, A.\ Eisfeld:  \textit{Non-Markovian Quantum State Diffusion for temperature-dependent linear spectra of light harvesting aggregates}, J.\ Chem.\ Phys.\ 142, 034115 (2015)}
+\cvitem{}{D.\ Suess, A.\ Eisfeld, W.\ T.\ Strunz: \textit{Hierarchy of stochastic pure states for open quantum system dynamics}, Phys. Rev. Lett. 113, 150403 (2014)}
+
+\subsection{Preprints}
+
+\cvitem{}{Ž.\ Stojanac, D.\ Suess, M.\ Kliesch, \textit{On products of Gaussian random variables}, arXiv:1711.10516}
+
+
+\subsection{Eingeladene Vorträge}
+
+\cventry{June 2017}{Centre for Quantum Software and Information group seminar}{Sydney}{Australia}{}{%
+  \quotes{Characterizing linear optical networks via PhaseLift}.
+}
+
+\cventry{May 2017}{Monash quantum information science group seminar}{Melbourne}{Australia}{}{%
+  \quotes{Low-rank tensor recovery via alternating least squares}.
+}
+
+\cventry{April 2017}{Quantum theory group seminar}{Sydney}{Australia}{}{%
+  \quotes{Error regions in quantum state estimation: computational complexity caused by the geometry of states}.
+}
+
+\subsection{Weiteres}
+
+\cventry{2014}{PROMOS Stipendium}{Deutscher Akademischer Austausch Dienst}{}{}{}
+
+\cventry{2017}{Data \& Software Carpentry Instructor}{}{}{}{}
+
+\end{document}
