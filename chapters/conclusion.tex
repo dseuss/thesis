@@ -22,20 +22,18 @@ For example, our results leave room for the existence of efficient approximate s
 Rather, our hardness result should be understood as an absolute upper bound on what such algorithms can achieve.\\
 
 
-% furthemore, we propose a measruement ensemble for phase-retrieval tailored to applications in linerar optics
-% in constrast to the Gaussian ensemble used in previous work, the RECR ensemble only requires preparation of 4 complex phases per mode and discrete magintudes -> able to calibrate experimetnal implemention better
-
 In \cref{chap:phaselift}, we investigate characterizing linear optical circuits and the related phase retrieval problem.
 To overcome to challenge of phase-insensitive measurements, we map the problem to rank-one matrix recovery.
 By exploiting the exact rank-one constraint, we are able to perform reconstruction using an asymptotically optimal number of measurements.
 Furthermore, our recovery protocol can be implemented efficiently using a positive-semidefinite program called \quotes{PhaseLift} and it is robust to noise as the rigorously proven recovery guarantees show.
-From an experimentalist's point of view, characterization of linear-optical networks via PhaseLift is favourable because it reduces the number of different measurement configurations required.
-As reconfiguring the chip for another input takes more time on the architecture used for the current experiment than the actual measuring process, the sample efficiency of our protocol reduces the total amount of time required.
 
 We also propose a measurement ensemble for phase retrieval tailored to the application in optics.
 In contrast to the Gaussian ensemble used in previous work, the RECR ensemble only necessitates the ability to prepare four complex phases per mode and discrete magnitudes.
-\todo{Add phaselift conclusions}
-This allows for calibrating the preparation stage more accurately, and hence, reduce the total error due to a mismatch of theoretical and implemented input vectors.\\
+This allows for calibrating the preparation stage more accurately, and hence, reduce the total error due to a mismatch of theoretical and implemented input vectors.
+Using a unified proof strategy, which was developed for this work, as well as numerical experiments we are able to show that the RECR ensemble's performances matches the well-established Gaussian scheme.
+
+From an experimentalist's point of view, characterization of linear-optical networks via PhaseLift is favourable because it reduces the number of different measurement configurations required.
+As reconfiguring the currently used hardware to prepare another input takes more time than the actual measuring process, the sample efficiency of our protocol reduces the total amount of time required.\\
 
 
 

@@ -3,8 +3,8 @@
 \label{chap:phaselift}
 
 
-Even though photonics is often considered the \quotes{ugly duckling} of the approaches to quantum computing and simulation~\cite{Rudolph}, it has two main adages over other approaches:
-It is inherently robust towards stochastic noise and integrated photonic devices can be fabricated using present-day fabrication techniques for silicon-based semi-conductors~\cite{Rudolph}.
+Even though photonics is often considered the \quotes{ugly duckling} of the approaches to quantum computing and simulation~\cite{Rudolph_2016_Why}, it has two main adages over other approaches:
+It is inherently robust towards stochastic noise and integrated photonic devices can be fabricated using present-day fabrication techniques for silicon-based semi-conductors~\cite{Rudolph_2016_Why}.
 Passive and reconfigurable linear optical circuits have been proposed and demonstrated for many applications including telecommunications~\cite{Miller_2015_Sorting}, machine learning~\cite{Shen_2017_Deep} as well as quantum computation~\cite{Carolan_2015_Universal} and simulation~\cite{Harris_2017_Quantum}.
 With the continuing development of large-scale integrated photonic platforms~\cite{Silverstone_2016_Silicon,Seok_2016_LargeScale}, practical and reliable techniques for characterizing and validating the operation of these devices are crucial.
 
@@ -253,7 +253,6 @@ For $p=1$, the complex Rademacher measurement vectors cannot distinguish between
 The rest of this section is devoted to proving recovery guarantees for the RECR ensemble for phase retrieval via PhaseLift~\eqref{eq:pl.PhaseLift}.
 In order to be more self-contained, we also provide recovery guarantees for the Gaussian and uniform ensembles, which are well known~\cite{Candes_2012_Solving,Demanet_2014_Stable}.
 For this purpose, we develop a unified proof strategy inspired by Ref.~\cite{Dirksen_2017_On}, who derived strong result for sparse vector recovery using similar assumptions, and Ref.~\cite{Kabanava_2015_Stable} in the non-commutative setting.
-\todo{Mention Richards contribution}
 In the following we consider ensembles of measurement vectors $\alpha$ that satisfy the following moment conditions.
 
 \begin{definition}%
@@ -954,7 +953,7 @@ Unitary transfer matrices satisfy $\nu = 1$.
   Note that the additional $n$ factor compared to \cref{eq:vectorial_noisy_bound} is due to the normalization of the input vectors.
   The input vectors need to be scaled by $\sqrt{n}$ in order to be able to apply \cref{thm:pl.phaselift_noisy}.
 
-  Before we can move on to determine the remaining row vectors ${M}_{i}$ ($i \neq j$) of ${M}$, it is important to point out that the recovery guarantees of \cref{thm:pl.phaselift_noisy,thm:pl.phaselift_noisy_recr} are \emph{universal}: one instance of randomly chosen measurement vectors suffices to recover \emph{any} vector ${x} \in \Complex^n$.
+  Before we can move on to determine the remaining row vectors ${M}_{i}$ ($i \neq j$) of ${M}$, it is important to point out that the recovery guarantees of \cref{thm:pl.phaselift_noisy} are \emph{universal}: one instance of randomly chosen measurement vectors suffices to recover \emph{any} vector ${x} \in \Complex^n$.
   This allows for applying this reconstruction guarantee to all $n$ row vectors ${M}_j$ simultaneously.
   The total noise bound~\eqref{eq:pl.total_bound} now follows from the entry-wise definition of the Frobenius norm:
   \begin{align}

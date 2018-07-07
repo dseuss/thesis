@@ -483,7 +483,6 @@ For those states, the entanglement entropy of a subsystem asymptotically only de
 Although those stats occupy only a small corner of the enormous many-body Hilbert space as depicted in \cref{fig:mps.cartoon}, they are exceptionally important in practice.
 %   - time evolution stays there -> see Orus 3.4
 
-\todo{Check the whole area law <=> MPS thing}
 In one dimensional systems, any many-body state $\ket{\psi}$ with an area law\footnote{%
   In one dimension, the boundary area of any connected region is constant and independent of the size of the region, and therefore, the area law implies constant entanglement entropy across bipartitions.
 }
@@ -677,7 +676,7 @@ Its main design principles are flexibility, user-friendliness, and expandability
 We placed special emphasis on making the API of \mpnum{} as accessible as possible for researchers with little background in programming:
 Compared to the existing TT-toolboxes for Matlab and Python~\cite{Oseledets_2018_Git,Oseledets_2018_Ttpy}, we used object-oriented design principles to make the syntax as close to mathematical notation as possible and to hide the details of the MPS representation for the user.
 We were partly inspired by the fantastic ITensor library~\cite{Stoudenmire_2018_Itensor} for C++, but preferred an implementation in pure Python due to its ease of use and widespread use in science.
-Beside our own work, \mpnum{} has been used in the study of experimental techniques in quantum optics~\cite{DNP,Pulsed}, optical quantum simulation~\cite{Proposal}, as well as quantum many-body tomography~\cite{Efficien}.
+Beside our own work, \mpnum{} has been used in the study of experimental techniques in quantum optics~\cite{Scheuer_2017_Robust,Schwartz_2017_Pulsed}, optical quantum simulation~\cite{Dhand_2017_Proposal}, as well as quantum many-body tomography~\cite{Lanyon_2017_Efficient}
 
 
 \input{notebooks/Introduction}
@@ -773,10 +772,10 @@ with the Frobenius inner product of tensors defined by \cref{eq:mps.inner}.
 
 The field of low-rank tensor recovery has attracted increasing attention in recent years.
 Especially the problem of tensor completion, i.e.\ inferring missing values of a low-rank tensor, has been thoroughly studied due to its broad applicability in computer vision, neuroscience, remote sensing, and context-aware recommender systems~\cite{Li_2010_Tensor,Zhu_2016_ContextAware,Wang_2014_LowRank}.
-In contrast to our work, most analytical results in this area are concerned with different notions of tensor rank such as the Tucker rank~\cite{Kressner_2013_LowRank,Zhang_2016_Cross} or the canonical tensor rank~\cite{Krishnamurthy_2013_LowRank,Potechin_2017_Exact,Ghadermarzy}.
+In contrast to our work, most analytical results in this area are concerned with different notions of tensor rank such as the Tucker rank~\cite{Kressner_2013_LowRank,Zhang_2016_Cross} or the canonical tensor rank~\cite{Krishnamurthy_2013_LowRank,Potechin_2017_Exact,Ghadermarzy_2017_NearOptimal}.
 The Tucker model still requires exponentially many parameters, and therefore, is unsuitable for our purposes.
 Although the canonical tensor representation captures the structure of many applications very well, it has some drawbacks in practice~\cite{Kolda_2009_Tensor}:
-Approximation with fixed canonical rank in the Frobenius norm can be ill-posed~\cite{Silva_Lim}.
+Approximation with fixed canonical rank in the Frobenius norm can be ill-posed~\cite{Silva_2008_Tensor}.
 Also, no equivalently tight bound on the approximation error as \cref{eq:mps.quasi_optimal} is known for the canonical format.
 
 The best analytical recovery guarantees for low-MPS rank tensor completion require -- to the best of the authors knowledge -- a number of measurements scaling exponentially in the order of the tensor~\cite{Phien_2016_Efficient}.
@@ -788,7 +787,7 @@ The authors in~\cite{Rauhut_2014_Tensor,Rauhut_2016_Low}, consider fully Gaussia
 In this approach, a number of measurements scaling polynomially in the crucial parameters $d$, $N$, and $r$ is sufficient to recover any rank $r$ tensor.
 Although their result is highly efficient in the sample complexity, it is still infeasible for high-order tensors due to the exponentially scaling memory requirement for the measurement tensors and the resulting exponential runtime of any algorithm using them.
 
-In existing work~\cite{Holtz,Rohwedder}, the authors proof local convergence result for general minimization problems in the MPS format.
+In existing work~\cite{Holtz_2012_Alternating,Rohwedder_2013_On}, the authors proof local convergence result for general minimization problems in the MPS format.
 Their work shows that alternating minimization-type algorithms can be used to provable find local minima of a large class of cost functions.
 
 In conclusion, the existing rigorous work on recovering low MPS-rank tensors is currently situated at two different ends of a spectrum:
@@ -838,10 +837,11 @@ The idea to recover $X$ is simply to find the tensor $Y$ of desired rank that mi
   \frac{1}{M} \, \sum_l \left( b\ind{l} - \braket{A\ind{l}, Y} \right)^2.
   \label{eq:als.empirical_l2}
 \]
-However, this problem is generally hard to solve directly since the space of MPS of given rank is non-convex.
-\todo{Fill in order!}
-Nevertheless, in the case of $M=\Order(???)$ fully Gaussian measurements, a projected gradient descent on~\eqref{eq:als.empirical_l2} is able to recover $X$~\cite{Rauhut_2014_Tensor,Rauhut_2016_Low}.
-However, the same proof techniques fail in the case of structured measurements such as the ones defined in \cref{eq:als.rank1_measurements} as we show in \cref{sub:tensors.trip}.
+In general, this problem is hard to solve directly since the space of MPS of given rank is non-convex.
+Nevertheless, in the case of $M=\Order(((N-1)r^3 + dNr) \log dr)$ fully Gaussian measurements, a projected gradient descent on~\eqref{eq:als.empirical_l2} is able to recover $X$~\cite{Rauhut_2014_Tensor,Rauhut_2016_Low}.
+However, the same proof techniques are not suitable for the Gaussian rank-one measurements under consideration here.
+This is due to the fact that the measurement tensors lie in the variational class of tensors we try to recover.
+For more details, see Appendix B in~\cite{Zhong_2015_Efficient}.
 
 Instead of updating all local tensor simultaneously as in the gradient descent, we iteratively optimize the empirical error over a single local tensor at a time.
 Since the minimization of \cref{eq:als.empirical_l2} over a single local tensor is a linear-least squares problem, it can be solved efficiently.
@@ -923,7 +923,7 @@ However, numerical experiments in \cref{sub:als.numerics} show that this resampl
 
 Alternating algorithms such as ALS updating only a few local tensors at a time are a very common approximation technique for circumventing intractabilities when dealing with MPS.
 Well known examples include variational compression and DMRG~\cite{Schollwoeck_2011_DensityMatrix} --  an iterative algorithm for approximating the smallest eigenvalue of a hermitian MPO.
-Local convergence of these alternating algorithms has been proven for a large class of problems in~\cite{Holtz,Rohwedder_2013_On}.
+Local convergence of these alternating algorithms has been proven for a large class of problems in~\cite{Holtz_2012_Alternating,Rohwedder_2013_On}.
 These results show that alternating minimization algorithms of many cost functions converge to a local minimum.
 However, it remains to be shown that the minimizer of the empirical $\ell_2$ error~\eqref{eq:als.empirical_l2} with given rank is equal to $X$, i.e.\ that the given measurements suffice to identify $X$.
 
@@ -1091,9 +1091,8 @@ We now derive an explicit representation of the minimizer of \cref{eq:ana.l2_err
   \]
   where the first and second summand cancel each other.
   Finally, we simplify the expression in parentheses, which completes the proof:
-  \todo{Fix alignment}
   \begin{flalign}
-    \left(\prod_{i \neq 1} \Braket{x_i, y_i} \right) \tilde B_1 - \tilde O_1 \\
+    & \left(\prod_{i \neq 1} \Braket{x_i, y_i} \right) \tilde B_1 - \tilde O_1 \\
     &= \frac{1}{m} \sum_l \left( \prod_{i \neq 1} \braket{x_i, y_i}\braket{a\ind{l}_i, y_i}^2 - \prod_{i \neq 1} \braket{a\ind{l}_i, y_i}\braket{a\ind{l}_i, x_i} \right) \Ketbra{a\ind{l}_1} \\
     &= \frac{1}{m} \sum_l \left( \prod_{i \neq 1} \braket{a\ind{l}_i, y_i} \left(\braket{x_i, y_i}\braket{a\ind{l}_i, y_i} - \braket{a\ind{l}_i, x_i} \right) \right) \Ketbra{a\ind{l}_1} \\
     &= \frac{1}{m} \sum_l \left( \prod_{i \neq 1} \braket{a\ind{l}_i, y_i} \left(\Braket{a\ind{l}_i, \braket{y_i, x_i} y_i - x_i} \right) \right) \Ketbra{a\ind{l}_1} \\
@@ -1306,7 +1305,7 @@ with
 being a product of $2(N - 1)$ independent standard Gaussians.
 Therefore, the problem of proving the concentration properties \cref{eq:ana.conditions.lmin,eq:ana.conditions.lmax} requires a better understanding of the distribution of products of Gaussian random variables.
 
-In this section we are going to summarize the results from~\cite{}, where we compute a power-log series expansion for the cumulative distribution function of products of independent standard Gaussians as well their absolute values and squares.
+In this section we are going to summarize the results from~\cite{Stojanac_2017_On,Stojanac_2017_Ona}, where we compute a power-log series expansion for the cumulative distribution function of products of independent standard Gaussians as well their absolute values and squares.
 As the main work in these publications was done by the first author, we only sketch the results here.
 In numerical simulations, we also show that truncations of said expansions at the first-order provide very close approximations, and therefore, may be used to derive strong concentration properties for said random variables.
 However, since at this time, we do not have explicit error bounds for these truncations, we investigate the concentration properties of the operators~\eqref{eq:als.gaussian.B} and~\eqref{eq:als.gaussian.G} numerically at the end of this section.\\
@@ -1571,7 +1570,7 @@ then we use a rank $r$ approximation of $\tilde X_\mathrm{init}$ as initializati
   X_\mathrm{init} = \mathtt{compress}_r(\tilde X_\mathrm{init}).
 \]
 Here, $\mathtt{compress}_r$ denotes a suitable compression routine such as SVD-compression introduced in \cref{sub:mps.tensor_representation} yielding a rank $r$ approximation.
-To understand the motivation behind \cref{eq:numerics:S}, note that $\tilde X_\mathrm{init} = \frac{1}{m} \adj{\AA}\AA X$, where $\AA$ is the measurement operator introduced in \cref{prop:pl.nsp}
+To understand the motivation behind \cref{eq:numerics.S}, note that $\tilde X_\mathrm{init} = \frac{1}{m} \adj{\AA}\AA X$, where $\AA$ is the measurement operator introduced in \cref{prop:pl.nsp}
 \[
   \AA = \sum_{l=1}^m \ket{e_l}\bra{A\ind{l}}
 \]
@@ -1760,7 +1759,7 @@ This is due to the fact that products of Gaussians exhibit fluctuations on order
 Making this precise would allow for a tremendous simplification of the problem as the full sum can be replaced by a sum over few terms.
 
 Another important point for future work is the generalization of the convergence proof to higher-rank target tensors $X$.
-As mentioned in \cref[sub:als.ana], the setting of higher-rank matrices is analysed by means of the principle angle distance in~\cite{Zhong_2015_Efficient}.
+As mentioned in \cref{sub:als.ana}, the setting of higher-rank matrices is analysed by means of the principle angle distance in~\cite{Zhong_2015_Efficient}.
 This, or a similar distance measure for the local tensors, should also be useful for the higher-rank tensor case.
 
 We also note that the proof in of \cref{thm:ana.local_convergence} is certainly not optimal.

@@ -69,12 +69,12 @@
 }
 
 % if \makefull is defined (e.g. by commandline argument, include everything)
-\ifdefined\makefull\else
+% \ifdefined\makefull\else
   % \includeonly{chapters/introduction,chapters/conclusion}
   % \includeonly{chapters/error_region,chapters/error_region_appendix}
-  \includeonly{chapters/phaselift,chapters/phaselift_appendix}
+  % % \includeonly{chapters/phaselift,chapters/phaselift_appendix}
   % \includeonly{chapters/tensors,chapters/tensors_appendix}
-\fi
+% \fi
 
 \input{macros}
 \input{notebook-macros}
@@ -179,12 +179,6 @@ Zusätzlich dazu ist unser Ansatz auch Recheneffizient, da wir effizient darstel
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \tableofcontents
-\newpage
-\makeatletter
-\providecommand\@dotsep{5}
-\makeatother
-\listoftodos\relax
-\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \mainmatter
@@ -195,17 +189,16 @@ Zusätzlich dazu ist unser Ansatz auch Recheneffizient, da wir effizient darstel
 \include{chapters/tensors}
 \include{chapters/conclusion}
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \appendix
 
-\begingroup
 \chapter{Appendix}%
 
-\let\clearpage\relax
-\include{chapters/error_region_appendix}
-\include{chapters/phaselift_appendix}
-\include{chapters/tensors_appendix}
-\endgroup
+\input{chapters/error_region_appendix}
+\input{chapters/phaselift_appendix}
+\input{chapters/tensors_appendix}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printbibliography[heading=bibintoc]

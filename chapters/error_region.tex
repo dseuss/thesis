@@ -336,7 +336,6 @@ Clearly, a modern high-performance cluster can solve problems in seconds, which 
 Maybe surprisingly, it turns out that a single, simple mathematical model -- the \emph{Turing machine} -- describes the capabilities and restrictions of almost all physical implementations of computation well enough for the purpose of complexity theory.
 The only conceivable exception so far are quantum computers that exploit quantum mechanical phenomena.
 Although so far no unconditional proof of an advantage of quantum computers exists, there is overwhelming evidence that they are able to solve problems efficiently for which there is no efficient classical algorithm.
-\todo{Maybe explain what unconditional means}
 Note that quantum computers only provide efficient algorithms for problems that are considered hard classically.
 The class of uncomputable functions is the same for classical and quantum computers~\cite{Arora_2009_Computational}.
 
@@ -686,13 +685,12 @@ So, having obtained a \quotes{small confidence region} in parameter space does n
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}
   \centering
-  \input{tikz/error_truncation_construction.tex}
-  \caption{\label{fig:ortho.geometry}
+  \input{tikz/error_truncation_construction.tex}%
+  \caption{\label{fig:ortho.geometry}%
     Geometric construction of confidence region for $\estim\varrho$.
     Quantum states are mapped by a measurement matrix $A$ to the respective quantum expectation values $\vec y$.
     Conversely, the pre-image of a confidence region $\CR_\vec{y}$ under $A$ gives rise to a confidence region for $\varrho_0$.
     These may be unbounded if the measurements are not tomographically complete -- a drawback that can be cured by taking into account the physical constraints on quantum states, i.e.\ positivity.
-    \todo[inline]{Update figure}
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1406,7 +1404,7 @@ A first step toward this is the following Lemma.
     \label{eq:bayesian.positivity_violation.ellipsoid}
     \Eps_{\vec{a}} = \left\{ \varrho_0 + R_1 \sum_{i=1}^{i_d} u_i \sigma_i^ + R_2 \sum_{i=i_d + 1}^{d^2 - 1} u_i \sigma_i \colon \vec u^T \vec u \le 1 \right\}
   \]
-  the corresponding encoding ellipsoid for Problem~\ref{prob:ortho.ellpos} defined in \cref{sec:error.ellpos}.
+  the corresponding encoding ellipsoid for Problem~\ref{prob:ortho.ellpos} defined in \cref{sub:error.ellpos}.
   Then, there exists a polynomial $\tilde p$ such that if $\Eps_{\vec{a}}$ is not a subset of $\States$, there is an element $\varrho \in \Eps_{\vec{a}}$ with
   \[
     \mathrm{mineig}(\varrho) \le -\tilde p{(\norm{\vec a})}^{-1} < 0.

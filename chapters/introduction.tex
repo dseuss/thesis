@@ -32,7 +32,7 @@ In this work, we are interested in the interaction of constraints and complexity
 The main motivation stems from recent progress in quantum technologies in general and quantum computing in particular:
 Many established techniques for characterization -- i.e.\ inferring a complete description of a system from experimental data -- work well for small systems with only a few qubits, which were prevalent in the past.
 However, many of these approaches do not scale to larger systems as they require exponentially large amounts of resources.
-With the recent announcements of quantum devices with up to 72-qubits~\cite{Sciencenews}, it becomes clear that new techniques for characterization need to be developed.
+With the recent announcements of quantum devices with up to 72-qubits~\cite{ConoverGooglemovesquantum2018}, it becomes clear that new techniques for characterization need to be developed.
 One way to go forward is to exploit physical constraints or to impose additional assumptions on the model to reduce the amount of resources necessary or to improve estimates.
 To better understand the interplay of constraints and complexity, we investigate three inference problems with applications to quantum estimation in this work.
 
@@ -48,13 +48,12 @@ The second main result of this thesis is concerned with characterizing linear op
 By measuring the output of such a device for different inputs, the problem is to reconstruct the \emph{transfer matrix} of the device.
 Here, the main challenge is that the standard measurement devices in optics -- single photon detectors and photo diodes -- are insensitive to the phases of the output.
 Therefore, we need to deliberately use interference between different modes of the device to gain information on the complex phases.
-This raises the question of how to choose the inputs in an optimal way, in order to reduce the total number of measurements required and how to reconstruct the transfer matrix in a computationally efficient way.
+This raises the question of how to choose the inputs in an optimal way, in order to reduce the total number of measurements required, and how to reconstruct the transfer matrix in a computationally efficient way.
 In \cref{chap:phaselift}, we propose a characterization method that is asymptotically optimal w.r.t.\ the sample complexity, comes with a rigorous proof of convergence, and is robust to noise.
-\todo{Hmmm.... 2}
 The suggested method adapts ideas from low-rank matrix recovery and leverages an exact mathematical constraint on the signal to be recovered to derive a reconstruction algorithm that is efficient w.r.t.\ both sample and computational complexity.
 
 \Cref{chap:tensors} is dedicated to efficiently reconstructing low-rank tensors from linear measurements.
-As a natural extension of low-rank matrix recovery, this challenging problem has received a lot of attention recently~\cite{}.
+As a natural extension of low-rank matrix recovery, this challenging problem has received a lot of attention recently.
 Here, we consider tensors $X \in {\left(\Reals^d\right)}^{\otimes N}$, where $d$ is the local dimension and $N$ the order of the tensor.
 Without any additional structure, reconstructing $X$ from measurements of the form  $\braket{A, X}$ for measurement tensors $A$ requires at least $d^N$ such overlaps as each component of $X$ is independent from the other.
 Therefore, the sample complexity scales exponentially in $N$ and the problem becomes infeasible already for moderate values of $N$.
