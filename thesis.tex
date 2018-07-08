@@ -138,6 +138,7 @@
 \end{center}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter*{Abstract}
+\setcounter{page}{3}
 
 In this thesis, we study the interplay of constraints and complexity in quantum estimation.
 We investigate three inference problems, where additional structure in the form of constraints is exploited to reduce the sample and/or computational complexity.
@@ -145,16 +146,18 @@ The first example is concerned with \emph{uncertainty quantification} in quantum
 However, as we show in this work, doing so in an optimal way constitutes a computationally hard problem, and therefore, is intractable for larger systems.
 This is in stark contrast to the unconstrained version of the problem under consideration.
 The second inference problem deals with phase retrieval and its application to characterizing linear optical circuits.
-The main challenge here is the fact that the measurements are insensitive to phases, and hence, their reconstruction requires deliberate utilization of interference.
+The main challenge here is the fact that the measurements are insensitive to complex phases, and hence, their reconstruction requires deliberate utilization of interference.
 We propose a reconstruction algorithm based on ideas from low-rank matrix recovery.
 More specifically, we map the problem of reconstruction from phase-insensitive measurements to the problem recovering a rank-one matrix from linear measurements.
 For the efficient solution of the latter it is crucial to exploit the rank-one constraint.
-In this work we adapt existing work to the specific application of characterizing linear optical devices and propose a measurement ensemble tailored to this setting.
+In this work, we adapt existing work on phase retrieval to the specific application of characterizing linear optical devices.
+Furthermore, we propose a measurement ensemble tailored specifically around the limitations encountered in this application.
+The main contribution of this work is the proof of efficacy and efficiency of the proposed protocol.
 Finally, we investigate \emph{low-rank tensor recovery} -- the problem of reconstructing a low-complexity tensor embedded in an exponentially large space.
-We derive a sufficient condition, which relates the error of the initialization and concentration properties of the measurements, for successful reconstruction from rank-one measurements.
+We derive a sufficient condition for reconstructing low-rank tensors from product measurements, which relates the error of the initialization and concentration properties of the measurements.
 Furthermore, we provide evidence that this condition is satisfied with high probability by Gaussian product tensors with the number of measurements only depending on the target's intrinsic complexity, and hence, scaling polynomially in the order of tensor.
 Therefore, the low-rank constraint can be exploited to dramatically reduce the sample complexity of the problem.
-By using efficiently representable measurement tensors, our approach is also computationally efficient.
+Additionally, the use of measurement tensors with an efficient representation is necessary for computational efficiency.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter*{Kurzzusammenfassung}
@@ -203,11 +206,25 @@ Zusätzlich dazu ist unser Ansatz auch Recheneffizient, da wir effizient darstel
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \printbibliography[heading=bibintoc]
 
-
+\clearpage
+\chapter*{Teilpublikationen}
+\pagestyle{empty}
+\pagenumbering{gobble}
+\begin{itemize}
+  \item D.\ Suess, Ł.\ Rudnicki, T.\ O.\ Maciel, D.\ Gross: \textit{Error regions in quantum state tomography: computational complexity caused by geometry of quantum states}, New J.\ Phys.\ 19 093013 (2017)
+  \item Ž.\ Stojanac, D.\ Suess, M.\ Kliesch: \textit{On the distribution of a product of N Gaussian random variables}, Proceedings Volume 10394, Wavelets and Sparsity XVII; 1039419 (2017)
+  \item Ž.\ Stojanac, D.\ Suess, M.\ Kliesch, \textit{On products of Gaussian random variables}, arXiv:1711.10516
+  \item D.\ Suess, M.\ Holzaepfel, \textit{mpnum: A matrix product representation library for Python}, Journal of Open Source Software, 2(20), 465 (2017)
+\end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 \chapter*{Acknowledgments}
+\pagestyle{empty}
+\pagenumbering{gobble}
+Bla bla bla.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 \chapter*{Erklärung}
 \pagenumbering{gobble}
 
@@ -219,15 +236,6 @@ Die von mir vorgelegte Dissertation ist von Prof.\ Dr.\ David Gross betreut word
 
 Ort, Datum \hfill Unterschrift \hspace{2cm}
 
-\clearpage
-\pagestyle{empty}
-\section*{Teilpublikationen}
-\begin{itemize}
-  \item D.\ Suess, Ł.\ Rudnicki, T.\ O.\ Maciel, D.\ Gross: \textit{Error regions in quantum state tomography: computational complexity caused by geometry of quantum states}, New J.\ Phys.\ 19 093013 (2017)
-  \item Ž.\ Stojanac, D.\ Suess, M.\ Kliesch: \textit{On the distribution of a product of N Gaussian random variables}, Proceedings Volume 10394, Wavelets and Sparsity XVII; 1039419 (2017)
-  \item Ž.\ Stojanac, D.\ Suess, M.\ Kliesch, \textit{On products of Gaussian random variables}, arXiv:1711.10516
-  \item D.\ Suess, M.\ Holzaepfel, \textit{mpnum: A matrix product representation library for Python}, Journal of Open Source Software, 2(20), 465 (2017)
-\end{itemize}
 
 
 \end{document}
