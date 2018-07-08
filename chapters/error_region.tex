@@ -1,6 +1,6 @@
  % -*- root: ../thesis.tex -*-
 
-\chapter{Uncertainty Quantification for quantum state estimation}%
+\chapter{Uncertainty quantification for quantum state estimation}%
 \label{chap:error}
 
 
@@ -14,7 +14,7 @@ We provide evidence that the latter case is true:
 Based on the generally accepted conjecture that $\P \neq \NP$ in computational complexity we show that no such algorithm can exist.
 More specifically, we show that the computational intractability does not simply arise due to the  general difficulties of statistics in high dimensions.
 Instead, by considering models which render the unconstrained problem tractable, we show that the computational intractability is caused by the \emph{quantum mechanical shape constraints}:
-For $\varrho$ to constitute a valid quantum state, it has to be a hermitian, positive semi-definite (psd) matrix with unit trace.
+For $\varrho$ to constitute a valid quantum state, it has to be a Hermitian, positive semi-definite (psd) matrix with unit trace.
 The Hermiticity and trace constraints are linear and easily satisfiable by means of a suitable linear parametrization.
 In contrast, the psd constraint is non-linear, and hence, more problematic to satisfy.
 
@@ -476,7 +476,7 @@ As an example of an $\NP$-complete problem, we consider the \emph{number partiti
   \]
 \end{problem}
 In case there is such a vector $\vec \psi$ one says that the instance $\vec a$ allows for a partition because the sum of components of $\vec a$ labeled by $\psi_i = 1$ is equal to the sum of components $a_i$ labeled by $\psi_i = -1$.
-For a proof of \cref{prob:complexity.partition}, see~\cite{Garey_2002_Computers}.\\
+For a proof of $\NP$-hardness of \cref{prob:complexity.partition}, see~\cite{Garey_2002_Computers}.\\
 
 
 The question remains what the notion of $\NP$-hardness means in practice.
@@ -485,7 +485,7 @@ First, approximative or probabilistic algorithms often suffice for all practical
 A prime example is the number partition problem~\ref{prob:complexity.partition}:
 It is often considered the \quotes{easiest hard problem} because although it is $\NP$-hard, highly efficient approximative algorithms for it exist~\cite{Kellerer_1997_Efficient}.
 Furthermore, considering only the worst-case behavior is often too pessimistic in practice.
-A more appropriate classification of the difficulty of \quotes{typical} is given in terms of \emph{average case} complexity~\cite{Arora_2009_Computational}.
+A more appropriate classification of the difficulty of \quotes{typical} instances is given in terms of \emph{average case} complexity~\cite{Arora_2009_Computational}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -588,7 +588,7 @@ Hence, under this Gaussian approximation, the relative counts $y_i$ are given in
   \Loss(\varrho; \vec y) = \Prob_{\vec p}(\vec y)
 \]
 defined in terms of \cref{eq:intro.gauss_approx} and the probabilities $p_k = \tr E_k \varrho$.
-However, if some of the $p_{i}$ are close or equal to zero, which happens especially for rank deficient $\varrho_{0}$, local asymtotic normality (LAN) does not hold.
+However, if some of the $p_{i}$ are close or equal to zero, which happens for rank deficient $\varrho_{0}$, local asymtotic normality (LAN) -- that is the approximation in \cref{eq:intro.gauss_approx} -- does not hold.
 In~\cite{Scholten_2016_Behavior} the authors discuss some implications of the lack of LAN in QSE.
 
 
@@ -598,7 +598,7 @@ In~\cite{Scholten_2016_Behavior} the authors discuss some implications of the la
 \label{sec:error.ortho}
 
 In this section we are going to present the first major result of our work~\cite{Suess_2016_Error} concerned with frequentist confidence regions in QSE.
-Optimal confidence regions for high-dimensional parameter estimation problems in are quite intricate in general even without additional constraints as there are only few elementary settings, where optimal confidence regions are known and easily characterized.
+Optimal confidence regions for high-dimensional parameter estimation problems in are generally intricate even without additional constraints as there are only few elementary settings, where optimal confidence regions are known and easily characterized.
 
 Since the goal of this work is to demonstrate that quantum shape constraints severely complicate even \quotes{classically} simple confidence regions, in the further discussion we restrict the discussion to a simplified setting:
 We focus on confidence ellipsoids for Gaussian distributions, which are one of the few easily characterizable examples.
@@ -748,7 +748,7 @@ These are the natural generalizations of the well-known $2\sigma$ confidence int
 However, even in the unconstrained setting, the ellipsoidal construction~\eqref{eq:ortho.confelip} is known to be admissible only for $m=\left\{ 1,2\right\}$~\cite{Joshi_1969_Admissibility}, while it is not admissible for $m\geq3$~\cite{Joshi_1967_Inadmissibility} due to Stein's phenomenon discussed in \cref{sub:stat.frequentist}:
 By shifting the center of the ellipsoid from the empirical mean $\hat{\vec y}$ to the Stein estimator~\eqref{eq:stat.frequentist.stein_estimator}, one can improve the coverage while keeping the volume constant~\cite{Joshi_1967_Inadmissibility}.
 Smaller confidence ellipsoids with the same coverage can be obtained by shifting the center slightly~\cite{Tseng_1997_Good,Hwang_1982_Minimax} or even by using more complicated shapes~\cite{Shinozaki_????_Improved,Brown_1995_Optimal}.
-Nevertheless, non of these constructions is known to be optimal and, to the best of the author's knowledge, no optimal confidence region for multivariate Gaussians in dimensions $m \ge 3$ is known.
+Nevertheless, none of these constructions is known to be optimal and, to the best of the author's knowledge, no optimal confidence region for multivariate Gaussians in dimensions $m \ge 3$ is known.
 But since our discussion is focused on the question how the physical psd constraints can be used to improve confidence regions, we are still going to use the ellipsoids~\eqref{eq:ortho.confelip} as a tractable example:
 As we will prove later, it is impossible to characterize the truncated ellipsoids efficiently although they are fully described by only few parameters, namely $\estim{\vec y}$ and $B$.\\
 
@@ -845,7 +845,7 @@ What \cref{thm:ortho.hard} shows is that any region estimator subject to this cr
 \subsection{Proof of Theorem~\ref{thm:ortho.hard}}
 \label{sub:error.ellpos}
 
-The remainder of this section is dedicated to give some proof \cref{thm:ortho.hard} and to discuss a tractable special case.
+The remainder of this section is dedicated to the proof of \cref{thm:ortho.hard} and to discuss a tractable special case.
 First, note \cref{prob:ortho.ellpos} is in $\NP$ as any $\vec u$ fulfilling \cref{eq:ortho.ellpos_condition} serves as a certificate.
 The rest of the proof of \cref{thm:ortho.hard} is inspired by a similar result due to Ben-Tal and Nemirovski~\cite{Tal_1998_Robust} in robust optimization theory, who showed that the following problem is $\NP$-complete.
 \begin{problem}
@@ -1740,7 +1740,7 @@ We now have all the necessary parts for the proof of the main theorem~\ref{thm:b
 \label{sec:error.outlook}
 
 The goal of this work is to provide an absolute \quotes{upper bound} on what we can expect from algorithms computing error regions for QSE and to demonstrate that there is a trade-off between optimality and efficiency.
-This paper should not be understood as providing a no-go theorem for efficient algorithms in practice.
+This work should not be understood as providing a no-go theorem for efficient algorithms in practice.
 As discussed in the end of \cref{sec:error.complexity}, the negative result of this work does not rule out efficient algorithms for practically acceptable approximations to optimal regions.
 Also, there is no indication that the various approaches used in practice give rise to regions that are far from optimal or do not have the advertised coverage.
 The reason our result leaves room for feasible approaches in practice are twofold:
@@ -1749,7 +1749,7 @@ Hence, our result neither precludes the existence of efficient approximate or pr
 Second, although the experimental effort necessary for full-fledged QSE scales polynomially in the dimension of the system -- and is, therefore, efficient in the sense of computational complexity -- in practice other characterization techniques such as randomized benchmarking or direct fidelity estimation become more important for larger dimensions.
 It should now be the goal of future work to further close down the gap between existing positive results and the proven no-go theorems from either side.
 
-More specifically, due to the simplifying assumptions made we investigate computational intractability that is solely caused by the quantum constraints and not by the general complications in high-dimensional statistics.
+More specifically, due to the simplifying assumptions made, we investigate computational intractability that is solely caused by the quantum constraints and not by the general complications in high-dimensional statistics.
 In the Bayesian settings we show that minimal volume (w.r.t.\ the Hilbert-Schmidt measure) credible regions for truncated Gaussian posterior distributions are hard to compute.
 Therefore, the problem of determining MVCR for QSE cannot be solved efficiently as well, since any algorithm solving the latter must also be able to solve instances with the specific prior used in Prob.~\ref{prob:bayesian.trucated_cr}.
 
