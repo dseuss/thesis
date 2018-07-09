@@ -3,17 +3,18 @@
 \label{chap:phaselift}
 
 
-Even though photonics is often considered the \quotes{ugly duckling} of the approaches to quantum computing and simulation~\cite{Rudolph_2016_Why}, it has two main adages over other approaches:
+Even though photonics is often considered the \quotes{ugly duckling} of the approaches to quantum computing and simulation~\cite{Rudolph_2016_Why}, it has two main advantages over other approaches:
 It is inherently robust towards stochastic noise and integrated photonic devices can be fabricated using present-day fabrication techniques for silicon-based semi-conductors~\cite{Rudolph_2016_Why}.
 Passive and reconfigurable linear optical circuits have been proposed and demonstrated for many applications including telecommunications~\cite{Miller_2015_Sorting}, machine learning~\cite{Shen_2017_Deep} as well as quantum computation~\cite{Carolan_2015_Universal} and simulation~\cite{Harris_2017_Quantum}.
 With the continuing development of large-scale integrated photonic platforms~\cite{Silverstone_2016_Silicon,Seok_2016_LargeScale}, practical and reliable techniques for characterizing and validating the operation of these devices are crucial.
+Here, characterization refers to the problem of recovering a full mathematical description of the linear optical devices in terms of its \emph{transfer matrix} $M$ from measurable quantities.
 
 In this chapter, we propose an efficient, robust, and conceptually simple technique for characterizing linear optical circuit by exploiting a connection to the phase retrieval problem \cite{Walther_1963_Question}.
 Not only do we adapt existing results from phase retrieval and low-rank matrix recovery to the problem of characterizing linear-optical networks, we also propose a measurement ensemble tailored to this specific application.
 To present the rigorous analysis of both approaches, we develop a unified proof strategy.
 Besides having these stringent recovery guarantees, the \emph{PhaseLift} reconstruction algorithm proposed here is robust to noise and efficient with respect to the number of measurements.
 
-Well-known techniques for characterizing linear optical circuits include quantum process tomography with non-classical~\cite{Brien_2004_Quantum} or coherent~\cite{Keshari_2011_Quantum} states, though these approaches scale exponentially with the number of modes.
+Well-known techniques for characterizing linear optical circuits include quantum process tomography with non-classical~\cite{Brien_2004_Quantum} or coherent~\cite{Keshari_2011_Quantum} states, though the sample complexity of these approaches scales exponentially with the number of modes.
 Simpler protocols tailored to linear optics have been proposed that use either single and two-photon probe states~\cite{Laing_2012_SuperStable,Dhand_2016_Accurate,Spagnolo_2017_Learning} or multimode coherent states~\cite{Keshari_2013_Direct,Tillmann_2016_On}.
 The most similar scheme to the one presented here is~\cite{Keshari_2013_Direct}, where coherent light is input into single modes and split over pairs of modes with the intensity at each output measured.
 While their recovery method is strikingly simple and relies only on $2n-1$ input configurations, for each configuration it requires varying over a phase shift between the two modes until maximal constructive interference is observed.
@@ -33,7 +34,7 @@ We present results from numerical and experimental investigation in \cref{sec:pl
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Device Characterization}%
+\section{Device characterization}%
 \label{sec:pl.optics}
 
 Mathematically, a linear optical device is fully characterized by its \emph{transfer matrix}, which relates the output to the input of the device by
@@ -44,7 +45,7 @@ Mathematically, a linear optical device is fully characterized by its \emph{tran
 Here, $\adj{a}_j$ and $\adj{b}_j$ denote the creation operators of the $j$-th input and output mode, respectively.
 Determining ${M}$ experimentally is the crucial step to validate and verify a linear optical circuit.
 For this purpose, we propose a protocol that can be implemented easily in an experiment using either classical laser light or single photon sources.
-We start by introducing the former since its conceptually simpler.
+We first introduce the former approach as it is conceptually simpler.
 
 For now, we assume that the input is described by a classical multi-mode coherent state $\ket{{\alpha}} = \ket{\alpha_1, \ldots, \alpha_n}$ with
 \[
@@ -69,7 +70,7 @@ A schematic of such an experiment is depicted in \cref{fig:pl.experimental.schem
 Although the output coherent states~\eqref{eq:pl.coherent_transfer_matrix} are linear in ${M}$, the resulting intensity measurements~\eqref{eq:pl.intensities} are quadratic in ${M}$ and oblivious to the phases of $\beta$.
 Therefore, the problem of reconstructing ${M}$ from such measurements is ill-posed and requires deliberate utilization of interference between the modes to recover the phases of $M$.
 
-In this chapter, we propose an approach for recovering $M$ using coherent states $\ket{\alpha}$ as inputs with $\alpha$ sampled randomly from appropriate distributions.
+We propose an approach for recovering $M$ from the measurements~\eqref{eq:pl.intensities} with the coherent states $\alpha$ sampled randomly from appropriate distributions.
 Preparing theses states reliably is the major challenge of implementing the proposed protocol experimentally.
 A first experimental demonstration is performed using the universal linear optics device from~\cite{Carolan_2015_Universal}:
 The silica-on-silicon device performs a linear-optical circuit comprising 30 directional couplers and 30 tunable thermo-optic phase-shifters on six optical waveguides.
@@ -77,25 +78,25 @@ Using the setup outlined in \cref{fig:pl.experimental.schematic}, we are able to
 The remaining triangular array of components colored blue in \cref{fig:pl.experimental.schematic} is then sufficient to implement any five mode unitary transfer matrix $M$~\cite{Reck_1994_Experimental}.
 Reconfiguring the target $M$ then enables us to experimentally test the protocol across a number of configurations including Identity, Swap, and Fourier matrices as well as Haar random unitaries.
 
-Note that for the proposed preparation scheme, it is beneficial to consider ensembles of coherent states with fixed norm, and hence, with fixed total intensity:
-The preparation procedure for an arbitrary coherent state $\tilde\alpha$ is described by a transfer matrix $P(\alpha)$, where $\alpha = \frac{\tilde \alpha}{\norm{\tilde \alpha}}$ as follows
+To prepare an arbitrary coherent state $\ket{\tilde \alpha}$ experimentally, we use the red colored cascade of couplers and phase-shifters in \cref{fig:pl.experimental.schematic}:
+First, we input a single laser with intensity $\norm{\tilde\alpha}^2$ in the first mode, which is mathematically described by the coherent state $\ket{\norm{\tilde\alpha} e_1}$.
+Here, $e_1$ denotes the first canonical basis vector.
+Then, the couplers and phase-shifters in the left-most cascade are set in such a way to implement a transfer matrix $P(\alpha)$ with
 \[
   \label{eq:pl.phaselift_P}
   \tilde\alpha = P(\alpha) (\norm{\tilde\alpha} e_1).
 \]
-Here, $e_1$ is the first canonical basis vector, and hence, the coherent state $\ket{\norm{\tilde\alpha}}$ describes a single laser input with intensity $\norm{\tilde\alpha}^2$ in the bottom most mode.
-Due to linearity, $P$ can only depend on the normalized $\alpha$.
-The red colored cascade of couples and phase-shifters in \cref{fig:pl.experimental.schematic} implements exactly the preparation matrix $P(\alpha)$.
-Therefore, varying the norm of the prepared input vector $\tilde\alpha$ requires to change the intensity of the input laser.
-Alternatively, we could redirect parts of the light in the topmost, unobserved mode, which is challenging when the required $\norm{\alpha}$ varies a lot.\\
+Note that due to linearity, $P$ can only depend on the normalized coherent label $\alpha = \frac{\tilde \alpha}{\norm{\tilde \alpha}}$.
+Therefore, for the proposed preparation scheme, it is beneficial to consider ensembles of coherent states with fixed norm as it allows for keeping the input laser at constant intensity.
+Alternatively, we could redirect parts of the light in the topmost, unobserved mode, which is challenging when the required $\norm{\tilde\alpha}$ varies a lot.\\
 
 
 
 Although performing recovery of $M$ using only classical sources of light and photodiodes simplifies the experiment, it also has a large drawback in practice:
 Our main motivation for studying linear optical devices is their application in quantum computing, which requires the use of single-photon sources.
 However, readily available laser and single photon sources often have slightly different characteristics such as wavelength or polarization.
-Since the properties of the components, and therefore, also the transfer matrix are generally dependent these characteristics, a characterization using coherent light is generally unsuitable for predicting the performance of the device when used with single photon sources.
-Instead, the device should be evaluated under the same experimental conditions where it will be used.
+Since the properties of the components, and therefore, also the transfer matrix are generally dependent on these characteristics, a characterization using coherent light is generally unsuitable for predicting the performance of the device when used with single photon sources.
+Instead, the device should be evaluated under the same experimental conditions under which it will be used.
 For this purpose, we now turn to an experimental implementation of the idea introduced above based on single-photon sources and detectors.
 
 The idea is to estimate the outcomes of the intensity measurements~\eqref{eq:pl.intensities} using single photon states:
@@ -143,7 +144,7 @@ Here the right hand side is the probability of simultaneously measuring $N_j$ ph
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Phase Retrieval}%
+\section{Phase retrieval}%
 \label{sec:pl.phase_retrieval}
 
 The crucial observation of this work is that measurements~\eqref{eq:pl.intensities} closely resemble the model of the \textit{phase retrieval problem}, i.e.\ the problem of recovering a complex vector ${x} \in \Complex^n$ from $m$ intensity measurements of the form
@@ -165,7 +166,7 @@ The quadratic measurements of $x$ in \cref{eq:pl.phase_retrieval_measurements} c
 \]
 This \quotes{lifts} the phase retrieval problem to the problem of recovering the positive semi-definite (psd) rank-1 matrix $\ketbra{x}$ from linear measurements.
 Note that an efficient solution to this problem needs to exploit the low-rank constraint, as we have embedded the low-complexity signal $\ketbra{x}$ into a $n^2$ dimensional ambient space.
-This problem -- and its generalization to arbitrary low-rank matrices -- have been studied extensively in the field of \emph{low-rank matrix recovery}, see e.g.~\cite{Ahmed_2014_Blind,Candes_2009_Exact,Candes_2011_Tight,Recht_2010_Guaranteed,Gross_2011_Recovering,Chen_2015_IncoherenceOptimal} for a highly incomplete list of references.
+This problem -- and its generalization to arbitrary low-rank matrices -- has been studied extensively in the field of \emph{low-rank matrix recovery}, see e.g.~\cite{Ahmed_2014_Blind,Candes_2009_Exact,Candes_2011_Tight,Recht_2010_Guaranteed,Gross_2011_Recovering,Chen_2015_IncoherenceOptimal} for a highly incomplete list of references.
 
 The fundamental idea is to find the matrix $Z$ with the smallest rank that is compatible with the observations.
 As an example, consider the idealized noiseless case of \cref{eq:pl.phase_retrieval_measurements}, i.e.\ $\epsilon\ind{l} = 0$.
@@ -208,16 +209,18 @@ In case of the Gaussian ensemble, the components $\alpha\ind{l}_i$ of the measur
 In the uniform scheme, the $\alpha^{(l)}$ are chosen uniformly from the complex unit sphere.
 The two are closely related, as the latter arises by normalizing all Gaussian vectors to a fixed length.
 However, these two measurement ensembles are often too demanding for practical applications, which led to a large body of work proving similar recovery guarantees  for measurement ensembles that feature less randomness~\cite{Gross_2014_Partial,Kueng_2014_Low,Kueng_2014_Low,Kueng_2016_Low} or additional structure tailored to specific applications~\cite{Candes_2013_Phaselift,Gross_2017_Improved,Voroninski_2013_Quantum,Kueng_2015_Low}.
+The main result of this chapter presented in the next section is of this type.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Theory for Characterization via Phase Lift}%
+\section{Theory}%
 \label{sec:pl.theory}
 
 The main theoretical contribution of this chapter is a recovery guarantee for a measurement ensemble motivated by the experimental architecture of linear optical devices:
 The \emph{randomly erased complex Rademacher} (RECR) ensemble defined below is easier to implement experimentally by the circuit depicted in \cref{fig:pl.experimental.schematic} than e.g.\ the uniform ensemble.
 In \cref{sub:pl.recr}, we introduce this sampling scheme and show that it can be used for phase retrieval.
-\Cref{sub:pl.characterization} is then concerned with applying the ideas from phase retrieval to the problem of recovering transfer matrices of linear optical circuits.
+The main technical proof related to the previous section can be found in \cref{sub.nsp_proof}.
+\Cref{sub:pl.characterization} is concerned with applying the ideas from phase retrieval to the problem of recovering transfer matrices of linear optical circuits.
 We also discuss the advantages of the RECR ensemble for our particular application in this section.
 
 
@@ -317,7 +320,7 @@ Therefore, we are going to treat it separately below.
   \]
   From this, we can readily infer $C_\mathrm{SG} = 1$, and the special case $N=1$  yields $C_\mathrm{I}=1$.
 
-  For the remaining expression, use an eigenvalue decomposition $ Z = \sum_{k=1}^d \zeta_k | z^{(k)} \rangle \langle  z^{(k)}|$ (with normalized eigenvectors $ z^{(k)}\in \mathbb{C}^n$) and note that the random variables $|\langle  a, z^{(1)} \rangle|,\ldots, | \langle  a, z^{(n)} \rangle|$ are independently distributed and obey \cref{eq:pl.moments_gauss}.
+  For the remaining expression, use an eigenvalue decomposition $ Z = \sum_{k=1}^d \zeta_k | z^{(k)} \rangle \langle  z^{(k)}|$ (with normalized eigenvectors $ z^{(k)}\in \mathbb{C}^n$) and note that the random variables $|\langle  a, z^{(1)} \rangle|$,$\ldots$, $| \langle  a, z^{(n)} \rangle|$ are independently distributed and obey \cref{eq:pl.moments_gauss}.
   Consequently:
   \begin{align}
     \mathbb{E} \left[ \tr \left(  A  Z \right)^2 \right]
@@ -435,20 +438,6 @@ Therefore, we are going to treat it separately below.
   where we have used a well-known integration formula for moments, see e.g.\ \cite[Prop.~7.1]{Foucart_2013_Mathematical}, as well as integration by parts.
 \end{proof}
 
-In this work, we consider a slight generalization of \cref{def:pl.attentive}, which we state now.
-\begin{definition}%
-  \label{def:pl.super_attentitive}
-  We say that a random vector $\alpha \in \Complex^n$ is \emph{super-attentive}, if there is an attentive random vector $\tilde\alpha$ and a function $f \Complex^n \to \Reals$ with $f(\tilde\alpha) \ge 1$ almost surely such that $\alpha = f(\tilde\alpha) \tilde \alpha$.
-\end{definition}
-The main example of a super-attentive distribution in this work is a normalized RECR vector with length $\sqrt{n}$.
-Denote by $\tilde\alpha$ an unnormalized RECR vector and set $f(\tilde\alpha) = \sqrt{n} / \ltwonorm{\tilde\alpha}$, then
-\[
-  \alpha = f(\tilde\alpha) \alpha
-  \label{eq:pl.normalized_recr}
-\]
-is a normalized RECR vector.
-Note that every super-attentive random vector is attentive trivially.
-
 The conditions in \cref{def:pl.attentive} naturally appear in the proof of the following theorem, which is the fundamental technical part of this work.
 It is used to provide rigorous recovery guarantees for phase retrieval via PhaseLift.
 
@@ -475,9 +464,23 @@ Note that the measurement operator notation~\eqref{eq:pl.measurement_operator_ra
 \[
   y\ind{l} = \braket{\alpha\ind{l}, Z\alpha\ind{l}} \quad\quad (l=1,\ldots,m).
 \]
-We postpone the proof of this proposition to \cref{sub.nsp_proof} in order to state the main results of this section, namely the recovery guarantees for phase retrieval using the measurement ensembles from~\cref{prop:gauss+recr_requirements}.
+We postpone the proof of this proposition to \cref{sub.nsp_proof}.
+Instead, we consider a slight generalization of the properties in \cref{def:pl.attentive}, which are the most general class of measurement ensembles we consider in this work.
+\begin{definition}%
+  \label{def:pl.super_attentitive}
+  We say that a random vector $\alpha \in \Complex^n$ is \emph{super-attentive}, if there is an attentive random vector $\tilde\alpha$ and a function $f \Complex^n \to \Reals$ with $f(\tilde\alpha) \ge 1$ almost surely such that $\alpha = f(\tilde\alpha)\colon \tilde\alpha$.
+\end{definition}
+The main example of a super-attentive distribution in this work is a normalized RECR vector with length $\sqrt{n}$.
+Denote by $\tilde\alpha$ an unnormalized RECR vector and set $f(\tilde\alpha) = \sqrt{n} / \ltwonorm{\tilde\alpha}$, then
+\[
+  \alpha = f(\tilde\alpha) \tilde\alpha
+  \label{eq:pl.normalized_recr}
+\]
+is a normalized RECR vector.
+Note that every attentive random vector is super-attentive trivially.
 
-The version presented here is a substantial generalization of existing results regarding Gaussian and uniform measurement ensembles~\cite{Candes_2012_Solving,Demanet_2014_Stable}.
+Let us now state the central result of this section, namely a recovery guarantee for super-attentive measurement ensembles.
+The following theorem is a substantial generalization of existing results regarding Gaussian and uniform measurement ensembles~\cite{Candes_2012_Solving,Demanet_2014_Stable}.
 
 \begin{theorem}%
   \label{thm:pl.phaselift_noisy}
@@ -497,7 +500,7 @@ The version presented here is a substantial generalization of existing results r
 \end{theorem}
 
 \begin{proof}[Proof of \cref{thm:pl.phaselift_noisy}]
-  Denote by $\tilde\alpha\ind{l}$ the vectors corresponding to $\alpha\ind{l}$ and by $f$ the scaling function from \cref{def:pl.super_attentitive}.
+  Denote by $\tilde\alpha\ind{l}$ the attentive vector corresponding to $\alpha\ind{l}$ and by $f$ the scaling function from \cref{def:pl.super_attentitive}.
   Then, the measurements outcomes $y\ind{l}$ can be mapped to measurement outcomes of $\tilde\alpha\ind{l}$ by
   \[
     \label{eq:pl.phaselift_noisy_recr.unnormalized_measurements}
@@ -522,7 +525,7 @@ The version presented here is a substantial generalization of existing results r
   \[
     \norm{\tilde\epsilon}_{\ell_1}  = \sum_l \Abs{  \frac{1}{{f(\tilde\alpha\ind{l})}^2} \, \epsilon\ind{l}} \le \norm{\epsilon}_{\ell_1}
   \]
-  since $f(\tilde\alpha\ind{l} \ge 1$.
+  since $f(\tilde\alpha\ind{l}) \ge 1$.
   For the second summand on the right hand side of \Cref{eq:phaselift_noisy_recr.findal_bound}, the same argument gives
   \begin{align}
     \norm{\tilde{\mathcal{A}}(Z) - \tilde y}_{\ell_1}
@@ -603,8 +606,8 @@ The version we use here is due to Mendelson~\cite{Mendelson_2015_Learning,Koltch
   with $e_l$ denoting the $l$-th canonical basis vector.
   For $D \subset \Hermitian^n$ and $\xi >0$ define
   \begin{align}
-    Q_\xi (D,  A) =& \inf_{ Z \in D}\Prob \left[ | \tr (A\ind{l}  Z) | \geq \xi \right] \quad &\textrm{(marginal tail funtion)}, \label{eq:pl.marginal_tail_function}\\
-    W_m (D,  A) =& 2 \, \mathbb{E} \left[ \sup_{ Z \in D} \tr \left(  Z  H \right) \right] \quad &\textrm{(mean empirical width)},
+    Q_\xi (D,  A) &= \inf_{ Z \in D}\Prob \left[ | \tr (A\ind{l}  Z) | \geq \xi \right] \quad &\textrm{(marginal tail funtion)}, \label{eq:pl.marginal_tail_function}\\
+    W_m (D,  A) &= 2 \, \mathbb{E} \left[ \sup_{ Z \in D} \tr \left(  Z  H \right) \right] \quad &\textrm{(mean empirical width)},
   \end{align}
   where
   \[
@@ -779,19 +782,20 @@ The following two propositions summarize several results presented in \cite{Kaba
   %$
   see e.g.\ \cite[Propostion~7.1]{Foucart_2013_Mathematical}, and bounding the effect of the tails via \eqref{eq:pl.Wm_tails}.
   To this end, we split the real line into three intervals $[0, c \sqrt{n}], [c\sqrt{n}, 2 C_\mathrm{SG} \sqrt{m}], [2 C_\mathrm{SG} \sqrt{m},\infty[$, where $c$ is a constant that we fix later:
-  \begin{align}
+  \begin{flalign}
     \mathbb{E} \left[ \| H\|_\infty \right]
-    &=& \int_0^\infty \Prob \left[ \| H\|_\infty \geq t \right] \mathrm{d}t \\
-    &\leq& \int_0^{c \sqrt{n}} 1 \mathrm{d}t + 2 \times 9^n \left( \int_{c \sqrt{n}}^{2 C_\mathrm{SG} \sqrt{m}} 2 \exp \left( - \frac{t^2}{8 C_\mathrm{SG}} \right) \mathrm{d}t
-     +  \mathrm{e}^{\frac{m C_\mathrm{SG}}{2}} \int_{2 C_\mathrm{SG} \sqrt{m}}^\infty \exp\left( - \frac{\sqrt{m}t}{2}  \right) \mathrm{d} t \right)\\
-    &\leq & c \sqrt{n} + 2 \times 9^n \left( \int_{c \sqrt{n}}^{2 C_\mathrm{SG} \sqrt{m}}  \exp \left( - \frac{t^2}{8 C_\mathrm{SG}} \right) \mathrm{d}t + \frac{2}{\sqrt{m}} \mathrm{e}^{-\frac{C_\mathrm{SG} m}{2}}\right).
-  \end{align}
+    &= \int_0^\infty \Prob \left[ \| H\|_\infty \geq t \right] \mathrm{d}t \\
+    &\leq
+    \begin{aligned}
+      \int_0^{c \sqrt{n}} 1 \mathrm{d}t + 2 \times 9^n \Bigg{(} \int_{c \sqrt{n}}^{2 C_\mathrm{SG} \sqrt{m}} 2 \exp \left( - \frac{t^2}{8 C_\mathrm{SG}} \right) \mathrm{d}t \\
+        +  \mathrm{e}^{\frac{m C_\mathrm{SG}}{2}} \int_{2 C_\mathrm{SG} \sqrt{m}}^\infty \exp\left( - \frac{\sqrt{m}t}{2}  \right) \mathrm{d} t \Bigg{)}
+    \end{aligned} \\
+    &\leq  c \sqrt{n} + 2 \times 9^n \left( \int_{c \sqrt{n}}^{2 C_\mathrm{SG} \sqrt{m}}  \exp \left( - \frac{t^2}{8 C_\mathrm{SG}} \right) \mathrm{d}t + \frac{2}{\sqrt{m}} \mathrm{e}^{-\frac{C_\mathrm{SG} m}{2}}\right).
+  \end{flalign}
   For the remaining Gauss integral, we use $\frac{t}{c \sqrt{n}} \geq 1\; \forall t \geq c\sqrt{n}$ to conclude
   \begin{align}
     \int_{c \sqrt{n}}^{2 C_\mathrm{SG} \sqrt{m}}  \exp \left( - \frac{t^2}{8 C_\mathrm{SG}} \right) \mathrm{d}t
-    %\leq & \int_{C \sqrt{n}}^{4 \mathrm{e}^2 \sqrt{m}} \frac{t}{C \sqrt{n}}  \exp \left( - \frac{t^2}{32 \mathrm{e}^2} \right) \mathrm{d} t
     \leq  \int_{c \sqrt{n}}^\infty \frac{t}{c \sqrt{n}}  \exp \left( - \frac{t^2}{8 C_\mathrm{SG}} \right) \mathrm{d} t
-    %=& - \frac{32 \mathrm{e}^2}{C\sqrt{n}} \exp \left( - \frac{t^2}{32 \mathrm{e}^2}\right) |_{t=C \sqrt{n}}^{t=\infty}
     = \frac{8 C_\mathrm{SG}}{c \sqrt{n}} \exp \left( - \frac{c^2 n}{8 C_\mathrm{SG}} \right).
   \end{align}
   Now, fixing $c = 4 \sqrt{\ln (3)C_\mathrm{SG}}$ assures $\exp \left( -\frac{c^2 n}{8 C_\mathrm{SG}}\right) = 9^{-n}$ and consequently
@@ -1052,11 +1056,11 @@ Not only does the number of measurements scale linearly in the system size -- as
     }
    \end{subfigure}
   \caption{\label{fig:pl.simerror}%
-    Simulated reconstruction error from RECR measurements for the with fixed time budget as a function of the number of measurements for two different circuit sizes.
-    The total photon number in for each reconstruction is $N = 4600 \times t$.
-    Then, the output for each input vector $\alpha$ is a multinomial distribution with the number of trials given by $\frac{M}{m}$.
-    Intensities for the PhaseLift reconstruction is estimated for 100 samples of each distribution.
-    The solid line indicates the mean and the colored areas the $0.025$ and $0.975$ quantiles.
+    Simulated reconstruction error using RECR measurements for fixed time budget as a function of the number of measurements for two different circuit sizes and different time budgets.
+    The total photon number for each reconstruction is $N = 4600 \times t$, which is the counting rate of the experiment.
+    Then, the output for each input vector $\alpha$ is a multinomial distribution with the number of trials given by $\frac{N}{m}$.
+    We sample 100 sets of measurement data for each value of $m$ and run the PhaseLift reconstruction on each of them.
+    The solid line indicates the mean error and the colored areas the $0.025$ and $0.975$ quantiles.
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1174,7 +1178,7 @@ The additional free parameters in the minimization may lead to overfitting, and 
 Finally, we study the influence of varying the number of measurements and the statistical error on each measurement in \cref{fig:pl.experimental.details}.
 In the left picture, we randomly select $m$ measurements from the existing data for 100 times and plot the mean as well as the spread of the error.
 Except for a larger error for very few measurements, the RECR ensemble performs equally well as the Gaussian ensemble.
-We see that the error saturates at a non-zero value, which might be due to systematic or statistical errors.
+We see that the error saturates at a non-zero value, which might be due to systematic errors.
 Also, note that the reconstruction error already saturates around $m = 4n = 20$ measurements.
 
 To further investigate the source of the reconstruction error, we vary the statistical error of the measurements $\epsilon\ind{l}$ in the right picture by changing the number of photons used to estimate $I_j(\alpha\ind{l})$ in terms of \cref{eq:pl.experiment.probabilities}.
@@ -1201,7 +1205,7 @@ The experimental results demonstrate this protocol's practicability and its adva
 
 
 Future work should investigate the question whether the techniques developed in this work can also be used to prove recovery guarantees for other structured measurement ensembles, which naturally occur in practical applications of phase retrieval.
-Especially the general proof for attentitive vectors as well as the bounding-trick used in the proof for super-attentive vectors may be useful for other applications.
+Especially the general proof for attentive vectors as well as the bounding-trick used in the proof for super-attentive vectors may be useful for other applications.
 
 For the specific application of characterizing linear optical networks, we would like to investiagte the applicability of our approach to larger systems, which may be out of reach for current techniques.
 Furthermore, we would like to investiagte better ways to implement the preparation of RECR vectors in linear optics.
