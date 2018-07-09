@@ -54,7 +54,15 @@ Additionally, numerical reconstruction experiments show that we are able to reco
 The ALS algorithm using rank-one measurements combines both sample and computational efficiency for tensor reconstruction.
 By exploiting the low-rank constraint we obtain an exponential improvement for the sampling rate compared to na\"ive approaches under the assumptions stated.
 This reduction of the number of measurements necessary for recovery is also crucial for making the reconstruction computationally efficient.
-The reduction of sample and computational complexity for low-rank tensor recovery is therefore qualitatively different from existing work on compressive sensing and low-rank matrix recovery.
+The reduction of sample and computational complexity for low-rank tensor recovery is
 For the latter, reconstruction without additional constraints is still feasible and, at least in the sense of polynomial scaling, still efficient.
 Future work is necessary to prove the recovery condition for certain measurement ensembles.
-The most promising -- as the numerical investigation in this chapter shows -- are Gaussian product measurements.
+The most promising -- as the numerical investigation in this chapter shows -- are Gaussian product measurements.\\
+
+
+
+What these three estimation problems have in common is the fact that the additional structure present in the form of constraints can be used to improve the quality of the estimate in principle.
+However, the ability to make use of this in practice highly depends on the problem.
+On the one hand, exploiting those constraints optimally constitutes a computationally hard problem in the case of uncertainty quantification for quantum state estimation.
+On the other hand, the problem of efficiently reconstructing tensors only becomes feasible due to this additional structure as the embedding space grows exponentially as a function of the order of the tensor.
+Phase retrieval and, more generally, low-rank matrix recovery lies somewhere between those two extreme cases as the sample complexity is reduced only by a linear factor at the cost of a slightly higher -- but still efficient -- computational complexity.
