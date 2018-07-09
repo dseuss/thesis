@@ -1194,20 +1194,36 @@ We already mentioned that this can be rectified by better calibrating the prepar
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Conclusion and Outlook}%
+\section{Conclusion \& Outlook}%
 \label{sec:pl.final}
 
-In this chapter, we introduced a characterization technique for linear optical networks based on this problem's connection to phase retrieval.
-First and foremost, we showed that two different ensembles of \quotes{sensing vectors} allow for efficiently and stably reconstructing any complex vector from phaseless measurements, namely random vectors sampled uniformly from the hypersphere and RECR vectors.
-The latter were motivated by our particular application of characterizing linear optical networks.
-Based on these results, we propose a protocol to recover transfer matrices using the PhaseLift algorithm, which is not only robust to noise with rigorously proven error bounds, but also efficient with respect to the number of measurements required.
-The experimental results demonstrate this protocol's practicability and its advantages in applications.\\
+In this chapter, we introduce a characterization technique for linear optical networks based on this problem's connection to phase retrieval.
+First and foremost, we show that recovering each row of the transfer matrix constitutes a separate phase retrieval problem, which can be solved using convex programming.
+Provided that the input vectors are chosen and random from a suitable distribution, the number of distinct inputs required scales linear in the number of modes.
+To prove this statement, we exploit the rank-one constraint, which arises from lifting the quadratic phaseless measurements to linear measurements on a larger spaces.
+
+Motivated by the specific application in linear optics, we propose the RECR measurement ensemble.
+The main technical contribution of this work is the proof that despite being highly structured, the RECR ensemble performs just as well for phase retrieval as the well-established uniform/Gaussian measurement ensembles.
+More generally, we introduce the notion of (super)-attentive measurement ensembles and show their efficacy for efficiently reconstructing rank-one matrices from few measurements.
+
+Finally, we report on ongoing experimental work to implement the proposed reconstruction protocol using a small-scale universal optics chip.
+Our preliminary results show that the PhaseLift characterization technique is a valuable tool for experimentalists due to its sample efficiency and robustness to noise.\\
 
 
-Future work should investigate the question whether the techniques developed in this work can also be used to prove recovery guarantees for other structured measurement ensembles, which naturally occur in practical applications of phase retrieval.
-Especially the general proof for attentive vectors as well as the bounding-trick used in the proof for super-attentive vectors may be useful for other applications.
 
-For the specific application of characterizing linear optical networks, we would like to investiagte the applicability of our approach to larger systems, which may be out of reach for current techniques.
-Furthermore, we would like to investiagte better ways to implement the preparation of RECR vectors in linear optics.
-The main drawback of the current architecture is that possible errors in the preparation state for the coherent state inputs $\ket{\alpha}$ add up linearly due to the serial wiring in the preparation stage.
-Furthermore, with a tree-like arrangement of the directional couplers, we might be able to also benefit from the fact that the RECR scheme allows only for two possible values for the intensity of each input mode $\abs{\alpha_i}$, and therefore, prepare the required vectors with higher precision.
+Future work on phase retrieval may benefit from the general reconstruction guarantees proven in this work as the conditions for (super)-attentiveness are quite general.
+The same statement applies to the majorization trick, which we use to generalize the proofs from attentive to super-attentive ensembles.
+The question remains whether any other practically relevant measurement ensembles fall within this framework.
+
+Furthermore, the current work is restricted to the reconstruction of rank-one matrices.
+We are interested in the question whether the RECR ensemble can be used for low-rank matrix recovery in general as the Gaussian ensemble~\cite{Kueng_2014_Low}.
+Matrix multiplications with structured measurements are often computationally faster, and therefore, structured ensembles are also interesting outside of particular applications.\\
+
+
+
+For the specific application of characterizing linear optical networks, future work should investigate the applicability of our approach to larger systems, which may be out of reach for other techniques.
+One of the main problems that need to be solved for this is a more accurate preparation stage:
+The preparation procedure used so far has not explicitly made use of the advantages of the RECR ensemble, that is the finite number of phases and magnitudes, which need to be prepared in each mode.
+Another drawback of the current architecture is that possible errors in the preparation state for the coherent state inputs $\ket{\alpha}$ add up linearly due to the serial wiring.
+To circumvent these two problems, we propose to investigate a tree-like arrangement of the directional couplers.
+This way, we could attain more independence of the phase shifters and couplers.

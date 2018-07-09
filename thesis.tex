@@ -18,19 +18,19 @@
 		   % ]{scrreprt}
 
 \usepackage[automark]{scrpage2}
-\setkomafont{pageheadfoot}{\normalcolor\sffamily\small}
-\setkomafont{pagenumber}{\normalcolor\sffamily\small}
-\setkomafont{captionlabel}{\sffamily\small\bfseries}
+\setkomafont{pageheadfoot}{\normalcolor\sffamily}
+\setkomafont{pagenumber}{\normalcolor\sffamily}
+% \setkomafont{captionlabel}{\sffamily\small\bfseries}
 % \setkomafont{captionlabel}{\bf}
-\setkomafont{caption}{\sffamily\footnotesize}
+% \setkomafont{caption}{\sffamily\footnotesize}
 \pagestyle{useheadings}
 % \setlength{\parskip}{10pt}
 
 %
 \usepackage{ifpdf}
 \ifpdf{}
-  \usepackage[utf8]{inputenc}
-\fi
+%   \usepackage[utf8]{inputenc}
+% \fi
 \usepackage{ifluatex}
 \ifluatex{}
   \usepackage[utf8]{luainputenc}
@@ -62,10 +62,11 @@
 %getting rid of hyperref's ugly boxes.
 %From:http://tex.stackexchange.com/a/51349
 \hypersetup{
-  colorlinks   = true, %Colours links instead of ugly boxes
+  hidelinks    = true,
+  colorlinks   = false, %Colours links instead of ugly boxes
   urlcolor     = blue, %Colour for external hyperlinks
   linkcolor    = blue, %Colour of internal links
-  citecolor   = red %Colour of citations
+  citecolor    = red %Colour of citations
 }
 
 % if \makefull is defined (e.g. by commandline argument, include everything)
