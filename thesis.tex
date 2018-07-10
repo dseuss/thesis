@@ -118,7 +118,7 @@
 %\subject{\normalfont\normalsize\sffamily Im Fachbereich Physik der\\ Freien Universität Berlin\\ eingereichte Dissertation}
 \title{Due to, or in spite of? The effect of constraints on efficiency in quantum estimation problems\vspace{.5\baselineskip}}
 \subtitle{\normalfont\normalsize\sffamily Inaugural-Disseration\\zur\\Erlangung des Doktorgrades\\der Mathematisch-Naturwissenschaftlichen Fakult\"at\\der Universit\"at zu K\"oln\\vorgelegt von}
-\author{Daniel Suess\\ {\normalfont\normalsize aus Dresden}}
+\author{Daniel S\"u{\ss}\\ {\normalfont\normalsize aus Dresden}}
 \date{\normalfont\normalsize\sffamily K\"oln, 2018}
 {\let\newpage\relax \sffamily \maketitle}
 
@@ -146,10 +146,10 @@ We investigate three inference problems, where additional structure in the form 
 The first example is concerned with \emph{uncertainty quantification} in quantum state estimation, where the \emph{positive-semidefinite constraint} is used to construct more powerful, that is smaller, error regions.
 However, as we show in this work, doing so in an optimal way constitutes a computationally hard problem, and therefore, is intractable for larger systems.
 This is in stark contrast to the unconstrained version of the problem under consideration.
-The second inference problem deals with phase retrieval and its application to characterizing linear optical circuits.
-The main challenge here is the fact that the measurements are insensitive to complex phases, and hence, their reconstruction requires deliberate utilization of interference.
-We propose a reconstruction algorithm based on ideas from low-rank matrix recovery.
-More specifically, we map the problem of reconstruction from phase-insensitive measurements to the problem recovering a rank-one matrix from linear measurements.
+The second inference problem deals with \emph{phase retrieval} and its application to characterizing \emph{linear optical circuits}.
+The main challenge here is the fact that the measurements are insensitive to complex phases, and hence, reconstruction requires deliberate utilization of interference.
+We propose a reconstruction algorithm based on ideas from \emph{low-rank matrix recovery}.
+More specifically, we map the problem of reconstruction from phase-insensitive measurements to the problem of recovering a rank-one matrix from linear measurements.
 For the efficient solution of the latter it is crucial to exploit the rank-one constraint.
 In this work, we adapt existing work on phase retrieval to the specific application of characterizing linear optical devices.
 Furthermore, we propose a measurement ensemble tailored specifically around the limitations encountered in this application.
@@ -162,23 +162,26 @@ Additionally, the use of measurement tensors with an efficient representation is
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter*{Kurzzusammenfassung}
+\pagestyle{blank}
 
 In dieser Arbeit untersuchen wir das Zusammenspiel von Zwangsbedingungen und Komplexität in Quantenschätzproblemen.
-Für diesen Zweck betrachten wir drei Schätzprobleme, für die zusätzliche Struktur in der Form von Zwangsbedingungen ausgenutzt werden kann um die notwendige Zahl der Messungen oder die Berechnungskomplexität zu verringern.
-Das erste Beispiel beschäftigt sich mit der Unsicherheitsabschätzung in Quantenzustandstomographie.
-In diesem nutzen wir die Zwangsbedingung, dass physikalische gemischte durch positive-semidefinite Matrizen beschrieben werden, um kleinere und damit aussagekräftigäre Fehlerregionen zu konstruieren.
+Für diesen Zweck betrachten wir drei Schätzprobleme, deren zusätzliche Struktur in der Form von Zwangsbedingungen ausgenutzt werden kann um die notwendige Zahl der Messungen oder die Berechnungskomplexität zu verringern.
+Das erste Beispiel beschäftigt sich mit der \emph{Unsicherheitsabschätzung} in \emph{Quantenzustandstomographie}.
+In diesem nutzen wir die Zwangsbedingung, dass physikalische gemischte Zustände durch \emph{positiv-semidefinite} Matrizen beschrieben werden, um kleinere und damit aussagekräftigere Fehlerregionen zu konstruieren.
 Wir zeigen jedoch in dieser Arbeit, dass ein optimales Nutzen der Zwangsbedingungen ein rechnerisch schweres Problem darstellt und damit nicht effizient lösbar ist.
-Im Vergleich dazu ist das Model ohne Zwangsbedingungen effizient lösbar.
-Das zweite Schätzproblem beschäftigt sich mit Phase Retrieval und dessen Anwendung für die Charakterisierung von linear-optischen Schaltkreisen.
-Hier ist die größte Herausforderung, dass die Messungen phasenunempfindlich sind und deshalb das gezielte Ausnutzen von Inteferenz für die vollständige Rekonstruktion notwendig ist.
+Im Vergleich dazu existieren effiziente Algorithmen f\"ur die Berechnung optimaler Fehlerregionen im Falle des Models ohne Zwangsbedingungen.
+Das zweite Schätzproblem beschäftigt sich mit \emph{Phase Retrieval} und dessen Anwendung für die Charakterisierung von \emph{linear-optischen Schaltkreisen}.
+Hier ist die größte Herausforderung, dass die Messungen phasenunempfindlich sind und deshalb das gezielte Ausnutzen von Interferenz für die vollständige Rekonstruktion notwendig ist.
 Für diesen Zweck entwickeln wir einen Algorithmus, der auf Techniken der effizienten Rekonstruktion von Matrizen mit niedrigem Rang basiert.
 Genauer gesagt bilden wir das Problem der Rekonstruktion aus phasenunempfindlichen Messungen auf das Problem der Rekonstruktion von Matrizen mit Rang 1 aus linearen Messungen ab.
 Für dessen effiziente Lösung ist es notwendig die Zwangsbedingung an den Rang auszunutzen.
-Zuletzt untersuchen wir die Rekonstruktion von Tensoren mit niedrigem Rang, also das Problem einen Tensor mit niedriger Komplexität in einem exponentiell großem Hilbertraum zu rekonstruieren.
-Wir leiten eine hinreichende Bedingung für die erfolgreiche Rekonstruktion aus Rang 1 Messungen ab, die den erlaubten Fehler der Initialisierung und Konzentrationseigenschaften der Messungen miteinander in Verbindung setzt.
-Außerdem zeigen wir numerisch, dass Gauss'sche Produktmessungen diese Eigenschaften mit hoher Wahrscheinlichkeit erfüllen auch wenn die Zahl der Messungen nur polynomiell in der Ordnung des Zieltensors gewählt werden.
+Hierzu adaptieren wir existierende Arbeiten aus dem Bereich des Phase Retrievals f\"ur die Anwendung auf die Charakterisierung von linear-optischen Schaltkreisen.
+Außerdem entwickeln wir ein Ensemble von Messvektoren, das speziell auf diese Anwendung zugeschnitten ist.
+Zuletzt untersuchen wir die Rekonstruktion von \emph{Tensoren mit niedrigem Rang}, also das Problem einen Tensor mit niedriger Komplexität in einem exponentiell großem Hilbertraum zu rekonstruieren.
+Wir leiten eine hinreichende Bedingung für die erfolgreiche Rekonstruktion von Tensoren mit niedrigem Range aus Rang 1 Messungen ab, die den erlaubten Fehler der Initialisierung und Konzentrationseigenschaften der Messungen miteinander in Verbindung setzt.
+Außerdem zeigen wir numerisch, dass Gauss'sche Produktmessungen diese Eigenschaft mit hoher Wahrscheinlichkeit erfüllen, auch wenn die Zahl der Messungen polynomiell in der Ordnung des Zieltensors skaliert.
 Damit können die Rangbedingungen ausgenutzt werden um die Zahl der notwendigen Messungen drastisch zu reduzieren.
-Zusätzlich dazu ist unser Ansatz auch Recheneffizient, da wir effizient darstellbare Produkttensoren als Messungen verwenden.
+Zusätzlich dazu ist unser Ansatz auch recheneffizient, da wir effizient darstellbare Produkttensoren als Messungen verwenden.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -225,16 +228,30 @@ Zusätzlich dazu ist unser Ansatz auch Recheneffizient, da wir effizient darstel
 \pagestyle{empty}
 \pagenumbering{gobble}
 
-First and foremost, I would like to thank David Gross for
-% mentoring, opportunties, freedom I enjoyed during my time in his Group in Freiburg and Cologne
-% Cologne group
+First and foremost, I would like to thank David Gross for his continuous support, for the numerous opportunities he has provided for me, and for the tremendous freedom I enjoyed during my PhD.
+
+I would also like to thank all former and current members of his group in Freiburg and Cologne.
+Particularly, I am deeply grateful to Mariela Boevska and Felipe Montealegre for the support they provided in organizing the submission of this thesis.
+I would like to thank Željka Stojanac, Johan Åberg, and Martin Kliesch for proof reading parts of this manuscript and providing crucial feedback.
+For his friendship, his advice inside and outside academia, and for providing me with an opportunity that changed my life fundamentally, I would like to thank Richard Kueng.
+Finally, I would like to thank my coauthors Milan Holzaepfel and Łukasz Rudnicki for productive collaboration and discussions.\\
+
+I would like to thank Stephen Bartlett and his group in Sydney for the hospitality and enjoyable atmosphere during my stay there.
+I am also grateful to Marco Tomamichel and Chris Ferrie for the productive atmosphere during my visit.\\
+
+I am deeply grateful to my parents for their unconditional support, love, and encouragement.
+I would like to thank my brother for his valuable advice.\\
+
+I would like to thank Mercedeh Edrisi for keeping me grounded during the time of writing this thesis and giving me a good reason to finish it rather sooner than later.
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 \chapter*{Erklärung}
 \pagenumbering{gobble}
 
-Ich versichere, dass ich die von mir vorgelegte Dissertation selbständig angefertigt, die benutzten Quellen und Hilfsmittel vollständig angegeben und die Stellen der Arbeit -- einschließlich Tabellen, Karten und Abbildungen --, die anderen Werken im Wortlaut oder dem Sinn nach entnommen sind, in jedem Einzelfall als Entlehnung kenntlich gemacht habe; dass diese Dissertation noch keiner anderen Fakultät oder Universität zur Prüfung vorgelegen hat; dass sie -- abgesehen von den auf der nächsten Seite angegebenen Teilpublikationen -- noch nicht veröffentlicht worden ist, sowie, dass ich eine solche Veröffentlichung vor Abschluss des Promotionsverfahrens nicht vornehmen werde.
+Ich versichere, dass ich die von mir vorgelegte Dissertation selbständig angefertigt, die benutzten Quellen und Hilfsmittel vollständig angegeben und die Stellen der Arbeit -- einschließlich Tabellen, Karten und Abbildungen --, die anderen Werken im Wortlaut oder dem Sinn nach entnommen sind, in jedem Einzelfall als Entlehnung kenntlich gemacht habe; dass diese Dissertation noch keiner anderen Fakultät oder Universität zur Prüfung vorgelegen hat; dass sie -- abgesehen von den angegebenen Teilpublikationen -- noch nicht veröffentlicht worden ist, sowie, dass ich eine solche Veröffentlichung vor Abschluss des Promotionsverfahrens nicht vornehmen werde.
 Die Bestimmungen der Promotionsordnung sind mir bekannt.
 Die von mir vorgelegte Dissertation ist von Prof.\ Dr.\ David Gross betreut worden.
 
@@ -243,5 +260,8 @@ Die von mir vorgelegte Dissertation ist von Prof.\ Dr.\ David Gross betreut word
 Ort, Datum \hfill Unterschrift \hspace{2cm}
 
 
+\clearpage
+\pagenumbering{gobble}
+\newpage\phantom{CLEAR PAGE}
 
 \end{document}
