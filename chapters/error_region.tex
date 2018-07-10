@@ -65,7 +65,7 @@ In general, we do not require $\estim\theta$ to map to the state space $\Omega$ 
 However, since we are interested in learning about the distribution of $X$, not every estimator is equally useful.
 Indeed, the goal should be to find an estimator, which yields the parameter value that describes the observed data best.
 What we mean by \quotes{best} in this context not only depends on the specific model and what the estimate is supposed to be used for, but also on the fundamental interpretation of probability.
-Broadly speaking, there are two different interpretations of probability, namely the frequentist (or orthodox) interpretation and the Bayesian interpretation~\cite{Hajek_2012_Interpretations,Caves_2000_Probabilities}, which lead to distinct schools of inference~\cite{Kiefer_2012_Introduction,Bolstad_2007_Introduction,Wasserman_2013_All}.
+Broadly speaking, there are two different interpretations of probability, namely the frequentist (or orthodox) interpretation and the Bayesian interpretation~\cite{Hajek_2012_Interpretations}, which lead to distinct schools of inference~\cite{Kiefer_2012_Introduction,Bolstad_2007_Introduction,Wasserman_2013_All}.
 Although the two approaches yield the same results for very simple models or -- under mild regularity assumptions -- in the limit of many measurements, they generally differ and in some cases even yield contradictory results~\cite[Sec. 11.9]{Wasserman_2013_All}.
 
 So far we have only discussed point estimators, which yield a single value for the parameters.
@@ -687,10 +687,10 @@ So, having obtained a \quotes{small confidence region} in parameter space does n
   \centering
   \input{tikz/error_truncation_construction.tex}%
   \caption{\label{fig:ortho.geometry}%
-    Geometric construction of confidence region for $\estim\varrho$.
+    Geometric construction of a confidence region for $\varrho_0$.
     Quantum states are mapped by a measurement matrix $A$ to the respective quantum expectation values $\vec y$.
     Conversely, the pre-image of a confidence region $\CR_\vec{y}$ under $A$ gives rise to a confidence region for $\varrho_0$.
-    These may be unbounded if the measurements are not tomographically complete -- a drawback that can be cured by taking into account the physical constraints on quantum states, i.e.\ positivity.
+    These may be unbounded if the measurements are not tomographically complete -- a drawback that can be cured by taking into account the physical constraints on quantum states, i.e.\ positive semi-definiteness.
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1314,7 +1314,7 @@ Also, there is no closed-form analogue to Eq.~\eqref{eq:bayesian.radius} due to 
 \begin{figure*}[t]
   \centering
   \input{tikz/error_ellipsoids.tex}
-  \caption{\label{fig:bayesian.ellipsoids}
+  \caption{\label{fig:bayesian.ellipsoids}%
     The two possible cases for the credible regions.
     \emph{Left:} The original ellipsoid $\Eps(r_\frac{\alpha}{C})$ with credibility $\frac{\alpha}{C}$ (yellow) lies completely inside the psd states and is, therefore, equal to the ellipsoid taking into account positivity $\Eps(r^+_{\alpha})$ with credibility $\alpha$ (blue hatched).
     \emph{Right:}  Parts of the original ellipsoid $\Eps(r_\frac{\alpha}{C})$ lie outside the psd states (blue).
@@ -1485,7 +1485,7 @@ We will now show how the explicitly parameterized ellipsoid~\eqref{eq:bayesian.p
 \begin{figure}[t]
   \centering
   \input{tikz/error_volume_truncation.tex}
-  \caption{\label{fig:bayesian.r_separation}
+  \caption{\label{fig:bayesian.r_separation}%
     Same as Fig.~\ref{fig:bayesian.ellipsoids} (right).
     Note that the solid blue and hatched blue regions need to have the same volume.
   }

@@ -531,8 +531,8 @@ For dimensions $D > 1$, not every state satisfying an area law can be efficientl
     \draw[pointerline] (A_2_E1e) -- +(0.3,1.5) node[pointernode] {virtual leg};
   \end{tikzpicture}
   \caption{%
-    \label{fig:mps.mpo}
-    An MPO with open boundary condition as described.
+    \label{fig:mps.mpo}%
+    An MPO with open boundary conditions.
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -608,8 +608,8 @@ Unfortunately, this problem is $\NP$-hard, even if we restrict to dimensions $d=
     \draw[pointerline] (A_1_S2e) -- +(0.2,-0.5) node[pointernode] {auxilliary leg };
   \end{tikzpicture}
   \caption{%
-    \label{fig:mps.pmps}
-    An PMPS with open boundary condition as described.
+    \label{fig:mps.pmps}%
+    An PMPS with open boundary condition.
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1317,7 +1317,7 @@ However, since at this time, we do not have explicit error bounds for these trun
   \centering
   \includegraphics[width=\linewidth]{fig/tensor_lognormal}
   \caption{%
-    Distribution function of $\log X$ given by \cref{eq:gaussian.X} for different numbers of factors $n$.
+    Distribution function of $\log Y = \log X^2 = \log \left(\prod_{i=1}^n g_i^2 \right)$ with $Y$ given by \cref{eq:gaussian.X} for different numbers of factors $n$.
     The histogram is taken over 100,000 samples and the solid line depicts the probability density function of a normal random variable with mean $\mu n$ and standard deviation $\sigma \sqrt n$.
     Here, $\mu$ and $\sigma$ denotes the mean and standard deviation of $\log g_i^2$ as given by \cref{eq:gaussian.means_and_std}.
     }%
@@ -1326,7 +1326,7 @@ However, since at this time, we do not have explicit error bounds for these trun
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-Recall from \cref{sub:als.ana} that one of the conditions needed for successful recovery via ALS is a lower bound on $\lambda\mathrm{min}(B_j(v))$ with $B_j(v)$ from \cref{eq:als.gaussian.B}.
+Recall from \cref{sub:als.ana} that one of the conditions needed for successful recovery via ALS is a lower bound on $\lambda_\mathrm{min}(B_j(v))$ with $B_j(v)$ from \cref{eq:als.gaussian.B}.
 In words, we need a lower tail bound on the smallest eigenvalue of sums of independent random operators of the form $Y \times \ketbra{a}$, where $a \sim \Normal(0, \1_d)$ and $Y$ is a product of squares of standard Gaussians, i.e.
 \[
   \label{eq:gaussian.X}
@@ -1444,7 +1444,7 @@ Based on the identities in \cref{lem:gaussians.cdf_as_meijer}, we now develop a 
   \end{subfigure}
   \caption{%
     \label{fig:gaussians.cdfs}%
-    \Cref{fig:gaussians.cdf.f} shows the CDFs ($k=\infty$) of the random variables $X$, $Y$, and $Z$ with their power-log series~\eqref{eq:gaussians.series} truncated at different orders $k$.
+    \Cref{fig:gaussians.cdf.f} shows the CDFs ($k=\infty$) of the random variables $X$, $Y$, and $Z$ with their power-log series~\eqref{eq:X_expansion}--\eqref{eq:Z_expansion}, respectively,  truncated at different orders $k$.
     Note that the first order approximation $k=1$ lies right on top of the true value, and hence, is not visible in this plot.
     In \cref{fig:gaussians.cdf.err}, we show the approximation error, i.e.\ the absolute value of the difference of the truncation and the true value, on a log-scale.
   }
@@ -1465,16 +1465,15 @@ The problem of proving such a statement rigorously remains, however.
 Furthermore, applying this approximation to prove the concentration properties from \cref{sub:als.ana} is also left for future work.\\
 
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure*}
   \includegraphics[width=\textwidth]{fig/tensor_concentration_dists}
   \caption{%
     \label{fig:numerics.dists}%
-    Empirical distribution of $\frac{Z_\mathrm{B}}{Z_\mathrm{G}}$ for $m = C N d$ and Gaussian measurements.
+    Empirical distribution of $\frac{Z_\mathrm{B}}{Z_\mathrm{G}}$ for Gaussian product measurements.
     Here, $Z_\mathrm{B}$ and $Z_\mathrm{G}$ are given by \cref{eq:numerics.zs}.
     The solid lines indicate the smoothed histograms over 10000 samples and the dotted lines their 0.05 quantiles, i.e.\ 5\,\% of the samples are smaller than the value shown.
-    For each combination of the number of sites $N$ and the local dimension $d$, we choose the number of measurements $m = CNd$.
+    For each combination of the number of sites $N$ and local dimension $d$, we choose the number of measurements $m = CNd$.
     For the blue curve we have $C = 10$ and for the red curve $C=100$.
   }
 \end{figure*}
@@ -1658,9 +1657,9 @@ The \quotes{practical} ALS algorithm used throughout this section is summarized 
   \end{subfigure}
   \caption{%
     \label{fig:numerics.recov}%
-    Recovery error of the ALS algorithm~\ref{alg:als_practical} as a function of the epoch $h$.
+    Recovery error of ALS (Algorithm~\ref{alg:als_practical}) as a function of the epoch $h$.
     All pictures show the recovery of a fixed randomly chosen tensor $X \in \Reals^{d^N}$ for $d = 4$ and $N = 8$.
-    Each line corresponds to a different set of measurements from the Gaussian ensemble.
+    Each line corresponds to a different set of Gaussian product measurements.
     In \cref{fig:numerics.recov.rank1_5percent}, we chose $X$ to be of rank 1, whereas \cref{fig:numerics.recov.rank10_10percent,fig:numerics.recov.rank10_20percent} show the reconstruction of a rank 10 tensor.
     For initialization, we used the spectral initialization~\eqref{eq:numerics.Xinit}.
   }

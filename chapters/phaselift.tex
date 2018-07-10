@@ -28,7 +28,7 @@ This makes it a priori susceptible towards noise as any error in the determinati
 This chapter is structured as follows:
 In \cref{sec:pl.optics}, we recapitulate the fundamental problem of characterizing linear optical devices using either coherent states of light or single photon states.
 \Cref{sec:pl.phase_retrieval} is concerned with introducing the fundamental problem of phase retrieval.
-\Cref{sec:pl.results} contains the main theoretical results of this work, namely the proposed measurement scheme, the related recovery guarantees for the PhaseLift reconstruction algorithm as well as the characterization of linear-optical networks via PhaseLift.
+\Cref{sec:pl.theory} contains the main theoretical results of this work, namely the proposed measurement scheme, the related recovery guarantees for the PhaseLift reconstruction algorithm as well as the characterization of linear-optical networks via PhaseLift.
 We present results from numerical and experimental investigation in \cref{sec:pl.results}.
 \Cref{sec:pl.final} concludes this chapter and provides an outlook on possible future work.
 
@@ -1056,8 +1056,8 @@ Not only does the number of measurements scale linearly in the system size -- as
     }
    \end{subfigure}
   \caption{\label{fig:pl.simerror}%
-    Simulated reconstruction error using RECR measurements for fixed time budget as a function of the number of measurements for two different circuit sizes and different time budgets.
-    The total photon number for each reconstruction is $N = 4600 \times t$, which is the counting rate of the experiment.
+    Simulated reconstruction error using RECR measurements for a fixed time budget as a function of the number of distinct input vectors for two different circuit sizes and different time budgets.
+    The total photon number budget for each reconstruction is $N = \Gamma \times t$, where $\Gamma=4600 \mathrm{s}^{-1}$ is a typical counting rate of the experiment and $t$ the time available.
     Then, the output for each input vector $\alpha$ is a multinomial distribution with the number of trials given by $\frac{N}{m}$.
     We sample 100 sets of measurement data for each value of $m$ and run the PhaseLift reconstruction on each of them.
     The solid line indicates the mean error and the colored areas the $0.025$ and $0.975$ quantiles.
@@ -1135,11 +1135,11 @@ Therefore, if we take into account this additional cost for reconfiguring the pr
   \includegraphics[width=0.95\columnwidth]{fig/phaselift_ex_details}
   \caption{%
    \label{fig:pl.experimental.details}%
-   Reconstruction errors for a random $5 \times 5$ matrix from experimental data.
+   Reconstruction errors for a random $5 \times 5$ transfer matrix from experimental data.
    For each picture, we plot the mean (solid) as well as the $0.025$ and $0.975$ quartiles over 100 samples.
-   In the left picture, each sample consists of a recovery from $m$ preparation vectors and the corresponding photon counts measured over $t = 30\,\mathrm{s}$
+   In the left picture, each sample consists of a recovery from $m$ preparation vectors and the corresponding photon counts measured over $30\,\mathrm{s}$
    In the right picture we fix a randomly selected set of $m=20$ preparation vectors and run the recovery with the photon counts from $t$ randomly selected time bins, each of which is one second long.
-   The constant shift $E_0$ in the right picture is equal to the mean error for $t=29$ and it serves the purpose to equalize any differences between the Gaussian and the RECR reconstructions due to the choice of preparation vectors.
+   The constant shift $E_\infty$ in the right picture is equal to the mean error for $t=29$ and it serves the purpose to equalize any differences between the Gaussian and the RECR reconstructions due to the choice of preparation vectors.
   }
 \end{figure*}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
